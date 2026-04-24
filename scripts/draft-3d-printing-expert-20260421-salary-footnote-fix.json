@@ -1,0 +1,20 @@
+{
+  "jobId": "1775053184629",
+  "jobName": "3D 프린팅 전문가",
+  "fields": {
+    "overviewSalary.sal": "관련 직업인 3D프린팅모델러 기준 연봉 중위값은 약 3,715만 원으로, 전체 직업 평균(4,072만 원)보다 다소 낮은 수준이며 신입은 약 2,500~3,000만 원에서 시작한다.[1] 의료·항공·자동차 특화 분야에서 경력을 쌓으면 5,000만 원 이상도 가능하다.[2]"
+  },
+  "sources": {
+    "overviewSalary.sal": [
+      {
+        "text": "[1] 워크넷 직업정보",
+        "url": "https://www.work.go.kr/"
+      },
+      {
+        "text": "[2] 메이저맵",
+        "url": "https://www.majormap.net/content/670"
+      }
+    ]
+  },
+  "changeSummary": "[hotfix] 3D 프린팅 전문가 임금정보 인라인 각주 위치 보정 (2026-04-21)"
+}

@@ -1,0 +1,103 @@
+{
+  "fields": {
+    "way": "정신건강의학전문의사가 되려면 의과대학(6년) 졸업 후 의사 국가고시에 합격해 의사 면허를 취득하고, 인턴 1년·정신건강의학과 레지던트 4년을 이수해야 한다.[1] 전문의 자격시험 합격 후 대학병원, 국공립 정신건강의료기관, 민간 정신건강의학과 의원 등으로 진출하며, 소아청소년정신건강의학·노인정신건강의학 등 세부전문의 과정을 거치는 경우도 있다.[2]",
+    "trivia": "2011년, '정신분열병'이라는 병명이 '조현병(調絃病)'으로 공식 변경되었다. 조현(調絃)은 현악기의 줄을 고른다는 뜻으로, 뇌의 신경망이 조율되지 못한 상태를 비유한 표현이다. 대한신경정신의학회가 부정적 낙인 제거를 위해 명칭 변경을 주도했다.[1]",
+    "overviewProspect": {
+      "main": "건강보험심사평가원 자료에 따르면 우울증 진료 인원이 2017년 대비 2021년 35.1%, 불안장애 진료 인원이 32.3% 증가하는 등 정신건강의학과 수요가 지속적으로 늘고 있다. 특히 20대 우울증 환자가 동기간 127.1% 폭증하는 등 젊은 층의 정신의료 이용이 빠르게 증가하고 있어 고용 전망은 양호한 편이다.[1]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "높음",
+      "wlbDetail": "정신건강의학과는 외과계에 비해 응급 수술·야간 처치 빈도가 낮아 상대적으로 규칙적인 근무가 가능하다.[1] 입원 병동이 있는 기관에서는 당직 근무와 주말 입원 환자 관리가 수반되며, 개원의의 경우 진료 일정을 자율적으로 조정할 수 있다.[2]",
+      "socialDetail": "우울증·조현병·조울증 등 정신질환을 진단·치료함으로써 환자의 사회 복귀와 삶의 질 향상에 직접 기여한다.[1] 지역사회 정신건강복지센터·국공립 정신병원 등에서 취약계층 정신건강 서비스를 이끄는 공익적 역할도 맡는다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학 6년 과정 이수[1]",
+        "의사 국가고시 합격 및 의사 면허 취득[2]",
+        "인턴 1년 후 정신건강의학과 레지던트 4년 지원[3]",
+        "정신건강의학과 전문의 자격시험 합격[4]"
+      ],
+      "recruit": [
+        "대학병원 정신건강의학과 임상강사·교수 지원[1]",
+        "국립정신건강센터 등 국공립 정신병원 공개 채용[2]",
+        "민간 정신건강의학과 의원 취업 또는 개원[3]"
+      ],
+      "training": [
+        "소아청소년정신건강의학 세부전문의 취득[1]",
+        "노인정신건강의학 세부전문의 취득[2]",
+        "대한신경정신의학회 학술 활동 및 전문 교육 참여[3]"
+      ]
+    },
+    "sidebarJobs": [
+      "가정의학과전문의사",
+      "내과전문의사",
+      "법의학자",
+      "신경과전문의사",
+      "소아청소년과의사",
+      "응급의학과전문의사",
+      "재활의학과전문의사",
+      "정신과의사",
+      "임상심리사",
+      "사회복지사"
+    ],
+    "sidebarMajors": ["의학과", "의료경영학과", "생명과학과", "심리학과"],
+    "sidebarOrgs": [
+      {"name": "대한신경정신의학회", "url": "https://www.knpa.or.kr/"},
+      {"name": "국립정신건강센터", "url": "https://www.ncmh.go.kr/"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"}
+    ],
+    "sidebarCerts": [
+      {"name": "의사", "url": "https://www.kuksiwon.or.kr/"},
+      {"name": "정신과전문의", "url": "https://www.knpa.or.kr/"}
+    ],
+    "heroTags": ["정신과의사", "정신건강의학과", "Psychiatrist", "정신과전문의사", "신경정신과"],
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=Eqb5h0h9Za4",
+        "title": "정신건강의학과 전문의가 되려면 10년 넘게 공부해야 한다!? [싸이들의 잡학사전]"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=V-ojxney64k",
+        "title": "정신과 의사는 누가 될까? 교수님들께 여쭤보았다"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국의과대학·의학전문대학원협회", "url": "https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id": 2, "text": "[2] 대한신경정신의학회", "url": "https://www.knpa.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 대한신경정신의학회", "url": "https://www.knpa.or.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 건강보험심사평가원 보건의료빅데이터", "url": "https://www.hira.or.kr/bbsDummy.do?pgmid=HIRAA020041000100&brdScnBltNo=4&brdBltNo=10627&pageIndex=1"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 대한신경정신의학회", "url": "https://www.knpa.or.kr/"},
+      {"id": 2, "text": "[2] 온마음 대한정신건강의학과의사회", "url": "https://www.onmaum.com/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 대한신경정신의학회", "url": "https://www.knpa.or.kr/"},
+      {"id": 2, "text": "[2] 국립정신건강센터", "url": "https://www.ncmh.go.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국의과대학·의학전문대학원협회", "url": "https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"},
+      {"id": 3, "text": "[3] 대한신경정신의학회", "url": "https://www.knpa.or.kr/"},
+      {"id": 4, "text": "[4] 온마음 대한정신건강의학과의사회", "url": "https://www.onmaum.com/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 한국의과대학·의학전문대학원협회", "url": "https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id": 2, "text": "[2] 국립정신건강센터", "url": "https://www.ncmh.go.kr/"},
+      {"id": 3, "text": "[3] 온마음 대한정신건강의학과의사회", "url": "https://www.onmaum.com/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한소아청소년정신의학회", "url": "https://kacap.or.kr/"},
+      {"id": 2, "text": "[2] 대한노인정신의학회", "url": "http://www.kagp.or.kr/"},
+      {"id": 3, "text": "[3] 대한신경정신의학회", "url": "https://www.knpa.or.kr/"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 정신건강의학전문의사 17필드 신규 작성 (way·trivia·prospect·detailWlb·detailReady 전체·sidebarJobs 27→10·sidebarMajors·sidebarOrgs·sidebarCerts URL 보강·heroTags 확장·youtubeLinks 2개)"
+}

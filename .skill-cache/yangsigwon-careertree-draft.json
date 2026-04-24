@@ -1,0 +1,46 @@
+{
+  "jobName": "양식원",
+  "jobId": "1765283341492648",
+  "slug": "양식원",
+  "fields": {},
+  "sources": {},
+  "careerTree": {
+    "person_name": "김태현",
+    "person_title": "씨테크랩스 대표, 우수 귀어귀촌인",
+    "stages_json": [
+      {
+        "order": 0,
+        "title": "IT 연구원 활동",
+        "organization": "부산 IT업계",
+        "years": "~2016",
+        "description": "부산에서 ICT 연구원으로 활동하며 데이터와 현장 문제 해결 경험을 쌓았다.",
+        "job_slug": null
+      },
+      {
+        "order": 1,
+        "title": "통영 귀어 후 가두리 양식 진입",
+        "organization": "통영 양식 현장",
+        "years": "2016~",
+        "description": "2016년 통영으로 귀어해 가두리 양식을 업으로 삼고, 기존 IT 노하우를 양식 현장에 접목하기 시작했다.",
+        "job_slug": "양식원"
+      },
+      {
+        "order": 2,
+        "title": "블루오션영어조합법인 이사",
+        "organization": "블루오션영어조합법인",
+        "years": "2021~2024",
+        "description": "스마트양식 기반의 지속가능한 양식업을 연구하고 AI 기반 양식장 관리 플랫폼 개발·보급에 앞장섰다.",
+        "job_slug": "양식업관리자"
+      },
+      {
+        "order": 3,
+        "title": "씨테크랩스 대표",
+        "organization": "씨테크랩스",
+        "years": "2024~현재",
+        "description": "AIoT 기반 스마트아쿠아팜 시스템 구축 기업을 설립해 내수면 양식의 디지털 전환을 이끌고 있다.",
+        "job_slug": null
+      }
+    ]
+  },
+  "changeSummary": "양식원 커리어트리 후보 검증: 김태현 대표의 귀어-양식-스마트양식 경로"
+}

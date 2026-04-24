@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 다소 감소할 전망이다. AI·빅데이터 기술 도입으로 반복적 재무 처리 업무가 자동화되고 기업 구조조정 추세로 재무관리직이 축소되는 경향이 있다.[1] 다만 전략적 판단·리스크 관리·투자 의사결정을 담당하는 상위 재무관리자 역할은 여전히 중요하며, ESG 경영 확산과 해외 투자 증가로 글로벌 재무 역량을 갖춘 전문가에 대한 수요는 유지될 것으로 보인다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통 이상",
+      "wlbDetail": "주로 사무실에서 좌식 근무하며 결산·감사 시즌에는 초과근무가 잦다. 예산 편성 기간에는 스트레스 강도가 높아지며, 업무 특성상 정밀성과 정확성이 요구된다.[1]",
+      "socialDetail": "기업의 재무 건전성을 유지하고 예산 배분·투자 의사결정을 담당함으로써 조직의 지속 가능한 성장을 뒷받침한다.[1] 올바른 재무 관리는 고용 안정과 협력사 생태계에 긍정적 파급 효과를 미친다."
+    },
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=iIv6qyhEkg8",
+        "title": "[직터뷰🎤] EP 20. 삼성물산 관리회계 김현우 프로편 💙"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "직업백과 재무관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "직업백과 재무관리자 경력 통계", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "직업백과 재무관리자 근무환경", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "직업백과 재무관리자 직무 기여", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "직업백과 재무관리자 임금정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "직업백과 재무관리자 고용전망", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"},
+      {"id": 2, "text": "직업백과 재무관리자 고용전망", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ]
+  },
+  "changeSummary": "피드백 4건 수정: prospect 두 번째 문장 [2] 추가, wlb 등급 띄어쓰기(보통이하→보통 이하/보통이상→보통 이상), youtubeLinks title 인코딩 수정, sources GN 전역번호→필드별 id:1 교정"
+}

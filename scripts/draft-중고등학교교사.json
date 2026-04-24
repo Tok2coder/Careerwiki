@@ -1,0 +1,74 @@
+{
+  "fields": {
+    "way": "중·고등학교 교사(중등교사)가 되려면 중등 2급 정교사 자격증 취득이 필수다. 주요 경로는 두 가지다. ① 사범대학 졸업: 국어교육과, 영어교육과, 수학교육과, 과학교육과, 역사교육과 등 사범대 교육학과를 졸업하면 해당 전공의 2급 정교사 자격증이 자동 부여된다. ② 일반학과 졸업 + 교직과정·교육대학원: 일반대학교에서 사범계가 아닌 전공(국어국문학과, 수학과 등)을 이수하면서 교직과정(교직이수)을 함께 수료하거나, 졸업 후 교육대학원에서 교육학 전공으로 석사를 취득하면 2급 정교사 자격이 부여된다.[1] 공립학교 교사를 목표로 할 경우 각 시·도 교육청이 매년 시행하는 중등 교원 임용시험(교원임용후보자선정경쟁시험)에 합격해야 한다. 1차 교육학·전공 필기시험과 2차 수업실연·심층면접으로 구성되며, 전국 평균 경쟁률은 5~10:1 수준이고 일부 과목(수학, 영어 등)은 경쟁이 더욱 치열하다. 사립학교는 학교법인별 자체 채용을 거친다.[2]",
+    "overviewProspect": {
+      "main": "향후 5년간 감소 전망이다. 저출산으로 인한 학령인구 감소가 핵심 요인으로, 2024년 기준 중학생 수가 10년 전 대비 30% 이상 줄었다. 학교 통폐합과 학급 수 감소로 신규 교원 채용 규모가 매년 축소되고 있다. 교육부는 임용 인원을 단계적으로 감축할 계획이다. 다만 특수교사·진로진학상담교사 등 전문 분야는 상대적으로 수요가 유지되며, 해외 한국어·한국학 교사 수요는 증가 추세다.[1]"
+    },
+    "trivia": "한국의 사교육 시장은 2023년 기준 약 27조 원 규모로 OECD 최고 수준이다.[1] 중·고등학교 교사의 직업 만족도 조사에서 '안정성'과 '사회적 인식' 항목이 가장 높은 점수를 받았으며, 커리어넷 재직자 조사에서 전체 직업 만족도 상위 15%에 해당한다. '임용절벽'이라는 신조어가 생길 만큼 임용 경쟁은 치열해졌지만, 합격 이후 정년(만 62세) 보장과 연금(공무원연금) 혜택으로 인기 직종으로 남아 있다.[2]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "공립학교 교원은 학기 중 수업·행정 업무 부담이 있으나 방학(여름·겨울 각 약 4~6주)이 있어 워라밸이 비교적 양호하다. 최근 학부모 민원 증가와 교권 침해 문제가 사회 이슈로 부각되어 정서적 소진을 호소하는 교사가 늘고 있다. 커리어넷 재직자 조사에서 워라밸은 '보통 이상'으로 분류된다.[1]",
+      "socialDetail": "다음 세대를 교육하는 핵심 역할로 사회적 가치와 존경도가 높다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '높음' 수준이다. 다양한 배경의 학생들과 소통하며 진로·진학을 돕는 과정에서 직업적 보람을 느끼는 교사가 많다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "사범대학 해당 전공(국어교육, 영어교육, 수학교육, 역사교육 등) 입학 및 졸업 — 졸업 시 2급 정교사 자격 자동 부여[1]",
+        "비사범계 전공자: 교직과정 이수(교직 20학점 이상) 또는 교육대학원 진학(2년) — 전공 50학점·교직 22~24학점 이수 필수[2]",
+        "공립학교 목표 시 교원임용시험(1차 필기 + 2차 수업실연·면접) 장기 준비 필수[3]"
+      ],
+      "recruit": [
+        "공립학교: 각 시·도 교육청 중등 교원 임용후보자 선정 경쟁시험 (매년 10~11월 1차, 이듬해 1~2월 2차)[1]",
+        "사립학교: 학교법인 자체 채용 공고 (에듀잡·스쿨잡 등 교육직 채용사이트 확인)[2]",
+        "국제학교·외국인학교·재외한국학교: 별도 채용 (교육부 재외교육기관포털 공고 확인)[3]"
+      ],
+      "training": [
+        "임용시험 1차 준비 — 교육학(논술+객관식) + 전공 필기[1]",
+        "임용시험 2차 준비 — 수업실연(모의수업 반복 연습) + 심층면접(교육관·교직관 정립)[2]",
+        "교생 실습(4~6주) 적극 활용 — 실제 수업 경험 및 학교 생활 적응력 점검[3]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "중등학교정교사", "url": null},
+      {"name": "중등학교정교사(1급)", "url": null}
+    ],
+    "sidebarOrgs": [
+      {"name": "한국교원단체총연합회", "url": "https://www.kfta.or.kr/"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=406"},
+      {"id": 2, "text": "서울특별시교육청 교원임용시험 안내", "url": "https://www.sen.go.kr/user/bbs/BD_selectBbsList.do?q_bbsSn=1094"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=406"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "통계청 2023년 초중고 사교육비 조사", "url": "https://mods.go.kr/board.es?mid=a10301010000&bid=245&list_no=429923&act=view&mainXml=Y"},
+      {"id": 2, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=406"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=406"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=406"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=406"},
+      {"id": 2, "text": "연세대학교 교육대학원 교원자격증 안내", "url": "https://gse.yonsei.ac.kr/gse/license/t_secondary_2013.do"},
+      {"id": 3, "text": "서울특별시교육청 교원임용시험 안내", "url": "https://www.sen.go.kr/user/bbs/BD_selectBbsList.do?q_bbsSn=1094"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "서울특별시교육청 교원임용시험 안내", "url": "https://www.sen.go.kr/user/bbs/BD_selectBbsList.do?q_bbsSn=1094"},
+      {"id": 2, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=406"},
+      {"id": 3, "text": "교육부 재외교육기관포털", "url": "https://okep.moe.go.kr/board/list.do?board_manager_seq=4&menu_seq=79"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "서울특별시교육청 교원임용시험 안내", "url": "https://www.sen.go.kr/user/bbs/BD_selectBbsList.do?q_bbsSn=1094"},
+      {"id": 2, "text": "경기도교육청 교원 임용시험 안내", "url": "https://www.goe.go.kr/goe/na/ntt/selectNttList.do?mi=11038&bbsId=2583"},
+      {"id": 3, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=406"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 중·고등학교교사: detailWlb 등급 수정(보통이상→보통 이상)·출처 추가, detailReady 각주 보강 및 curriculum 2항목 추가, sidebarCerts·sidebarOrgs 보강, way/trivia/prospect 출처 수선"
+}

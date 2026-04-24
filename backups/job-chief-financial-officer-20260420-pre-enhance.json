@@ -1,0 +1,63 @@
+{
+  "jobId": "1765283541791271",
+  "jobName": "최고재무책임자",
+  "capturedAt": "2026-04-20",
+  "restorePayload": {
+    "fields": {
+      "way": null,
+      "trivia": null,
+      "sidebarMajors": null,
+      "sidebarOrgs": null,
+      "youtubeLinks": null,
+      "overviewProspect": {
+        "main": null
+      },
+      "overviewAbilities": {
+        "technKnow": null
+      },
+      "detailWlb": {
+        "wlb": null,
+        "social": null,
+        "wlbDetail": null,
+        "socialDetail": null
+      },
+      "detailReady": {
+        "curriculum": null,
+        "recruit": null,
+        "training": null
+      }
+    },
+    "sources": {
+      "overviewProspect.main": {
+        "delete": true
+      },
+      "overviewAbilities.technKnow": {
+        "delete": true
+      },
+      "detailWlb.wlbDetail": {
+        "delete": true
+      },
+      "detailWlb.socialDetail": {
+        "delete": true
+      },
+      "trivia": {
+        "delete": true
+      },
+      "way": {
+        "delete": true
+      },
+      "detailReady.curriculum": {
+        "delete": true
+      },
+      "detailReady.recruit": {
+        "delete": true
+      },
+      "detailReady.training": {
+        "delete": true
+      }
+    },
+    "careerTree": null,
+    "_careerTreeNote": null,
+    "changeSummary": "[job-data-enhance] 최고재무책임자 보강 이전 상태 복원"
+  }
+}

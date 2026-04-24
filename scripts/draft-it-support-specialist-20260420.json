@@ -1,0 +1,162 @@
+{
+  "jobId": "1765283437704460",
+  "jobName": "IT기술지원전문가",
+  "fields": {
+    "way": "IT기술지원전문가는 보통 컴퓨터공학·전자공학·정보통신 계열에서 운영체제와 네트워크, 하드웨어 기초를 익힌 뒤 헬프데스크·시스템 운영·기술지원 직무로 입문한다.[1] 실무에서는 장애 접수와 원인 분석, 서비스 요청 대응, 문서화 역량이 중요해 ITIL 4 Foundation 같은 IT 서비스 관리 학습이 자주 활용된다.[2] 최근에는 온프레미스 지원만이 아니라 클라우드 연결성과 하이브리드 환경 문제 해결 역량까지 요구되어 Azure나 AWS 기반 학습 경로를 함께 준비하는 흐름이 강해졌다.[3]",
+    "overviewAbilities": {
+      "technKnow": "IT기술지원전문가는 운영체제, 하드웨어, 네트워크, 사용자 지원 절차와 함께 장애 원인 분석과 기록 관리 역량을 이해해야 한다.[1] ITIL 4 Foundation은 서비스 관리의 핵심 개념과 공통 용어, 업무 흐름을 구조화하는 데 도움이 된다.[2] 최근에는 클라우드와 하이브리드 연결성 문제를 해결하는 역량도 중요해져 Azure 지원 엔지니어 학습 경로 같은 실무형 교육이 직접적인 참고가 된다.[3]"
+    },
+    "detailWlb": {
+      "wlbDetail": "IT기술지원전문가는 서비스 장애나 긴급 이슈가 발생하면 즉시 대응해야 해서 특정 시간대에는 업무 밀도가 높아질 수 있다.[1] 다만 상시 외근보다 모니터링, 티켓 처리, 원격 지원, 문서화 업무 비중이 커 전반적인 일가정 균형은 보통 수준으로 보는 편이 적절하다.[2]",
+      "socialDetail": "IT기술지원전문가는 시스템 장애를 줄이고 사용자 업무가 중단되지 않도록 도와 조직 운영의 연속성을 지탱한다.[1] 최근에는 IT 서비스 관리와 클라우드 지원이 기업 경쟁력과 직결되기 때문에 기술지원 인력의 사회적·산업적 중요성이 꾸준히 유지되고 있다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "컴퓨터공학·전자공학·정보통신 계열에서 운영체제와 네트워크, 하드웨어 기초를 익히는 편이다.[1]",
+        "ITIL 4 Foundation 학습은 서비스 요청·장애·문서화 흐름을 구조적으로 이해하는 데 도움이 된다.[2]",
+        "클라우드 기술지원 수요에 대비해 Azure 지원 엔지니어나 AWS 교육 경로를 함께 보는 경우가 많다.[3]"
+      ],
+      "recruit": [
+        "헬프데스크, 시스템 운영, 기술지원, 클라우드 운영 지원 직군에서 입문 기회를 찾는 경우가 많다.[1]",
+        "국내 교육·협회 기관의 실무 과정과 자격 학습 경험은 지원 직무 준비도를 설명하는 데 도움이 된다.[2]",
+        "최근 채용에서는 운영체제·네트워크 기초와 함께 클라우드 서비스 이해를 함께 보는 흐름이 강하다.[3]"
+      ],
+      "training": [
+        "ITIL 4 Foundation은 서비스 관리 기본 체계를 정리하는 대표 학습 경로다.[1]",
+        "Azure Support Engineer 학습 경로는 클라우드·하이브리드 연결성 문제 해결 관점을 익히는 데 직접적이다.[2]",
+        "AWS Training은 클라우드 지원과 운영 이해를 넓히는 보완 학습 자료로 활용할 수 있다.[3]"
+      ]
+    },
+    "sidebarOrgs": [
+      {
+        "name": "한국정보통신진흥협회",
+        "url": "https://www.kait.or.kr/"
+      },
+      {
+        "name": "한국정보통신기술협회",
+        "url": "https://www.tta.or.kr/"
+      },
+      {
+        "name": "한국소프트웨어산업협회",
+        "url": "https://www.sw.or.kr/"
+      }
+    ],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "\"IT기술지원전문가\" 검색, \"IT 기술지원 직무 인터뷰\" 검색, \"서비스데스크 직무\" 검색, \"헬프데스크 현실\" 검색, \"클라우드 기술지원 엔지니어\" 검색, \"IT 지원 엔지니어 인터뷰\" 검색을 확인했다. 현직자·인터뷰, 직무·실무, 강의·교육, 진로·면접 카테고리를 함께 찾았지만 직업 페이지에 직접 대응하는 한국어 영상이 뚜렷하지 않아 youtubeLinks를 비움 (2026-04-20).",
+    "_careerTreeNote": "탐색 카테고리: 대기업(대기업 IT운영·인프라 조직), 공공·정부(정보통신 공공기관·전산 운영), 학계·연구(컴퓨터공학·정보통신 연구자), 스타트업·CxO(클라우드·SaaS 운영 조직), 컨설팅(ITSM·인프라 운영 컨설팅). 'IT기술지원전문가'에 직접 대응하는 한국인 공인의 단계형 공식 경력을 출처 2개 이상으로 안정적으로 재구성하기 어려워 적합 인물 없음 (2026-04-20)."
+  },
+  "careerTree": null,
+  "_careerTreeNote": "탐색 카테고리: 대기업(대기업 IT운영·인프라 조직), 공공·정부(정보통신 공공기관·전산 운영), 학계·연구(컴퓨터공학·정보통신 연구자), 스타트업·CxO(클라우드·SaaS 운영 조직), 컨설팅(ITSM·인프라 운영 컨설팅). 'IT기술지원전문가'에 직접 대응하는 한국인 공인의 단계형 공식 경력을 출처 2개 이상으로 안정적으로 재구성하기 어려워 적합 인물 없음 (2026-04-20).",
+  "changeSummary": "[job-data-enhance] IT기술지원전문가 full enhance 1차",
+  "sources": {
+    "way": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      },
+      {
+        "id": 2,
+        "text": "[2] PeopleCert — ITIL 4 Foundation",
+        "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/ITIL-1/itil-4-foundation"
+      },
+      {
+        "id": 3,
+        "text": "[3] Microsoft Learn — Azure Support Engineer for Connectivity Specialty",
+        "url": "https://learn.microsoft.com/en-us/training/paths/azure-support-engineer-for-connectivity-specialty/"
+      }
+    ],
+    "overviewAbilities.technKnow": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      },
+      {
+        "id": 2,
+        "text": "[2] PeopleCert — ITIL 4 Foundation",
+        "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/ITIL-1/itil-4-foundation"
+      },
+      {
+        "id": 3,
+        "text": "[3] Microsoft Learn — Azure Support Engineer for Connectivity Specialty",
+        "url": "https://learn.microsoft.com/en-us/training/paths/azure-support-engineer-for-connectivity-specialty/"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      },
+      {
+        "id": 2,
+        "text": "[2] PeopleCert — ITIL 4 Foundation",
+        "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/ITIL-1/itil-4-foundation"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      },
+      {
+        "id": 2,
+        "text": "[2] AWS — Support 플랜",
+        "url": "https://aws.amazon.com/ko/premiumsupport/"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      },
+      {
+        "id": 2,
+        "text": "[2] PeopleCert — ITIL 4 Foundation",
+        "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/ITIL-1/itil-4-foundation"
+      },
+      {
+        "id": 3,
+        "text": "[3] Microsoft Learn — Azure Support Engineer for Connectivity Specialty",
+        "url": "https://learn.microsoft.com/en-us/training/paths/azure-support-engineer-for-connectivity-specialty/"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      },
+      {
+        "id": 2,
+        "text": "[2] 한국정보통신진흥협회",
+        "url": "https://www.kait.or.kr/"
+      },
+      {
+        "id": 3,
+        "text": "[3] AWS Training and Certification",
+        "url": "https://aws.amazon.com/ko/training/"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "id": 1,
+        "text": "[1] PeopleCert — ITIL 4 Foundation",
+        "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/ITIL-1/itil-4-foundation"
+      },
+      {
+        "id": 2,
+        "text": "[2] Microsoft Learn — Azure Support Engineer for Connectivity Specialty",
+        "url": "https://learn.microsoft.com/en-us/training/paths/azure-support-engineer-for-connectivity-specialty/"
+      },
+      {
+        "id": 3,
+        "text": "[3] AWS Training and Certification",
+        "url": "https://aws.amazon.com/ko/training/"
+      }
+    ]
+  }
+}

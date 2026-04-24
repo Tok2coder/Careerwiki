@@ -1,0 +1,3430 @@
+[
+  {
+    "slug": "가스설비공사관리자",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "가스안전공사",
+        "newText": "가스안전공사"
+      }
+    ]
+  },
+  {
+    "slug": "가스공급설비기계관리원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스생산설비계기관리원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "에너지관리공단",
+        "newText": "에너지관리공단"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스설비방식관리원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스설비방식연구원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스기기안전성연구원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스관로안전관리원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "보험계리사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/emp/info/jobdictionary/jobDicDetail.do?jobCd=02220201",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 보험계리사 근무환경",
+        "newText": "임금직업포털(워크피디아)보험계리사 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "가스생산사무원",
+    "changes": [
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicIntro.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스생산기지소방대원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicIntro.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스생산기지소방대장",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicIntro.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스설비설치관리자",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스관설치원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가스생산설비기계관리원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "에너지관리공단",
+        "newText": "에너지관리공단"
+      }
+    ]
+  },
+  {
+    "slug": "가스생산설비현장운전원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "에너지관리공단",
+        "newText": "에너지관리공단"
+      }
+    ]
+  },
+  {
+    "slug": "가스생산중앙조정원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "에너지관리공단",
+        "newText": "에너지관리공단"
+      }
+    ]
+  },
+  {
+    "slug": "산업용로봇제어조작원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "[1] 워크넷 산업용로봇제어조작원 직업정보",
+        "newText": "[1] 임금직업포털(워크피디아)산업용로봇제어조작원 직업정보"
+      }
+    ]
+  },
+  {
+    "slug": "가구조립-및-검사원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가사도우미",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "귀금속-및-보석세공원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicSrchDtl.do?pageCode=002&jobInfoWantedAuthCd=3&jobDicSeq=2078&langCd=ko",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보 — 귀금속 및 보석세공원 직업 전망",
+        "newText": "임금직업포털(워크피디아) — 귀금속 및 보석세공원 직업 전망"
+      }
+    ]
+  },
+  {
+    "slug": "금속가공장치조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicSrchDtl.do?pageCode=002&jobInfoWantedAuthCd=3&jobDicSeq=2201&langCd=ko",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보 — 금속가공장치조작원 취업 경로",
+        "newText": "임금직업포털(워크피디아) — 금속가공장치조작원 취업 경로"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicSrchDtl.do?pageCode=002&jobInfoWantedAuthCd=3&jobDicSeq=2201&langCd=ko",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보 — 금속가공장치조작원 직업 전망",
+        "newText": "임금직업포털(워크피디아) — 금속가공장치조작원 직업 전망"
+      }
+    ]
+  },
+  {
+    "slug": "운동선수",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "[1] 한국고용정보원 한국직업전망 – 직업운동선수",
+        "newText": "[1] 한국고용정보원 한국직업전망 – 직업운동선수"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "[2] 한국고용정보원 한국직업전망 – 직업운동선수 직업지표",
+        "newText": "[2] 한국고용정보원 한국직업전망 – 직업운동선수 직업지표"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "[2] 한국고용정보원 한국직업전망 – 직업운동선수 직업지표",
+        "newText": "[2] 한국고용정보원 한국직업전망 – 직업운동선수 직업지표"
+      }
+    ]
+  },
+  {
+    "slug": "특수교사",
+    "changes": [
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/emp/info/jobdictionary/jobDicDetail.do?jobCd=01120201",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 특수교사 직업정보",
+        "newText": "임금직업포털(워크피디아)특수교사 직업정보"
+      }
+    ]
+  },
+  {
+    "slug": "검사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "[3] 워크넷 직업정보 - 검사",
+        "newText": "[3] 임금직업포털(워크피디아) - 검사"
+      }
+    ]
+  },
+  {
+    "slug": "법률사무원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2810&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2810&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2810&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "보건의료정보관리사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EB%B3%B4%EA%B1%B4%EC%9D%98%EB%A3%8C%EC%A0%95%EB%B3%B4%EA%B4%80%EB%A6%AC%EC%82%AC",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "상품대여원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "선박정비원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "섬유공학기술자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "시스템-소프트웨어-개발자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "정보시스템운영자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/getJobInfoSrchList.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보 - 정보시스템운영자",
+        "newText": "임금직업포털(워크피디아) - 정보시스템운영자"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/getJobInfoSrchList.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 IT직종 자격증 보유 현황",
+        "newText": "임금직업포털(워크피디아)IT직종 자격증 보유 현황"
+      }
+    ]
+  },
+  {
+    "slug": "안마사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S3224&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "언어학연구원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobGuide/jobGuideView.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/jobGuide/jobGuideView.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업전망",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "연예인-매니저",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrchList.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrchList.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "연주가",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "영화시나리오작가",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%98%81%ED%99%94%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4%EC%9E%91%EA%B0%80",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "자동차영업원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "자동차정비원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "자동차조립원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "작곡가",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/schdpt/schdptSrchDtl02.do?empCurtState1Id=7&empCurtState2Id=16",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "[3] 한국직업정보시스템 - 작곡과 학과정보",
+        "newText": "[3] 한국직업정보시스템 - 작곡과 학과정보"
+      }
+    ]
+  },
+  {
+    "slug": "정치학연구원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "조각가",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A1%B0%EA%B0%81%EA%B0%80",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A1%B0%EA%B0%81%EA%B0%80",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "주방보조원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empinfo/occInfoSrch/occInfoMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "지게차운전원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A7%80%EA%B2%8C%EC%B0%A8%EC%9A%B4%EC%A0%84%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A7%80%EA%B2%8C%EC%B0%A8%EC%9A%B4%EC%A0%84%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A7%80%EA%B2%8C%EC%B0%A8%EC%9A%B4%EC%A0%84%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국지게차협회",
+        "newText": "한국지게차협회"
+      }
+    ]
+  },
+  {
+    "slug": "지질학연구원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do?jobsCd=B0107",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do?jobsCd=B0107",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "청소원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "청원경찰",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보 청원경찰",
+        "newText": "임금직업포털(워크피디아) 청원경찰"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5412&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "콘크리트공",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "택배원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "통역가",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "혼례종사원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "화가",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=428",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=428",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=428",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "회계사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%ED%9A%8C%EA%B3%84%EC%82%AC%EB%AC%B4%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%ED%9A%8C%EA%B3%84%EC%82%AC%EB%AC%B4%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "경영지원관리자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?searchType3=4",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?searchType3=4",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "정부행정관리자",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "금융관리자",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "보험관리자",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/jobGuide/jobGuideView.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업전망",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobGuide/jobGuideView.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "중고등학교-교장-및-교감",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/jobGuide/jobGuideView.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업전망",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "보건의료관리자",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EB%B3%B4%EA%B1%B4%C2%B7%EC%9D%98%EB%A3%8C%EA%B4%80%EB%A6%AC%EC%9E%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "예술디자인방송관리자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=169",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=169",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "정보통신관리자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A0%95%EB%B3%B4%ED%86%B5%EC%8B%A0%EA%B4%80%EB%A6%AC%EC%9E%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A0%95%EB%B3%B4%ED%86%B5%EC%8B%A0%EA%B4%80%EB%A6%AC%EC%9E%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "연구관리자",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%97%B0%EA%B5%AC%EA%B4%80%EB%A6%AC%EC%9E%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "음식서비스관리자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empinfo/occInfoSrch/occInfoMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "건설채굴관리자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B1%B4%EC%84%A4%C2%B7%EC%B1%84%EA%B5%B4%EA%B4%80%EB%A6%AC%EC%9E%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B1%B4%EC%84%A4%C2%B7%EC%B1%84%EA%B5%B4%EA%B4%80%EB%A6%AC%EC%9E%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "제조생산관리자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empinfo/occInfoSrch/occInfoMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "인적자원전문가",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empinfo/occInfoSrch/occInfoMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "경영진단전문가",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2411&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2411&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2411&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "광고홍보마케팅전문가",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "일반행정공무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업전망",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "관세행정사무원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "법원공무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "병무행정사무원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "광고홍보마케팅사무원",
+    "changes": [
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "인사교육훈련사무원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "감사사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "경리사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B2%BD%EB%A6%AC%EC%82%AC%EB%AC%B4%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "물류사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "무역사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "항공운송사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do?job_cd=3030103",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do?job_cd=3030103",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망(고용노동부)",
+        "newText": "한국직업전망(고용노동부)"
+      }
+    ]
+  },
+  {
+    "slug": "철도지하철운송사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=456",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "출판자료편집사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "의료코디네이터",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=570",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=570",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=570",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=570",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "안내-및-접수사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/korJobProspect/korJobProspectNotes.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "고객상담원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B3%A0%EA%B0%9D%EC%83%81%EB%8B%B4%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B3%A0%EA%B0%9D%EC%83%81%EB%8B%B4%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국콜센터산업정보연구소",
+        "newText": "한국콜센터산업정보연구소"
+      }
+    ]
+  },
+  {
+    "slug": "통계사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%ED%86%B5%EA%B3%84%EC%82%AC%EB%AC%B4%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "자산운용가",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "금융상품개발자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrchList.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "보험상품개발자",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/jobGuide/jobGuideView.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업전망",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "보험인수심사원언더라이터",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "신용추심원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "증권사무원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "자연과학시험원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "수학-및-통계연구원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "농학연구원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "수산학연구원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "모바일-앱-개발자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=547",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=547",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "웹-기획자",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9B%B9%20%EA%B8%B0%ED%9A%8D%EC%9E%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "응용-소프트웨어-개발자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "데이터분석가빅데이터분석가",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "네트워크-관리자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "도시계획설계가",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "건축감리기술자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "토목감리기술자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "항공공학기술자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "전기감리기술자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=432",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=432",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "전자제품-및-부품-개발기술자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "전기계측제어기술자",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "전기전자공학시험원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "환경시험원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=382",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "식품공학시험원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%8B%9D%ED%92%88%EA%B3%B5%ED%95%99%EC%8B%9C%ED%97%98%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "산업안전원-및-위험관리원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationInfo/occupationDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "보조교사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2320&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "예능강사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "심리상담전문가",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "청소년지도사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "생활지도원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "비뇨기과의사",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=240",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=240",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=240",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "안과의사",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=241",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=241",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=241",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "외과의사",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=242",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=242",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=242",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "성형외과의사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%84%B1%ED%98%95%EC%99%B8%EA%B3%BC%EC%9D%98%EC%82%AC",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "피부과의사",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=243",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=243",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=243",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "이비인후과의사",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=244",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=244",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=244",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "마취병리과의사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EB%A7%88%EC%B7%A8%EB%B3%91%EB%A6%AC%EA%B3%BC%EC%9D%98%EC%82%AC",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "내과의사",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=245",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=245",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=245",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "산부인과의사",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=246",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=246",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=246",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "재활공학기사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "잡지기자",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2610&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S2610&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "영상-그래픽-디자이너",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "실내장식-디자이너",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "음향녹음기사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=295",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=295",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "영화배우-및-탤런트",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%98%81%ED%99%94%EB%B0%B0%EC%9A%B0%20%EB%B0%8F%20%ED%83%A4%EB%9F%B0%ED%8A%B8",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "경기심판-및-경기기록원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekJob/jobInfo/jobListInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "피부-및-체형관리사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "수의사보조원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%88%98%EC%9D%98%EC%82%AC%EB%B3%B4%EC%A1%B0%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "자연-및-문화해설사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S5120&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "여행상품개발자",
+    "changes": [
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "항공기객실승무원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%ED%95%AD%EA%B3%B5%EA%B8%B0%EA%B0%9D%EC%8B%A4%EC%8A%B9%EB%AC%B4%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "숙박시설서비스원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "오락시설서비스원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empinfo/occInfoSrch/occInfoMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "음료조리사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "중식조리사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "한식조리사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "양식조리사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "일식조리사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "패스트푸드준비원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "방역원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가사관리사",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "주차관리안내원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 주차관리·안내원",
+        "newText": "임금직업포털(워크피디아) – 주차관리·안내원"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "기술영업원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B8%B0%EC%88%A0%EC%98%81%EC%97%85%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "해외영업원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%ED%95%B4%EC%99%B8%EC%98%81%EC%97%85%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "통신기기서비스판매원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "온라인판매원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "홍보도우미-및-판촉원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "헬리콥터조종사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "철도교통관제사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "택시운전원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/jobMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "하역적재종사원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "건축목공",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "섀시조립설치원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "타일대리석시공원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "도배공",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "건물도장공",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "공업배관공",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B3%B5%EC%97%85%EB%B0%B0%EA%B4%80%EA%B3%B5",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B3%B5%EC%97%85%EB%B0%B0%EA%B4%80%EA%B3%B5",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "점화발파화약관리원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empinfo/occInfoSrch/occInfoMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "광원채석원-및-석재절단원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B4%91%EC%9B%90%C2%B7%EC%B1%84%EC%84%9D%EC%9B%90%20%EB%B0%8F%20%EC%84%9D%EC%9E%AC%EC%A0%88%EB%8B%A8%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "건설채굴단순종사원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/jobDic/jobDicInfo.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "보일러설치정비원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/jobSeeking/jobOccInfo/view.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "헬리콥터정비원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "오토바이정비원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "금속공작기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobinfo/jobsearch/jobSearchList.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B8%88%EC%86%8D%EA%B3%B5%EC%9E%91%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "자동차부품조립검사원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "금속가공기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "금속가공제어장치조작원",
+    "changes": [
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B8%88%EC%86%8D%EA%B0%80%EA%B3%B5%EC%A0%9C%EC%96%B4%EC%9E%A5%EC%B9%98%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "도금금속분무기조작원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7422&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7422&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "시멘트광물제품생산기계조작원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%8B%9C%EB%A9%98%ED%8A%B8%C2%B7%EA%B4%91%EB%AC%BC%EC%A0%9C%ED%92%88%EC%83%9D%EC%82%B0%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "유리유리제품생산기계조작원",
+    "changes": [
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9C%A0%EB%A6%AC%C2%B7%EC%9C%A0%EB%A6%AC%EC%A0%9C%ED%92%88%EC%83%9D%EC%82%B0%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "광석석제품생산기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B4%91%EC%84%9D%C2%B7%EC%84%9D%EC%A0%9C%ED%92%88%EC%83%9D%EC%82%B0%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "외선전기공",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobinfo/jobsearch/jobSearchList.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%99%B8%EC%84%A0%EC%A0%84%EA%B8%B0%EA%B3%B5",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "내선전기공",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seek/jobs/jobsDetail.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "사무용-전자기기설치수리원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "발전배전장치조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "전기전자설비조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/jobinfo/jobsearch/jobSearchList.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A0%84%EA%B8%B0%C2%B7%EC%A0%84%EC%9E%90%EC%84%A4%EB%B9%84%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "전자부품제품생산기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "전기전자부품제품조립원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=475",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=475",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "방송장비설치수리원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "화학물가공장치조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=380",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=380",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=380",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/empInfoSrch/detail/directEnterMnView.do?empSeq=380",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "재활용-처리장치소각로조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9E%AC%ED%99%9C%EC%9A%A9%20%EC%B2%98%EB%A6%AC%EC%9E%A5%EC%B9%98%C2%B7%EC%86%8C%EA%B0%81%EB%A1%9C%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "표백염색기조작원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "직조기-및-편직기조작원",
+    "changes": [
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%A7%81%EC%A1%B0%EA%B8%B0%20%EB%B0%8F%20%ED%8E%B8%EC%A7%81%EA%B8%B0%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "의복가죽모피수선원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9D%98%EB%B3%B5%C2%B7%EA%B0%80%EC%A3%BD%C2%B7%EB%AA%A8%ED%94%BC%EC%88%98%EC%84%A0%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9D%98%EB%B3%B5%C2%B7%EA%B0%80%EC%A3%BD%C2%B7%EB%AA%A8%ED%94%BC%EC%88%98%EC%84%A0%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "양장양복제조원",
+    "changes": [
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7211&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7211&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "detailWlb.socialDetail",
+        "old": "https://www.work.go.kr/empInfo/jobseekerInfo/jobDic/jobDicDetailView.do?jobDicSeq=S7211&infoType=1",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "세탁기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empinfo/occInfoSrch/occInfoMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "떡제조원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EB%96%A1%EC%A0%9C%EC%A1%B0%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "김치밑반찬-제조종사원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/policyInfo/jobOutlook.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "한국직업전망서",
+        "newText": "한국직업전망서"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occupationalInfo/findJobMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "음료제조기계조작원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9D%8C%EB%A3%8C%EC%A0%9C%EC%A1%B0%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "곡물가공제품기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B3%A1%EB%AC%BC%EA%B0%80%EA%B3%B5%EC%A0%9C%ED%92%88%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "제분도정기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "과실채소기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/seek/occpDtl.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "인쇄기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=498",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "overviewProspect.main",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailIntro.do?occupationSeq=498",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "목재가공기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "가구조립원",
+    "changes": [
+      {
+        "field": "detailWlb.wlbDetail",
+        "old": "https://www.work.go.kr/seekWantedMain.do",
+        "new": "https://www.wagework.go.kr/pt/index.do",
+        "oldText": "워크넷 직업정보 – 근무환경",
+        "newText": "임금직업포털(워크피디아) – 근무환경"
+      }
+    ]
+  },
+  {
+    "slug": "악기제조원-및-조율사",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailForMng.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "주입포장상표부착기계조작원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/empinfo/occInfoSrch/occInfoMain.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  },
+  {
+    "slug": "간판제작설치원",
+    "changes": [
+      {
+        "field": "way",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      },
+      {
+        "field": "trivia",
+        "old": "https://www.work.go.kr/seek/work/workSrchForm.do",
+        "new": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
+        "oldText": "워크넷 직업정보",
+        "newText": "임금직업포털(워크피디아)"
+      }
+    ]
+  }
+]

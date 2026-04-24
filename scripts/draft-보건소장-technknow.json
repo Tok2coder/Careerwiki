@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "overviewAbilities": {
+      "technKnow": "지역보건법 제11조에 규정된 건강증진·감염병 예방 및 관리·모자보건·만성질환 관리·방문보건·정신건강증진·취약계층 건강지원 등 지역보건사업 전반을 기획·조율하는 공중보건 전문 지식이 요구된다.[1] 의사·치과의사·한의사·간호사·약사 면허 또는 보건 관련 공무원 경력이 임용 요건이며, 이에 상응하는 보건의료 분야 전문 지식이 필요하다.[2]"
+    }
+  },
+  "sources": {
+    "overviewAbilities.technKnow": [
+      {"id": 1, "text": "[1] 지역보건법 제11조 — 보건소 기능 및 업무", "url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A7%80%EC%97%AD%EB%B3%B4%EA%B1%B4%EB%B2%95/%EC%A0%9C11%EC%A1%B0"},
+      {"id": 2, "text": "[2] 지역보건법 제15조 — 보건소장 임용 규정", "url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A7%80%EC%97%AD%EB%B3%B4%EA%B1%B4%EB%B2%95/%EC%A0%9C15%EC%A1%B0"}
+    ]
+  },
+  "changeSummary": "보건소장 overviewAbilities.technKnow 신규 작성"
+}

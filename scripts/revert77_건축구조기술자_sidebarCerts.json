@@ -1,0 +1,15 @@
+{
+  "jobName": "건축구조기술자",
+  "jobId": "1765283441570636",
+  "fields": {
+    "sidebarCerts": [
+      {"name": "건축구조기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00502"},
+      {"name": "건축기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=1010"},
+      {"name": "건설안전기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5011"},
+      {"name": "토목기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=1040"},
+      {"name": "건축시공기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00502"}
+    ]
+  },
+  "sources": {},
+  "changeSummary": "revert: sidebarCerts 5개 원복 (이전 버전에서 3개로 줄어든 것 복원 — 건설안전기사/토목기사 재추가)"
+}

@@ -1,0 +1,20 @@
+﻿{
+    "slug":  "양식원",
+    "savedAt":  "2026-04-13T03:50:45.2604791Z",
+    "ucj":  {
+                "detailWlb":  {
+                                  "wlb":  "보통이하",
+                                  "social":  "보통이하"
+                              }
+            },
+    "summary":  {
+                    "slug":  "양식원",
+                    "arrays":  {
+
+                               },
+                    "prose":  {
+
+                              },
+                    "prospectDirection":  "neutral"
+                }
+}

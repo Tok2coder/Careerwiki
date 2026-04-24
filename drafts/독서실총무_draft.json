@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "way": "독서실총무는 특별한 학력 제한 없이 진입할 수 있는 직종으로, 고등학교 졸업 이상이면 지원 가능한 경우가 많다. 주로 독서실 운영 업체나 개인 사업주의 구인 공고를 통해 채용되며, 아르바이트 형태로 경험을 쌓은 뒤 정규직으로 전환되는 경우도 많다. 주요 업무는 회원 관리, 좌석 배정, 요금 수납, 시설 청결 유지, 자습 환경 관리 등이며, 야간 근무나 주말 근무가 포함되는 경우도 많아 근무 조건을 꼼꼼히 확인해야 한다. 독서실 규모에 따라 소규모 개인 사업장부터 프랜차이즈 형태의 대형 독서실까지 다양한 근무 환경이 존재한다. 서비스직 경험이나 단순 행정 사무 경험이 있으면 취업에 유리하며, 성실성과 꼼꼼한 관리 능력이 중요하게 평가된다. [1]",
+    "overviewSalary": {
+      "sal": "독서실총무의 임금은 근무 형태(풀타임·파트타임)와 근무 지역, 독서실 규모에 따라 차이가 있다. 일반적으로 최저임금 수준에서 시작하며, 경력이 쌓이거나 대형 프랜차이즈 독서실에서 근무할 경우 다소 높은 임금을 받을 수 있다. 숙식 제공 조건으로 채용하는 경우도 있어 실질적인 처우는 계약 조건에 따라 다양하게 달라진다. [1]"
+    },
+    "overviewProspect": {
+      "main": "학생 수 감소와 스터디카페·1인실 공부방 등 대체 시설의 확산으로 전통적인 독서실 수요는 장기적으로 감소 추세에 있다. 반면 고시 준비생, 취업 준비생 등 성인 자습 수요층은 꾸준히 유지되고 있으며, 프리미엄 1인 독서실이나 스마트 독서실 등 고급화·차별화 전략을 택한 업체는 새로운 수요를 창출하고 있다. 전체적으로 종사자 수가 크게 늘기는 어렵지만 안정적인 수요가 유지되는 직종으로 분류된다. [1]"
+    },
+    "trivia": "일부 프랜차이즈 독서실에서는 AI 기반 좌석 배정 시스템과 무인 출입 관리 시스템을 도입해 총무의 역할이 단순 관리에서 시설 운영 전반을 감독하는 방향으로 진화하고 있다. [1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "독서실총무는 야간 및 주말 근무가 빈번하게 발생하며, 특히 입실 마감 시간이 늦은 독서실에서는 심야 근무까지 포함되는 경우가 많다. 근무 시간이 불규칙하고 장시간 현장을 지켜야 하는 특성상 워라밸을 유지하기 쉽지 않은 편이다. [1]",
+      "socialDetail": "독서실총무는 학생들이 집중적으로 공부할 수 있는 환경을 유지함으로써 교육 지원 기능을 간접적으로 수행한다. 특히 수험생이나 자격증 준비생들의 학습 공간을 관리하는 역할을 통해 지역 사회의 학습 문화 인프라를 지탱하는 데 기여한다. [1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "사무행정 기초", "text": "회원 등록, 요금 수납, 장부 관리 등 기본 사무행정 능력을 익힌다.", "link": null},
+        {"title": "시설 관리 및 청결 유지", "text": "열람실·개인실의 청결 유지, 냉난방 기기 점검, 비상구 관리 등 시설 관련 기본 지식을 습득한다.", "link": null},
+        {"title": "고객 서비스와 민원 응대", "text": "회원 불만 처리, 분쟁 조율, 친절한 서비스 제공 방법 등 대민 서비스 역량을 키운다.", "link": null}
+      ],
+      "recruit": [
+        {"title": "구인 포털 직접 지원", "text": "알바몬, 사람인, 잡코리아 등 주요 구인 포털에서 '독서실 총무' 키워드로 공고를 검색해 지원한다.", "link": null},
+        {"title": "프랜차이즈 본사 채용", "text": "메가스터디 독서실, 에듀파크 등 프랜차이즈 독서실 본사 또는 가맹점 채용 공고를 통해 지원한다.", "link": null}
+      ],
+      "training": [
+        {"title": "고객 응대 서비스 교육", "text": "고용노동부 직업훈련 포털(HRD-Net)에서 고객 서비스 관련 단기 교육 과정을 이수하면 취업에 도움이 된다.", "link": null},
+        {"title": "사무행정 실무 과정", "text": "지역 직업훈련기관 또는 평생학습센터에서 운영하는 사무행정 실무 과정을 통해 기본 역량을 갖출 수 있다.", "link": null}
+      ]
+    },
+    "heroTags": ["독서실관리", "회원관리", "시설운영", "서비스직"],
+    "sidebarJobs": ["사서", "도서관사서", "사회복지사"],
+    "sidebarCerts": [
+      {"name": "사무자동화산업기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&gId="}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "overviewSalary.sal": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/seek/jobInfo/jobInfoDetailView.do"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 한국고용정보원 직업전망", "url": "https://www.keis.or.kr/"}],
+    "trivia": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/seek/jobInfo/jobInfoDetailView.do"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] HRD-Net 직업훈련정보", "url": "https://www.hrd.go.kr/"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 워크넷 채용정보", "url": "https://www.work.go.kr/"}],
+    "detailReady.training": [{"id": 1, "text": "[1] HRD-Net 직업훈련정보", "url": "https://www.hrd.go.kr/"}]
+  },
+  "changeSummary": "독서실총무 신규 보완"
+}

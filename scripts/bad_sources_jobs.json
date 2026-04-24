@@ -1,0 +1,522 @@
+[
+  {
+    "results": [
+      {
+        "id": "1765283278683691",
+        "name": "가스ㆍ수도ㆍ전기 계기 검침원 및 안전점검원",
+        "slug": "가스수도전기-계기-검침원-및-안전점검원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewSalary.sal\":[{\"id\":3,\"text\":\"워크넷 임금정보\",\"url\":\"https://www.work.go.kr/empInfo/wageLevel/wageLevelMain.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":5,\"text\":\"한국가스안전공사\",\"url\":\"https://www.kgs.or.kr\"}],\"detailWlb.wlbDetail\":[{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283418586250",
+        "name": "감사사무원",
+        "slug": "감사사무원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":11,\"text\":\"����� ���Ļ���Ʈ\",\"url\":\"https://www.bai.go.kr/bai/html/intro/buildingguide/buildingguide.do?mdex=bai94\"},{\"id\":12,\"text\":\"�������ΰ������ȸ\",\"url\":\"https://www.theiia.org/en/about-us/about-internal-audit/\"}]}"
+      },
+      {
+        "id": "1765283443811235",
+        "name": "건설자재시험원",
+        "slug": "건설자재시험원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"trivia\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"detailWlb.wlbDetail\":[{\"id\":10,\"text\":\"�ѱ��Ǽ����������\",\"url\":\"https://www.kict.re.kr/menu.es?mid=a10225010000\"}],\"detailWlb.socialDetail\":[{\"id\":11,\"text\":\"�ѱ����ΰ���\",\"url\":\"https://www.ex.co.kr\"}],\"overviewProspect.main\":[{\"id\":12,\"text\":\"한국직업능력연구원\",\"url\":\"https://www.krivet.re.kr/search/searchTotal.do?query=%EA%B1%B4%EC%84%A4%EC%9E%90%EC%9E%AC%EC%8B%9C%ED%97%98%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283440746327",
+        "name": "건축감리기술자",
+        "slug": "건축감리기술자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283441570636",
+        "name": "건축구조기술자",
+        "slug": "건축구조기술자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"overviewProspect.main\":[{\"id\":7,\"text\":\"�ѱ��Ǽ����������\",\"url\":\"https://www.kict.re.kr/menu.es?mid=a10901040100\"}],\"trivia\":[{\"id\":8,\"text\":\"���Ѱ�����ȸ\",\"url\":\"https://www.aik.or.kr/pages_activity/academic_event.vm\"}]}"
+      },
+      {
+        "id": "1765283441033654",
+        "name": "건축설비기술자",
+        "slug": "건축설비기술자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"trivia\":[{\"id\":8,\"text\":\"���Ѽ������ȸ\",\"url\":\"https://www.sarek.or.kr/html/sub06_02.jsp\"}],\"overviewProspect.main\":[{\"id\":9,\"text\":\"고용노동부\",\"url\":\"https://www.moel.go.kr/search.do?searchType=total&query=%EA%B1%B4%EC%B6%95%EC%84%A4%EB%B9%84%EA%B8%B0%EC%88%A0%EC%9E%90\"}]}"
+      },
+      {
+        "id": "1765284216221323",
+        "name": "경마선수",
+        "slug": "경마선수",
+        "sources": "{\"detailWlb.wlbDetail\":[{\"id\":8,\"text\":\"워크넷 근무환경 정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do\"}],\"way\":[{\"id\":9,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":10,\"text\":\"한국마사회 기수 소개\",\"url\":\"https://race.kra.co.kr/jockey/ProfileJockeyListActive.do\"}],\"trivia\":[{\"id\":13,\"text\":\"한국마사회 통계·연감\",\"url\":\"https://www.kra.co.kr/in/pu/01/inpu0101.do?menuId=skr01_skr014\"}],\"overviewProspect.main\":[{\"id\":14,\"text\":\"한국직업능력연구원 직업전망\",\"url\":\"https://www.krivet.re.kr/search/searchTotal.do?query=%EA%B2%BD%EB%A7%88%EC%84%A0%EC%88%98\"}]}"
+      },
+      {
+        "id": "1765283283787881",
+        "name": "경비원",
+        "slug": "경비원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"경비업법(법제처)\",\"url\":\"https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EA%B2%BD%EB%B9%84%EC%97%85%EB%B2%95\"},{\"id\":2,\"text\":\"경비협회 신임교육 안내\",\"url\":\"https://www.ksan.or.kr/edu/eduInfo.do\"},{\"id\":3,\"text\":\"Q-Net 경비지도사\",\"url\":\"https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&gId=\"},{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":17,\"text\":\"�ѱ������ȸ ���� ���ӱ��� �ȳ�\",\"url\":\"https://www.ksan.or.kr/edu/eduInfo.do\"},{\"id\":18,\"text\":\"Q-Net ��������� ���� ���\",\"url\":\"https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9501\"},{\"id\":19,\"text\":\"���䱳��� �������ð��� ���\",\"url\":\"https://stat.molit.go.kr/portal/cate/statView.do?hRsId=419&hFormId=&hDivEng=&month_yn=\"}],\"overviewProspect.main\":[{\"id\":20,\"text\":\"����û ����ü �ΰ���Ȳ\",\"url\":\"https://www.police.go.kr/user/bbs/BD_selectBbs.do?q_bbsCode=1025&q_bbscttSn=20220920131810126\"}]}"
+      },
+      {
+        "id": "176528341709323",
+        "name": "경영기획사무원",
+        "slug": "경영기획사무원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}],\"trivia\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}]}"
+      },
+      {
+        "id": "1765283407346795",
+        "name": "경영지원관리자",
+        "slug": "경영지원관리자",
+        "sources": "{\"trivia\":[{\"id\":19,\"text\":\"�ѱ�����ȸ������ȸ\",\"url\":\"https://www.klca.or.kr/sub/edu/education_application.asp?rWork=TblRead&rNo=2905\"}],\"way\":[{\"id\":11,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":12,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?searchType3=4\"},{\"id\":13,\"text\":\"한국경영자총협회\",\"url\":\"https://cro.kef.or.kr/web/pages/gc601b.do\"}],\"overviewProspect.main\":[{\"id\":14,\"text\":\"한국고용정보원\",\"url\":\"https://www.keis.or.kr/keis/ko/conts/105/web.do\"},{\"id\":15,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?searchType3=4\"}]}"
+      },
+      {
+        "id": "1765283501610707",
+        "name": "광원·채석원 및 석재절단원",
+        "slug": "광원채석원-및-석재절단원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":10,\"text\":\"�ѱ������ڿ�����\",\"url\":\"https://www.kores.or.kr\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.wlbDetail\":[{\"id\":8,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B4%91%EC%9B%90%C2%B7%EC%B1%84%EC%84%9D%EC%9B%90%20%EB%B0%8F%20%EC%84%9D%EC%9E%AC%EC%A0%88%EB%8B%A8%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283459307220",
+        "name": "교재·교구 및 이러닝교육전문가",
+        "slug": "교재교구-및-이러닝교육전문가",
+        "sources": "{\"way\":[{\"id\":12,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":13,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/wantedInfo/jobIntro.do\"},{\"id\":14,\"text\":\"Q-Net 이러닝운영관리사\",\"url\":\"https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&gId=\"},{\"id\":15,\"text\":\"한국이러닝산업협회\"}],\"overviewProspect.main\":[{\"id\":23,\"text\":\"한국고용정보원\",\"url\":\"https://www.keis.or.kr/search/totalSearch.do?query=%EA%B5%90%EC%9E%AC%C2%B7%EA%B5%90%EA%B5%AC%20%EB%B0%8F%20%EC%9D%B4%EB%9F%AC%EB%8B%9D%EA%B5%90%EC%9C%A1%EC%A0%84%EB%AC%B8%EA%B0%80\"}],\"trivia\":[{\"id\":24,\"text\":\"한국직업능력연구원\",\"url\":\"https://www.krivet.re.kr/search/searchTotal.do?query=%EA%B5%90%EC%9E%AC%C2%B7%EA%B5%90%EA%B5%AC%20%EB%B0%8F%20%EC%9D%B4%EB%9F%AC%EB%8B%9D%EA%B5%90%EC%9C%A1%EC%A0%84%EB%AC%B8%EA%B0%80\"}]}"
+      },
+      {
+        "id": "1765283446011710",
+        "name": "금속·재료공학시험원",
+        "slug": "금속재료공학시험원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"overviewProspect.main\":[{\"id\":7,\"text\":\"�ѱ������ȸ\",\"url\":\"https://www.mrs.or.kr\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":6,\"text\":\"한국비파괴검사학회\"}]}"
+      },
+      {
+        "id": "1765283507191326",
+        "name": "금속가공기계조작원",
+        "slug": "금속가공기계조작원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283487138100",
+        "name": "기술영업원",
+        "slug": "기술영업원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":9,\"text\":\"�ѱ�����η°���\",\"url\":\"https://www.hrdkorea.or.kr/1/2/2/1\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.wlbDetail\":[{\"id\":8,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EA%B8%B0%EC%88%A0%EC%98%81%EC%97%85%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283522953278",
+        "name": "김치·밑반찬 제조종사원",
+        "slug": "김치밑반찬-제조종사원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":7,\"text\":\"농림축산식품부\",\"url\":\"https://www.mafra.go.kr/search/search.do?query=%EA%B9%80%EC%B9%98%C2%B7%EB%B0%91%EB%B0%98%EC%B0%AC%20%EC%A0%9C%EC%A1%B0%EC%A2%85%EC%82%AC%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283502568140",
+        "name": "냉동·냉장·공조기설치·정비원",
+        "slug": "냉동냉장공조기설치정비원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"trivia\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"detailWlb.wlbDetail\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"},{\"id\":2,\"text\":\"한국냉동공조공업협회\",\"url\":\"https://www.karse.or.kr\"}],\"detailWlb.socialDetail\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"한국직업능력연구원\",\"url\":\"https://www.krivet.re.kr/search/searchTotal.do?query=%EB%83%89%EB%8F%99%C2%B7%EB%83%89%EC%9E%A5%C2%B7%EA%B3%B5%EC%A1%B0%EA%B8%B0%EC%84%A4%EC%B9%98%C2%B7%EC%A0%95%EB%B9%84%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283410160808",
+        "name": "대학교 총장 및 대학학장",
+        "slug": "대학교-총장-및-대학학장",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"교육부 고등교육 정책\",\"url\":\"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=337&boardSeq=89883&lev=0&searchType=null&statusYN=W&page=1&s=moe&m=0303&opType=N\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":4,\"text\":\"교육부\",\"url\":\"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=337&boardSeq=89883&lev=0&searchType=null&statusYN=W&page=1&s=moe&m=0303&opType=N\"}],\"trivia\":[{\"id\":5,\"text\":\"이화여대 역사 기록\",\"url\":\"https://www.ewha.ac.kr/ewha/intro/history02-6.do\"},{\"id\":6,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":7,\"text\":\"교육부\",\"url\":\"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=337&boardSeq=89883&lev=0&searchType=null&statusYN=W&page=1&s=moe&m=0303&opType=N\"}]}"
+      },
+      {
+        "id": "1765283439933383",
+        "name": "도시계획·설계가",
+        "slug": "도시계획설계가",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283447082928",
+        "name": "디스플레이연구 및 개발자",
+        "slug": "디스플레이연구-및-개발자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"trivia\":[{\"id\":4,\"text\":\"�ѱ����÷��̻����ȸ\",\"url\":\"https://www.kdia.org/display/graph.jsp\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"산업통상자원부\",\"url\":\"https://www.motie.go.kr/search/search.do?query=%EB%94%94%EC%8A%A4%ED%94%8C%EB%A0%88%EC%9D%B4%EC%97%B0%EA%B5%AC%20%EB%B0%8F%20%EA%B0%9C%EB%B0%9C%EC%9E%90\"}]}"
+      },
+      {
+        "id": "1765283407073895",
+        "name": "마케팅·광고·홍보관리자",
+        "slug": "마케팅광고홍보관리자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/wantedInfo/jobIntro.do\"},{\"id\":3,\"text\":\"한국광고협회\",\"url\":\"https://www.kaa.or.kr/sub01/sub01_1.html\"},{\"id\":4,\"text\":\"직업백과\",\"url\":\"https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%ED%9A%8D-%ED%99%8D%EB%B3%B4-%EB%B0%8F-%EA%B4%91%EA%B3%A0%EA%B4%80%EB%A6%AC%EC%9E%90/\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국고용정보원\",\"url\":\"https://www.keis.or.kr/keis/ko/conts/105/web.do\"},{\"id\":6,\"text\":\"커리어넷 직업전망\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":7,\"text\":\"한국광고총연합회\",\"url\":\"https://www.kaa.or.kr/sub01/sub01_1.html\"},{\"id\":8,\"text\":\"과학기술정보통신부 디지털광고 보고서\",\"url\":\"https://www.msit.go.kr/bbs/view.do?sCode=user&nttSeqNo=3173663&pageIndex=&searchTxt=&searchOpt=ALL&bbsSeqNo=79&mId=99&mPid=74\"},{\"id\":9,\"text\":\"한국마케팅협회\",\"url\":\"https://kma.re.kr/121\"}]}"
+      },
+      {
+        "id": "1765283489490514",
+        "name": "매장계산원 및 요금정산원",
+        "slug": "매장계산원-및-요금정산원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"trivia\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"detailWlb.wlbDetail\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.socialDetail\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"한국직업능력연구원\",\"url\":\"https://www.krivet.re.kr/search/searchTotal.do?query=%EB%A7%A4%EC%9E%A5%EA%B3%84%EC%82%B0%EC%9B%90%20%EB%B0%8F%20%EC%9A%94%EA%B8%88%EC%A0%95%EC%82%B0%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283527070103",
+        "name": "목재가공기계조작원",
+        "slug": "목재가공기계조작원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283419991406",
+        "name": "무역사무원",
+        "slug": "무역사무원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":9,\"text\":\"�ѱ�������ȸ\",\"url\":\"https://stat.kita.net/\"},{\"id\":10,\"text\":\"����û ���Ļ���Ʈ\",\"url\":\"https://www.customs.go.kr\"}]}"
+      },
+      {
+        "id": "1765283458472604",
+        "name": "문리학원강사",
+        "slug": "문리학원강사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"통계청 사교육비 조사\",\"url\":\"https://kostat.go.kr/board.es?mid=a10301010000&bid=218\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":3,\"text\":\"교육부\",\"url\":\"https://www.moe.go.kr/search/search.do?query=%EB%AC%B8%EB%A6%AC%ED%95%99%EC%9B%90%EA%B0%95%EC%82%AC\"}]}"
+      },
+      {
+        "id": "1765283419641669",
+        "name": "물류사무원",
+        "slug": "물류사무원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":7,\"text\":\"국토교통부 물류정책\",\"url\":\"https://www.molit.go.kr/search/search.do?query=%EB%AC%BC%EB%A5%98%EC%82%AC%EB%AC%B4%EC%9B%90\"}]}"
+      },
+      {
+        "id": "176528334096238",
+        "name": "반려동물미용사",
+        "slug": "반려동물미용사",
+        "sources": "{\"way\":[{\"id\":3,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":4,\"text\":\"농림축산식품부\",\"url\":\"https://www.mafra.go.kr/bbs/home/792/574327/artclView.do\"}],\"overviewProspect.main\":[{\"id\":7,\"text\":\"�ѱ�������ȸ\",\"url\":\"https://www.kaplia.com/\"}]}"
+      },
+      {
+        "id": "1765283311041576",
+        "name": "방문판매원",
+        "slug": "방문판매원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"공정거래위원회 방문판매 통계\",\"url\":\"https://www.ftc.go.kr/www/selectReportUserView.do?key=10\"}],\"trivia\":[{\"id\":3,\"text\":\"공정거래위원회\",\"url\":\"https://www.ftc.go.kr/www/FtcRelLawUList.do?key=289&law_div_cd=06\"},{\"id\":4,\"text\":\"한국방문판매협회\",\"url\":\"http://www.kdsa.or.kr/kor/center/center1.php\"}]}"
+      },
+      {
+        "id": "1765283439371599",
+        "name": "방송송출장비기사",
+        "slug": "방송송출장비기사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과 - 방송송출장비기사\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}],\"trivia\":[{\"id\":9,\"text\":\"����������ȸ, Ŀ����� ��������\",\"url\":\"https://kcc.go.kr/user.do?boardId=1027&dc=K02060100&page=A02060100\"}],\"detailWlb.wlbDetail\":[{\"id\":6,\"text\":\"워크넷 직업정보 근무환경\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업 만족도 조사\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":10,\"text\":\"고용노동부 직업전망, 방송통신위원회(2024)\",\"url\":\"https://www.moel.go.kr/search.do?searchType=total&query=%EB%B0%A9%EC%86%A1%EC%86%A1%EC%B6%9C%EC%9E%A5%EB%B9%84%EA%B8%B0%EC%82%AC\"}]}"
+      },
+      {
+        "id": "1765283408493973",
+        "name": "사회복지관리자",
+        "slug": "사회복지관리자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":4,\"text\":\"보건복지부\",\"url\":\"https://www.mohw.go.kr/menu.es?mid=a10709010100\"}],\"trivia\":[{\"id\":5,\"text\":\"한국사회복지사협회\",\"url\":\"https://www.welfare.net/welfare/cm/cntnts/cntntsView.do?mi=1088&cntntsId=1053\"},{\"id\":6,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":7,\"text\":\"보건복지부\",\"url\":\"https://www.mohw.go.kr/menu.es?mid=a10709010100\"}]}"
+      },
+      {
+        "id": "1765283323000982",
+        "name": "상점판매원",
+        "slug": "상점판매원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보 - 상점판매원\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과 - 판매원\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.wlbDetail\":[{\"id\":6,\"text\":\"워크넷 직업정보 근무환경\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업 만족도 조사\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":8,\"text\":\"고용노동부 직업전망(2024)\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/korJobProspect/korJobProspectSrchByJobClList.do\"}],\"trivia\":[{\"id\":10,\"text\":\"���û ����� ���, Ŀ�����\",\"url\":\"https://kostat.go.kr/\"}]}"
+      },
+      {
+        "id": "1765283414610719",
+        "name": "상품기획자",
+        "slug": "상품기획자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"trivia\":[{\"id\":3,\"text\":\"고용24\",\"url\":\"https://www.work24.go.kr/cm/f/c/0100/selectUnifySearch.do?topQuerySearchArea=tb_workinfo&topQueryData=%EC%83%81%ED%92%88%EA%B8%B0%ED%9A%8D%EC%9E%90\"}]}"
+      },
+      {
+        "id": "1765283490532443",
+        "name": "선박교통관제사",
+        "slug": "선박교통관제사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"�ؾ�����\",\"url\":\"https://www.mof.go.kr/index.do?menuSeq=420\"}],\"trivia\":[{\"id\":4,\"text\":\"�ؾ����û\",\"url\":\"https://www.kcg.go.kr\"}]}"
+      },
+      {
+        "id": "1765283326625817",
+        "name": "선장 및 항해사",
+        "slug": "선장-및-항해사",
+        "sources": "{\"way\":[{\"id\":6,\"text\":\"�ѱ��ؾ���꿬����\",\"url\":\"https://www.kimft.or.kr/\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"trivia\":[{\"id\":3,\"text\":\"해사법원 판례 및 해상법\",\"url\":\"https://www.moleg.go.kr/lawinfo/nwLwAnInfo.mo?mid=a10106020000&cs_seq=433321&currentPage=1&keyField=&keyWord=&sort=date\"},{\"id\":4,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":5,\"text\":\"해양수산부\",\"url\":\"https://www.mof.go.kr/statPortal/\"}]}"
+      },
+      {
+        "id": "1765283454067290",
+        "name": "섬유공학시험원",
+        "slug": "섬유공학시험원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":4,\"text\":\"�ѱ������������ȸ\",\"url\":\"http://www.kofoti.or.kr/main.do\"},{\"id\":5,\"text\":\"�ѱ��Ƿ����迬����\",\"url\":\"https://www.katri.re.kr/kr/example/contentsid/270/index.do\"}]}"
+      },
+      {
+        "id": "1765283330463128",
+        "name": "속기사",
+        "slug": "속기사",
+        "sources": "{\"way\":[{\"id\":5,\"text\":\"�ѱ��ӱ��ȸ\",\"url\":\"https://www.koreashorthand.com/\"}],\"overviewProspect.main\":[{\"id\":6,\"text\":\"�ѱ��ӱ��ȸ\",\"url\":\"https://www.koreashorthand.com/\"}],\"trivia\":[{\"id\":3,\"text\":\"국회사무처\",\"url\":\"https://assembly.go.kr/portal/main/contents.do?menuNo=600157\"},{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283502284162",
+        "name": "승강기설치·정비원",
+        "slug": "승강기설치정비원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"�ѱ��°����������\",\"url\":\"https://home.koelsa.or.kr/www/wpge/m_98/life/life060301_3.do\"}],\"trivia\":[{\"id\":4,\"text\":\"�ѱ��°����������\",\"url\":\"https://home.koelsa.or.kr/www/wpge/m_98/life/life060301_3.do\"}],\"detailWlb.wlbDetail\":[{\"id\":5,\"text\":\"�ѱ��°����������\",\"url\":\"https://home.koelsa.or.kr/portal/contents.do?mId=0203020000\"}],\"detailWlb.socialDetail\":[{\"id\":6,\"text\":\"�ѱ��°����������\",\"url\":\"https://home.koelsa.or.kr/portal/contents.do?mId=0203020000\"}]}"
+      },
+      {
+        "id": "1765283510170752",
+        "name": "시멘트·광물제품생산기계조작원",
+        "slug": "시멘트광물제품생산기계조작원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":9,\"text\":\"�ѱ��ø�Ʈ��ȸ\",\"url\":\"https://www.cement.or.kr\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.wlbDetail\":[{\"id\":8,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%8B%9C%EB%A9%98%ED%8A%B8%C2%B7%EA%B4%91%EB%AC%BC%EC%A0%9C%ED%92%88%EC%83%9D%EC%82%B0%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283337113406",
+        "name": "신호원 및 수송원",
+        "slug": "신호원-및-수송원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":8,\"text\":\"한국철도공사\",\"url\":\"https://info.korail.com/info/contents.do?key=728\"}],\"detailWlb.wlbDetail\":[{\"id\":9,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do\"}]}"
+      },
+      {
+        "id": "1765283471246882",
+        "name": "실내장식 디자이너",
+        "slug": "실내장식-디자이너",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "176528348109248",
+        "name": "양식조리사",
+        "slug": "양식조리사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":8,\"text\":\"미슐랭 가이드 서울\",\"url\":\"https://guide.michelin.com/kr/ko/seoul-region/restaurants\"}]}"
+      },
+      {
+        "id": "1765283472672395",
+        "name": "영상·녹화 및 편집기사",
+        "slug": "영상녹화-및-편집기사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"����������ȸ\",\"url\":\"https://kcc.go.kr/user.do?page=A04010100\"}],\"trivia\":[{\"id\":4,\"text\":\"�ѱ���۱���ο���ȸ\",\"url\":\"https://www.kobeta.com\"}]}"
+      },
+      {
+        "id": "1765283417801846",
+        "name": "영업기획·관리·지원사무원",
+        "slug": "영업기획관리지원사무원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"워크넷\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"},{\"id\":2,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":3,\"text\":\"고용24\",\"url\":\"https://www.work24.go.kr/cm/f/c/0100/selectUnifySearch.do?topQuerySearchArea=tb_workinfo&topQueryData=%EC%98%81%EC%97%85%EA%B8%B0%ED%9A%8D%C2%B7%EA%B4%80%EB%A6%AC%C2%B7%EC%A7%80%EC%9B%90%EC%82%AC%EB%AC%B4%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283349532437",
+        "name": "웨딩플래너",
+        "slug": "웨딩플래너",
+        "sources": "{\"way\":[{\"id\":3,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":4,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicIntro.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicIntro.do\"}],\"overviewProspect.main\":[{\"id\":8,\"text\":\"���û ȥ�����\",\"url\":\"https://kostat.go.kr/\"}]}"
+      },
+      {
+        "id": "176528343659531",
+        "name": "웹 기획자",
+        "slug": "웹-기획자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":9,\"text\":\"�ѱ����ͳ������\",\"url\":\"https://www.kisa.or.kr/\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.wlbDetail\":[{\"id\":8,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9B%B9%20%EA%B8%B0%ED%9A%8D%EC%9E%90\"}]}"
+      },
+      {
+        "id": "1765284216840412",
+        "name": "유도마기수",
+        "slug": "유도마기수",
+        "sources": "{\"detailWlb.wlbDetail\":[{\"id\":7,\"text\":\"워크넷 근무환경 정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetail.do\"}],\"way\":[{\"id\":8,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":9,\"text\":\"한국마사회 기수(조교사) 소개\",\"url\":\"https://race.kra.co.kr/trainer/profileTrainerList.do\"}],\"trivia\":[{\"id\":10,\"text\":\"한국마사회 경마 통계\",\"url\":\"https://www.kra.co.kr/openDataPublic.do\"}],\"overviewProspect.main\":[{\"id\":11,\"text\":\"한국직업능력연구원 직업전망\",\"url\":\"https://www.krivet.re.kr/search/searchTotal.do?query=%EC%9C%A0%EB%8F%84%EB%A7%88%EA%B8%B0%EC%88%98\"}]}"
+      },
+      {
+        "id": "1765283350996835",
+        "name": "유리부착원",
+        "slug": "유리부착원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"trivia\":[{\"id\":4,\"text\":\"��������������\",\"url\":\"https://www.kemco.or.kr/\"}]}"
+      },
+      {
+        "id": "1765283525518631",
+        "name": "육류·어패류·낙농품가공기계조작원",
+        "slug": "육류어패류낙농품가공기계조작원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"detailWlb.wlbDetail\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":6,\"text\":\"식품의약품안전처\",\"url\":\"https://www.mfds.go.kr/search/search.do?query=%EC%9C%A1%EB%A5%98%C2%B7%EC%96%B4%ED%8C%A8%EB%A5%98%C2%B7%EB%82%99%EB%86%8D%ED%92%88%EA%B0%80%EA%B3%B5%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90\"}],\"trivia\":[{\"id\":7,\"text\":\"농림축산식품부\",\"url\":\"https://www.mafra.go.kr/search/search.do?query=%EC%9C%A1%EB%A5%98%C2%B7%EC%96%B4%ED%8C%A8%EB%A5%98%C2%B7%EB%82%99%EB%86%8D%ED%92%88%EA%B0%80%EA%B3%B5%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90\"}],\"detailWlb.socialDetail\":[{\"id\":8,\"text\":\"식품의약품안전처\",\"url\":\"https://www.mfds.go.kr/search/search.do?query=%EC%9C%A1%EB%A5%98%C2%B7%EC%96%B4%ED%8C%A8%EB%A5%98%C2%B7%EB%82%99%EB%86%8D%ED%92%88%EA%B0%80%EA%B3%B5%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283524074267",
+        "name": "음료제조기계조작원",
+        "slug": "음료제조기계조작원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.wlbDetail\":[{\"id\":8,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%9D%8C%EB%A3%8C%EC%A0%9C%EC%A1%B0%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90\"}],\"trivia\":[{\"id\":9,\"text\":\"식품의약품안전처\",\"url\":\"https://www.mfds.go.kr/search/search.do?query=%EC%9D%8C%EB%A3%8C%EC%A0%9C%EC%A1%B0%EA%B8%B0%EA%B3%84%EC%A1%B0%EC%9E%91%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283479636612",
+        "name": "음료조리사",
+        "slug": "음료조리사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":8,\"text\":\"세계바리스타챔피언십 공식사이트\",\"url\":\"https://www.worldcoffeeevents.org/competitions/world-barista-championship/\"}]}"
+      },
+      {
+        "id": "1765283514751254",
+        "name": "이동전화기수리원",
+        "slug": "이동전화기수리원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"���ڽŹ�\",\"url\":\"https://www.etnews.com\"}],\"trivia\":[{\"id\":4,\"text\":\"���� ���� ����\",\"url\":\"https://support.apple.com\"}]}"
+      },
+      {
+        "id": "1765283355706504",
+        "name": "이용사",
+        "slug": "이용사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"Q-Net 이용사 자격정보\",\"url\":\"https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&gId=\"},{\"id\":2,\"text\":\"한국산업인력공단\",\"url\":\"https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7908\"},{\"id\":3,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":4,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/wantedInfo/jobIntro.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"커리어넷 직업전망\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":6,\"text\":\"한국고용정보원\",\"url\":\"https://www.keis.or.kr/keis/ko/proj/117/pblc/rpt/detail.do?categoryIdx=130&reportIdx=3981\"}],\"trivia\":[{\"id\":11,\"text\":\"�ѱ��̿��ȸ �߾�ȸ\",\"url\":\"https://www.hairkorea.or.kr/\"}]}"
+      },
+      {
+        "id": "1765283572922905",
+        "name": "인력파견관리자",
+        "slug": "인력파견관리자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}],\"trivia\":[{\"id\":1,\"text\":\"고용노동부 파견근로자보호법\",\"url\":\"https://www.moel.go.kr/policy/policyinfo/dispatch/list.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}]}"
+      },
+      {
+        "id": "17652834817679",
+        "name": "일식조리사",
+        "slug": "일식조리사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":9,\"text\":\"�ܽĻ�����\",\"url\":\"https://www.kfiri.org/bbs/board.php?bo_table=stat\"}]}"
+      },
+      {
+        "id": "1765283426345613",
+        "name": "자산운용가",
+        "slug": "자산운용가",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":7,\"text\":\"CFA Institute\",\"url\":\"https://www.cfainstitute.org/programs/cfa-program\"},{\"id\":8,\"text\":\"금융투자협회\",\"url\":\"https://www.kofia.or.kr/members/m_61/sub020201.do?srchCate=5\"}]}"
+      },
+      {
+        "id": "1765283431074364",
+        "name": "자연과학시험원",
+        "slug": "자연과학시험원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283476471779",
+        "name": "장례지도사 및 장례상담원",
+        "slug": "장례지도사-및-장례상담원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"trivia\":[{\"id\":4,\"text\":\"���û\",\"url\":\"https://kostat.go.kr/board.es?mid=a10301010000&bid=213&act=view&list_no=428916\"}],\"detailWlb.wlbDetail\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":6,\"text\":\"보건복지부\",\"url\":\"https://www.mohw.go.kr/search/search.do?query=%EC%9E%A5%EB%A1%80%EC%A7%80%EB%8F%84%EC%82%AC%20%EB%B0%8F%20%EC%9E%A5%EB%A1%80%EC%83%81%EB%8B%B4%EC%9B%90\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"보건복지부\",\"url\":\"https://www.mohw.go.kr/search/search.do?query=%EC%9E%A5%EB%A1%80%EC%A7%80%EB%8F%84%EC%82%AC%20%EB%B0%8F%20%EC%9E%A5%EB%A1%80%EC%83%81%EB%8B%B4%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283448463214",
+        "name": "전기계측제어기술자",
+        "slug": "전기계측제어기술자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283448205157",
+        "name": "전자계측제어기술자",
+        "slug": "전자계측제어기술자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"워크넷\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"},{\"id\":2,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":4,\"text\":\"�ѱ����ڷ¾��������\",\"url\":\"https://www.kins.re.kr/\"}]}"
+      },
+      {
+        "id": "1765283447613524",
+        "name": "전자제품 및 부품 개발기술자",
+        "slug": "전자제품-및-부품-개발기술자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283462906419",
+        "name": "정신과의사",
+        "slug": "정신과의사",
+        "sources": "{\"way\":[{\"id\":3,\"text\":\"�����ǻ���ȸ\",\"url\":\"https://www.kma.org/\"}],\"trivia\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"WHO 정신건강 보고서\",\"url\":\"https://www.who.int/health-topics/mental-health\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"보건복지부 정신건강 통계\",\"url\":\"https://www.mohw.go.kr/search/search.do?query=%EC%A0%95%EC%8B%A0%EA%B3%BC%EC%9D%98%EC%82%AC\"}]}"
+      },
+      {
+        "id": "1765283486774724",
+        "name": "제품광고영업원",
+        "slug": "제품광고영업원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoSearch.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"�ѱ������ѿ���ȸ\",\"url\":\"https://www.kobaco.co.kr\"}],\"trivia\":[{\"id\":4,\"text\":\"�ѱ������ѿ���ȸ\",\"url\":\"https://www.kobaco.co.kr\"}]}"
+      },
+      {
+        "id": "1765283372774310",
+        "name": "조경기술자",
+        "slug": "조경기술자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"trivia\":[{\"id\":5,\"text\":\"�ѱ�������ȸ\",\"url\":\"https://www.kila.or.kr\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"ȯ���\",\"url\":\"https://me.go.kr/home/web/index.do?menuId=10265\"}]}"
+      },
+      {
+        "id": "1765283373057723",
+        "name": "조경원",
+        "slug": "조경원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과 - 조경원\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보 - 조경\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}],\"detailWlb.wlbDetail\":[{\"id\":6,\"text\":\"워크넷 직업정보 근무환경\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업 만족도 조사\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":10,\"text\":\"����뵿�� ��������(2024)\",\"url\":\"https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=18130\"}],\"trivia\":[{\"id\":11,\"text\":\"���䱳��� ���ð��� ���, Ŀ�����\",\"url\":\"https://www.molit.go.kr/\"}]}"
+      },
+      {
+        "id": "1765283373650318",
+        "name": "조명기사",
+        "slug": "조명기사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"detailWlb.wlbDetail\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":6,\"text\":\"�ѱ������������\",\"url\":\"https://www.kocca.kr/cop/bbs/list/B0000147.do?menuNo=201825\"}],\"trivia\":[{\"id\":7,\"text\":\"�ѱ������������\",\"url\":\"https://www.kocca.kr/cop/bbs/list/B0000147.do?menuNo=201825\"}],\"detailWlb.socialDetail\":[{\"id\":8,\"text\":\"�ѱ������������\",\"url\":\"https://www.kocca.kr/cop/bbs/list/B0000147.do?menuNo=201825\"}]}"
+      },
+      {
+        "id": "1765283375157683",
+        "name": "주유원",
+        "slug": "주유원",
+        "sources": "{\"way\":[{\"id\":8,\"text\":\"한국산업인력공단\",\"url\":\"https://www.q-net.or.kr/search.do?query=%EC%A3%BC%EC%9C%A0%EC%9B%90\"}],\"overviewProspect.main\":[{\"id\":9,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cloud/w/job/view?seq=1115\"}],\"trivia\":[{\"id\":13,\"text\":\"�ѱ���������ȸ\",\"url\":\"https://www.koga.or.kr/\"},{\"id\":14,\"text\":\"�ҹ�û ���蹰��������\",\"url\":\"https://www.nfa.go.kr/\"},{\"id\":15,\"text\":\"Ŀ�����\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.wlbDetail\":[{\"id\":11,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cloud/w/job/view?seq=1115\"}],\"detailWlb.socialDetail\":[{\"id\":12,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cloud/w/job/view?seq=1115\"}]}"
+      },
+      {
+        "id": "1765283480333839",
+        "name": "중식조리사",
+        "slug": "중식조리사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":9,\"text\":\"�ܽĻ�����\",\"url\":\"https://www.kfiri.org/bbs/board.php?bo_table=stat\"}]}"
+      },
+      {
+        "id": "176528342701427",
+        "name": "증권·외환딜러",
+        "slug": "증권외환딜러",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과 - 증권·외환딜러\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}],\"trivia\":[{\"id\":5,\"text\":\"BIS 외환시장 통계, 워크넷\",\"url\":\"https://www.bis.org/statistics/rpfx22.htm\"}],\"detailWlb.wlbDetail\":[{\"id\":6,\"text\":\"워크넷 직업정보 근무환경\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업 만족도 조사\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":9,\"text\":\"����뵿�� ��������, ����������ȸ(2024)\",\"url\":\"https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=18130\"}]}"
+      },
+      {
+        "id": "1765283442364599",
+        "name": "지리정보시스템전문가",
+        "slug": "지리정보시스템전문가",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"�ѱ�������������\",\"url\":\"https://www.lx.or.kr\"}],\"detailWlb.wlbDetail\":[{\"id\":7,\"text\":\"�ѱ�������������\",\"url\":\"https://www.lx.or.kr\"}],\"trivia\":[{\"id\":6,\"text\":\"���䱳���\",\"url\":\"https://www.molit.go.kr\"}],\"detailWlb.socialDetail\":[{\"id\":8,\"text\":\"���䱳���\",\"url\":\"https://www.molit.go.kr\"}]}"
+      },
+      {
+        "id": "1765283467631283",
+        "name": "출판물기획자",
+        "slug": "출판물기획자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과 - 출판물기획자\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}],\"overviewProspect.main\":[{\"id\":8,\"text\":\"�ѱ����ǹ�ȭ�������� ���ǻ�� ����(2024)\",\"url\":\"https://www.kpipa.or.kr/p/g3_1/138\"}],\"trivia\":[{\"id\":9,\"text\":\"�ѱ����ǹ�ȭ��������, ��ũ��\",\"url\":\"https://www.kpipa.or.kr/p/g3_1/138\"}],\"detailWlb.wlbDetail\":[{\"id\":6,\"text\":\"커리어넷 직업 근무환경 정보\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoMain.do\"}]}"
+      },
+      {
+        "id": "1765283459033677",
+        "name": "컴퓨터강사",
+        "slug": "컴퓨터강사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":3,\"text\":\"교육부 SW교육 정책\",\"url\":\"https://www.moe.go.kr/search/search.do?query=%EC%BB%B4%ED%93%A8%ED%84%B0%EA%B0%95%EC%82%AC\"}]}"
+      },
+      {
+        "id": "1765283386664325",
+        "name": "컴퓨터설치·수리원",
+        "slug": "컴퓨터설치수리원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"trivia\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"detailWlb.wlbDetail\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.socialDetail\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"워크넷 직업전망\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srchJobInfo/srchJobInfoDetail.do\"},{\"id\":4,\"text\":\"한국직업능력연구원\",\"url\":\"https://www.krivet.re.kr/kor/sub.do?menuSn=12\"}]}"
+      },
+      {
+        "id": "1765283435222108",
+        "name": "컴퓨터시스템설계 및 분석가",
+        "slug": "컴퓨터시스템설계-및-분석가",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"}],\"overviewProspect.main\":[{\"id\":1,\"text\":\"워크넷\",\"url\":\"https://www.work.go.kr/seek/jobdic/jobdicInfoView.do\"},{\"id\":2,\"text\":\"커리어넷\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":3,\"text\":\"고용24\",\"url\":\"https://www.work24.go.kr/cm/f/c/0100/selectUnifySearch.do?topQuerySearchArea=tb_workinfo&topQueryData=%EC%BB%B4%ED%93%A8%ED%84%B0%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%84%A4%EA%B3%84%20%EB%B0%8F%20%EB%B6%84%EC%84%9D%EA%B0%80\"}]}"
+      },
+      {
+        "id": "1765283387196166",
+        "name": "콘크리트공",
+        "slug": "콘크리트공",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"detailWlb.socialDetail\":[{\"id\":7,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"trivia\":[{\"id\":10,\"text\":\"�ѱ���ũ��Ʈ��ȸ\",\"url\":\"https://www.kci.or.kr/pages_introduce/greetings.vm\"}],\"detailWlb.wlbDetail\":[{\"id\":9,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key\"}]}"
+      },
+      {
+        "id": "1765283452970224",
+        "name": "태양광발전연구 및 개발자",
+        "slug": "태양광발전연구-및-개발자",
+        "sources": "{\"way\":[{\"id\":4,\"text\":\"�ѱ����������������\",\"url\":\"https://www.kier.re.kr/menu?menuId=MENU00327\"}],\"trivia\":[{\"id\":1,\"text\":\"NREL 태양전지 효율 차트\",\"url\":\"https://www.nrel.gov/pv/cell-pv-eff-emergingpv.html\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":3,\"text\":\"국제에너지기구(IEA)\",\"url\":\"https://www.iea.org/reports/solar-pv\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"산업통상자원부\",\"url\":\"https://www.motie.go.kr/search/search.do?query=%ED%83%9C%EC%96%91%EA%B4%91%EB%B0%9C%EC%A0%84%EC%97%B0%EA%B5%AC%20%EB%B0%8F%20%EA%B0%9C%EB%B0%9C%EC%9E%90\"}]}"
+      },
+      {
+        "id": "1765283388569335",
+        "name": "텔레마케터",
+        "slug": "텔레마케터",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"trivia\":[{\"id\":1,\"text\":\"한국콜센터산업정보연구소\",\"url\":\"https://www.kcii.re.kr\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"고용노동부\",\"url\":\"https://www.moel.go.kr/search.do?searchType=total&query=%ED%85%94%EB%A0%88%EB%A7%88%EC%BC%80%ED%84%B0\"}]}"
+      },
+      {
+        "id": "1765283442674847",
+        "name": "토목감리기술자",
+        "slug": "토목감리기술자",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283425991686",
+        "name": "통계사무원",
+        "slug": "통계사무원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%ED%86%B5%EA%B3%84%EC%82%AC%EB%AC%B4%EC%9B%90\"},{\"id\":3,\"text\":\"큐넷 자격정보\",\"url\":\"https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9521\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cloud/w/job/view?seq=165\"},{\"id\":5,\"text\":\"한국고용정보원\",\"url\":\"https://www.keis.or.kr/keis/ko/conts/105/web.do\"}],\"trivia\":[{\"id\":6,\"text\":\"통계청 공식 홈페이지\",\"url\":\"https://kostat.go.kr/search/search.es?mid=a10103000000&query=%ED%86%B5%EA%B3%84%EC%82%AC%EB%AC%B4%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283488855673",
+        "name": "통신기기·서비스판매원",
+        "slug": "통신기기서비스판매원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do\"}],\"overviewProspect.main\":[{\"id\":4,\"text\":\"한국고용정보원 직업전망\",\"url\":\"https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do\"}],\"trivia\":[{\"id\":5,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}]}"
+      },
+      {
+        "id": "1765283527471619",
+        "name": "펄프·종이제조장치조작원",
+        "slug": "펄프종이제조장치조작원",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seekWantedMain.do\"}],\"trivia\":[{\"id\":1,\"text\":\"한국제지공업연합회\",\"url\":\"https://www.paper.or.kr\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"}],\"overviewProspect.main\":[{\"id\":3,\"text\":\"산업통상자원부\",\"url\":\"https://www.motie.go.kr/search/search.do?query=%ED%8E%84%ED%94%84%C2%B7%EC%A2%85%EC%9D%B4%EC%A0%9C%EC%A1%B0%EC%9E%A5%EC%B9%98%EC%A1%B0%EC%9E%91%EC%9B%90\"}]}"
+      },
+      {
+        "id": "1765283453523429",
+        "name": "풍력발전연구 및 개발자",
+        "slug": "풍력발전연구-및-개발자",
+        "sources": "{\"way\":[{\"id\":4,\"text\":\"�ѱ����������������\",\"url\":\"https://www.kier.re.kr/menu?menuId=MENU00327\"}],\"trivia\":[{\"id\":1,\"text\":\"Vestas 공식 사이트\",\"url\":\"https://www.vestas.com\"},{\"id\":2,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":3,\"text\":\"국제에너지기구(IEA)\",\"url\":\"https://www.iea.org/reports/wind-power\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"산업통상자원부\",\"url\":\"https://www.motie.go.kr/search/search.do?query=%ED%92%8D%EB%A0%A5%EB%B0%9C%EC%A0%84%EC%97%B0%EA%B5%AC%20%EB%B0%8F%20%EA%B0%9C%EB%B0%9C%EC%9E%90\"}]}"
+      },
+      {
+        "id": "1765283457922594",
+        "name": "학습지·교육교구방문강사",
+        "slug": "학습지교육교구방문강사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/wantedInfo/jobIntro.do\"},{\"id\":3,\"text\":\"Q-Net 교원자격정보\",\"url\":\"https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&gId=\"},{\"id\":4,\"text\":\"직업백과\",\"url\":\"https://job.asamaru.net/\"}],\"overviewProspect.main\":[{\"id\":15,\"text\":\"교육부 통계\",\"url\":\"https://www.moe.go.kr/search/search.do?query=%ED%95%99%EC%8A%B5%EC%A7%80%C2%B7%EA%B5%90%EC%9C%A1%EA%B5%90%EA%B5%AC%EB%B0%A9%EB%AC%B8%EA%B0%95%EC%82%AC\"}],\"trivia\":[{\"id\":16,\"text\":\"교육부 에듀테크 보고서\",\"url\":\"https://www.moe.go.kr/search/search.do?query=%ED%95%99%EC%8A%B5%EC%A7%80%C2%B7%EA%B5%90%EC%9C%A1%EA%B5%90%EA%B5%AC%EB%B0%A9%EB%AC%B8%EA%B0%95%EC%82%AC\"}]}"
+      },
+      {
+        "id": "1765283480685954",
+        "name": "한식조리사",
+        "slug": "한식조리사",
+        "sources": "{\"way\":[{\"id\":1,\"text\":\"커리어넷 직업백과\",\"url\":\"https://www.career.go.kr/cnet/front/base/job/jobView.do\"},{\"id\":2,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"overviewProspect.main\":[{\"id\":5,\"text\":\"한국직업전망서\",\"url\":\"https://www.work.go.kr/seek/policyInfo/jobOutlook.do\"},{\"id\":6,\"text\":\"워크넷 직업정보\",\"url\":\"https://www.work.go.kr/seek/occupationalInfo/findJobMain.do\"}],\"trivia\":[{\"id\":9,\"text\":\"�ѱ�����η°���\",\"url\":\"https://www.hrdkorea.or.kr/1/2/2/1\"}]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 35.2612
+      },
+      "duration": 35.2612,
+      "changes": 0,
+      "last_row_id": 7527,
+      "changed_db": false,
+      "size_after": 696373248,
+      "rows_read": 7035,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

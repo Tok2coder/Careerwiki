@@ -1,0 +1,51 @@
+{
+  "jobName": "양식원",
+  "jobId": "1765283341492648",
+  "fields": {
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통 이하",
+      "wlbDetail": "양식 현장은 수질 악화와 질병에 선제적으로 대응해야 하고, 산소 부족·세균 감지 장비와 사료 자동공급 장치 수요가 언급될 만큼 사육환경을 지속적으로 점검하는 일이 중요하다. 질병 진단키트와 치료제 개발 요구가 제기될 정도로 현장 관리 부담이 큰 분야다.[1][2]",
+      "socialDetail": "양식업은 생산·가공·유통 전 과정에 스마트 기술을 도입해 국민이 안심하고 소비할 수 있는 수산물을 공급하는 기반 산업으로 다뤄진다.[1] 정부는 청년에게 양식장 임대와 정착 지원을 추진하며 지역 어촌의 지속가능성도 함께 높이려 한다.[2]"
+    },
+    "trivia": "해양수산부는 청년의 어촌 신규 진입 장벽을 낮추기 위해 공공기관이 확보한 양식장을 임대 제공하는 근거를 마련하겠다고 밝혔다.[1]",
+    "sidebarMajors": [
+      "농수산과",
+      "수산학과",
+      "해양생명과학과"
+    ],
+    "youtubeLinks": [],
+    "detailReady": {
+      "certificate": []
+    }
+  },
+  "sources": {
+    "detailWlb.wlbDetail": [
+      {
+        "text": "[1] 국립수산과학원 주요 양식품종 가치사슬 분석(흰다리새우)",
+        "url": "https://nifs.go.kr/cmmn/file/valuechain_04.pdf"
+      },
+      {
+        "text": "[2] 해양수산부 해양수산 스마트화 전략",
+        "url": "https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&docSeq=27859&menuSeq=971"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "text": "[1] 해양수산부 해양수산 스마트화 전략",
+        "url": "https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&docSeq=27859&menuSeq=971"
+      },
+      {
+        "text": "[2] 해양수산부 2023년 중점과제 브리핑",
+        "url": "https://www.mof.go.kr/2023briefing/upload/2023_briefing.pdf"
+      }
+    ],
+    "trivia": [
+      {
+        "text": "[1] 해양수산부 2023년 중점과제 브리핑",
+        "url": "https://www.mof.go.kr/2023briefing/upload/2023_briefing.pdf"
+      }
+    ]
+  },
+  "changeSummary": "양식원 스킬 테스트: WLB 서술 보강, trivia/전공 보강, source 없는 본문 추천 자격증 정리"
+}

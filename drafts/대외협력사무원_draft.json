@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "way": "대외협력사무원은 기업·기관의 외부 이해관계자(정부, 언론, NGO, 지역사회 등)와의 관계를 관리하는 실무 직무로, 경영학, 행정학, 언론홍보학, 사회학 등 관련 전공의 학사 이상 학위가 일반적인 진입 조건이다. 대기업이나 공공기관의 대외협력팀·CSR팀·공공정책팀 신입 공채를 통해 입직하는 경로가 주를 이루며, 중소기업은 경력직 채용도 많다. 실무 능력으로는 문서 작성·기획 능력, 외부 기관 네트워크 형성 역량, 정부 정책·규제 이해력, 그리고 일정 수준의 영어 커뮤니케이션 능력이 요구된다. 홍보·PR 에이전시 근무 경험이나 인턴십을 통해 관련 역량을 쌓은 후 이직하는 사례도 많다. 사회적가치·ESG 보고서 작성, 이해관계자 소통 프로그램 운영, 정부 대관 업무 보조 등의 실무 경험이 주요 전형 요소로 작용한다.[1]",
+    "overviewSalary": {
+      "sal": "대기업·금융기관 소속 초봉은 연 3,500만~4,500만 원 수준이며, 경력 5년 이상의 대외협력 담당자는 연 5,000만~7,000만 원을 받는다. 공공기관이나 협회 소속의 경우 호봉제가 적용되며, 민간 대기업에서는 성과급이 포함되어 실질 보상이 더 높을 수 있다.[1]"
+    },
+    "overviewProspect": {
+      "main": "ESG 경영 의무화, 사회적책임 강화, 규제 환경 복잡화로 기업의 대외협력 기능의 중요성이 높아지고 있다. 특히 신산업 분야(반도체, 배터리, AI 등)에서 정부 정책과의 협력이 중요해지면서 대관(GR) 및 대외협력 전문 인력 수요가 증가 추세이다.[1]"
+    },
+    "trivia": "국내 재계 순위 10대 그룹은 모두 전담 대외협력(GR, Government Relations) 조직을 운영하고 있다. 반도체·배터리 등 국가 전략 산업에서는 대외협력 담당자가 입법 과정에 직접 참여해 기업 의견을 전달하는 '공공정책 로비스트'에 준하는 역할을 수행하기도 한다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통 이상",
+      "wlbDetail": "주 40~45시간 근무가 일반적이나, 입법·정책 이슈나 위기 커뮤니케이션 상황 발생 시 야근과 주말 근무가 발생할 수 있다. 외부 기관 방문이나 행사 참여가 잦아 이동이 많은 업무 특성이 있으며, 본사 중심 사무직이므로 원격근무가 가능한 기업도 있다.[1]",
+      "socialDetail": "기업의 사회적 책임 활동을 조율하고 이해관계자와의 신뢰 관계를 구축하는 역할로, ESG 활동과 지역사회 협력 프로그램을 통해 기업의 사회적 가치 실현에 기여한다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "경영학·행정학·언론홍보학 학사", "text": "기업 경영, 공공정책, 미디어 관계에 대한 체계적인 이해를 갖추는 기초 전공이다.", "link": null},
+        {"title": "정책·규제 환경 분석", "text": "정부 입법 과정, 규제 동향, 산업 정책을 분석하는 역량은 대관 업무의 핵심이다.", "link": null},
+        {"title": "ESG·사회공헌(CSR) 기획 실무", "text": "사회적 가치 보고서 작성, 이해관계자 소통 전략 수립, ESG 활동 기획·평가 역량을 키운다.", "link": null},
+        {"title": "비즈니스 영어·커뮤니케이션", "text": "글로벌 이해관계자 대응과 해외 규제 동향 파악을 위한 비즈니스 영어 커뮤니케이션 역량이 필요하다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "대기업·금융기관 대외협력팀 신입·경력 공채", "text": "삼성, 현대, SK 등 대기업 지속가능경영팀·대외협력팀과 주요 금융기관 ESG팀에서 정기·수시 채용을 진행한다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "공공기관·협회 홍보·대외협력 담당 채용", "text": "정부 부처 산하 공공기관과 각종 경제단체(전경련, 대한상의 등)에서 대외협력 및 홍보 담당 인력을 채용한다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "한국ESG학회·지속가능경영원 전문 교육", "text": "ESG 보고서 작성, 이해관계자 소통 방법론 등 실무 역량을 키우는 전문 교육과정이 운영된다.", "link": "https://www.sustain.or.kr/"},
+        {"title": "HRD-Net 공공관계·홍보 관련 직업훈련과정", "text": "고용노동부 K-Digital Training을 포함한 직업훈련 과정을 HRD-Net에서 검색하여 수강할 수 있다.[1]", "link": "https://www.hrd.go.kr/"}
+      ]
+    },
+    "heroTags": ["대외협력", "ESG", "공공정책", "홍보기획", "이해관계자관리"],
+    "sidebarJobs": ["홍보기획원", "광고홍보관리자", "사무원"],
+    "sidebarCerts": []
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}],
+    "overviewSalary.sal": [{"id": 1, "text": "[1] 고용노동부 고용형태별근로실태조사", "url": "https://www.moel.go.kr/"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 한국지속가능발전기업협의회(KBCSD) ESG 동향", "url": "https://www.kbcsd.or.kr/"}],
+    "trivia": [{"id": 1, "text": "[1] 대한상공회의소 ESG 보고서", "url": "https://www.korcham.net/"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 원티드 채용정보", "url": "https://www.wanted.co.kr/"}],
+    "detailReady.training": [{"id": 1, "text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/"}]
+  },
+  "changeSummary": "대외협력사무원 way·sal·prospect·trivia·wlb·detailReady·heroTags·sidebarJobs 신규 보완"
+}

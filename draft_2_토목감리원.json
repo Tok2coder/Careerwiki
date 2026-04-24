@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "way": "토목공학과, 건설공학교육과 등 관련 학과를 졸업한 뒤 감리전문회사나 엔지니어링회사에 입사해 현장 경험을 쌓는 것이 일반적인 진입 경로다. 입사 후에는 초급→중급→고급→특급 감리원 등급 체계에 따라 실무경력을 기반으로 승급하며, 토목기사·토목기술사 등 관련 자격을 취득하면 경력 인정과 등급 상향에 유리하다. 공공발주 현장에 투입되려면 한국건설기술인협회에 기술인으로 등록해야 한다.[1]",
+    "trivia": "직업백과에 따르면 토목감리기술자의 직업만족도는 69.8점(100점 기준)으로 나타났으며, 종사자의 학력 분포는 대졸 100%, 전공 분포는 공학계열 100%로 집계됐다. 취업처로는 감리전문회사, 토목엔지니어링회사, 대형 건설회사 감리 부서 등이 있다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "공사 현장에서 고지대 작업, 사다리·비계 오르내리기, 특수 보호장비 착용 등이 일상적이며, 고압 전류·가연성 물질 등 위험 환경에 노출되는 빈도가 높다. 설계도서와 시방서 준수 여부를 꼼꼼히 점검해야 하는 특성상 집중력과 책임감이 요구되며, 현장 소재에 따라 장기 지방 파견이 잦다.[1]",
+      "socialDetail": "도로, 댐, 고속도로 등 국가기반시설 공사에서 품질관리·공정관리·원가관리를 담당하며 공공 인프라의 안전 수준을 보증하는 역할을 한다. 직업가치관 조사에서 '애국' 항목이 최상위(81점)를 기록할 만큼 사회 기여도가 높은 직군이다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "토목공학과, 건설공학교육과, 도시건설과 등 관련 학과 졸업",
+        "정역학·구조역학·토질역학·측량학 등 공학 기초 및 전공 이수",
+        "토목기사·토목기술사 등 관련 자격 취득[1]"
+      ],
+      "recruit": [
+        "감리전문회사, 토목엔지니어링회사 공개채용·경력직 지원",
+        "대형 건설회사 감리 부서 채용 지원[1]"
+      ],
+      "training": [
+        "한국건설기술인협회 기술등급 심사 관련 교육",
+        "토목 감리 실무 전문 교육과정 이수[1]"
+      ]
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 현 상태를 유지하거나 다소 감소할 것으로 전망된다. 사회기반시설 성숙기 진입과 공공부채 억제로 신규 공공건설이 위축될 것으로 예상되나, 노후 시설 보수·신재생에너지 설비·지진 대비 안전진단 수요는 일정 수준을 유지할 것으로 보인다.[1]"
+    },
+    "heroTags": ["토목감리원", "건설감리", "품질관리", "공정관리", "토목현장", "감리기술자"],
+    "sidebarJobs": ["토목공학기술자", "토목구조설계기술자", "건축감리기술자", "토목공무기술자"],
+    "sidebarMajors": ["토목공학과", "토목과", "건설공학교육과", "도시건설과"],
+    "sidebarOrgs": [
+      {"name": "대한토목학회", "url": "https://www.ksce.or.kr"},
+      {"name": "한국건설기술인협회", "url": null}
+    ],
+    "sidebarCerts": [
+      {"name": "토목기술사", "url": null},
+      {"name": "토목(산업)기사", "url": null},
+      {"name": "건설재료시험(산업)기사", "url": null}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=ltT64fRkf3E", "title": "감리단장의 하루 일과는? (+정착 생활이 가능한가요?)"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 직업백과 — 토목감리기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B0%90%EB%A6%AC%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "trivia": [{"id": 1, "text": "[1] 직업백과 — 토목감리기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B0%90%EB%A6%AC%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 직업백과 — 토목감리기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B0%90%EB%A6%AC%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 직업백과 — 토목감리기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B0%90%EB%A6%AC%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 직업백과 — 토목감리기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B0%90%EB%A6%AC%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 직업백과 — 토목감리기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B0%90%EB%A6%AC%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 직업백과 — 토목감리기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B0%90%EB%A6%AC%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.training": [{"id": 1, "text": "[1] 직업백과 — 토목감리기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B0%90%EB%A6%AC%EA%B8%B0%EC%88%A0%EC%9E%90"}]
+  },
+  "changeSummary": "토목감리원 Phase 1: way·trivia·detailWlb·detailReady·prospect·사이드바·유튜브 신규 작성"
+}

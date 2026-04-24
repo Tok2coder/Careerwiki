@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "way": "토목공학과 등 관련 학과에서 4년제 학부를 마친 후 대학원에 진학해 구조역학, 교량공학, 콘크리트공학 등 구조 분야를 전공하고 석·박사 학위를 취득하는 것이 일반적인 진입 경로다. 학위 취득 후에는 한국건설기술연구원(KICT) 등 국가 연구기관이나 대학 부설 연구소에 지원한다. 토목기사·토목구조기술사 등 관련 자격을 보유하면 연구과제 수행과 승진에 유리하며, 공인 기술인 등록이 공공 연구용역 참여에 필요하다.[1]",
+    "trivia": "직업백과에 따르면 토목공학기술자(연구기관 포함) 취업처는 건설회사, 토목엔지니어링회사, 토목감리전문업체, 토목 관련 연구기관, 중앙부처 및 지방자치단체 기술직 공무원 등으로 다양하다. 2015년 기준 종사자 수는 약 71,900명으로 집계됐다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "연구기관에서 구조실험·데이터 분석·논문 작성이 주를 이루며, 현장 측정이나 시공 실험을 위해 건설현장을 방문하는 업무도 병행된다. 연구과제 마감 시기에는 집중적인 초과 근무가 발생하지만, 현장 건설직에 비해 근무 환경이 안정적인 편이다.[1]",
+      "socialDetail": "토목 구조공법 개발과 구조물 안전성 실험을 통해 국가 기반시설의 설계 기준을 선진화하고 안전 수준을 높이는 데 기여한다. 연구 성과는 교량, 댐, 도로 등 공공 인프라의 품질 향상에 직접 반영된다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "토목공학과, 건설공학교육과 등 관련 학과 졸업 (4년제 학부)",
+        "대학원(석·박사) 구조역학, 교량공학, 콘크리트공학 등 구조 전공",
+        "토목기사·토목구조기술사 등 관련 자격 취득[1]"
+      ],
+      "recruit": [
+        "한국건설기술연구원(KICT) 등 국가 연구기관 공개채용 지원",
+        "대학 부설 토목 연구소 연구원직 지원",
+        "토목엔지니어링회사 연구개발 부서 채용 지원[1]"
+      ],
+      "training": [
+        "구조해석 소프트웨어(MIDAS, SAP2000 등) 전문 교육",
+        "한국건설기술인협회 기술등급 심사 관련 교육[1]"
+      ]
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 현 상태를 유지하거나 다소 감소할 것으로 전망된다. 건설경기 부진이 주요 요인이나, 노후 인프라 안전진단·지진 대비·신재생에너지 관련 구조 연구 수요는 일정 수준을 유지할 것으로 예상된다.[1]"
+    },
+    "heroTags": ["토목구조연구원", "구조공학연구", "건설기술연구", "교량연구", "구조실험", "토목연구원"],
+    "sidebarJobs": ["토목공학기술자", "토목구조설계기술자", "건축구조기술자", "토목감리원"],
+    "sidebarMajors": ["토목공학과", "토목과", "건설공학교육과", "도시건설과"],
+    "sidebarOrgs": [
+      {"name": "대한토목학회", "url": "https://www.ksce.or.kr"},
+      {"name": "한국건설기술연구원", "url": null}
+    ],
+    "sidebarCerts": [
+      {"name": "토목기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=1252&gSite=Q"},
+      {"name": "토목구조기술사", "url": null}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=0M1jO2pF8O8", "title": "건축설계를 전공하고 연구를 할 수도 있다? feat. 한국건설기술연구원 이재웅 박사님"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "trivia": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.training": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}]
+  },
+  "changeSummary": "토목구조연구원 Phase 1: way·trivia·detailWlb·detailReady·prospect·사이드바·유튜브 신규 작성"
+}

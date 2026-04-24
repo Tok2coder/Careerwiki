@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "장거리 운행으로 밤샘·야간 운전이 일상적이며, 배송 일정 압박으로 주말·공휴일 근무가 빈번하다. 운전 시간 규제가 있으나 현장에서는 지켜지지 않는 경우도 있어 피로도가 높은 편이다.[1]",
+      "socialDetail": "물류·건설·에너지 산업의 근간을 이루는 직종으로 사회적 필요성은 높다. 다만 상대적으로 직업 인지도는 낮으며, 안전 사고 위험이 높아 전문성과 책임감이 요구된다.[1]"
+    }
+  },
+  "sources": {
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 고용24 직업정보", "url": "https://www.work24.go.kr/cm/f/c/0100/selectUnifySearch.do?topQuerySearchArea=tb_workinfo&topQueryData=%EB%8C%80%ED%98%95%ED%8A%B8%EB%9F%AD%20%EB%B0%8F%20%ED%8A%B9%EC%88%98%EC%B0%A8%EC%9A%B4%EC%A0%84%EC%9B%90"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1078"}]
+  },
+  "changeSummary": "detailWlb 등급 오탈자 수정 및 각주 정규화: 보통이하→보통 이하"
+}

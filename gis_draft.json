@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "way": "GIS전문가가 되려면 대학에서 지리학, 공간정보공학, 지구정보공학, 지적학, 도시공학 등 관련 학과를 졸업한 후, 측량전문업체·지도제작업체·공간정보 전문 기업이나 한국국토정보공사·한국수자원공사 등 공공기관에 취업하는 것이 일반적인 진입 경로다.[1] 국가자격증인 측량및지형공간정보기사, 지적기사 등을 취득하면 취업 시 우대받으며, GIS 소프트웨어 활용 역량과 프로그래밍 능력을 함께 갖추면 공간 데이터 분석·개발 분야로도 진출 범위가 넓어진다.[2]",
+    "overviewSalary": {
+      "sal": "워크넷에 따르면 관련 직종인 지적및측량기술자의 평균 연봉(중앙값)은 5,000만 원(2021년 기준)으로 전체 직업 평균보다 높은 수준이며, 공공기관이나 대형 공간정보 기업에서 상대적으로 높은 처우를 받는 경향이 있다.[1]"
+    },
+    "trivia": "GPS와 GIS를 접목한 내비게이션·위치 기반 서비스의 이면에는 GIS전문가가 구축한 방대한 공간 데이터베이스가 있으며, 현재 건설·국방·안전·교통·물류·상권·방범 시스템 등 거의 모든 산업 분야에서 GIS 기술이 활용되고 있다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통 이상",
+      "wlbDetail": "GIS전문가는 주로 사무실에서 GIS 소프트웨어를 활용하여 공간 데이터를 구축하고 분석하며, 프로젝트 마감 시기에는 집중 작업이 요구되기도 한다.[1] 현장 측량이나 데이터 수집이 필요한 경우에는 야외 작업이 수반되며, 계절과 현장 조건에 따라 근무 환경이 상당히 달라질 수 있다.[2]",
+      "socialDetail": "국토 공간 정보를 디지털화하여 내비게이션, 재난 대응, 교통 최적화, 도시 계획 등 시민 생활 전반에 직결되는 정보 인프라를 구축하며, 건설·국방·환경 분야에서도 의사결정을 지원하는 공익적 역할을 한다.[1]"
+    },
+    "heroTags": ["GIS전문가", "GIS", "지리정보시스템", "공간정보전문가", "Geospatial", "측량·지리정보"],
+    "sidebarMajors": ["지리학과", "지적학과", "지구정보공학과"],
+    "sidebarJobs": [
+      "공간정보시스템설계분석가",
+      "공간정보시스템연구원",
+      "공간정보데이터분석원",
+      "공간정보데이터베이스관리자",
+      "지도제작기술자",
+      "지리학연구원",
+      "측량사",
+      "항공사진측량기술자"
+    ],
+    "sidebarCerts": [
+      {"name": "측량및지형공간정보기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1380"},
+      {"name": "지적기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1390"}
+    ],
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        "지리학과 — GIS의 이론적 토대인 지리 정보 분류·공간 분석·원격탐사 등을 학습하며 GIS전문가로서의 기반을 다질 수 있다.",
+        "공간정보공학과/지구정보공학과 — 측량, GIS 소프트웨어 개발, 공간 데이터베이스 등 GIS 분야 핵심 기술을 전문적으로 학습한다.",
+        "지적학과 — 토지 정보 관리, 지적 측량, 부동산 정보 시스템 등 지적 분야 GIS 실무에 직결되는 교육과정을 이수할 수 있다.",
+        "도시공학과/토목공학과 — 도시 계획, 인프라 설계 등에서 GIS를 활용하는 응용 역량을 키울 수 있다.",
+        "GIS 소프트웨어 교육 과정 — ArcGIS, QGIS 등 GIS 전문 소프트웨어 활용 능력을 키우는 국비 또는 민간 교육 과정을 통해 취업 역량을 높일 수 있다."
+      ],
+      "recruit": [
+        "공간정보·측량 전문 기업 채용 — 측량 전문업체, 지도제작 기업, 드론 측량 기업 등에서 GIS 데이터 구축·분석 인력을 수시로 채용한다.",
+        "공공기관 채용 — 한국국토정보공사, 한국토지주택공사, 한국수자원공사, 국토교통부 국토지리정보원 등에서 GIS 전문 인력을 채용한다.",
+        "민간 IT·건설 기업 채용 — 내비게이션 서비스사, 스마트시티 기업, 건설사 등에서 공간정보 분석가를 수시 채용한다."
+      ],
+      "training": [
+        "K-디지털 트레이닝 GIS·공간정보 과정 — 고용노동부 지원으로 GIS 소프트웨어 활용, 공간 데이터 분석, 드론 측량 등의 실무 과정을 배울 수 있다.",
+        "내일배움카드 측량·공간정보 훈련 — 고용24에서 지원하는 GIS·측량 관련 직업훈련으로, 자격증 취득과 취업 연계를 함께 준비할 수 있다."
+      ]
+    }
+  },
+  "sources": {
+    "way": [
+      {"text": "[1] 고용24 GIS전문가 직업정보", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do"},
+      {"text": "[2] 직업백과 지리정보시스템전문가", "url": "https://job.asamaru.net/%EC%A7%80%EB%A6%AC%EC%A0%95%EB%B3%B4%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%A0%84%EB%AC%B8%EA%B0%80-gis%EC%A0%84%EB%AC%B8%EA%B0%80/"}
+    ],
+    "overviewSalary.sal": [
+      {"text": "[1] 워크넷 GIS전문가 직업정보(2021)", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do"}
+    ],
+    "trivia": [
+      {"text": "[1] 고용24 GIS전문가 직업정보", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"text": "[1] 커리어넷 GIS전문가 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=1092"},
+      {"text": "[2] 직업백과 지리정보시스템전문가", "url": "https://job.asamaru.net/%EC%A7%80%EB%A6%AC%EC%A0%95%EB%B3%B4%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%A0%84%EB%AC%B8%EA%B0%80-gis%EC%A0%84%EB%AC%B8%EA%B0%80/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"text": "[1] 고용24 GIS전문가 직업정보", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do"}
+    ]
+  },
+  "changeSummary": "GIS전문가 Phase 1: way·sal·trivia·detailWlb(wlb/social/wlbDetail/socialDetail)·heroTags·sidebarMajors·sidebarCerts 보완 + social등급 띄어쓰기 수정"
+}

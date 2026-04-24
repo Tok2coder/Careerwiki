@@ -1,0 +1,197 @@
+{
+  "jobId": "1765283541791271",
+  "jobName": "최고재무책임자",
+  "fields": {
+    "way": "최고재무책임자는 보통 경영학·회계학·경제학 기반으로 재무팀, FP&A, IR, 회계법인, 투자심사 부문에서 실무를 쌓은 뒤 결산·자금조달·내부회계·투자자 커뮤니케이션을 두루 경험하며 올라가는 경우가 많다.[1] 최근에는 비재무 출신 관리자도 재무제표 이해와 재무관리 핵심을 체계적으로 익히는 CFO 교육을 통해 재무 리더십을 보강하는 흐름이 커지고 있다.[2] 상장사나 대규모 기업의 CFO는 공시와 내부통제, 자본시장 대응 책임이 커서 회계사 자격이나 대기업 재경조직 경험이 있으면 유리하다.[3]",
+    "overviewProspect": {
+      "main": "ESG 공시, IFRS 18 도입, 고금리와 자금조달 리스크, AI 기반 경영관리 확산으로 CFO 역할은 단순 결산 책임자에서 전략·리스크·투자 의사결정을 총괄하는 자리로 확대되고 있다.[1] 비재무 임원에게도 높은 수준의 재무 리더십이 요구된다는 점은 CFO가 경영 전반을 잇는 핵심 직무로 더 부각되고 있음을 보여준다.[2] 반복 처리 업무는 자동화되더라도 자본배분, 투자자 소통, 내부통제와 자금조달을 책임지는 최고재무 리더 수요는 계속 유지될 가능성이 높다.[3]"
+    },
+    "overviewAbilities": {
+      "technKnow": "최고재무책임자는 재무제표와 K-IFRS, 예산·자금조달, 투자·M&A 타당성, 내부회계관리제도, IR과 공시를 함께 이해해야 한다.[1] 최근에는 IFRS 18 도입처럼 회계 기준 변화가 COA 체계, KPI, 배당·보상 체계와 시스템 개편까지 연결되므로 데이터 구조와 경영지표를 함께 설계하는 역량이 중요하다.[2]"
+    },
+    "trivia": "2024년 홍콩에서는 AI로 복제한 CFO의 목소리를 활용한 화상회의 사기로 2,560만 달러가 송금된 사건이 보고되면서, 현대 CFO의 역할이 숫자 관리뿐 아니라 보안과 내부통제 설계까지 확장되고 있음을 보여줬다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "실적 발표, 결산, 자금조달, 이사회 일정이 겹치는 시기에는 업무 집중도가 매우 높아진다. 재무 수치와 시장 커뮤니케이션을 동시에 책임져 압박이 큰 편이며, 위기 국면에서는 단기간에 많은 의사결정을 내려야 한다.[1]",
+      "socialDetail": "CFO는 기업의 자본배분과 내부통제, 재무 전략을 통해 조직의 생존과 성장에 직접 영향을 미친다.[1] 최근에는 ESG와 디지털 전환, 사업 포트폴리오 조정까지 연결하는 전략적 조정자로 평가받는다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "경영학·회계학·경제학 기반으로 재무제표, 원가, 기업가치평가, 자본시장 과목을 체계적으로 익힌다.[1]",
+        "비재무 출신 관리자라도 재무제표 이해와 재무관리 핵심을 다루는 CFO 교육 과정을 통해 의사결정 기반을 보강할 수 있다.[2]",
+        "상장사 재무리더를 목표로 한다면 공시, IR, 내부회계관리제도, 자금조달, M&A 실무를 순차적으로 경험한다.[3]"
+      ],
+      "recruit": [
+        "대기업 재경실, FP&A, IR, 재무기획 직군 채용을 통해 재무조직에 입문한다.[1]",
+        "회계법인과 전략재무자문 조직에서 회계·공시·딜 경험을 쌓으면 CFO 트랙으로 연결되기 쉽다.[2]",
+        "상장사 CFO는 실적발표와 투자자 소통, 내부회계관리제도 운영 책임까지 요구되므로 경력직 채용에서 관련 경험이 중요하다.[3]"
+      ],
+      "training": [
+        "재무제표 해석과 재무관리 핵심을 다루는 관리자 대상 실무 과정을 통해 숫자 기반 의사결정 역량을 키운다.[1]",
+        "글로벌 비즈니스 환경에서 요구되는 재무 감각과 사업 통찰을 다루는 CFO 교육 과정을 병행하면 전략적 시야를 넓히는 데 도움이 된다.[2]",
+        "IFRS 18, 내부회계관리제도, 공시 체계처럼 제도 변화가 큰 주제는 세미나와 실무 교육으로 계속 업데이트해야 한다.[3]"
+      ]
+    },
+    "sidebarMajors": [
+      "경영학과",
+      "회계학과",
+      "경제학과",
+      "금융학과",
+      "산업공학과"
+    ],
+    "sidebarOrgs": [
+      {
+        "name": "한국공인회계사회",
+        "url": "https://www.kicpa.or.kr/"
+      },
+      {
+        "name": "한국CFO스쿨",
+        "url": "https://www.cfoschool.com/"
+      },
+      {
+        "name": "서울대학교 CFO 교육과정",
+        "url": "https://mdc.snu.ac.kr/cfo/letters"
+      }
+    ],
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=eG1Uc3cRhtU",
+        "title": "CFO의 역할중 가장 중요한 일은?"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=nSFBIBlkdII",
+        "title": "CFO 언제부터 합류해야할까?"
+      }
+    ],
+    "_careerTreeNote": "조사한 인물: 김양섭(SK텔레콤 CFO, 현재 역할은 확인되나 초기 재무 커리어 단계 공개가 제한적), 박종석(SK텔레콤 CFO, 현재 역할 기사 확인 가능하나 세부 경력 단계 부족), 김남선(네이버 CFO, 재무 리더십 보도는 있으나 공개 경력 단계 부족), 차동석(LG화학 CFO, 현재 직함 보도는 있으나 단계형 약력 부족), 서혜란(토스뱅크 CFO, 공개 인터뷰는 있으나 위키피디아·공식 단계형 약력 확인 제한). 현재 역할은 공개돼도 직업 페이지용 단계별 경로를 공식 출처 2개 이상으로 안정적으로 재구성하기 어려워 적합 인물 없음 (2026-04-20)."
+  },
+  "careerTree": null,
+  "_careerTreeNote": "조사한 인물: 김양섭(SK텔레콤 CFO, 현재 역할은 확인되나 초기 재무 커리어 단계 공개가 제한적), 박종석(SK텔레콤 CFO, 현재 역할 기사 확인 가능하나 세부 경력 단계 부족), 김남선(네이버 CFO, 재무 리더십 보도는 있으나 공개 경력 단계 부족), 차동석(LG화학 CFO, 현재 직함 보도는 있으나 단계형 약력 부족), 서혜란(토스뱅크 CFO, 공개 인터뷰는 있으나 위키피디아·공식 단계형 약력 확인 제한). 현재 역할은 공개돼도 직업 페이지용 단계별 경로를 공식 출처 2개 이상으로 안정적으로 재구성하기 어려워 적합 인물 없음 (2026-04-20).",
+  "changeSummary": "[job-data-enhance] 최고재무책임자 full enhance 1차",
+  "sources": {
+    "overviewProspect.main": [
+      {
+        "id": 1,
+        "text": "[1] DBR - CFO 역할 확대",
+        "url": "https://dbr.donga.com/article/view/1201/article_no/11607/ac/a_view"
+      },
+      {
+        "id": 2,
+        "text": "[2] 한국CFO스쿨 소개",
+        "url": "https://www.cfoschool.com/"
+      },
+      {
+        "id": 3,
+        "text": "[3] 한국공인회계사회 - CFO의 전략적 역할",
+        "url": "https://www.sentv.co.kr/article/view/sentv202005110006"
+      }
+    ],
+    "overviewAbilities.technKnow": [
+      {
+        "id": 1,
+        "text": "[1] 한국공인회계사회 - CFO의 전략적 역할",
+        "url": "https://www.sentv.co.kr/article/view/sentv202005110006"
+      },
+      {
+        "id": 2,
+        "text": "[2] 삼일PwC - IFRS 18 대응 전략 세미나",
+        "url": "https://www.pwc.com/kr/ko/events/event_260407.html"
+      }
+    ],
+    "trivia": [
+      {
+        "id": 1,
+        "text": "[1] SK텔레콤 뉴스룸 - AI 음성 사칭 사례",
+        "url": "https://news.sktelecom.com/221425"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "id": 1,
+        "text": "[1] 한국CFO스쿨 소개",
+        "url": "https://www.cfoschool.com/"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "id": 1,
+        "text": "[1] 한국공인회계사회 - CFO의 전략적 역할",
+        "url": "https://www.sentv.co.kr/article/view/sentv202005110006"
+      },
+      {
+        "id": 2,
+        "text": "[2] DBR - CFO 역할 확대",
+        "url": "https://dbr.donga.com/article/view/1201/article_no/11607/ac/a_view"
+      }
+    ],
+    "way": [
+      {
+        "id": 1,
+        "text": "[1] 서울대학교 CFO 교육과정",
+        "url": "https://mdc.snu.ac.kr/cfo/letters"
+      },
+      {
+        "id": 2,
+        "text": "[2] 한국CFO스쿨 manager 과정",
+        "url": "https://www.cfoschool.com/courses/manager"
+      },
+      {
+        "id": 3,
+        "text": "[3] SK텔레콤 Annual Report 2023",
+        "url": "https://www.sktelecom.com/img/kor/annual/20240805/SK_Telecom_Annual_Report_2023_Kor_F.pdf"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "id": 1,
+        "text": "[1] 서울대학교 CFO 교육과정",
+        "url": "https://mdc.snu.ac.kr/cfo/letters"
+      },
+      {
+        "id": 2,
+        "text": "[2] 한국CFO스쿨 manager 과정",
+        "url": "https://www.cfoschool.com/courses/manager"
+      },
+      {
+        "id": 3,
+        "text": "[3] 한국공인회계사회 - CFO의 전략적 역할",
+        "url": "https://www.sentv.co.kr/article/view/sentv202005110006"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "id": 1,
+        "text": "[1] 딜로이트 코리아 Careers",
+        "url": "https://www.deloitte.com/kr/ko/careers.html"
+      },
+      {
+        "id": 2,
+        "text": "[2] 삼일PwC Career",
+        "url": "https://www.pwc.com/kr/ko/career.html"
+      },
+      {
+        "id": 3,
+        "text": "[3] SK텔레콤 2024년 2분기 실적 발표",
+        "url": "https://news.sktelecom.com/206101"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "id": 1,
+        "text": "[1] 한국CFO스쿨 manager 과정",
+        "url": "https://www.cfoschool.com/courses/manager"
+      },
+      {
+        "id": 2,
+        "text": "[2] 서울대학교 CFO 교육과정",
+        "url": "https://mdc.snu.ac.kr/cfo/letters"
+      },
+      {
+        "id": 3,
+        "text": "[3] 삼일PwC - IFRS 18 대응 전략 세미나",
+        "url": "https://www.pwc.com/kr/ko/events/event_260407.html"
+      }
+    ]
+  }
+}

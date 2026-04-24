@@ -1,0 +1,74 @@
+{
+  "fields": {
+    "way": "데이터품질관리자가 되기 위해서는 데이터베이스·정보시스템 운영 경험을 갖추고 데이터 거버넌스와 마스터 데이터 관리(MDM) 개념을 이해하는 것이 기본 경로다.[1] 컴퓨터공학·경영정보학·통계학 관련 학위 취득 후 IT 기업이나 금융·공공기관의 데이터 관리 부서에서 경력을 시작하는 경우가 많다. 한국데이터산업진흥원의 DQC(데이터품질인증) 관련 실무 경험이나 데이터분석전문가(DAP) 자격 취득이 직무 경쟁력을 높이는 데 도움이 된다.[2]",
+    "overviewSalary": {
+      "sal": "주니어 데이터품질관리자의 연봉은 약 3,500만~5,000만 원이며, 시니어 전문가는 연 6,500만~9,000만 원 수준도 가능하다.[1] 금융기관·공공기관에서 상대적으로 안정적인 처우가 이루어진다."
+    },
+    "overviewProspect": {
+      "main": "개인정보보호법 강화, 데이터경제 성장, AI 학습 데이터 품질 요구 증가로 데이터 품질 전문가에 대한 수요가 지속적으로 증가하는 추세다.[1] 특히 금융·공공·의료 분야에서 데이터 거버넌스 체계 구축 의무화가 강화되면서 전문 인력의 수요는 안정적으로 유지될 전망이다."
+    },
+    "trivia": "글로벌 시장조사기관 가트너(Gartner)에 따르면 데이터 품질 문제로 인한 비즈니스 손실이 연평균 1,290만 달러(한화 약 170억 원)에 달한다고 추산된다. 이는 잘못된 데이터에 기반한 의사결정, 시스템 오류, 고객 이탈 등 다양한 형태로 발생하며, 데이터 품질 관리의 경제적 중요성을 잘 보여주는 수치다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통 이상",
+      "wlbDetail": "사무직 형태로 정해진 근무 시간 내에서 대부분의 업무가 이루어지며, 데이터 감사·인증 기간에는 야근이 발생할 수 있다. 여러 부서와 협력해야 하므로 커뮤니케이션 업무 비중이 높고, 데이터 오류 발생 시 긴급 대응이 필요하기도 하다.[1]",
+      "socialDetail": "정확하고 신뢰할 수 있는 데이터 환경을 유지해 기업과 공공기관의 AI·빅데이터 분석 결과물의 신뢰성을 높이는 데 기여한다. 금융·의료 등 민감 데이터 품질 관리는 사회 전체의 데이터 생태계 건전성과 직결된다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "컴퓨터공학·경영정보학·통계학 학위", "text": "데이터베이스 설계, SQL, 데이터 거버넌스의 이론적 기반을 학위 과정에서 습득하며 정보시스템 운영 전반에 대한 이해를 갖춘다.", "link": null},
+        {"title": "DAMA-DMBOK 데이터 관리 지식체계 학습", "text": "국제 데이터 관리 협회(DAMA)의 데이터 관리 지식체계(DMBOK)를 학습하면 데이터 거버넌스·마스터 데이터 관리·메타데이터 관리 등 핵심 역량을 체계적으로 갖출 수 있다.", "link": null},
+        {"title": "SQL 및 데이터 품질 도구 실습 (Talend, Informatica)", "text": "데이터 정제·검증·통합에 사용되는 ETL 도구와 데이터 품질 플랫폼 실습을 통해 현업에서 필요한 기술 역량을 키울 수 있다.", "link": null},
+        {"title": "한국데이터산업진흥원 — 데이터 품질관리 교육", "text": "DQC(데이터 품질인증) 심사 방법론, 데이터 거버넌스 구축 실무 등 국내 실정에 맞는 데이터 품질 관련 교육과정을 운영한다.", "link": "https://www.kdata.or.kr/"},
+        {"title": "데이터분석전문가(DAP) 자격 취득", "text": "한국데이터산업진흥원이 시행하는 고급 자격으로, 데이터 관리·분석·품질 역량을 종합적으로 평가한다. 데이터 품질관리 실무 역량 인증에 활용된다.[1]", "link": "https://www.kdata.or.kr/"}
+      ],
+      "recruit": [
+        {"title": "IT 기업·금융기관 데이터 거버넌스팀 채용", "text": "대형 IT 기업과 은행·보험사 등 금융기관에서 데이터 거버넌스 및 품질 관리 전문인력을 수시 채용한다. 링크드인·원티드에서 공고를 확인할 수 있다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "공공기관 — 데이터 품질인증(DQC) 심사 전문인력", "text": "한국데이터산업진흥원 및 공공기관에서 데이터 품질인증 심사 업무를 위한 전문인력을 수시 채용하거나 외부 심사원을 위촉한다.", "link": "https://www.kdata.or.kr/"},
+        {"title": "컨설팅 기업 — 데이터 거버넌스 프로젝트 참여", "text": "IT 컨설팅 기업에서 고객사 데이터 거버넌스 체계 구축 프로젝트에 참여하면서 경력을 쌓는 경로도 많다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "한국데이터산업진흥원 — 데이터 전문인력 양성과정", "text": "데이터 관리·품질·거버넌스 전문인력 양성을 위한 교육과정을 운영하며 국내 데이터 산업 실정에 맞는 심화 교육을 제공한다.", "link": "https://www.kdata.or.kr/"},
+        {"title": "HRD-Net — 데이터베이스·빅데이터 관련 국비 훈련", "text": "고용노동부 직업훈련 포털에서 데이터 관리·품질 관련 국비 지원 훈련과정을 검색해 수료할 수 있다.[1]", "link": "https://www.hrd.go.kr/"}
+      ]
+    },
+    "heroTags": ["데이터품질", "데이터거버넌스", "MDM", "DQC", "메타데이터", "SQL", "데이터관리"],
+    "sidebarJobs": ["데이터분석가(일반)", "데이터 엔지니어", "데이터베이스운영원", "데이터마이너", "데이터시각화전문가", "빅데이터전문가", "정보시스템감리사"],
+    "sidebarCerts": [
+      {"name": "데이터분석전문가(DAP)", "url": "https://www.kdata.or.kr/info/info_04_view.html?field=&keyword=DAP&type=all&page=1&idx=51887"},
+      {"name": "빅데이터분석기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1440"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 데이터품질관리자 직업정보", "url": "https://www.career.go.kr/"},
+      {"id": 2, "text": "[2] 한국데이터산업진흥원 DAP 자격정보", "url": "https://www.kdata.or.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 워크넷 데이터 관리 직군 임금정보", "url": "https://www.work.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 과학기술정보통신부 데이터경제 활성화 정책", "url": "https://www.msit.go.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] Gartner — How to Create a Business Case for Data Quality Improvement", "url": "https://www.gartner.com/en/documents/3899063"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 데이터 관련 직군 근무환경", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국데이터산업진흥원 데이터 거버넌스 안내", "url": "https://www.kdata.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국데이터산업진흥원 DAP 자격 취득 안내", "url": "https://www.kdata.or.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 원티드 데이터 거버넌스 채용공고", "url": "https://www.wanted.co.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] HRD-Net 데이터 관련 훈련과정", "url": "https://www.hrd.go.kr/"}
+    ]
+  },
+  "changeSummary": "way·sal·prospect·trivia·detailWlb·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

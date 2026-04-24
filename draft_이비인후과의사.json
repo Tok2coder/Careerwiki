@@ -1,0 +1,81 @@
+{
+  "fields": {
+    "way": "이비인후과의사가 되려면 의과대학(6년) 졸업 후 의사 국가고시에 합격하여 의사 면허를 취득하고, 인턴 1년·이비인후과 레지던트 4년을 이수해야 한다. 대학병원 또는 이비인후과 의원 개업의 경로로 진출한다.[1] 이비인후과 전문의 자격시험 합격 후 귀·코·목 및 두경부 전문 영역으로 세분화된 세부전문의 과정을 거치는 경우도 많다.[2]",
+    "trivia": "달팽이관 인공와우 이식 수술은 청각 장애인이 소리를 들을 수 있도록 돕는 대표적인 이비인후과 수술로, 한국은 이 분야에서 세계적인 수준의 의료 기술을 보유하고 있다. 편도 및 아데노이드 절제술은 전 세계적으로 가장 빈번하게 시행되는 수술 중 하나이다. 이비인후과(耳鼻咽喉科)는 귀(耳)·코(鼻)·인두(咽)·후두(喉)를 담당하는 과로, 두경부외과 분야도 포함한다.[1]",
+    "overviewProspect": {
+      "main": "미세먼지·알레르기 질환 증가와 고령화로 인한 난청·어지럼증 환자 증가로 이비인후과 수요는 꾸준히 유지되고 있다.[1] 두경부 암 및 수면 무호흡 환자 증가로 전문 인력의 중요성도 커지고 있다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "이비인후과는 비교적 응급 수술이 적은 편이지만, 편도·부비동 수술 등 정기적인 수술 스케줄로 바쁜 편이다.[1] 개원 이비인후과는 소아 환자가 많아 감기·알레르기 시즌에 진료량이 폭증하여 체력적 부담이 크다.[2]",
+      "socialDetail": "청각 장애, 수면 무호흡 등 일상생활에 직접적인 영향을 주는 질환을 치료해 사회적 공헌도가 높다.[1] 의사로서의 신뢰와 사회적 지위를 바탕으로 지역 사회에서 주요 의료인으로 활동한다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학 6년 과정 이수[1]",
+        "의사 국가고시 합격 및 면허 취득[2]",
+        "인턴 1년 후 이비인후과 레지던트 4년 지원[3]",
+        "귀·코·목 분야 기초 수술 기법 습득[4]"
+      ],
+      "recruit": [
+        "이비인후과 전문의 자격시험 합격[1]",
+        "대학병원 두경부외과 세부 펠로우십 지원[2]",
+        "이비인후과 의원 취업 또는 개원[3]"
+      ],
+      "training": [
+        "두경부외과·이과·비과 등 세부전문의 취득[1]",
+        "인공와우·수면내시경 전문 교육[2]",
+        "대한이비인후과학회 학술 활동 참여[3]"
+      ]
+    },
+    "sidebarJobs": ["가정의학과의사","내과의사","마취병리과의사","방사선과의사","비뇨기과의사","산부인과의사","성형외과의사","소아청소년과의사","안과의사","외과의사","이비인후과전문의사","정신과의사","치과의사","피부과의사","한의사"],
+    "sidebarMajors": ["의학과","의료경영학과","간호학과","생명과학과","생물학과"],
+    "sidebarOrgs": [
+      {"name":"대한의사협회","url":"https://www.kma.org"},
+      {"name":"대한병원협회","url":"https://www.kha.or.kr"},
+      {"name":"한국보건의료인국가시험원","url":"https://www.kuksiwon.or.kr"}
+    ],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "'이비인후과의사 현직자 인터뷰' 검색 0건, '이비인후과의사 진로 탐색' 검색 0건, 'KEIS 이비인후과의사 직업영상' 검색 0건, '이비인후과 의사 하루일과' 검색 0건, '이비인후과 의사 수련과정' 검색 0건, '귀코목TV 이비인후과 진로' 검색 결과 병원채널만 검출 (현직자·인터뷰/직무·실무/강의·교육/진로·면접 4개 카테고리 탐색) - 직업진로 목적 한국어 영상 미발견 (2026-04-23)",
+    "_careerTreeNote": "조사 인물: 이낙준(인하대의대 졸업, 삼성서울병원 이비인후과 전공의 수료, 공군 군의관, 닥터프렌즈 유튜버, 공인). careerTree DB 별도 삽입 예정"
+  },
+  "sources": {
+    "way": [
+      {"id":1,"text":"[1] 한국의과대학·의학전문대학원협회","url":"https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id":2,"text":"[2] 대한이비인후과학회","url":"https://korl.or.kr/info/sub02_02.php"}
+    ],
+    "overviewProspect.main": [
+      {"id":1,"text":"[1] 건강보험심사평가원 보건의료빅데이터개방시스템","url":"https://opendata.hira.or.kr/op/opc/olapMfrnIntrsIlnsInfoTab1.do"},
+      {"id":2,"text":"[2] 대한이비인후과학회","url":"https://www.korl.or.kr/webzine/163/sub2.html"}
+    ],
+    "trivia": [
+      {"id":1,"text":"[1] 대한이비인후과학회","url":"https://www.korl.or.kr/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id":1,"text":"[1] 대한이비인후과학회","url":"https://www.korl.or.kr/webzine/163/sub2.html"},
+      {"id":2,"text":"[2] 메디게이트뉴스","url":"https://medigatenews.com/news/2179722804"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id":1,"text":"[1] 대한이비인후과학회","url":"https://www.korl.or.kr/"},
+      {"id":2,"text":"[2] 대한의사협회","url":"https://www.kma.org/"}
+    ],
+    "detailReady.curriculum": [
+      {"id":1,"text":"[1] 한국의과대학·의학전문대학원협회","url":"https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id":2,"text":"[2] 한국보건의료인국가시험원","url":"https://www.kuksiwon.or.kr/"},
+      {"id":3,"text":"[3] 보건복지부 전문의 수련 제도","url":"https://www.mohw.go.kr/menu.es?mid=a10707020100"},
+      {"id":4,"text":"[4] 대한이비인후과학회","url":"https://korl.or.kr/info/sub02_02.php"}
+    ],
+    "detailReady.recruit": [
+      {"id":1,"text":"[1] 한국보건의료인국가시험원","url":"https://www.kuksiwon.or.kr/"},
+      {"id":2,"text":"[2] 한국의과대학·의학전문대학원협회","url":"https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id":3,"text":"[3] 대한이비인후과의사회","url":"https://www.korl.or.kr/"}
+    ],
+    "detailReady.training": [
+      {"id":1,"text":"[1] 대한이비인후과학회 수련안내","url":"https://korl.or.kr/info/sub02_02.php"},
+      {"id":2,"text":"[2] 대한이비인후과학회 웹진","url":"https://www.korl.or.kr/webzine/163/sub2.html"},
+      {"id":3,"text":"[3] 대한이비인후과학회","url":"https://www.korl.or.kr/"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 이비인후과의사 17필드 보완 (way·trivia 각주 수정, detailWlb.wlb 띄어쓰기, detailReady [N] 추가, sidebarJobs 15개, sidebarMajors 보강)"
+}

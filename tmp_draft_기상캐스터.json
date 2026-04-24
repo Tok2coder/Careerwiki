@@ -1,0 +1,52 @@
+{
+  "jobName": "기상캐스터",
+  "jobId": "1765284155848546",
+  "fields": {
+    "way": "기상캐스터가 되는 경로는 크게 방송국 공채와 프리랜서 계약 두 가지로 나뉜다. 기상캐스터는 기상청 자료를 직접 분석해 날씨 대본을 작성하는 방송인으로, 기상직 공무원인 기상예보관과는 다른 직역이다.[1] 방송사 공채는 1차 서류, 2차 카메라 테스트, 3차 최종면접 순으로 진행되며 발음·전달력·기상 지식을 종합 평가한다. 특정 전공 제한은 없지만 신문방송학과·지구과학과·천문기상학과 출신이 유리하며, 재직자의 93%가 대졸이다.[2] 방송 아카데미에서 발음·발성·카메라 트레이닝을 받은 뒤 포트폴리오를 제작하는 것이 일반적인 준비 경로다. 신입은 주로 지역 방송사나 케이블 채널에서 경력을 쌓은 뒤 지상파로 이동하며, 대부분 프리랜서·계약직으로 근무한다.[3]",
+    "trivia": "한국의 기상캐스터 제도는 1991년 KBS가 이익선을 첫 여성 프리랜서 기상캐스터로 채용하면서 시작됐다. 그 이전까지 날씨 예보는 기상청 소속 기상통보관이 직접 방송에 출연해 전달했다. KBS 도입 후 1992년 SBS, 1994년 MBC가 잇따라 같은 제도를 도입했다.[1]",
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 보통 수준의 변화가 예상된다. 이상기후 빈번화로 기상방송 수요는 유지되지만, 단순 정보 전달 역할은 AI 기상 앵커의 등장으로 대체 압력을 받고 있다.[1] 2026년 MBC는 프리랜서 기상캐스터 제도를 폐지하고 정규직 기상기후 전문가 체제로 전환했으며, 기상기사 자격이나 기후변화 전문성을 갖춘 방송인에 대한 수요는 유지될 전망이다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "낮음",
+      "social": "보통 이상",
+      "wlbDetail": "생방송 기준으로 새벽 뉴스 담당 시 새벽 3시 출근·오전 퇴근, 저녁·심야 뉴스 담당 시 오후 출근·자정 이후 퇴근하는 교대 근무 형태다. 주말·공휴일·명절도 방송이 계속되므로 정기 휴일 없이 근무하는 경우가 많다.[1] 1분 30초 방송을 위해 3~6시간의 자료 분석과 대본 준비가 선행된다.[2]",
+      "socialDetail": "폭염·태풍·집중호우 등 재난 기상 상황에서 취약 계층에게 생활 밀착형 기상 정보를 전달하는 공익적 역할을 한다. 기후변화 심화로 이상기후 대응 정보를 국민에게 전파하는 환경 메신저로서의 역할도 커지고 있다.[1]"
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 이코노믹리뷰 기상캐스터 근무환경", "url": "https://www.econovill.com/news/articleView.html?idxno=79515"},
+      {"id": 2, "text": "[2] 직업백과 기상캐스터", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%EC%83%81%EC%BA%90%EC%8A%A4%ED%84%B0/"},
+      {"id": 3, "text": "[3] 에듀진 기상캐스터 인터뷰", "url": "https://www.edujin.co.kr/news/articleView.html?idxno=39573"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 위키백과 기상캐스터", "url": "https://ko.wikipedia.org/wiki/%EA%B8%B0%EC%83%81_%EC%BA%90%EC%8A%A4%ED%84%B0"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 에듀진 기상캐스터 인터뷰", "url": "https://www.edujin.co.kr/news/articleView.html?idxno=39573"},
+      {"id": 2, "text": "[2] 이코노믹리뷰 기상캐스터 근무환경", "url": "https://www.econovill.com/news/articleView.html?idxno=79515"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 뉴스펭귄 기후캐스터 인터뷰", "url": "https://www.newspenguin.com/news/articleView.html?idxno=11254"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 한국경제 기상캐스터 임금 보도", "url": "https://www.hankyung.com/article/2025020421667"},
+      {"id": 2, "text": "[2] 직업백과 기상캐스터 임금", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%EC%83%81%EC%BA%90%EC%8A%A4%ED%84%B0/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 직업백과 기상캐스터 전망", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%EC%83%81%EC%BA%90%EC%8A%A4%ED%84%B0/"},
+      {"id": 2, "text": "[2] 한국경제 기상캐스터 제도 변화", "url": "https://www.hankyung.com/article/2025020421667"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 직업백과 기상캐스터 교육과정", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%EC%83%81%EC%BA%90%EC%8A%A4%ED%84%B0/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 직업백과 기상캐스터 취업 정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%EC%83%81%EC%BA%90%EC%8A%A4%ED%84%B0/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 기상청 기상기후인재개발원", "url": "https://www.kma.go.kr/kma/intro/education.jsp"}
+    ]
+  },
+  "changeSummary": "F1 각주 위치 수정(way/trivia/wlbDetail/overviewProspect — 첫 문장→마지막 문장으로 이동), F2 detailReady sources 추가"
+}

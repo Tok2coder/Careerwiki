@@ -1,0 +1,184 @@
+{
+    "fields":  {
+                   "way":  "가스·수도·전기 계기 검침원 및 안전점검원이 되려면 고등학교 졸업 이상의 학력이 요구되며, 한국전력공사·한국가스안전공사·지방자치단체 수도사업소 등에서 직접 채용하거나 협력 용역업체를 통해 채용된다. 가스 분야의 경우 한국가스안전공사 사이버교육원에서 사용시설점검원 교육을 이수해야 한다.[1] 전기기능사·가스기능사 등 관련 자격증이 있으면 취업에 유리하며, 체력이 좋고 성실함과 정직성, 기본적인 수리 계산 능력이 필요하다. 경력을 쌓으면 현장 감독자나 관리 직무로 전환되는 경로도 있다.[2]",
+                   "overviewProspect":  {
+                                            "main":  "향후 5년간 고용은 다소 감소할 것으로 전망된다. 스마트 계량기(AMI) 보급 확대로 인해 원격 검침 비중이 늘어나면서 현장 검침 인력 수요가 점차 감소하고 있으나, 안전점검 수요는 꾸준히 유지될 전망이다.[1]"
+                                        },
+                   "trivia":  "스마트 계량기(AMI: Advanced Metering Infrastructure) 도입으로 일부 지역에서는 원격 자동 검침이 가능해졌으나, 노후 주택이나 외진 지역은 여전히 사람이 직접 방문하여 검침한다. 가스 안전점검원은 연간 약 1,000만 가구 이상의 가스 시설을 점검하며, 가스 사고 예방에 핵심적인 역할을 한다. 전기 계기는 5년마다 법적 검정 의무가 있어 전국적으로 교체 점검 수요가 꾸준히 발생한다.[1]",
+                   "detailWlb":  {
+                                     "wlb":  "보통 이상",
+                                     "social":  "보통",
+                                     "wlbDetail":  "야외 순회 업무 특성상 날씨 영향을 받지만 정해진 구역을 돌며 검침하는 규칙적인 업무 패턴으로 워라밸은 비교적 양호하다. 독립적으로 업무를 수행하는 경우가 많아 자율성이 높으며, 오전 중심 근무로 저녁 시간 여유가 있는 편이다.[1]",
+                                     "socialDetail":  "에너지 및 수도 공급망의 안전을 유지하는 역할로 지역 사회 안전에 기여한다. 공공성이 높은 업무로 인식되나 단순 노무직으로 간주되는 경향이 있다.[1]"
+                                 },
+                   "sidebarJobs":  [
+                                       "계기검침원 및 가스점검원",
+                                       "전기안전관리원",
+                                       "가스시설안전관리원",
+                                       "보일러설치·정비원",
+                                       "소방관",
+                                       "배관원",
+                                       "산업안전원 및 위험관리원",
+                                       "철로설치·보수원"
+                                   ],
+                   "sidebarMajors":  [
+                                         "전기공학과",
+                                         "기계공학과",
+                                         "환경공학과",
+                                         "산업공학과"
+                                     ],
+                   "sidebarCerts":  [
+                                        {
+                                            "name":  "가스기능사",
+                                            "url":  "https://www.q-net.or.kr/crf005.do?id=crf00503\u0026jmCd=6335\u0026gSite=Q"
+                                        },
+                                        {
+                                            "name":  "전기기능사",
+                                            "url":  "https://www.q-net.or.kr/crf005.do?id=crf00503\u0026jmCd=7780\u0026gSite=Q"
+                                        },
+                                        {
+                                            "name":  "에너지관리기능사",
+                                            "url":  "https://www.q-net.or.kr/crf005.do?id=crf00503\u0026jmCd=7761\u0026gSite=Q"
+                                        }
+                                    ],
+                   "heroTags":  [
+                                    "검침원",
+                                    "안전점검원",
+                                    "가스점검",
+                                    "전기검침",
+                                    "수도검침",
+                                    "에너지안전",
+                                    "공공서비스"
+                                ],
+                   "youtubeLinks":  [
+
+                                    ],
+                   "_youtubeSearchNote":  "탐색어: \u0027검침원 직업\u0027, \u0027검침원 현직자 인터뷰\u0027, \u0027검침원 브이로그\u0027, \u0027가스 검침원 업무\u0027, \u0027수도 검침원 업무\u0027, \u0027전기 검침원 하루\u0027, \u0027KEIS 검침원 진로\u0027. 카테고리 커버: 현직자·인터뷰, 직무·실무, 강의·교육, 진로·면접. 직업명에 직접 대응하는 검증 가능한 한국어 영상을 찾지 못함 (2026-04-20).",
+                   "_careerTreeNote":  "조사 인물 5명: 김동수(전력 공기업 경영 이력 중심, 검침원 경력 확인 안 됨), 정승일(전력 공기업 사장 이력 중심, 검침원 경력 확인 안 됨), 박일준(산업·에너지 정책 경력 중심, 검침원 경력 확인 안 됨), 최연혜(에너지 공기업 사장 이력 중심, 검침원 경력 확인 안 됨), 김동철(전력 공기업 경영 이력 중심, 검침원 경력 확인 안 됨). 적합 인물 없음 (2026-04-20).",
+                   "detailReady":  {
+                                       "curriculum":  [
+                                                          "고등학교 졸업 후 전기·기계·에너지 관련 기초 지식을 익힌다.[1]",
+                                                          "한국가스안전공사 사이버교육원에서 사용시설점검원 교육을 이수한다.[2]",
+                                                          "전기기능사·가스기능사·에너지관리기능사 등 관련 자격을 준비한다.[3]"
+                                                      ],
+                                       "recruit":  [
+                                                       "한국전력공사·지방자치단체 수도사업소·도시가스사 협력업체 채용 공고를 확인한다.[1]",
+                                                       "원격검침(AMI)·고객 현장 점검 등 검침 관련 업무 내용을 확인하고 지원 분야를 정한다.[2]",
+                                                       "가스 분야는 사용시설점검원 교육 이수 여부를 점검한 뒤 지원한다.[3]"
+                                                   ],
+                                       "training":  [
+                                                        "현장 검침 기록 작성과 고객 응대 기본 절차를 익힌다.[1]",
+                                                        "가스 시설 안전점검 기초와 법정 교육 과정을 이수한다.[2]",
+                                                        "관련 자격 준비를 통해 설비 이해도와 안전관리 역량을 높인다.[3]"
+                                                    ]
+                                   },
+                   "sidebarOrgs":  [
+                                       {
+                                           "name":  "한국전력공사",
+                                           "url":  "https://www.kepco.co.kr/"
+                                       },
+                                       {
+                                           "name":  "한국가스안전공사",
+                                           "url":  "https://www.kgs.or.kr/"
+                                       }
+                                   ]
+               },
+    "jobId":  "1765285618765131",
+    "jobName":  "검침원",
+    "careerTree":  null,
+    "_careerTreeNote":  "조사 인물 5명: 김동수(전력 공기업 경영 이력 중심, 검침원 경력 확인 안 됨), 정승일(전력 공기업 사장 이력 중심, 검침원 경력 확인 안 됨), 박일준(산업·에너지 정책 경력 중심, 검침원 경력 확인 안 됨), 최연혜(에너지 공기업 사장 이력 중심, 검침원 경력 확인 안 됨), 김동철(전력 공기업 경영 이력 중심, 검침원 경력 확인 안 됨). 적합 인물 없음 (2026-04-20).",
+    "changeSummary":  "[job-data-enhance] 검침원 way/prospect/trivia/detailWlb/detailReady/sidebar/youtubeNote/careerTreeNote 보강",
+    "sources":  {
+                    "detailReady.curriculum":  [
+                                                   {
+                                                       "id":  1,
+                                                       "text":  "[1] 커리어넷 직업정보",
+                                                       "url":  "https://www.career.go.kr/cloud/w/job/view?seq=1"
+                                                   },
+                                                   {
+                                                       "id":  2,
+                                                       "text":  "[2] 가스안전교육원 온라인교육",
+                                                       "url":  "https://cyber.kgs.or.kr"
+                                                   },
+                                                   {
+                                                       "id":  3,
+                                                       "text":  "[3] 큐넷 자격정보",
+                                                       "url":  "https://www.q-net.or.kr/crf005.do?id=crf00503\u0026jmCd=6335\u0026gSite=Q"
+                                                   }
+                                               ],
+                    "detailReady.recruit":  [
+                                                {
+                                                    "id":  1,
+                                                    "text":  "[1] 한국전력공사 인재경영",
+                                                    "url":  "https://www.kepco.co.kr/home/esg/society/talent/conts.do"
+                                                },
+                                                {
+                                                    "id":  2,
+                                                    "text":  "[2] 한국전력공사 개인정보 처리방침(AMI 검침 고객 관리)",
+                                                    "url":  "https://www.kepco.co.kr/home/service/privacy/boardView.do"
+                                                },
+                                                {
+                                                    "id":  3,
+                                                    "text":  "[3] 가스안전교육원 온라인교육",
+                                                    "url":  "https://cyber.kgs.or.kr"
+                                                }
+                                            ],
+                    "detailReady.training":  [
+                                                 {
+                                                     "id":  1,
+                                                     "text":  "[1] 커리어넷 직업정보",
+                                                     "url":  "https://www.career.go.kr/cloud/w/job/view?seq=1"
+                                                 },
+                                                 {
+                                                     "id":  2,
+                                                     "text":  "[2] 가스안전교육원 온라인교육",
+                                                     "url":  "https://cyber.kgs.or.kr"
+                                                 },
+                                                 {
+                                                     "id":  3,
+                                                     "text":  "[3] 큐넷 자격정보",
+                                                     "url":  "https://www.q-net.or.kr/crf005.do?id=crf00503\u0026jmCd=7761\u0026gSite=Q"
+                                                 }
+                                             ],
+                    "way":  [
+                                {
+                                    "id":  1,
+                                    "text":  "[1] 커리어넷 직업정보",
+                                    "url":  "https://www.career.go.kr/cloud/w/job/view?seq=1"
+                                },
+                                {
+                                    "id":  2,
+                                    "text":  "[2] 더잡 직업분석",
+                                    "url":  "https://www.thejobnews.kr/news/articleView.html?idxno=255"
+                                }
+                            ],
+                    "overviewProspect.main":  [
+                                                  {
+                                                      "id":  1,
+                                                      "text":  "[1] 커리어넷 직업정보",
+                                                      "url":  "https://www.career.go.kr/cloud/w/job/view?seq=1"
+                                                  }
+                                              ],
+                    "trivia":  [
+                                   {
+                                       "id":  1,
+                                       "text":  "[1] 커리어넷 직업정보",
+                                       "url":  "https://www.career.go.kr/cloud/w/job/view?seq=1"
+                                   }
+                               ],
+                    "detailWlb.wlbDetail":  [
+                                                {
+                                                    "id":  1,
+                                                    "text":  "[1] 커리어넷 직업정보",
+                                                    "url":  "https://www.career.go.kr/cloud/w/job/view?seq=1"
+                                                }
+                                            ],
+                    "detailWlb.socialDetail":  [
+                                                   {
+                                                       "id":  1,
+                                                       "text":  "[1] 커리어넷 직업정보",
+                                                       "url":  "https://www.career.go.kr/cloud/w/job/view?seq=1"
+                                                   }
+                                               ]
+                }
+}

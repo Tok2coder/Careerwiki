@@ -1,0 +1,107 @@
+{
+  "fields": {
+    "way": "응급의학과전문의사가 되려면 의과대학(6년) 졸업 후 의사 국가고시에 합격해 의사 면허를 취득하고, 인턴 1년·응급의학과 레지던트 4년을 이수해야 한다.[1] 전문의 자격시험 합격 후 대학병원 응급의학과, 권역응급의료센터, 공공의료기관 등으로 진출하거나 연구 및 학술 분야로 이어질 수 있다.[2]",
+    "trivia": "한국 최초의 응급의학과는 1987년 영동 세브란스병원에 설립됐다. 성수대교 붕괴(1994년)·삼풍백화점 붕괴(1995년)와 같은 대형 참사가 응급의학 전문의 제도 도입을 앞당겼으며, 현재는 전국에 2,000명 이상의 응급의학과 전문의가 활동하고 있다.[1]",
+    "overviewProspect": {
+      "main": "2025년 응급의학과 전공의 정원(224명) 대비 실제 확보 인원이 15명에 그치는 등 극심한 인력난이 이어지고 있어 취업 기회 자체는 넓은 편이다.[1] 다만 야간·교대 근무 등 높은 업무 강도로 인해 지원자 감소가 지속되는 추세여서 중장기 인력 공급 상황은 불확실하다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "응급의학과는 365일 24시간 운영되는 특성상 야간·주말·공휴일 교대 근무가 필수이며, 다수의 중증 환자를 동시에 처리하는 고강도 업무 환경이다.[1] 대학병원 응급의학과 교수나 펠로우 과정에서는 진료·연구·교육을 병행하여 추가적인 시간 투자가 요구된다.[2]",
+      "socialDetail": "심정지·다발성 외상·뇌졸중 등 생명이 위급한 환자를 즉각 처치해 사망을 예방하는 직접적인 공익 역할을 담당한다.[1] 대량재해 발생 시 의료 대응 팀을 이끌고, 지역사회 응급의료체계를 지탱하는 핵심 인력으로서 공공보건에 기여한다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학 6년 과정 이수[1]",
+        "의사 국가고시 합격 및 의사 면허 취득[2]",
+        "인턴 1년 후 응급의학과 레지던트 4년 지원[3]",
+        "응급의학과 전문의 자격시험 합격[4]"
+      ],
+      "recruit": [
+        "대학병원 응급의학과 임상강사·교수 지원[1]",
+        "권역응급의료센터 등 지역 응급의료기관 채용 지원[2]",
+        "공공의료기관(보건의료원·지방의료원 등) 응급의학과 근무[3]"
+      ],
+      "training": [
+        "중증 응급의학(재해의학·독극물) 세부전문의 과정 참여[1]",
+        "초음파(POCUS)·기관삽관 등 전문 응급처치 술기 교육 이수[2]",
+        "대한응급의학회 학술대회 및 연수강좌 참여[3]"
+      ]
+    },
+    "overviewAbilities": {
+      "technKnow": "심폐소생술(CPR)·급속기관삽관(RSI)·흉관삽입·중심정맥관 삽입 등 응급 시술 기법과 초음파(POCUS) 활용이 핵심이다.[1] 독극물 중독·심정지·다발성 외상에 대한 빠른 진단 프로토콜과 응급약물(카테콜아민·항부정맥제 등) 지식이 요구된다.[2]"
+    },
+    "sidebarJobs": [
+      "외과전문의사",
+      "내과전문의사",
+      "마취과전문의사",
+      "신경과전문의사",
+      "정신건강의학전문의사",
+      "소아청소년과의사",
+      "재활의학과전문의사",
+      "법의학자",
+      "응급구조사",
+      "흉부외과전문의사"
+    ],
+    "sidebarMajors": ["의학과", "생명과학과", "의료경영학과"],
+    "sidebarOrgs": [
+      {"name": "대한응급의학회", "url": "https://emergency.or.kr/"},
+      {"name": "중앙응급의료센터", "url": "https://www.e-gen.or.kr/"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"}
+    ],
+    "sidebarCerts": [
+      {"name": "의사", "url": "https://www.kuksiwon.or.kr/"},
+      {"name": "응급의학과전문의", "url": "https://emergency.or.kr/"}
+    ],
+    "heroTags": ["응급의학과의사", "응급실의사", "응급전문의사", "ER Doctor", "중증외상의학"],
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=o5kwD15DQUs",
+        "title": "응급의학과 의사와 그 진로에 대한 모든것 Q&A !!"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국의과대학·의학전문대학원협회", "url": "https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id": 2, "text": "[2] 대한응급의학회", "url": "https://emergency.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 응급의료체계 역사 — 중앙응급의료센터", "url": "https://www.e-gen.or.kr/nemc/emergency_medical_services_system.do?viewPage=history"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 문화일보 — 응급의학 전공의 현황", "url": "https://www.munhwa.com/article/11517083"},
+      {"id": 2, "text": "[2] 대한응급의학회", "url": "https://emergency.or.kr/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 대한응급의학회", "url": "https://emergency.or.kr/"},
+      {"id": 2, "text": "[2] 중앙응급의료센터", "url": "https://www.e-gen.or.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 중앙응급의료센터", "url": "https://www.e-gen.or.kr/"},
+      {"id": 2, "text": "[2] 대한응급의학회", "url": "https://emergency.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국의과대학·의학전문대학원협회", "url": "https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"},
+      {"id": 3, "text": "[3] 대한응급의학회", "url": "https://emergency.or.kr/"},
+      {"id": 4, "text": "[4] 중앙응급의료센터", "url": "https://www.e-gen.or.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 한국의과대학·의학전문대학원협회", "url": "https://www.kamc.kr/main/index.php?m_cd=52"},
+      {"id": 2, "text": "[2] 대한응급의학회", "url": "https://emergency.or.kr/"},
+      {"id": 3, "text": "[3] 중앙응급의료센터", "url": "https://www.e-gen.or.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한응급의학회", "url": "https://emergency.or.kr/"},
+      {"id": 2, "text": "[2] 중앙응급의료센터", "url": "https://www.e-gen.or.kr/"},
+      {"id": 3, "text": "[3] 한국의과대학·의학전문대학원협회", "url": "https://www.kamc.kr/main/index.php?m_cd=52"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 1, "text": "[1] 대한응급의학회", "url": "https://emergency.or.kr/"},
+      {"id": 2, "text": "[2] 중앙응급의료센터", "url": "https://www.e-gen.or.kr/"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 응급의학과전문의사 17필드 신규 작성 (way·trivia·prospect·detailWlb·detailReady·technKnow 전체·sidebarJobs 27→10·sidebarMajors·sidebarOrgs·sidebarCerts URL 보강·heroTags 확장·youtubeLinks)"
+}

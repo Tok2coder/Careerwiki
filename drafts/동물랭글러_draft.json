@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "way": "동물랭글러는 영화, 드라마, 광고, 방송 촬영 현장에서 동물을 안전하게 관리하고 연출하는 전문가로, 국내에서는 체계적인 공식 학위 과정이 별도로 존재하지 않습니다. 동물조련사나 반려동물훈련사로 출발하여 영상 제작 현장 경험을 쌓는 것이 가장 일반적인 진입 경로입니다. 동물사육사, 동물원 관리직, 반려동물훈련학원 등에서 경력을 쌓은 후 영화·광고 제작사 또는 동물 전문 에이전시에 연결되는 방식으로 진입하기도 합니다. 해외에서는 전문 동물랭글러 에이전시를 통한 진입이 일반적이며, 국내에서도 유사한 방식으로 프리랜서 활동이 이루어집니다. 동물 행동학, 동물훈련 자격증을 보유하면 현장 신뢰도를 높이는 데 유리합니다 [1].",
+    "overviewSalary": {
+      "sal": "동물랭글러의 보수는 고정급보다는 프로젝트별 계약 형태가 많아 편차가 큽니다. 프리랜서 기준 하루 출연료는 수십만 원에서 수백만 원까지 다양하며, 대형 영화나 광고 프로젝트의 경우 상당한 수입을 기대할 수 있습니다. 연간 안정적인 소득을 보장받기는 어렵지만 경력과 인지도가 쌓일수록 단가가 높아지는 구조입니다 [1]."
+    },
+    "overviewProspect": {
+      "main": "OTT 플랫폼 성장과 콘텐츠 제작 증가로 영상 산업 규모가 확대되면서 동물이 등장하는 콘텐츠도 늘고 있습니다. 동물 복지에 대한 사회적 관심이 높아지면서 촬영 현장에서 동물 전문가의 역할이 더욱 중요해지고 있으며, 전문 동물랭글러에 대한 수요는 완만한 증가세를 보일 것으로 전망됩니다 [1]."
+    },
+    "trivia": "할리우드에는 'No Animals Were Harmed'라는 공식 인증 제도가 있으며, 이는 미국인도주의협회(AHA)가 촬영 현장에서 동물이 학대받지 않았음을 보증하는 제도로 동물랭글러의 역할이 핵심입니다 [1].",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "촬영 일정은 불규칙하며 이른 새벽이나 야간 촬영이 빈번합니다. 촬영 현장의 특성상 대기 시간이 길고 장시간 야외 근무가 요구되는 경우도 많아 체력 소모가 큰 편입니다. 프리랜서 비중이 높아 안정적인 근무 패턴을 유지하기 어렵습니다 [1].",
+      "socialDetail": "영상 콘텐츠 산업에 기여하는 동시에, 촬영 중 동물의 복지와 안전을 지키는 역할을 담당하여 동물 권리 증진에도 간접적으로 기여합니다 [1]."
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "동물행동학", "text": "동물의 본능적·학습적 행동 원리를 이해하고 촬영 환경에서 동물의 반응을 예측·통제하는 기초 지식을 제공합니다.", "link": null},
+        {"title": "동물훈련 이론 및 실습", "text": "긍정 강화 훈련, 클리커 훈련 등 다양한 훈련 기법을 익히며 동물이 특정 행동을 수행하도록 유도하는 기술을 학습합니다.", "link": null},
+        {"title": "영상 제작 기초", "text": "촬영 현장의 구조와 용어, 스태프 역할을 이해함으로써 제작팀과의 원활한 소통 및 협업 능력을 기릅니다.", "link": null}
+      ],
+      "recruit": [
+        {"title": "동물 전문 에이전시 연결", "text": "국내외 동물 촬영 전문 에이전시에 등록하거나 제작사 네트워크를 통해 프리랜서로 활동하는 방식이 일반적입니다.", "link": null},
+        {"title": "동물원·동물조련 기관 경력 후 전환", "text": "동물원, 아쿠아리움, 동물훈련 학원 등에서 조련·사육 경력을 쌓은 후 영상 제작 현장으로 진출합니다.", "link": null}
+      ],
+      "training": [
+        {"title": "반려동물훈련사 자격 과정", "text": "동물 훈련의 기본 원리와 실습을 체계적으로 학습하며, 촬영 현장에서 동물을 다루는 기초 역량을 기릅니다.", "link": null},
+        {"title": "동물조련사 실무 교육", "text": "대형 동물 및 특수 동물 조련 기법을 익히는 실무 중심 교육으로, 현장 적응력을 높이는 데 도움이 됩니다.", "link": null}
+      ]
+    },
+    "heroTags": ["동물조련", "영상촬영", "동물복지", "프리랜서"],
+    "sidebarJobs": ["동물사육사", "반려동물훈련사", "동물보호관리사"],
+    "sidebarCerts": [
+      {"name": "반려동물훈련사", "url": "https://www.q-net.or.kr/man001.do?gSite=Q"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/seekWantedMain.do"}],
+    "overviewSalary.sal": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/seekWantedMain.do"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/seekWantedMain.do"}],
+    "trivia": [{"id": 1, "text": "[1] 미국인도주의협회(AHA)", "url": "https://www.americanhumane.org/initiative/no-animals-were-harmed/"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/seekWantedMain.do"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/seekWantedMain.do"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/seekWantedMain.do"}],
+    "detailReady.training": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}]
+  },
+  "changeSummary": "동물랭글러 신규 보완"
+}

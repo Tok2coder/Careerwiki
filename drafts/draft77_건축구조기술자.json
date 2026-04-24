@@ -1,0 +1,47 @@
+{
+  "jobName": "건축구조기술자",
+  "jobId": "1765283441570636",
+  "fields": {
+    "way": "건축구조기술자가 되려면 건축공학이나 토목공학 관련 학과를 졸업한 후 구조 설계 전문 회사에 입사하는 것이 일반적이다.[1] 실무 경험을 쌓으면서 건축기사, 건축구조기술사 등의 자격증을 취득하면 전문가로 인정받을 수 있다.[2] 대형 건설사의 구조팀이나 건축설계사무소 구조 부서에서 경력을 쌓은 뒤 독립 구조 엔지니어링 사무소를 설립하거나, 공공기관 시설직으로 전환하는 경로도 있다.",
+    "overviewSalary": {
+      "sal": "2024년 워크넷·커리어넷 직업정보 기준 평균 연봉은 약 3,200~3,800만 원이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "도시 재개발, 노후 건축물 리모델링, 초고층 빌딩 건설 수요와 함께 건축구조기술자의 고용은 꾸준히 유지될 전망이다. 내진 설계 의무 강화와 스마트 구조 기술 도입으로 전문 인력 수요가 지속될 것으로 보인다.[1]"
+    },
+    "trivia": "건축구조기술자는 건물이 자체 하중과 지진, 바람 등 외력을 견딜 수 있도록 설계하는 안전의 수호자다. 롯데월드타워(555m)와 같은 초고층 빌딩 설계에는 수십 명의 구조기술자가 수년에 걸쳐 협업한다. 건축물의 수명 50년 이상을 책임지는 만큼 단 1%의 오차도 허용되지 않는 고도의 전문직이다.[1]",
+    "sidebarCerts": [
+      {"name": "건축기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5110&gSite=Q&gId="},
+      {"name": "건축구조기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5101&gSite=Q&gId="},
+      {"name": "건축시공기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5105&gSite=Q&gId="}
+    ],
+    "detailReady": {
+      "recruit": [
+        "건축구조 전문 엔지니어링 회사(구조안전기술·동일구조·해안 건축구조) 경력·신입 채용",
+        "종합 건설사 구조팀 기술직 공채(현대건설·삼성물산·DL이앤씨 등)",
+        "건축설계사무소 구조팀 입사(희림종합건축사사무소·간삼파트너스 등)[1]",
+        "공공기관(LH·한국도로공사·지자체 건축과) 시설직 채용을 통한 구조 검토 업무[2]"
+      ]
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=77"},
+      {"id": 2, "text": "워크넷 직업정보", "url": "https://www.work24.go.kr/cm/f/cvl/retrieveOccpDtl.do?SEQ=CC1020010"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "워크넷 직업정보", "url": "https://www.work24.go.kr/cm/f/cvl/retrieveOccpDtl.do?SEQ=CC1020010"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "한국건설기술연구원", "url": "https://www.kict.re.kr"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "대한건축학회", "url": "https://www.aik.or.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "잡코리아 채용정보", "url": "https://www.jobkorea.co.kr"},
+      {"id": 2, "text": "사람인 채용정보", "url": "https://www.saramin.co.kr"}
+    ]
+  },
+  "changeSummary": "sources text URL 포함 항목 기관명으로 교체, sources ID 필드별 1부터 재설정, 동적 검색결과 URL을 직업정보 직접 URL로 교체, way/trivia/prospect/sal에 [N] 마커 추가, detailReady.recruit sources 등록, sidebarCerts 업데이트"
+}

@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "way": "토목공학과, 환경공학과 등 관련 학과를 졸업한 뒤 상하수도전문공사업체, 토목엔지니어링회사 또는 지방자치단체 수도사업소에 기술직으로 진입하는 것이 일반적인 경로다. 토목기사·상하수도기술사 등 관련 자격을 취득하면 설계·감리 업무와 공공발주 현장 투입에 유리하다. 경력이 쌓이면 취수장·정수장·하수처리장 등 수처리 시설의 계획·설계·운영 전반을 담당하며, 기술사 자격 취득 이후에는 독립적인 설계·감리 업무도 가능하다.[1]",
+    "trivia": "직업백과에 따르면 토목 분야 취업처의 하나로 상하수도전문공사업체가 있으며, 관련 자격인 상하수도기술사는 수처리 시설 계획·설계·감리에 필요한 전문자격이다. 관련 종사자는 지방자치단체 수도사업소 소속인 경우 수도 사업소 지방 근무 비중이 높은 편이다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "사무실 설계 업무와 취수장·정수장·하수처리장 등 현장 점검을 병행하는 하이브리드 근무 형태다. 시공 감리나 시설 운영 기술진단 시에는 현장에 장시간 상주하는 경우도 있으며, 지방 수도사업소 소속이면 지방 근무 비중이 높아진다. 설계변경 마감이나 준공 전후 집중 근무 기간이 있다.[1]",
+      "socialDetail": "국민이 매일 이용하는 수돗물 공급과 하수·폐수 처리 시스템을 설계·운영함으로써 공중보건과 수질 환경을 직접 지키는 역할을 담당한다. 깨끗한 수돗물 공급과 하수 처리는 지역사회 건강과 환경 보전에 필수적인 공익 서비스다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "토목공학과, 환경공학과, 도시건설과 등 관련 학과 졸업",
+        "상수도공학, 하수도공학, 수리학, 유체역학 등 핵심 과목 이수",
+        "토목기사·상하수도기술사 등 관련 자격 취득[1]"
+      ],
+      "recruit": [
+        "상하수도전문공사업체, 토목엔지니어링회사 공개채용·경력직 지원",
+        "지방자치단체 수도사업소 기술직 공무원 시험 응시",
+        "한국수자원공사(K-water) 등 공공기관 채용 지원[1]"
+      ],
+      "training": [
+        "한국상하수도협회 및 한국건설기술인협회 기술 교육",
+        "상하수도기술사 취득을 위한 전문 교육과정 이수[1]"
+      ]
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 현 상태를 유지하거나 다소 감소할 것으로 전망된다. 신규 상하수도 인프라 투자는 위축되는 경향이나, 노후 관망 교체·누수 방지·스마트 수도 사업 등 유지보수와 현대화 수요는 꾸준히 유지될 것으로 예상된다.[1]"
+    },
+    "heroTags": ["상하수도설비기술자", "수처리기술", "상하수도설계", "정수처리", "하수처리", "수도설비"],
+    "sidebarJobs": ["토목공학기술자", "환경공학기술자 및 연구원", "토목감리원", "하수처리기술자"],
+    "sidebarMajors": ["토목공학과", "환경공학과", "토목과", "도시건설과"],
+    "sidebarOrgs": [
+      {"name": "한국수자원공사", "url": "https://www.kwater.or.kr"},
+      {"name": "대한토목학회", "url": "https://www.ksce.or.kr"}
+    ],
+    "sidebarCerts": [
+      {"name": "도로및공항기술사", "url": null},
+      {"name": "토목기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=1252&gSite=Q"},
+      {"name": "상하수도기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0460"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "trivia": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.training": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}]
+  },
+  "changeSummary": "상하수도설비기술자 Phase 1: way·trivia·detailWlb·detailReady·prospect·사이드바 신규 작성 (YouTube 없음)"
+}

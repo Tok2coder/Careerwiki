@@ -1,0 +1,54 @@
+{
+    "jobId":  "1765285618765131",
+    "jobName":  "검침원",
+    "jobSlug":  "검침원",
+    "capturedAt":  "2026-04-20T00:00:00+09:00",
+    "currentRevision":  null,
+    "restorePayload":  {
+                           "fields":  {
+                                          "way":  null,
+                                          "overviewProspect":  {
+                                                                   "main":  null
+                                                               },
+                                          "trivia":  null,
+                                          "detailWlb":  null,
+                                          "detailReady":  null,
+                                          "sidebarJobs":  null,
+                                          "sidebarMajors":  null,
+                                          "sidebarCerts":  null,
+                                          "heroTags":  null,
+                                          "youtubeLinks":  null,
+                                          "_youtubeSearchNote":  null,
+                                          "_careerTreeNote":  null
+                                      },
+                           "sources":  {
+                                           "way":  {
+                                                       "delete":  true
+                                                   },
+                                           "overviewProspect.main":  {
+                                                                         "delete":  true
+                                                                     },
+                                           "trivia":  {
+                                                          "delete":  true
+                                                      },
+                                           "detailWlb.wlbDetail":  {
+                                                                       "delete":  true
+                                                                   },
+                                           "detailWlb.socialDetail":  {
+                                                                          "delete":  true
+                                                                      },
+                                           "detailReady.curriculum":  {
+                                                                          "delete":  true
+                                                                      },
+                                           "detailReady.recruit":  {
+                                                                       "delete":  true
+                                                                   },
+                                           "detailReady.training":  {
+                                                                        "delete":  true
+                                                                    }
+                                       },
+                           "careerTree":  null,
+                           "_careerTreeNote":  null,
+                           "changeSummary":  "[job-data-enhance] restore 검침원 pre-enhance backup (2026-04-20)"
+                       }
+}

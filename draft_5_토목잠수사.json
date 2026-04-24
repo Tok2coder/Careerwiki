@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "way": "잠수기능사를 취득한 뒤 잠수산업기사로 자격을 높이는 것이 일반적인 진입 경로다. 관련 교육기관으로는 한국산업잠수기술인협회 단기과정이나 한국폴리텍대학 산업잠수과 2년 과정이 있다. 입직 후에는 잠수보조원으로 시작해 잠수팀에서 경력을 쌓으며 잠수사·잠수감독관으로 승급하며, 토목·용접·화약 관련 추가 자격을 보유하면 수중공사 현장에서 업무 범위가 넓어진다.[1]",
+    "trivia": "산업잠수사는 수중전문건설업체, 해양경찰 특공대, 소방공무원 119구조대, 어장 정화정비업체, 해난구조업체, 정유회사, 원자력발전소 냉각시설 등 다양한 분야에서 활동한다. 해병대·UDT·SSU 등 군 특수부대 출신들이 많이 도전하는 직업으로 알려져 있으며, 위험도가 높은 수중작업에는 특수 장비와 팀 단위 운영이 필수적이다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통 이상",
+      "wlbDetail": "수중에서 암반 발파, 구조물 설치, 용접·절단 등 고위험 작업을 수행하며, 기상·해상 조건에 따라 작업 여부가 결정된다. 잠수팀은 잠수감독관, 잠수사, 대기잠수사, 보조사 등으로 구성되며 팀 단위로 운영되고 상호 협력이 필수적이다. 작업 시간 자체는 프로젝트 단위이지만 위험 노출 빈도가 매우 높아 신체적 부담이 크다.[1]",
+      "socialDetail": "교량, 부두, 방파제, 댐 등 국가 기반시설의 수중 기초 공사와 유지보수를 담당하며, 원자력발전소 냉각시설·유조선 터미널 수중 점검 등 산업 안전에도 기여한다. 해난구조 현장에서의 역할도 생명과 재산 보호에 직결된다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "한국폴리텍대학 산업잠수과(2년) 또는 해양 관련 학과 졸업",
+        "잠수기능사 취득 후 잠수산업기사 자격 취득",
+        "토목·용접·화약류 취급 등 관련 추가 자격 취득[1]"
+      ],
+      "recruit": [
+        "수중전문건설업체, 해난구조업체 입직",
+        "해양경찰 특공대, 소방 119구조대 채용 응시",
+        "정유회사, 원자력발전소 냉각시설 관리업체 채용 지원[1]"
+      ],
+      "training": [
+        "한국산업잠수기술인협회 단기 잠수 교육과정",
+        "가나해양교육원 등 전문 잠수 교육기관 실기 교육[1]"
+      ]
+    },
+    "heroTags": ["토목잠수사", "산업잠수사", "수중건설", "수중공사", "잠수기능사", "수중용접"],
+    "sidebarJobs": ["산업잠수사(일반)", "선박잠수사", "잠수반장", "해양공학기술자"],
+    "sidebarMajors": ["산업잠수과", "해양공학과", "토목공학과", "해양경찰학과"],
+    "sidebarOrgs": [
+      {"name": "한국산업잠수기술인협회", "url": null},
+      {"name": "한국잠수협회", "url": null}
+    ],
+    "sidebarCerts": [
+      {"name": "잠수기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7612"},
+      {"name": "잠수산업기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2521"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=ElYGfhXCCOU", "title": "위험한 현장은 하루 200만원도 벌 수 있는 직업의 정체┃산업 잠수사┃극한직업"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 에브리뉴스 — 이색 직업 산업잠수사 소개", "url": "http://www.everynews.co.kr/news/articleView.html?idxno=2629"}],
+    "trivia": [{"id": 1, "text": "[1] 에브리뉴스 — 이색 직업 산업잠수사 소개", "url": "http://www.everynews.co.kr/news/articleView.html?idxno=2629"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 에브리뉴스 — 이색 직업 산업잠수사 소개", "url": "http://www.everynews.co.kr/news/articleView.html?idxno=2629"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 에브리뉴스 — 이색 직업 산업잠수사 소개", "url": "http://www.everynews.co.kr/news/articleView.html?idxno=2629"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 에브리뉴스 — 이색 직업 산업잠수사 소개", "url": "http://www.everynews.co.kr/news/articleView.html?idxno=2629"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 에브리뉴스 — 이색 직업 산업잠수사 소개", "url": "http://www.everynews.co.kr/news/articleView.html?idxno=2629"}],
+    "detailReady.training": [{"id": 1, "text": "[1] 에브리뉴스 — 이색 직업 산업잠수사 소개", "url": "http://www.everynews.co.kr/news/articleView.html?idxno=2629"}]
+  },
+  "changeSummary": "토목잠수사 Phase 1: way·trivia·detailWlb·detailReady·사이드바·유튜브 신규 작성 (prospect 출처 미확보로 생략)"
+}

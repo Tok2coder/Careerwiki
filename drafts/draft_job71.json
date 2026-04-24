@@ -1,0 +1,76 @@
+{
+  "fields": {
+    "way": "건설장비운영사무원이 되려면 건축공학, 토목공학, 기계공학 관련 학과를 졸업하거나 건설 현장 장비 운용 관련 실무 경험을 쌓은 후 건설사 장비운영팀에 입사하는 것이 일반적이다. 국내외 건설현장의 장비 소요계획 수립부터 구입·임차·매각까지 다양한 행정 업무를 담당하므로 건설 프로젝트 관리와 장비 관련 법규에 대한 폭넓은 이해가 필요하다.[1] 전문대졸 이상 학력에 2~4년 경력이 쌓이면 독립적으로 장비 운영계획을 수립할 수 있으며, 해외 건설 프로젝트 경험을 갖추면 글로벌 건설사의 장비 운영팀으로 진출할 수 있다.[2]",
+    "overviewSalary": {
+      "sal": "건설사 자재·구매·물류 사무직으로 분류되며, 2025년 기준 대형 건설사 신입 사무직 계약연봉은 약 4,500만 원 내외이고, 경력이 쌓일수록 해외 현장 수당 등이 더해져 연봉이 상승하는 구조다.[1]"
+    },
+    "overviewProspect": {
+      "main": "국내외 건설 프로젝트의 대형화와 복잡화로 건설장비의 효율적 운용 및 전략적 배치 필요성이 높아지고 있다. 해외 건설사업 수주 규모에 따라 수요가 변동하며, 건설 경기 변동에 민감한 직종이지만 대형 건설사를 중심으로 장비 운영 전문 인력에 대한 꾸준한 수요가 유지될 전망이다.[1]"
+    },
+    "trivia": "건설장비운영사무원이 다루는 장비매각(폐기 대상이 아닌 노후 장비 원매자 물색) 업무는 단순 행정 처리가 아니라 적정 매각 가격 산정을 위해 장비의 잔존 수명과 수리 비용을 종합 분석해야 하므로, 건설기계에 대한 기술적 이해가 사무직임에도 불구하고 필수 역량으로 요구된다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통",
+      "wlbDetail": "주로 사무실에서 근무하나 국내 건설현장 출장 및 해외 공사 현장 방문이 수반되기도 한다. 장비 투입 시점이나 계약 마감 등 프로젝트 일정에 따라 업무 강도가 높아질 수 있으나, 전반적으로 실내 사무직에 준한 근무환경이다.[1]",
+      "socialDetail": "건설 프로젝트에 필요한 장비를 적시에 공급함으로써 국내외 대형 인프라·건축 사업의 적기 완공에 기여하는 역할을 한다. 불용장비 매각과 효율적 임차를 통해 건설 비용을 절감하고 자원 낭비를 줄이는 환경적 기여도 있다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "건축공학·토목공학·기계공학 관련 학과 전공",
+        "건설장비 관련 법규 및 국제 기준(ISO) 학습",
+        "건설 프로젝트 관리(PM) 방법론 이수",
+        "ERP·장비관리 시스템 활용 역량 배양",
+        "해외 건설 장비 통관·물류 관련 실무 교육 이수[1]"
+      ],
+      "recruit": [
+        {"text": "대형 건설사(현대건설, GS건설 등) 장비운영팀 신입·경력 공채 지원", "url": "https://recruit.hdec.kr/"},
+        {"text": "건설기계 임대 전문업체 운영 관리 사무직 취업", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"},
+        "공공기관(도로공사, LH 등) 장비 행정 사무직 채용 지원[1]"
+      ],
+      "training": [
+        "건설기계 관련 법규 및 국제 통관 절차 전문 교육 이수",
+        "건설PM(프로젝트 관리) 자격 교육 및 취득[1]"
+      ]
+    },
+    "sidebarMajors": ["건축공학과", "토목공학과", "기계공학과", "경영학과"],
+    "sidebarOrgs": [
+      {"name": "대한건설기계안전관리원(KCESI)", "url": "https://www.kcesi.or.kr"},
+      {"name": "건설워커(건설취업포털)", "url": "https://www.worker.co.kr"}
+    ],
+    "sidebarCerts": [
+      {"name": "건설기계정비기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1980"},
+      {"name": "물류관리사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2570"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 건설워커 건설사 직종 안내", "url": "https://www.worker.co.kr/job/list.asp"},
+      {"id": 2, "text": "[2] 건설워커 2025년 건설사 신입 연봉 정보", "url": "https://consline.co.kr/524216"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 건설워커 2025년 건설사 신입 연봉 정보", "url": "https://consline.co.kr/524216"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 건설워커 건설사 직종 안내", "url": "https://www.worker.co.kr/job/list.asp"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 고용24 건설사 직업정보", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 고용24 건설사무직 직업정보", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 건설워커 건설사 직종 안내", "url": "https://www.worker.co.kr/job/list.asp"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 건설워커 건설취업 가이드", "url": "https://www.worker.co.kr/job/list.asp"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 고용24 워크넷 건설 채용정보", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 건설워커 건설취업 가이드", "url": "https://www.worker.co.kr/job/list.asp"}
+    ]
+  },
+  "changeSummary": "Phase 1: 완전 빈 직업 데이터 신규 작성 - way/sal/prospect/trivia/detailWlb/detailReady/sidebarMajors/sidebarOrgs/sidebarCerts"
+}

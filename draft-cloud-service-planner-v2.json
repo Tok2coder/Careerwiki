@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "overviewProspect": {
+      "main": "향후 5년간 증가 전망이다.[1] 2024년 국내 클라우드 시장 매출이 전년 대비 25.2% 성장하며 9조 2,600억 원을 돌파하고, AI·멀티클라우드 확산으로 서비스 기획 인력 수요도 동반 증가하고 있다.[2]"
+    },
+    "trivia": "'클라우드'라는 명칭은 과거 네트워크 도식에서 인터넷을 구름 모양으로 표시하던 관행에서 유래했으며, 2006년 아마존이 상용 클라우드 서비스 AWS를 출시하면서 전 세계 IT 인프라의 표준이 됐다.[1] 현재 국내 클라우드 인력은 약 3만 3천 명으로 매년 증가 추세다."
+  },
+  "sources": {
+    "overviewProspect.main": [
+      {"id": 1, "text": "아시아에이 — 2024년 국내 클라우드 시장 매출 9조 돌파", "url": "https://www.asiaa.co.kr/news/articleView.html?idxno=244854"},
+      {"id": 2, "text": "전자신문 — 국내 클라우드 시장 규모와 전망", "url": "https://m.etnews.com/stats/detail_stats.html?id=52309"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "클라우드 컴퓨팅 역사와 AWS 출시 배경, 다빈치 블로그", "url": "https://www.dvn.ci/blog/%EC%9D%B8%ED%84%B0%EB%84%B7-%EC%97%AD%EC%82%AC-05-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EC%BB%B4%ED%93%A8%ED%8C%85-%EC%97%AD%EC%82%AC%EC%99%80-%EC%95%84%EB%A7%88%EC%A1%B4-aws-%EC%A3%BC%EC%9A%94-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%86%8C%EA%B0%9C-23897"}
+    ]
+  },
+  "changeSummary": "trivia AWS 기원 스토리로 교체, prospect 국내 9.26조·25.2% 성장 데이터로 강화"
+}

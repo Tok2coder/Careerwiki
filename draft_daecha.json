@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "sidebarJobs": [
+      "고속철도차량대차차입원",
+      "대차조립반장",
+      "철도차량교정원",
+      "철도차량기기취부원",
+      "철도차량내장판조립원",
+      "철도차량도어조립원",
+      "철도차량설비조립원",
+      "철도차량연결기조립원",
+      "철도차량의장검사원",
+      "철도차량차체조립반장"
+    ],
+    "sidebarMajors": ["기계공학과", "기계설계공학과", "금속공학과"],
+    "overviewSalary": {
+      "sal": "철도 차량 제조업 생산직 기준 월 임금은 약 250만~350만 원 수준이다(조사 기준 연도 미상). 철도 차량 특성상 제조 업체가 대형 기업 위주로 일반 제조업 대비 처우가 양호하다.[1]"
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 워크넷 직업사전 대차조립원", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicDtlInfo.do?pageType=jobDicSrchByJobCl&jobCode=8543&jobSeq=3"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 워크넷 직업사전 대차조립원", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicDtlInfo.do?pageType=jobDicSrchByJobCl&jobCode=8543&jobSeq=3"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국고용정보원 직업전망 정보", "url": "https://www.keis.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 한국철도기술연구원 철도차량 기술 자료", "url": "https://www.krri.re.kr/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 워크넷 직업사전 대차조립원", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicDtlInfo.do?pageType=jobDicSrchByJobCl&jobCode=8543&jobSeq=3"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 국토교통부 철도안전 정책", "url": "https://www.molit.go.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] HRD-Net 직업훈련 과정 검색", "url": "https://www.work24.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 워크넷 직업사전 대차조립원", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobDic/jobDicDtlInfo.do?pageType=jobDicSrchByJobCl&jobCode=8543&jobSeq=3"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] HRD-Net 직업훈련 과정 검색", "url": "https://www.work24.go.kr/"}
+    ]
+  },
+  "changeSummary": "sidebarJobs 10개로 정리, sidebarMajors 추가, sal 연도 미상 명시, sources GN 수선 (per-field id:1), 출처 URL 구체화"
+}

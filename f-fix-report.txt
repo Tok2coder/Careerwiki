@@ -1,0 +1,371 @@
+F 카테고리 TypeScript 에러 수정 보고서
+생성일: 2026-04-05
+작업 브랜치: claude/practical-mendeleev
+================================================================================
+
+결과 요약
+─────────
+  tsc --noEmit 에러: 183개 → 0개
+  npm run build:     성공 (dist/_worker.js 3,891.65 kB)
+  변경 파일:         21개 (154 insertions, 104 deletions)
+
+================================================================================
+git diff --stat
+================================================================================
+
+ src/services/ai-analyzer/aggregated-profile.ts     |   7 +-
+ src/services/ai-analyzer/career-tree-types.ts      |  14 +-
+ src/services/ai-analyzer/draft-routes.ts           |   2 +-
+ src/services/ai-analyzer/evidence-generator.ts     |   2 +-
+ src/services/ai-analyzer/fact-saver.ts             |   2 +-
+ src/services/ai-analyzer/fact-score-mapping.ts     |   2 +-
+ src/services/ai-analyzer/llm-followup.ts           |   6 +-
+ src/services/ai-analyzer/llm-interviewer.ts        |   2 +-
+ src/services/ai-analyzer/llm-judge.ts              |   2 +
+ src/services/ai-analyzer/llm-memory.ts             |   2 +-
+ src/services/ai-analyzer/llm-reporter.ts           |   2 +-
+ src/services/ai-analyzer/premium-report-generator.ts |   4 +-
+ src/services/ai-analyzer/qsp-generator.ts          |   2 +-
+ src/services/ai-analyzer/question-generation.ts    |  11 ++
+ src/services/ai-analyzer/resume-parser.ts          |   2 +-
+ src/services/ai-analyzer/routes.ts                 | 149 +++++++++++----------
+ src/services/ai-analyzer/test-scenarios.ts         |   2 +-
+ src/services/ai-analyzer/types.ts                  |  24 +++-
+ src/services/ai-analyzer/universal-questions.ts    |   4 +-
+ src/services/ai-analyzer/vis-synthesizer.ts        |  13 +-
+ src/services/aiAnalysisService.ts                  |   4 +-
+ 21 files changed, 154 insertions(+), 104 deletions(-)
+
+================================================================================
+파일별 수정 내역
+================================================================================
+
+────────────────────────────────────────
+[타입 수정] career-tree-types.ts (+14 -8)
+────────────────────────────────────────
+변경 종류: 타입 유니온 확장
+
+1. RoleIdentity 유니온에 'inactive' 추가
+   - Before: 'student' | 'worker' | 'manager' | 'entrepreneur' | 'job_seeker'
+   - After:  위 + | 'inactive'
+   - 이유: ROLE_DISABLED_RULES가 Record<RoleIdentity, ...> 이므로
+           'inactive' 엔트리 없으면 TS2741 (missing property in Record)
+
+2. ROLE_DISABLED_RULES에 inactive 엔트리 추가
+   - inactive: { career_stage: [], transition_status: [], skill_level: [] }
+
+3. TransitionStatus 유니온에 레거시 값 추가
+   - Before: 'growth_current' | 'field_change' | 'return_work' | 'second_career' | 'first_job' | 'explore'
+   - After:  위 + | 'none' | 'changer' | 'returner'
+   - 이유: resume-parser.ts가 구형 스칼라 값을 반환, 호환 필요
+
+────────────────────────────────────────
+[타입 수정] types.ts (+24 -1)
+────────────────────────────────────────
+변경 종류: 인터페이스 필드 추가
+
+1. SectionMeta.generated_by에 'rule_enhanced' 추가
+   - Before: 'rule' | 'llm' | 'hybrid'
+   - After:  위 + | 'rule_enhanced'
+   - 이유: premium-report-generator가 실제로 이 값을 사용
+
+2. MetaCognition._meta.generated_by에 'rule_enhanced' 추가 (동일 이유)
+
+3. AnalysisResultJSON에 필드 추가 (routes.ts가 실제로 반환하나 인터페이스에 없었음)
+   - engine_version?: string
+   - premium_report?: any
+   - scored_candidates?: number
+   - filtered_out_candidates?: number
+   - llm_modules?: any
+   - confidence?: any
+   - key_decision_variables?: any[]
+   - scoring_trace_summary?: any
+
+4. DebugInfo에 candidate_count?: number 추가
+   (generateDebugInfo 반환값에 있으나 타입에 없었음)
+
+5. PremiumReport에 engine_version?: string 추가
+
+────────────────────────────────────────
+[타입 수정] fact-score-mapping.ts (+2 -2)
+────────────────────────────────────────
+변경 종류: 유니온 확장
+
+- JobAttribute 유니온에 'autonomy' | 'remote_possible' 추가
+- 이유: routes.ts에서 실제로 이 속성 키를 사용 중이었으나 타입에 없었음
+
+────────────────────────────────────────
+[타입 수정] question-generation.ts (+11)
+────────────────────────────────────────
+변경 종류: 로컬 ScoredJob 인터페이스에 선택적 필드 추가
+
+추가된 필드:
+  job_description?, rationale?, likeReason?, canReason?, riskWarning?,
+  like_score?, can_score?, risk_penalty?, final_score?,
+  entry_level_friendly?, tag_source?
+
+이유: types.ts의 ScoredJob에는 있으나 question-generation.ts 로컬 정의에 없어
+     routes.ts에서 두 타입이 충돌. 두 파일이 각각 ScoredJob을 선언하는 구조.
+
+────────────────────────────────────────
+[타입 수정] universal-questions.ts (+4 -4)
+────────────────────────────────────────
+변경 종류: 인터페이스 이름 변경 (리네임)
+
+- NarrativeQuestion (V1, 구형) → NarrativeQuestionLegacy
+- NARRATIVE_QUESTIONS_LEGACY 배열 타입도 함께 변경
+- 이유: 같은 파일 하단에 V2 NarrativeQuestion이 별도 정의되어 있어
+        TypeScript가 두 선언을 병합 → 만족 불가능한 슈퍼타입 생성
+        이것이 183개 에러의 핵심 원인 중 하나였음
+
+────────────────────────────────────────
+[타입 수정] aggregated-profile.ts (+7 -5)
+────────────────────────────────────────
+1. step3_answers_json 파싱: TransitionSignal 타입 → as any (레거시 flat 필드)
+   - step3.trans_intent 등 flat 필드가 현재 중첩 구조와 맞지 않음
+2. cs.constraints를 extractConstraintFlagsFromCareerState에 as any 전달
+
+────────────────────────────────────────
+[타입 수정] llm-followup.ts (+6 -4)
+────────────────────────────────────────
+1. generatePurposeBasedFollowups 호출 시 candidates/topK에 as any 캐스팅
+   - types.ScoredJob(scores 선택)과 question-generation.ScoredJob(scores 필수) 불일치
+2. transition_status === 'changer' → (... as any[]).includes('changer')
+   - TransitionStatus가 배열일 수도 있는 레거시 데이터 처리
+
+────────────────────────────────────────
+[타입 수정] llm-memory.ts (+2 -2)
+────────────────────────────────────────
+- responseText = response → (response as any)?.response ?? (response as any)
+- callOpenAI 반환값이 string이 아닌 { response: string } 객체임을 반영
+
+────────────────────────────────────────
+[타입 수정] llm-reporter.ts (+2 -2)
+────────────────────────────────────────
+- return fixParticlesDeep(report) as typeof report
+  → return fixParticlesDeep(report) as PremiumReportV3
+- 이유: typeof report가 PremiumReportV3보다 더 좁은 타입으로 추론되어 충돌
+
+────────────────────────────────────────
+[타입 수정] premium-report-generator.ts (+4 -2)
+────────────────────────────────────────
+1. mm.work_style_flags → mm.workstyle_top (필드명 오류 수정 — 아래 Stage2 참조)
+2. generatePremiumReport 반환값 끝에 as unknown as PremiumReport 추가
+   - 함수가 PremiumReport보다 더 많은 필드(executiveSummary 등 LLM Compat 필드)를 담아 반환
+
+────────────────────────────────────────
+[타입 수정] 기타 소파일 (각 2줄 내외)
+────────────────────────────────────────
+- draft-routes.ts:     narrativeFacts as any (updateMemory data 타입 불일치)
+- evidence-generator.ts: matchLogic as any (type: 'inverse' 리터럴 미매칭)
+- fact-saver.ts:        state.transition_status as any (배열 vs 스칼라)
+- llm-interviewer.ts:   metadata as any (round metadata 형식)
+- llm-judge.ts:         allRows 배열 타입에 way, prospect 필드 추가
+- qsp-generator.ts:     (previousQSP as any).retrieval_summary?.top_clusters
+- resume-parser.ts:     parsed.inferred_state.transition_status as any
+- test-scenarios.ts:    careerState: 'freelancer' as any (유니온에 없는 값)
+
+================================================================================
+routes.ts 상세 (115개 에러 → 0개, +149줄 변경)
+================================================================================
+
+[구조적 수정 — 타입 캐스팅 없이 코드 변경]
+
+1. ErrorCode 유니온 확장
+   추가: 'AUTH_REQUIRED' | 'FORBIDDEN' | 'NOT_FOUND' | 'LLM_JUDGE_FAILED' | 'REPORT_FAILED'
+   이유: 코드에서 이미 사용 중이었으나 유니온 정의에 없었음
+
+2. spread 순서 수정 (TS2783)
+   Before: { success: true, phase4_applied: true, ...safeResult }
+   After:  { ...safeResult, success: true, phase4_applied: true }
+   이유: spread 뒤에 명시적 키가 있으면 TS2783 오류
+
+3. 잘못된 변수명 수정
+   Before: mini_module_result: miniModuleForFilter || null
+   After:  mini_module_result: v2MiniModule || null
+   이유: miniModuleForFilter는 해당 스코프에 없는 변수
+
+4. FollowupQuestion → FollowupQuestionV2 타입 전환
+   - import 추가: type FollowupQuestionV2 from './types'
+   - 변수 선언: let followupQuestions: FollowupQuestion[] → FollowupQuestionV2[]
+   - 함수 시그니처: generateStageBasedFollowups 반환 타입 변경
+   - firstFollowup 타입 변경
+   - firstFollowup.constraint 참조 제거 (V2에 없는 필드)
+
+5. additionalContextText 선언 위치 호이스팅 (TS2448)
+   Before: if (openaiKey) { ... } ... let additionalContextText (3393번째 줄)
+   After:  let additionalContextText 를 if 블록 앞으로 이동
+   이유: 블록 이전에 참조되는 블록 스코프 변수
+
+6. effectiveUserId 타입 수정
+   Before: draftOwner?.user_id || null  (number | null)
+   After:  draftOwner?.user_id?.toString() || null  (string | null)
+
+7. requestId null → undefined
+   Before: body.request_id ? String(...) : null
+   After:  body.request_id ? String(...) : undefined
+   이유: 대상 변수 타입이 string | undefined
+
+8. filteredJobs 타입 명시
+   Before: let filteredJobs, mmFilterResult
+   After:  let filteredJobs: any[], mmFilterResult
+
+9. body 캐스팅 (union type 분기 처리)
+   .catch(() => ({})) 의 반환 타입이 {} | { token?, request_id? } 유니온이 되어
+   .token, .request_id 접근 불가 → as { token?: string; request_id?: number } 캐스팅
+
+10. payload.max_jobs / max_items 접근
+    Before: payload.max_jobs  (.catch(() => ({})) 때문에 유니온)
+    After:  (payload as { max_jobs?: number }).max_jobs
+
+11. interestLabels/valueLabels/strengthLabels 인덱싱
+    Before: interestLabels[i]  (string 키로 리터럴 객체 인덱싱 불가)
+    After:  (interestLabels as Record<string, string>)[i]
+
+[as any 캐스팅 목록 — 전체]
+  (payload as any).affects_attributes
+  scoredJobs as any  (generateFollowupQuestions 인수)
+  top10 as any       (generateFollowupQuestions 인수)
+  } as any as FollowupQuestionV2[]  (generateFollowupQuestions 반환)
+  (payload as any).universal_answers
+  (payload as any).career_state
+  (job as any).slug
+  (job as any).image_url
+  } as any as FollowupQuestionV2[]  (generateStageBasedFollowups 반환)
+  type: 'can_validation' as any
+  (env as any)?.OPENAI_API_KEY
+  (deepIntake as any)?.questions?.map(...)
+  (payload as any).career_state.role_identity
+  (payload as any).career_state.career_stage_years
+  candidatesForJudge as any
+  searchProfile as any  (JudgeInput)
+  })) as any  (createScoringTrace 인수)
+  facts.map(...) as any  (extractKeyDecisionVariables 인수)
+  (miniModuleFilterResult as any)?.excluded
+  searchProfile as any  (ReporterInput)
+  roundAnswers as any  (ReporterInput)
+  hardCutList as any  (ReporterInput)
+  (premiumReport as any)._confidence  (두 곳)
+  (expansionResult as any).cacheHit  (두 곳)
+  roundAnswers as any  (MajorJudgeInput)
+  sampleJobs as any  (generateDebugInfo 인수)
+  factBoosts as any  (generateDebugInfo 인수)
+  candidate_source: candidateSource as any
+  metadata: meta as any
+  (q as any).questionId
+  } as any  (RoundQuestion 객체)
+  payload as any  (skipReport 등 destructuring)
+  (payload.mini_module_result as any).workstyle_top
+  {} as any  (hardConstraints reduce 초기값)
+  filterUnrealisticJobs(scoredJobs as any) as any
+  filterNicheMaterialJobs(scoredJobs as any, ...) as any
+  (mmFilterResult.appliedRules[0] as any)?.description
+  judgeResults map → })) as any
+  w: (payload.mini_module_result as any).workstyle_top?.sort()
+
+================================================================================
+Stage 2 — 구현 수정 Before/After 동작 차이
+================================================================================
+
+[1] aiAnalysisService.ts — lastRowId → meta.last_row_id (2곳)
+─────────────────────────────────────────────────────────────
+Before:
+  const requestId = Number(result.lastRowId)
+  const resultId  = Number(insert.lastRowId)
+
+After:
+  const requestId = Number(result.meta.last_row_id)
+  const resultId  = Number(insert.meta.last_row_id)
+
+동작 차이:
+  lastRowId는 구 D1 SDK API로 현재 D1Result 타입에 존재하지 않음.
+  런타임에 undefined → Number(undefined) = NaN.
+  이후 "SELECT id = NaN" 쿼리가 행을 못 찾아
+  "failed to create analysis request" 예외 발생, 분석 저장 전체 실패.
+  수정 후: 올바른 INSERT row id로 후속 SELECT 성공, 정상 저장.
+
+[2] vis-synthesizer.ts — callOpenAI 호출 시그니처 수정
+─────────────────────────────────────────────────────
+Before:
+  const response = await callOpenAI(openaiApiKey, {
+    model: OPENAI_MODEL,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
+    temperature: 0.3,
+    max_tokens: 200,
+  })
+  const content = response.choices[0]?.message?.content || '{}'
+
+After:
+  const response = await callOpenAI(openaiApiKey, [
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt },
+  ], {
+    model: OPENAI_MODEL,
+    temperature: 0.3,
+    max_tokens: 200,
+  })
+  const content = response.response || '{}'
+
+동작 차이:
+  callOpenAI의 실제 시그니처: (key, messages[], options) → { response: string }
+  구 형태로 호출 시: options 인자 위치에 객체 통째로 들어가 messages 필드가 무시됨.
+  + choices 없어서 response.choices[0] = undefined → content 항상 '{}'.
+  vis-synthesizer의 혼란 포인트 분석(tension 분석, summary/suggested_angle 생성)이
+  항상 fallback 값만 반환하던 버그 수정.
+  수정 후: 실제 OpenAI 응답 파싱, 혼란 분석 정상 작동.
+
+[3] premium-report-generator.ts — work_style_flags → workstyle_top
+───────────────────────────────────────────────────────────────────
+Before:
+  const workStyleLabels = (mm.work_style_flags || []).map(t => TOKEN_TO_KOREAN[t] || t)
+
+After:
+  const workStyleLabels = (mm.workstyle_top || []).map(t => TOKEN_TO_KOREAN[t] || t)
+
+동작 차이:
+  MiniModuleResult에 work_style_flags 필드가 존재하지 않음.
+  실제 필드명은 workstyle_top.
+  수정 전: workStyleLabels = [] (항상 빈 배열)
+           → premium report identity insight에서 워크스타일 정보 완전 누락.
+  수정 후: mm.workstyle_top 배열 정상 사용, 워크스타일 레이블 포함된 인사이트 생성.
+
+================================================================================
+as any / as unknown as Type 캐스팅 사용 이유 분류
+================================================================================
+
+[A] 두 파일에 동일 이름의 인터페이스가 따로 존재 (ScoredJob 이중 정의)
+  - question-generation.ts: scores 필수 (fit, like, can, risk_penalty)
+  - types.ts: scores 선택적 + 많은 optional 표시 필드
+  - 두 파일을 import하는 routes.ts에서 혼용 시 불일치 → as any로 통일
+  - 근본 해결: 두 ScoredJob을 하나로 통합해야 하나, 영향 범위가 너무 넓어 보류
+
+[B] Bindings 타입 정의 미비
+  - (env as any)?.OPENAI_API_KEY, (env as any)?.AI
+  - 실제로 wrangler.jsonc에 바인딩 존재하나 Bindings 인터페이스에 미선언
+  - 근본 해결: Bindings 인터페이스에 필드 추가
+
+[C] 레거시 데이터 형식 (step3, transition_status)
+  - step3_answers_json의 flat 필드 (trans_intent 등)가 현재 중첩 구조와 다름
+  - transition_status가 단일 스칼라 vs 배열 혼재
+  - as any로 파싱 후 필드별 접근
+
+[D] MiniModuleFilterResult.excluded 미선언
+  - (miniModuleFilterResult as any)?.excluded
+  - excluded 필드가 타입에 없음
+  - 근본 해결: 타입에 필드 추가
+
+[E] RoundAnswer.answeredAt 누락
+  - roundAnswers as any
+  - DB 로드 시 answeredAt 없이 매핑
+  - 근본 해결: SELECT 쿼리에 answered_at 컬럼 추가 또는 기본값 주입
+
+[F] as unknown as PremiumReport (premium-report-generator.ts)
+  - generatePremiumReport가 PremiumReport보다 많은 필드를 반환 (LLM compat 필드)
+  - as PremiumReport로 직접 캐스팅 불가 (구조 불일치)
+  - as unknown 경유 필요
+
+================================================================================
+EOF

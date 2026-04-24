@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "way": "토목공학과, 건설공학과 등 관련 학과를 졸업한 뒤 종합건설사나 토목 전문 건설사의 공무팀에 입사하는 것이 일반적인 진입 경로다. 입사 후에는 하도급 계약, 기성 집행, 설계변경 협의 등의 실무를 익히며 초급기술자로 시작해 경력에 따라 고급·특급 기술인으로 등급이 올라간다. 토목기사·토목산업기사 자격 취득이 취업과 공공발주 현장 투입에 유리하며, 한국건설기술인협회에 기술인으로 등록해야 공공공사 현장에 배치될 수 있다.[1]",
+    "trivia": "건설 공무(工務) 기술자는 토목 설계·시공이 아닌 원가, 계약, 기성 집행 전반을 총괄하는 전문직이다. 직업백과에 따르면 토목 관련 취업처는 건설회사, 토목엔지니어링회사, 토목감리전문업체 등이 있으며, 공공기관 및 연구기관으로의 진출도 가능하다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "착공 초기와 준공 전후 기성 마감 시기에 야근이 집중되는 편이다. 현장 사무·현장 방문을 병행하는 하이브리드 근무 형태지만, 설계변경이나 클레임 협의가 겹치면 장시간 근무가 발생한다. 현장 소재에 따라 지방·해외 파견이 잦고, 가족과의 생활 균형이 어렵다는 평이 많다.[1]",
+      "socialDetail": "도로, 교량, 댐 등 공공 인프라의 시공 원가와 계약 투명성을 관리함으로써 세금이 효율적으로 집행되도록 하는 역할을 담당한다. 공정한 하도급 계약과 기성 관리를 통해 건설 하도급 생태계의 투명성에 기여한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "토목공학과, 건설공학과, 도시건설과 등 관련 학과 졸업",
+        "토목기사·토목산업기사 자격 취득",
+        "한국건설기술인협회 기술등급(초급→중급→고급→특급) 등록[1]"
+      ],
+      "recruit": [
+        "종합건설사, 토목엔지니어링회사 공무팀 공개채용 지원",
+        "토목 전문 건설사 및 관급공사 전문업체 경력직 채용 지원[1]"
+      ],
+      "training": [
+        "한국건설기술인협회 기술등급 심사 관련 교육",
+        "원가관리·견적 실무 전문 교육과정 이수[1]"
+      ]
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 현 상태를 유지하거나 다소 감소할 것으로 전망된다. 공공건설 투자 위축과 건설경기 부진이 주요 요인이지만, 노후 사회기반시설의 유지보수와 안전진단 수요는 일정 수준을 유지할 것으로 예상된다.[1]"
+    },
+    "heroTags": ["건설공무기술자", "현장공무", "기성관리", "원가관리", "건설행정"],
+    "sidebarJobs": ["토목공학기술자", "토목감리기술자", "토목구조설계기술자"],
+    "sidebarMajors": ["토목공학과", "토목과", "건설공학교육과", "도시건설과"],
+    "sidebarOrgs": [
+      {"name": "대한토목학회", "url": "https://www.ksce.or.kr"},
+      {"name": "한국건설기술인협회", "url": null}
+    ],
+    "sidebarCerts": [
+      {"name": "토목기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=1252&gSite=Q"},
+      {"name": "토목산업기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=2252&gSite=Q"},
+      {"name": "건설안전기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=1322&gSite=Q"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=JpVj_HBHKX8", "title": "공무기술자가 견적작업시 숙지 해야할 사항"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "trivia": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 대한토목학회", "url": "https://www.ksce.or.kr"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 직업백과 — 토목공학기술자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%ED%86%A0%EB%AA%A9%EA%B3%B5%ED%95%99%EA%B8%B0%EC%88%A0%EC%9E%90"}],
+    "detailReady.training": [{"id": 1, "text": "[1] 대한토목학회", "url": "https://www.ksce.or.kr"}]
+  },
+  "changeSummary": "토목공무기술자 Phase 1: way·trivia·detailWlb·detailReady·prospect·사이드바·유튜브 신규 작성"
+}

@@ -1,0 +1,45 @@
+{
+  "jobName": "성우",
+  "jobId": "1765283328079234",
+  "fields": {
+    "way": "성우가 되는 경로는 KBS·MBC·EBS 등 방송사 공채 성우 시험에 합격하는 것이 가장 공식적인 경로이며, 경쟁률은 수백 대 1에 달한다. 공채 시험은 기본 발성·낭독·연기 테스트로 구성되며, 한국성우협회나 사설 성우 학원에서 1~3년 이상 체계적으로 준비하는 것이 일반적이다.[1] 방송사 전속 성우 이외에도 녹음 스튜디오·광고 제작사·게임사·애니메이션 제작사에서 프리랜서 성우로 활동하는 경로도 있다. 발성·호흡·발음·연기력이 핵심 역량이며, 외화·애니메이션·오디오북 전문으로 특화하는 방향도 있다. 최근에는 AI TTS 학습 데이터 녹음, 오디오북 내레이션, 기업 홍보 영상 내레이션 등 활동 분야가 다양화됐다.[2]",
+    "trivia": "한국 성우업계는 1927년 경성방송국(JODK) 개국과 함께 라디오 드라마 출연자로 시작됐다. 1970~80년대 TV 외화 더빙 전성기에 성우가 목소리 배우로 대중의 사랑을 받았으며, 배한성·최병학·유강진 등이 국민 성우로 활동했다. 현재 한국성우협회 등록 성우는 약 1,500명이며, 매년 KBS·MBC·EBS 공채를 통해 20~30명이 새로 입문한다.[1]",
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 보통 수준이 예상된다. 방송·애니메이션·게임 분야의 성우 수요는 안정적으로 유지되고 있으며, AI TTS 기술 발전으로 단순 내레이션 수요는 줄어들 수 있으나 감정 표현과 캐릭터 연기가 요구되는 분야는 인간 성우가 대체 불가하다. 유튜브·팟캐스트·오디오북 플랫폼 성장으로 새로운 수요도 창출되고 있다.[1]"
+    },
+    "detailWlb": {
+      "wlb": "높음",
+      "social": "높음",
+      "wlbDetail": "녹음 스케줄이 불규칙하며 집중 제작 기간이나 마감 전 야간 녹음이 발생한다. 프리랜서 성우는 스케줄을 직접 관리해야 하며 수입 변동이 크고, 전속 성우는 방송사 근무 환경에 준하는 정규 패턴을 따른다. 방송국 전속은 평일 주 5일 근무가 원칙이지만 방영 스케줄에 따라 주말 녹음도 발생할 수 있다.[1]",
+      "socialDetail": "애니메이션·외화·게임 등을 통해 대중에게 캐릭터의 생명력을 불어넣는 창의적 직업이다. 어린이 교육·오디오북·장애인을 위한 음성 서비스 등 다양한 공익적 역할을 담당하며, 한국 문화 콘텐츠의 수출과 함께 K-문화 확산에도 기여한다.[1]"
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 성우 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=270"},
+      {"id": 2, "text": "[2] 한국성우협회 직업정보", "url": "https://www.voiceactor.or.kr"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 커리어넷 성우 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=270"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 커리어넷 성우 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=270"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 성우 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=270"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 성우 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=270"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 성우 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=270"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 한국성우협회 공채 정보", "url": "https://www.voiceactor.or.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국성우협회 교육원", "url": "https://www.voiceactor.or.kr"}
+    ]
+  },
+  "changeSummary": "F2 detailReady sources 추가 (기존 F1 각주 위치는 이미 올바름), 기존 way/trivia/wlbDetail/socialDetail/prospect 콘텐츠 보존"
+}

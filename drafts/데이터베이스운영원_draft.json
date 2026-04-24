@@ -1,0 +1,87 @@
+{
+  "fields": {
+    "way": "데이터베이스운영원(DBA)은 컴퓨터공학, 정보시스템, 소프트웨어공학 관련 학사 학위가 일반적인 진입 경로이다. MySQL, PostgreSQL, Oracle, MS SQL Server 등 주요 RDBMS 운영 능력이 기본 요건이며, 쿼리 최적화·백업·복구·보안 설정 등 실무 역량이 중요하다. 정보처리기사 취득이 권장되며, Oracle DBA 자격증(OCA/OCP)이나 마이크로소프트 인증(MCSA: SQL)도 유효하다. 최근에는 클라우드 DB(AWS RDS, Aurora, Google Cloud SQL, Azure SQL) 운영 경험이 필수에 가까워졌다. 전통적 온프레미스 DBA에서 클라우드 DBA로의 전환을 요구하는 기업이 늘고 있으므로 클라우드 역량 개발이 중요하다.[1]",
+    "overviewSalary": {
+      "sal": "초봉은 연 3,500만~4,500만 원 수준이며, 5년 이상 경력의 숙련 DBA는 연 5,500만~6,500만 원을 받는다. 클라우드 DB 전문가나 대용량 데이터베이스 운영 경험자는 상한이 더 높게 형성된다.[1]"
+    },
+    "overviewProspect": {
+      "main": "클라우드 DB 전환으로 전통적 온프레미스 DBA 수요는 정체되고 있으나, 클라우드 DB 운영·최적화 역량을 갖춘 인력 수요는 지속된다. 금융·공공·제조업의 레거시 DB 유지보수 수요도 당분간 이어질 전망이다.[1]"
+    },
+    "trivia": "1970년 IBM 연구원 에드거 코드(Edgar F. Codd)가 발표한 관계형 데이터 모델 논문은 현대 데이터베이스 산업의 토대가 됐다. 이 논문 한 편이 Oracle, IBM DB2, PostgreSQL 등 수천억 달러 규모의 RDBMS 산업을 탄생시킨 셈이다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통",
+      "wlbDetail": "주 40~50시간 근무이며 DB 장애·데이터 마이그레이션 시 야간·주말 비상 대응이 발생할 수 있다. 온콜 체계가 있는 기업에서는 스트레스가 높은 편이나, 자동화 도구 도입으로 긴급 상황 빈도는 줄어드는 추세다.[1]",
+      "socialDetail": "기업과 공공기관의 핵심 데이터 자산을 안전하게 보호하는 역할로 신뢰성 있는 서비스 운영에 기여한다. 의료·금융·공공 분야 DB를 담당할 때 사회적 책임감이 크다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "RDBMS 핵심 (MySQL, PostgreSQL, Oracle) 설치·운영·튜닝", "text": "MySQL, PostgreSQL, Oracle 등 주요 관계형 데이터베이스 시스템의 설치·운영·성능 튜닝을 학습해 현업에서 즉시 활용 가능한 DBA 기초 역량을 갖춘다.", "link": null},
+        {"title": "SQL 심화 및 실행 계획(Execution Plan) 분석", "text": "복잡한 SQL 쿼리를 최적화하고 실행 계획을 분석해 데이터베이스 성능을 개선하는 고급 기술을 학습한다.", "link": null},
+        {"title": "백업·복구·고가용성(HA) 구성 (Replication, Failover)", "text": "데이터 손실 방지를 위한 백업·복구 전략과 Replication, Failover 기반의 고가용성 환경 구성 방법을 학습한다.", "link": null},
+        {"title": "클라우드 DB 운영 (AWS RDS/Aurora, Google Cloud SQL, Azure SQL)", "text": "주요 클라우드 플랫폼의 관리형 데이터베이스 서비스를 운영하고 최적화하는 방법을 학습해 클라우드 DBA 역량을 키운다.", "link": null},
+        {"title": "데이터베이스 보안 및 접근 제어 설계", "text": "데이터베이스 사용자 권한 관리, 암호화, 감사 로그 설정 등 보안 체계를 설계하는 방법을 학습한다.", "link": null},
+        {"title": "NoSQL (MongoDB, Redis, Elasticsearch) 운영 기초", "text": "관계형 DB를 보완하는 MongoDB, Redis, Elasticsearch 등 NoSQL 데이터베이스의 특성과 운영 방법을 학습한다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "IT 서비스 기업·금융사·공공기관 DBA 경력 채용", "text": "서비스 가용성이 중요한 IT 서비스 기업과 금융사, 공공기관에서 DBA를 수시 채용한다. 원티드·잡코리아 등 채용 플랫폼에서 공고를 확인할 수 있다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "클라우드 MSP — 클라우드 DB 마이그레이션 전문 인력 채용", "text": "클라우드 관리형 서비스 제공업체(MSP)에서 온프레미스 DB를 클라우드로 이전하는 마이그레이션 전문 DBA를 채용한다.", "link": null},
+        {"title": "SI 기업 DB 운영 팀 신입·경력 채용", "text": "시스템통합(SI) 기업에서 고객사 DB 구축·운영을 담당하는 DBA를 신입·경력 모두 채용한다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "정보처리기사 취득 후 Oracle OCA/OCP 또는 클라우드 DB 자격증 병행", "text": "정보처리기사로 기본 IT 역량을 인증한 뒤, Oracle OCA/OCP 또는 AWS Certified Database Specialty 등 전문 DB 자격증을 취득하면 DBA로서의 경쟁력이 높아진다.", "link": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0120"},
+        {"title": "K-Digital Training — DB 운영·클라우드 전환 국비 과정 이수", "text": "고용노동부 K-Digital Training 과정에서 DB 운영과 클라우드 전환 관련 국비 지원 교육을 받을 수 있으며, HRD-Net에서 관련 훈련과정을 검색해 수료할 수 있다.[1]", "link": "https://www.hrd.go.kr/"}
+      ]
+    },
+    "heroTags": ["데이터베이스", "SQL최적화", "클라우드DB", "백업복구", "Oracle", "고가용성"],
+    "sidebarJobs": [
+      "데이터 엔지니어",
+      "데이터 매니저",
+      "데이터분석가(일반)",
+      "데브옵스 엔지니어",
+      "빅데이터전문가",
+      "응용 소프트웨어 개발자"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "정보처리기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0120"
+      },
+      {
+        "name": "SQL개발자(SQLD)",
+        "url": "https://www.kdata.or.kr/info/info_04_view.html?field=&keyword=SQLD&type=all&page=1&idx=51888"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국산업인력공단 NCS 데이터베이스 직무정보", "url": "https://www.ncs.go.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 고용노동부 고용형태별근로실태조사", "url": "https://www.moel.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 과학기술정보통신부 SW산업 실태조사", "url": "https://www.msit.go.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] ACM — Edgar F. Codd 관계형 데이터 모델 논문", "url": "https://dl.acm.org/doi/10.1145/362384.362685"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국정보통신기술협회(TTA)", "url": "https://tta.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 원티드 채용정보", "url": "https://www.wanted.co.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/"}
+    ]
+  },
+  "changeSummary": "데이터베이스운영원 진입경로·임금·전망·WLB·trivia·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

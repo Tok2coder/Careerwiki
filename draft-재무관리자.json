@@ -1,0 +1,55 @@
+{
+  "jobName": "재무관리자",
+  "jobId": "1765283545023124",
+  "fields": {
+    "way": "재무관리자가 되려면 경영학·회계학·경제학 등 사회계열 학과 대졸 이상의 학력이 기본이다. 재경관리사, 공인회계사(CPA), 재무위험관리사(FRM) 같은 자격증을 취득하면 진입에 유리하다. 일반적으로 회계·재무 부서에 일반 사원으로 입사해 실무 경험을 쌓고 승진을 통해 관리직에 오르며, 사원에서 부장급 재무관리자가 되기까지 평균 약 20년이 소요된다.[1] 최근에는 능력 중심 인사제도가 확산되어 공인회계사나 CFA 자격을 갖춘 30대 재무관리자도 등장하고 있다.",
+    "trivia": "한국 재무관리자의 97%가 사회계열 출신임에도 사원으로 입사해 부장급 타이틀을 달기까지 평균 20년이 걸린다—의대 6년보다 더 긴 준비 기간이다.[1]",
+    "detailWlb": {
+      "wlb": "보통이하",
+      "social": "보통이상",
+      "wlbDetail": "주로 사무실에서 좌식 근무하며 결산·감사 시즌에는 초과근무가 잦다. 예산 편성 기간에는 스트레스 강도가 높아지며, 업무 특성상 정밀성과 정확성이 요구된다.[1]",
+      "socialDetail": "기업의 재무 건전성을 유지하고 예산 배분·투자 의사결정을 담당함으로써 조직의 지속 가능한 성장을 뒷받침한다.[1] 올바른 재무 관리는 고용 안정과 협력사 생태계에 긍정적 파급 효과를 미친다."
+    },
+    "overviewSalary": {
+      "sal": "중위 연봉 약 6,200만 원(하위 25% 5,072만 원, 상위 25% 8,403만 원)으로 경력과 기업 규모에 따른 임금 격차가 크다.[1]"
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 다소 감소할 전망이다. AI·빅데이터 기술 도입으로 반복적 재무 처리 업무가 자동화되고 기업 구조조정 추세로 재무관리직이 축소되는 경향이 있다.[1] 다만 전략적 판단·리스크 관리·투자 의사결정을 담당하는 상위 재무관리자 역할은 여전히 중요하며, ESG 경영 확산과 해외 투자 증가로 글로벌 재무 역량을 갖춘 전문가에 대한 수요는 유지될 것으로 보인다."
+    },
+    "heroTags": ["재무관리자", "재무", "관리자", "CFO", "재무회계", "경영관리", "예산기획"],
+    "sidebarMajors": ["경영학과", "회계학과", "경제학과", "세무학과", "금융경영과"],
+    "sidebarCerts": [
+      {"name": "재경관리사", "url": "https://www.samilexam.com"},
+      {"name": "공인회계사(CPA)", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=Q&jmCd=1200"},
+      {"name": "재무위험관리사(FRM)", "url": "https://www.kofia.or.kr/brd/m_27/view.do?seq=2"}
+    ],
+    "youtubeLinks": ["https://www.youtube.com/watch?v=iIv6qyhEkg8"],
+    "detailReady": {
+      "curriculum": ["경영학과", "회계학과", "세무회계학과", "경제학과", "금융경영과"],
+      "recruit": ["재무·회계팀 사원/대리", "CFO(최고재무책임자)", "재무기획팀장/부장"],
+      "training": ["재무회계 실무 과정 (HRD-Net 국민내일배움카드)", "기업재무관리 실무 과정 (한국CFO스쿨)"],
+      "certificate": null
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "직업백과 재무관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "직업백과 재무관리자 경력 통계", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "직업백과 재무관리자 근무환경", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "직업백과 재무관리자 직무 기여", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "직업백과 재무관리자 임금정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "직업백과 재무관리자 고용전망", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%AC%EB%AC%B4%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ]
+  },
+  "changeSummary": "way·trivia·detailWlb·sal·prospect·detailReady·heroTags·sidebarMajors·sidebarCerts·youtubeLinks 신규 보완"
+}

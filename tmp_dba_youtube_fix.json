@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=c9H3iXSTeZw", "title": "AI가 말하는 DBA의 위기와 기회! [바이브톡2@토크아이티]"}
+    ]
+  },
+  "changeSummary": "youtubeLinks: 영어 영상 2개 → 한국어 영상 1개로 교체 (규칙: 한국어 영상만 허용)"
+}

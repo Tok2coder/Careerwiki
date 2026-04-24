@@ -1,0 +1,77 @@
+{
+  "fields": {
+    "way": "농촌생활연구원은 농촌진흥청 산하 국립농업과학원에 소속된 연구직공무원으로, 식품영양학·생활과학·가정학·식품공학 등 관련 분야의 석사 이상 학위를 취득한 후 경력경쟁채용 시험에 응시하는 것이 주된 경로이다. 농촌진흥청은 매년 농업연구사 직급으로 20여 명 내외를 선발하며, 필기시험·서류전형·면접의 3단계 전형을 거친다.[1] 공개채용으로 입직한 경우에도 이후 박사학위 취득이 사실상 요구되며, 진흥청 내 연구직의 70~80%가 박사학위 소지자이다. 채용 후에는 농촌생활자원·식품영양·주거환경 분야의 과제연구를 담당하며 연구사에서 연구관으로 승진하는 데 평균 12~16년이 소요된다. 관련 가산점 자격증으로는 농화학기사, 식물보호기사, 시설원예기사 등이 있다.[2]",
+    "overviewSalary": {
+      "sal": "농촌진흥청 연구직공무원(농업연구사)은 2024년 기준 공무원 보수가 평균 2.5% 인상되었다.[1] 각종 수당(정근·가족·직급보조비 등)을 포함하면 석사 초임 기준 연 4,000만 원 내외, 경력이 쌓이면 평균 5,000만 원 수준으로 알려져 있다.[2]"
+    },
+    "overviewProspect": {
+      "main": "농촌 고령화 가속화와 식품 안전·기능성 식품 수요 증가로 농촌생활 분야 연구의 사회적 필요성은 꾸준히 증가하고 있다.[1] 다만 연구직 공무원 정원은 정부 정책에 따라 제한적으로 운영되므로 고용 규모 자체는 현 수준을 유지하거나 소폭 증가하는 수준에 그칠 것으로 전망된다.[2]"
+    },
+    "trivia": "농촌진흥청 산하 연구원들이 1999년부터 2007년까지 9년에 걸쳐 전국 9개 도의 전통향토음식을 조사·발굴하여 3,300종에 달하는 전통향토음식 정보 DB를 국내 최초로 구축하였으며, 음식별 조리법·영양성분·유래까지 담아 한식 세계화의 기초 자료로 활용되고 있다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "높음",
+      "wlbDetail": "국립농업과학원 등 국가 연구기관 소속으로 복장·복무·유연근무 등 근무여건이 비교적 자유로운 편이다. 연구과제 마감기한이나 학회·발표 일정 시 야근이 발생할 수 있으나, 일반 행정직에 비해 연구 일정을 스스로 조율할 수 있어 전반적인 업무강도는 보통 이상으로 평가된다.[1]",
+      "socialDetail": "농촌 고령인구의 식생활 개선, 전통식품 세계화, 농산물 영양·기능성 연구를 통해 국민 건강 증진과 농촌 삶의 질 향상에 직접 기여하는 직업으로 사회적 공헌도가 높다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "식품영양학과(학사·석사·박사)", "text": "식품 성분 분석, 영양 평가, 조리과학을 전공하며 농촌진흥청 연구사 채용의 핵심 전공 경로이다.", "link": null},
+        {"title": "생활과학·가정학과", "text": "농촌생활환경, 가족복지, 주거학 분야를 연계 탐구하며 농촌생활연구원의 다양한 연구 영역을 아우른다.", "link": null},
+        {"title": "식품공학과", "text": "식품 가공·발효·저장 기술 연구 역량을 함양하며, 농산식품자원 연구 분야에 직접 적용 가능하다.", "link": null},
+        {"title": "농생물학·농화학과", "text": "농산물 기능성분 분석 및 생리효과 연구에 활용되며, 가산점 자격증(농화학기사) 취득과 연계된다.", "link": null},
+        {"title": "대학원 연구과제 참여", "text": "농진청 연구과제 연계 졸업논문 수행 경험이 권장되며, 박사학위 취득이 장기적으로 요구된다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "농촌진흥청 경력경쟁채용(농업연구사)", "text": "연간 1회, rda.go.kr 채용공고 확인. 필기시험·서류전형·면접 3단계.", "link": "https://www.rda.go.kr/board/board.do?mode=list&prgId=acp_adopancmEntry"},
+        {"title": "나라일터(gojobs.go.kr)", "text": "국가연구직 공무원 채용공고 통합 게시. 농진청 외 산하기관 공고도 확인 가능.", "link": "https://www.gojobs.go.kr"},
+        {"title": "인사혁신처 사이버국가고시센터(gosi.kr)", "text": "필기시험 일정 및 원서접수를 진행하며 합격선과 시험통계를 확인할 수 있다.[1]", "link": "https://www.gosi.kr"}
+      ],
+      "training": [
+        {"title": "농업교육포털(agriedu.net)", "text": "농촌진흥청 운영 연구·지도 직무역량 온·오프라인 교육과정을 제공한다.", "link": "https://agriedu.net"},
+        {"title": "농식품공무원교육원(ahi.go.kr)", "text": "신규 임용자 직무교육 및 스마트농업·전통식품 등 전문역량 과정을 운영한다.[1]", "link": "https://www.ahi.go.kr"}
+      ]
+    },
+    "heroTags": ["공무원", "연구직", "식품영양", "농촌진흥청", "농촌복지", "전통식품", "식량안보", "국가연구기관"],
+    "sidebarJobs": ["농업경영연구원", "보건정책연구원", "사회복지정책연구원", "스포츠사회학연구원", "에너지정책연구원", "지역환경정책연구원", "거시경제연구원", "풍수지리학자"],
+    "sidebarCerts": [
+      {"name": "농화학기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=Q&jmCd=1241"},
+      {"name": "식물보호기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=Q&jmCd=1481"},
+      {"name": "시설원예기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=Q&jmCd=1461"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 농촌진흥청 채용공고", "url": "https://www.rda.go.kr/board/board.do?mode=list&prgId=acp_adopancmEntry"},
+      {"id": 2, "text": "[2] 직업백과 농학연구원 직업사전", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%86%8D%ED%95%99%EC%97%B0%EA%B5%AC%EC%9B%90/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 인사혁신처 2024년 공무원 보수", "url": "https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2024/"},
+      {"id": 2, "text": "[2] 직업백과 농학연구원 직업사전", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%86%8D%ED%95%99%EC%97%B0%EA%B5%AC%EC%9B%90/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국농촌경제연구원 농촌 고령화 보고", "url": "https://krei.re.kr/krei/selectBbsNttView.do?bbsNo=77&nttNo=89123"},
+      {"id": 2, "text": "[2] 직업백과 농학연구원 직업사전", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%86%8D%ED%95%99%EC%97%B0%EA%B5%AC%EC%9B%90/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 대한민국 정책브리핑 — 한국 전통향토음식 정보 DB 구축", "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=155281351"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 하이브레인넷 — 연구직공무원 근무환경 정보", "url": "https://www.hibrain.net/braincafe/cafes/38/posts/208/articles/454450"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 대한민국 정책브리핑 — 한국 전통향토음식 정보 DB 구축", "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=155281351"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 직업백과 농학연구원 직업사전", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%86%8D%ED%95%99%EC%97%B0%EA%B5%AC%EC%9B%90/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 인사혁신처 사이버국가고시센터", "url": "https://www.gosi.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 농식품공무원교육원", "url": "https://www.ahi.go.kr"}
+    ]
+  },
+  "changeSummary": "way·sal·prospect·trivia·detailWlb·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

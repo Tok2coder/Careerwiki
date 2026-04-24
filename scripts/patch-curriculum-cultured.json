@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "detailReady": {
+      "curriculum": [
+        "식품공학과·생명공학과·동물세포공학과 등 관련 학과에서 세포 배양·미생물학·식품가공학 기초 역량을 쌓고 학사 이상 학위를 취득한다",
+        "대학원 석사·박사 과정에서 동물세포 배양·조직공학·식품 단백질 연구를 심화 전공하면 연구직 입직에 유리하다[2]",
+        "식품기사·식품기술사 등 국가자격증을 취득하면 식품 연구기관·기업 취업 시 경쟁력이 높아진다[3]",
+        "한국생명공학연구원(KRIBB) 인턴십이나 대학 부설 세포배양 실험실 참여로 현장 실험 경험을 쌓을 수 있다[4]",
+        "의성군 세포배양식품 규제자유특구 등 정부 R&D 사업에 연구보조원으로 참여해 배양육 특화 실무 역량을 갖춘다[1]"
+      ],
+      "recruit": [
+        "스페이스에프·다나그린 등 국내 배양육 스타트업의 채용 공고를 확인하고 연구직에 지원한다[1]",
+        "한국생명공학연구원(KRIBB) 채용 페이지에서 세포배양·대체식품 관련 연구직 공고를 모니터링한다[2]",
+        "사람인·잡코리아에서 '배양육', '세포배양', '대체단백질' 키워드로 스타트업·식품 연구기관 채용공고를 검색한다[3]"
+      ],
+      "training": [
+        "의성군 세포배양식품 규제자유특구 연구센터(USC) — 세포배양 기반 식품 R&D 프로그램 운영, 연구 인력 대상 교육 제공[1]",
+        "한국생명공학연구원(KRIBB) 바이오인력양성센터 — 동물세포 배양·바이오의약 연구 기술 교육 과정 운영[2]"
+      ]
+    }
+  },
+  "sources": {
+    "detailReady.curriculum": [
+      {"id": 1, "text": "의성군 세포배양식품 규제자유특구 연구센터(USC)", "url": "https://usc.go.kr/cell/index.do"},
+      {"id": 2, "text": "뉴스1, 국내 배양육 연구 현황", "url": "https://www.news1.kr/bio/pharmaceutical-bio/5462550"},
+      {"id": 3, "text": "Q-net 식품기사 자격 안내", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1530"},
+      {"id": 4, "text": "한국생명공학연구원(KRIBB) 바이오인력양성센터", "url": "https://www.kribb.re.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "스페이스에프 기업 정보 (The VC)", "url": "https://thevc.kr/spacef"},
+      {"id": 2, "text": "한국생명공학연구원(KRIBB) 채용", "url": "https://www.kribb.re.kr/kor/sub03/sub03_01_01.jsp"},
+      {"id": 3, "text": "사람인 취업포털", "url": "https://www.saramin.co.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "의성군 세포배양식품 규제자유특구 연구센터(USC)", "url": "https://usc.go.kr/cell/index.do"},
+      {"id": 2, "text": "한국생명공학연구원(KRIBB) 바이오인력양성센터", "url": "https://www.kribb.re.kr"}
+    ]
+  },
+  "changeSummary": "세포배양기반대체식품연구원 curriculum 각주 보강: items1-2블록[2]/item3[3]/item4[4]/item5[1]"
+}

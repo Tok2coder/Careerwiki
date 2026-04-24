@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "overviewSalary": {
+      "sal": "캐디의 수입은 기본 라운드 수당(디비디)과 팁으로 구성되며, 숙련도와 투입 라운드 수에 따라 크게 달라진다.[1] 워크넷 통계(2021년 기준)에 따르면 관련 직업군 평균 연봉은 약 2,950만 원 수준이나, 하루 2라운드를 꾸준히 소화하는 숙련 캐디는 월 400만 원 이상의 수입을 올리기도 한다.[2] 프리랜서 형태가 많아 4대 보험 가입 여부는 골프장마다 다르다.[3]",
+      "wage": "2,950",
+      "wageSource": "캐디의 관련 직업인 오락시설서비스원의 평균연봉(중앙값)은 2,950만원으로, 조사 대상 전체 직업 평균연봉(중앙값)인 4,072만원과 비교하여 낮은 수준입니다. (자료 : 워크넷, 오락시설서비스원(2021))",
+      "source": "CAREERNET"
+    },
+    "overviewProspect": {
+      "main": "골프 인구 증가와 레저 문화 확산에 따라 캐디 수요도 점진적으로 늘어나고 있다.[1] 향후 5년간 관련 직업군 일자리는 다소 증가할 전망이며, 골프장 수 증가도 고용에 긍정적 영향을 미칠 것으로 예상된다.[2] 여성 캐디 비율이 높은 직군 특성상 출산·육아로 인한 이탈이 빈번하여 구인난이 지속되는 편이다.[3] 전국 500여 개 골프장에서 약 3만 명 이상이 종사하며, 골프 저변 확대에 따라 안정적인 취업 기회가 이어질 것으로 보인다.[4]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "캐디는 18홀 풀 라운드 기준 약 4~5시간을 야외에서 걸으며 일하며, 하루 2라운드를 소화하면 10시간 이상 야외에 머무른다.[1] 이른 새벽 출근이 일반적이고 여름 폭염·겨울 한파에 그대로 노출되어 체력 소모가 크다.[2] 프리랜서 성격이 강해 원하는 날 쉴 수 있지만, 날씨 취소 시 갑작스러운 수입 감소가 발생할 수 있다.[3]",
+      "socialDetail": "캐디는 아마추어 골퍼의 경기 진행을 돕고 골프 에티켓을 안내하며, 레저 스포츠 보급과 건강한 야외 활동 문화 확산에 기여한다.[1] 다양한 연령대와 직업군의 사람들과 매일 교류하며 긍정적인 여가 경험을 제공하는 서비스직이다.[2]"
+    },
+    "trivia": "골프장 캐디는 법적으로 독립도급계약자(개인사업자)로 분류되어 근로기준법상 근로자로 인정받지 못하는 경우가 많아, 4대 보험과 퇴직금 적용이 배제되어 노동 취약 계층으로 분류된다.[1] 2023년 국가인권위원회는 42세 이상 캐디의 취업을 일률적으로 제한하는 것은 합리적 이유 없는 연령 차별이라고 판단하고 시정을 권고했다.[2]",
+    "way": "캐디가 되기 위한 별도의 학력·자격증 요건은 없으며, 고졸 이상이면 지원 가능하다.[1] 진입 경로는 크게 세 가지인데, 골프장 자체 양성 교육(3~6개월) 수료, 사설 캐디 양성센터(8주 내외) 실습 교육 이수, 구직 사이트를 통한 직접 지원이 있다.[2] 한국골프캐디협회 등에서 발급하는 협회 자격증을 취득하면 취업 시 유리하게 작용하기도 한다.[3] 채용 후에는 수개월의 견습 기간을 거쳐 정식 캐디로 승급하며, 골프 규칙 이해도와 고객 서비스 역량이 현장 평가의 핵심이다.[4] 18홀 기준 약 10km 이상을 걷는 야외 작업이 많아 체력 관리가 필수적이다.[5]"
+  },
+  "sources": {
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://www.work.go.kr/"},
+      {"id": 2, "text": "[2] 워크넷 직업정보 (2021년 기준)", "url": "https://www.work.go.kr/"},
+      {"id": 3, "text": "[3] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 워크넷 직업정보 - 캐디 취업 전망", "url": "https://www.work.go.kr/"},
+      {"id": 2, "text": "[2] 워크넷 직업정보 - 캐디 취업 전망", "url": "https://www.work.go.kr/"},
+      {"id": 3, "text": "[3] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"},
+      {"id": 4, "text": "[4] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"},
+      {"id": 2, "text": "[2] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"},
+      {"id": 3, "text": "[3] 워크넷 직업정보", "url": "https://www.work.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"},
+      {"id": 2, "text": "[2] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"},
+      {"id": 2, "text": "[2] 국가인권위원회 결정례 (2023)", "url": "https://www.humanrights.go.kr/"}
+    ],
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"},
+      {"id": 2, "text": "[2] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"},
+      {"id": 3, "text": "[3] 한국골프캐디협회", "url": "http://www.k-caddie.com/"},
+      {"id": 4, "text": "[4] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"},
+      {"id": 5, "text": "[5] 커리어넷 직업정보 - 캐디", "url": "https://www.career.go.kr/cloud/w/job/view?seq=412"}
+    ]
+  },
+  "changeSummary": "Phase 5: sources 순서를 페이지 렌더링 순서로 재정렬 (Gate4 수선)"
+}

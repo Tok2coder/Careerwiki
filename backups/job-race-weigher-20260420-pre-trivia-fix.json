@@ -1,0 +1,30 @@
+{
+  "jobId": "1765284218856936",
+  "jobName": "경마검량원",
+  "capturedAt": "2026-04-20",
+  "restorePayload": {
+    "fields": {
+      "trivia": "1. 경마검량원의 '계체완료' 공식 선언이 있어야만 베팅 정산이 가능하다. 순위가 확정됐더라도 후검량에서 부담중량 불일치가 발견되면 해당 기수는 실격 처리될 수 있다.\n2. 경마는 국내 프로야구(약 800만 명)보다 연간 관중이 많은 1,300만 명 규모의 최대 관람 스포츠이며, 기수의 60%가 억대 연봉을 받는 고소득 직종이다.\n3. 부담중량에는 말의 연령에 따른 마령중량, 벌어들인 상금 누계에 따른 별정중량, 능력별 핸디캡전문위원이 부여하는 핸디캡중량의 세 종류가 있다. 이 조정 덕분에 능력 차이가 있는 경주마들도 균등한 우승 기회를 갖는다."
+    },
+    "sources": {
+      "trivia": [
+        {
+          "id": 6,
+          "text": "[1] 미디어피아 - 경마 경주 절차",
+          "url": "http://www.mediapia.co.kr/news/articleView.html?idxno=16391"
+        },
+        {
+          "id": 7,
+          "text": "[2] 글로벌이코노믹 - 경마 관중·기수 연봉",
+          "url": "https://www.g-enews.com/article/Distribution/2020/03/202003151408134505620e02e8e3_1"
+        },
+        {
+          "id": 8,
+          "text": "[3] 미디어피아 - 경마 경주 절차",
+          "url": "http://www.mediapia.co.kr/news/articleView.html?idxno=16391"
+        }
+      ]
+    },
+    "changeSummary": "[job-data-enhance] 경마검량원 trivia 주석 수정 이전 상태 복원"
+  }
+}

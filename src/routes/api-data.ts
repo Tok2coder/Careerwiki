@@ -607,17 +607,18 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
           }
           if (typeof raw === 'string' && raw.trim()) {
             const normalized = raw.replace(/\r/g, '\n')
+            const stripDutyPrefix = (value: string) => value.trim().replace(/^(?:[-*•]+|\d+[.)])\s+/, '')
             // 1차: 줄바꿈, 불릿 포인트로 분리
             let sentences = normalized
               .split(/\n+|•|▶|►|■|●|◆/)
-              .map((s: string) => s.trim().replace(/^[\d\-\.\)\(]+\s*/, ''))
+              .map((s: string) => stripDutyPrefix(s))
               .filter(Boolean)
             // 2차: 1줄이면 마침표/느낌표/물음표로 분리
             if (sentences.length <= 1) {
               const sentenceSplit = normalized
-                .replace(/([.!?])\s+(?=[^\s])/g, '$1|')
+                .replace(/([.!?](?:\[\d+\])*)\s+(?=[^\s])/g, '$1|')
                 .split('|')
-                .map((s: string) => s.trim().replace(/^[\d\-\.\)\(]+\s*/, ''))
+                .map((s: string) => stripDutyPrefix(s))
                 .filter(Boolean)
               if (sentenceSplit.length > sentences.length) {
                 sentences = sentenceSplit

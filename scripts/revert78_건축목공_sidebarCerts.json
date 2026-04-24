@@ -1,0 +1,15 @@
+{
+  "jobName": "건축목공",
+  "jobId": "1765283494731969",
+  "fields": {
+    "sidebarCerts": [
+      {"name": "건축목공기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00502"},
+      {"name": "거푸집기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00502"},
+      {"name": "실내건축기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00502"},
+      {"name": "건설안전기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5011"},
+      {"name": "한식목공기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00502"}
+    ]
+  },
+  "sources": {},
+  "changeSummary": "revert: sidebarCerts 5개 원복 (이전 버전에서 3개로 줄어든 것 복원 — 실내건축기능사/건설안전기사/한식목공기능사 재추가)"
+}

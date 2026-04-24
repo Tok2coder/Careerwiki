@@ -1,0 +1,89 @@
+{
+  "fields": {
+    "way": "사회복지시설관리자가 되려면 대학 또는 전문대학의 사회복지학과, 아동복지학과, 노인복지학과 등 관련 학과를 졸업하여 사회복지사 2급 자격을 취득하는 것이 일반적인 시작점이다. 이후 학사학위 소지자는 사회복지사 1급 국가시험에 응시해 자격을 취득한다.[1] 시설장으로 취임하기 위해서는 사회복지시설에서 오랜 실무 경력을 쌓는 것이 필수적이며, 시설 유형별로 요구 경력이 다르다. 사회복지관 및 노인복지관의 관장이 되려면 사회복지시설 근무 경력 15년 이상이 필요하고, 아동생활시설·장애인거주시설·노인생활시설의 시설장은 10년 이상의 경력이 요구된다.[2]",
+    "overviewProspect": {
+      "main": "향후 5년간 사회복지시설관리자의 고용은 다소 증가할 것으로 전망된다. 저출산·고령화 심화로 인한 사회복지 서비스 수요 확대가 주요 요인이다.[1] 2023년 기준 재가노인복지시설 수는 전년 대비 19.7% 증가한 15,896개소를 기록하는 등 관련 시설이 꾸준히 늘고 있어 시설 운영 관리자 수요도 지속적으로 확대되고 있다.[2]"
+    },
+    "trivia": "사회복지시설에 대한 국가 평가는 1999년에 처음 도입되어 3년마다 시행되고 있으며, 2024년 평가에서는 전국 680개 시설 중 71.5%(486개소)가 우수시설(A등급)을 받았다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "사회복지시설관리자는 통상 주 5일 근무 체계로 운영되나, 24시간 입소형 시설(노인요양시설·아동양육시설 등)의 경우 야간·주말 위기 대응이 필요할 수 있다. 재정·인사·행정 업무 외에도 이용자 민원 처리와 관련 기관 행사 참석 등 비정기적 업무가 수시로 발생한다.[1]",
+      "socialDetail": "노인, 아동, 장애인, 노숙인 등 취약계층이 이용하는 복지시설을 총괄 운영하여 지역사회 안전망을 유지하는 핵심 역할을 담당하며, 어려움에 처한 이들의 삶의 질을 직접 향상시킨다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "대학 또는 전문대학 사회복지학과·노인복지학과·아동복지학과 등 관련 학과 졸업 및 사회복지사 2급 취득[1]",
+        "사회복지 현장실습 이수 (대학 교과과정 내 필수 — 최소 160시간)[2]",
+        "사회복지사 1급 국가시험 합격 (학사학위 이상 소지자 응시 가능)[3]",
+        "사회복지법인·시설에서 사회복지사로 실무 경력 7~15년 이상 축적[4]",
+        "보건복지부 및 지자체 지정 사회복지시설 관리자 전문성 향상 교육 이수[5]"
+      ],
+      "recruit": [
+        "한국사회복지협의회 복지넷을 통해 시설장·관리직 채용 공고 지원[1]",
+        "사회복지법인 산하 시설 운영 위탁공모 및 공개 채용공고 지원[2]",
+        "사회복지시설 종사자 경력 축적 후 법인 추천 또는 내부 승진으로 시설장 발탁[3]"
+      ],
+      "training": [
+        "한국사회복지사협회 보수교육 이수 (의무 교육, 연 8시간 이상)[1]",
+        "지자체 및 사회복지시설 협회 주관 시설 관리자 역량강화 교육 수강[2]"
+      ]
+    },
+    "overviewAbilities": {
+      "technKnow": "사회복지시설관리자는 사회복지학, 행정학, 경영학 등 복합적 지식을 바탕으로 시설 운영 전반을 책임진다. 인사 채용·배치·복무 관리, 예산 편성·집행·결산 등 재정관리 역량이 요구되며, 사회복지서비스 기획·품질 평가 능력도 필요하다. 「사회복지사업법」 등 관련 법령에 대한 이해와 지방자치단체 보고·감사 대응 역량 또한 필수적이다.[1]"
+    },
+    "sidebarCerts": [
+      {"name": "사회복지사 1급", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=L&gId=52"},
+      {"name": "사회복지사 2급", "url": "https://www.welfare.net/lic/"}
+    ],
+    "sidebarMajors": ["사회복지학과", "사회복지과", "노인복지학과", "아동복지학과", "사회학과"],
+    "sidebarOrgs": [
+      {"name": "한국사회복지협의회", "url": "https://www.bokji.net/"},
+      {"name": "한국사회복지관협회", "url": "https://kaswc.or.kr/"},
+      {"name": "한국노인종합복지관협회", "url": "https://www.kaswcs.or.kr/"}
+    ],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "'사회복지시설관리자 직업진로' 검색 0건, '사회복지시설관리자 현직자' 검색 0건, '사회복지관 관장 인터뷰' 검색 0건, '노인복지관 시설장 직무' 검색 0건, '사회복지시설 관리직 강의' 검색 0건, '사회복지관련관리자 진로탐색' 검색 0건. KEIS @KEISwork2011 채널 '사회복지' 검색 결과 없음. 카테고리: 현직자·인터뷰(관장 인터뷰) / 직무·실무(시설 관리직무) / 강의·교육(관리자 강의) 커버 탐색. 한국어 영상 없음 (2026-04-17)",
+    "careerTree": null,
+    "_careerTreeNote": "탐색 후보 5명: 1) 박원순(전 서울시장 — 복지 분야 기여하였으나 사회복지시설 시설장 직접 경력 없음), 2) 최혜영(전 국회의원 — 장애인복지 활동, 시설장 경력 직접 확인 불가), 3) 류한호(사회복지학 교수 — 학계 경력, 시설관리 직접 경력 없음), 4) 이수정(범죄심리학자 — 사회복지 관련 활동, 시설장 경력 없음), 5) 정종득(전 국회의원 — 복지 활동, 시설장 경력 직접 확인 불가). 카테고리 공공·정부 / 학계·연구 커버 탐색 완료. 사회복지시설관리자 경력의 위키피디아 등재 한국인 공인 확인 불가. 적합한 공인 없음 (2026-04-17)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 직업백과(아사마루) 사회복지관련관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EA%B4%80%EB%A0%A8%EA%B4%80%EB%A6%AC%EC%9E%90/"},
+      {"id": 2, "text": "[2] 기업사회공헌연구소 시설장 자격기준", "url": "https://csrri.com/entry/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%8B%9C%EC%84%A4-%ED%8F%89%EA%B0%80-%EC%8B%9C%EC%84%A4%EC%9E%A5-%EB%B0%8F-%EC%B5%9C%EA%B3%A0%EC%A4%91%EA%B0%84%EA%B4%80%EB%A6%AC%EC%9E%90-%EC%9E%90%EA%B2%A9-%EA%B8%B0%EC%A4%80"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 직업백과(아사마루) 사회복지관련관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EA%B4%80%EB%A0%A8%EA%B4%80%EB%A6%AC%EC%9E%90/"},
+      {"id": 2, "text": "[2] 보건복지부 2024 노인복지시설 현황", "url": "https://www.mohw.go.kr/board.es?mid=a10503010100&bid=0027&act=view&list_no=1482103"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 보건복지부 2024 사회복지시설 평가 결과", "url": "https://mohw.go.kr/board.es?act=view&bid=0027&list_no=1484814&mid=a10503000000"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 직업백과(아사마루) 사회복지관련관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EA%B4%80%EB%A0%A8%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 직업백과(아사마루) 사회복지관련관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EA%B4%80%EB%A0%A8%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 직업백과(아사마루) 사회복지관련관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EA%B4%80%EB%A0%A8%EA%B4%80%EB%A6%AC%EC%9E%90/"},
+      {"id": 2, "text": "[2] 한국사회복지사협회 자격관리센터", "url": "https://www.welfare.net/lic/"},
+      {"id": 3, "text": "[3] Q-Net 사회복지사1급 자격정보", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=L&gId=52"},
+      {"id": 4, "text": "[4] 기업사회공헌연구소 시설장 자격기준", "url": "https://csrri.com/entry/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EC%8B%9C%EC%84%A4-%ED%8F%89%EA%B0%80-%EC%8B%9C%EC%84%A4%EC%9E%A5-%EB%B0%8F-%EC%B5%9C%EA%B3%A0%EC%A4%91%EA%B0%84%EA%B4%80%EB%A6%AC%EC%9E%90-%EC%9E%90%EA%B2%A9-%EA%B8%B0%EC%A4%80"},
+      {"id": 5, "text": "[5] 보건복지부 2025 사회복지시설 관리안내", "url": "https://www.mohw.go.kr/board.es?mid=a10413000000&bid=0021&act=view&list_no=1484386"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 한국사회복지협의회 복지넷 구인정보", "url": "https://www.bokji.net/job/off/01.bokji"},
+      {"id": 2, "text": "[2] 보건복지부 2025 사회복지시설 관리안내", "url": "https://www.mohw.go.kr/board.es?mid=a10413000000&bid=0021&act=view&list_no=1484386"},
+      {"id": 3, "text": "[3] 직업백과(아사마루) 사회복지관련관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EA%B4%80%EB%A0%A8%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국사회복지사협회", "url": "https://www.welfare.net/"},
+      {"id": 2, "text": "[2] 보건복지부 2025 사회복지시설 관리안내", "url": "https://www.mohw.go.kr/board.es?mid=a10413000000&bid=0021&act=view&list_no=1484386"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 1, "text": "[1] 직업백과(아사마루) 사회복지관련관리자", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%82%AC%ED%9A%8C%EB%B3%B5%EC%A7%80%EA%B4%80%EB%A0%A8%EA%B4%80%EB%A6%AC%EC%9E%90/"}
+    ]
+  },
+  "changeSummary": "사회복지시설관리자 way·전망·trivia·detailWlb·detailReady·technKnow·사이드바 전 필드 보완"
+}

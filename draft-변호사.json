@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "way": "변호사가 되려면 법학전문대학원(로스쿨) 3년 과정을 이수하고 변호사 시험에 합격하는 것이 현재 주된 경로다.[1] 로스쿨 입학은 4년제 학부 졸업(또는 예정자) 후 법학적성시험(LEET)·영어 성적·학업성적·자기소개서·면접으로 선발된다.[2] 2023년 기준 전국 25개 로스쿨 입학정원은 2,000명이며, 변호사 시험 합격률은 약 55%다.[3] 합격 후 대한변호사협회 연수원 6개월 교육 이수로 법조 경력이 시작되며, 법무법인(대형·중형·소형)·개인 변호사 사무소·기업 법무팀·공공기관·검찰청 검사 임관 등 다양한 경로로 진출할 수 있다.[4]",
+    "overviewProspect": {
+      "main": "향후 5년간 변호사의 일자리 규모는 늘어날 전망이다. 법에 대한 국민의 인식 향상과 분쟁의 법적 해소 수요 증가, 수임료 하락으로 법률서비스 접근성이 높아진 것이 주요 요인이다. 일반 기업체·금융기관·행정기관에서도 변호사 수요가 지속적으로 늘어날 것으로 전망되며, 단독 개업보다는 법무법인 확대 현상도 계속될 것으로 예상된다.[1]"
+    },
+    "trivia": "대한민국 변호사 수는 1980년대까지 1,000명 미만이었으나, 2009년 로스쿨 도입 이후 급증해 2026년 현재 약 3만 8,000명을 넘어섰다. 로스쿨 도입 전 사법시험 시절 합격자는 연간 1,000명 수준이었고 평균 응시 기간은 5~7년이었으나, 로스쿨 체제 전환 후 법조인 양성 속도가 빨라졌다. 법학전문대학원 학비는 연 1,500만~2,000만 원 수준으로 교육비 부담 논란이 지속된다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통 이상",
+      "wlbDetail": "대형 로펌 근무 시 야근·주말 근무가 잦고 업무 강도가 높은 편이다. 반면 개인 사무소 개업 변호사나 기업 인하우스 로이어는 상대적으로 자율적인 시간 관리가 가능하다. 소송 기일·계약 마감 등 시간 압박이 높은 직군이며, 커리어넷 재직자 조사에서 워라밸은 '보통 이상'으로 분류된다.[1]",
+      "socialDetail": "법치주의의 근간을 지탱하는 직업으로 사회적 신뢰도와 지위가 높다. 개인·기업·사회적 분쟁을 법적으로 해결함으로써 정의 실현에 기여한다. 공익법무관·법률 구조 활동·국선 변호인 등 공익 활동 비중도 높아 커리어넷 재직자 조사에서 사회적 기여 인식은 '매우 좋음'으로 나타난다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "LEET(법학적성시험) 준비 — 언어이해·추리논증·논술 집중 학습[1]",
+        "로스쿨 3년 — 민법·형법·상법·헌법·절차법 등 필수 법과목 이수 및 클리닉 참여[2]",
+        "변호사 시험 5회 내 합격 — 선택형·사례형·기록형 기출 분석 및 모의고사[3]",
+        "대한변호사협회 변호사시험합격자연수원 6개월 법조 실무교육 이수[4]",
+        "전문 분야(IP·조세·국제거래 등) 심화 연수 수강으로 전문 변호사 역량 강화[5]"
+      ],
+      "recruit": [
+        "대형 로펌(김앤장·태평양·광장 등) 공개 채용 — 신입변호사(로스쿨 졸업예정자) 연중 수시 지원[1]",
+        "기업 법무팀 인하우스 변호사 채용 — 대기업 법무파트 수시 채용[2]",
+        "법원행정처·검찰청 공익법무관 지원 또는 개인 법률사무소 개업[3]"
+      ],
+      "training": [
+        "법학전문대학원(로스쿨) 25개교 진학 — LEET·GPA·영어·자소서·면접[1]",
+        "대한변호사협회 변호사시험합격자연수원 6개월 법조 실무 교육 이수[2]",
+        "리걸테크·IP·국제중재 등 전문 분야 LL.M.(법학석사) 해외 취득으로 차별화[3]"
+      ]
+    },
+    "sidebarOrgs": [
+      {"name": "대한변호사협회", "url": "https://www.koreanbar.or.kr"},
+      {"name": "대법원", "url": "https://www.scourt.go.kr"},
+      {"name": "법무부", "url": "https://www.moj.go.kr"}
+    ],
+    "sidebarCerts": [
+      {"name": "변호사 자격증", "url": "https://www.moj.go.kr/bbs/moj/182/artclList.do"},
+      {"name": "법무사", "url": "https://www.kajs.or.kr/"},
+      {"name": "공인노무사", "url": "https://www.q-net.or.kr/site/nomu"},
+      {"name": "변리사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9737"}
+    ],
+    "heroTags": ["변호사시험", "로스쿨입시", "법학전문대학원", "LEET준비", "대형로펌취업", "인하우스로이어", "공익법무관"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=veAHBpRi1kw", "title": "[직업인터뷰] 변호사가 말하는 변호사! #1"},
+      {"url": "https://www.youtube.com/watch?v=UX2gQAVjqqg", "title": "변호사 리얼 인터뷰 1부│변호사의 삶, 변호사 되는 법, 변호사 에피소드│힘이 되는 인터뷰, 힘터뷰"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "커리어넷 직업정보 변호사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=375"},
+      {"id": 2, "text": "법학전문대학원협의회 입학요강", "url": "https://akls.kr/information/information02.php"},
+      {"id": 3, "text": "법학전문대학원협의회 일반현황", "url": "https://akls.kr/company/present.php"},
+      {"id": 4, "text": "대한변호사협회 변호사시험합격자연수원", "url": "https://new.edukba.org"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업정보 변호사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=375"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "대한변호사협회 회원현황", "url": "https://www.koreanbar.or.kr/pages/introduce/stat.asp"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "커리어넷 직업정보 변호사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=375"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "커리어넷 직업정보 변호사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=375"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "법학전문대학원협의회 입학요강", "url": "https://akls.kr/information/information02.php"},
+      {"id": 2, "text": "법학전문대학원협의회 일반현황", "url": "https://akls.kr/company/present.php"},
+      {"id": 3, "text": "법학전문대학원협의회 변호사시험 안내", "url": "https://akls.kr/exam/exam.php"},
+      {"id": 4, "text": "대한변호사협회 변호사시험합격자연수원", "url": "https://new.edukba.org"},
+      {"id": 5, "text": "커리어넷 직업정보 변호사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=375"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "법무법인 태평양 인재영입", "url": "https://recruit.bkl.co.kr/"},
+      {"id": 2, "text": "김앤장 법률사무소 채용", "url": "https://careers.kimchang.com/ko/guide/index.kc?category=H"},
+      {"id": 3, "text": "커리어넷 직업정보 변호사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=375"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "법학전문대학원협의회 입학요강", "url": "https://akls.kr/information/information02.php"},
+      {"id": 2, "text": "대한변호사협회 변호사시험합격자연수원", "url": "https://new.edukba.org"},
+      {"id": 3, "text": "커리어넷 직업정보 변호사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=375"}
+    ]
+  },
+  "changeSummary": "변호사 데이터 고도화: way 출처 정비·무출처 문장 제거, prospect 원문 방향(늘어날 전망) 복원, trivia 최신화(3만8천명), wlb 등급 띄어쓰기 교정, detailReady 전 항목 각주 추가, sidebarOrgs 신설, sidebarCerts URL 보완, youtubeLinks 제목 업데이트"
+}

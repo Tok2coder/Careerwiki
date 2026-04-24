@@ -1,0 +1,84 @@
+{
+  "jobName": "보육시설원장",
+  "jobId": "1765283563376210",
+  "fields": {
+    "way": "보육시설원장이 되려면 영유아보육법 시행령에서 정한 자격을 갖춰야 하며 어린이집 유형별로 요건이 다르다. 일반 어린이집 원장은 보육교사 1급 취득 후 3년 이상 보육·아동복지 경력이 필요하며, 유치원 정교사 1급이나 사회복지사 1급(5년 이상 경력), 간호사(7년 이상 경력)도 원장 자격을 신청할 수 있다. 가정어린이집은 보육교사 1급 + 1년 이상 경력으로 요건이 완화된다.[1] 자격증은 한국보육진흥원에 서류를 제출하는 무시험 심사 방식으로 발급되며 사전직무교육 80시간 이수가 의무다.[2]",
+    "trivia": "저출생의 영향으로 전국 어린이집 수는 2023년 기준 28,954개소로 전년 대비 6.4% 감소했으며, 이용 아동 수도 1,011,813명으로 전년 대비 7.6% 줄었다. 2018년 이후 민간·가정 어린이집은 계속 감소하는 반면 국공립 어린이집 이용 비중은 꾸준히 높아지고 있다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "어린이집은 이른 아침부터 저녁까지 운영되며 원장은 운영 시간 중 시설 내 상주가 의무다. 행사 준비나 서류 작업으로 야근이 발생하며 토요일에도 단축 운영 형태로 출근하는 경우가 많다. 원장 겸임 특례 적용 시 보육교사 업무를 병행하므로 근무 강도가 높아진다.[1]",
+      "socialDetail": "보육시설원장은 맞벌이 가정이 안심하고 자녀를 맡길 수 있는 공보육 인프라의 최일선을 담당하며 영유아의 신체·정서 발달을 총괄한다. 지역사회 보육 서비스의 수준을 직접 좌우하는 역할로 사회적 기여도가 높다.[1]"
+    },
+    "overviewProspect": {
+      "main": "저출생에 따른 영유아 수 감소로 전국 어린이집 수는 2023년 28,954개소로 전년 대비 6.4% 감소했으며 이용 아동도 7.6% 줄었다. 민간·가정 어린이집을 중심으로 폐원이 이어져 보육시설원장 수요는 전반적으로 감소 추세다. 다만 국공립 어린이집 이용 비중은 꾸준히 높아지고 있어 공공 분야 원장 포지션은 일부 유지될 전망이다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "아동·유아교육·사회복지 관련 학과 졸업 후 보육교사 2급→1급 자격 순차 취득[1]",
+        "어린이집 보육교사 1급으로 3년 이상 근무하여 일반 원장 자격 요건 충족[2]",
+        "원장 사전직무교육 80시간 이수(한국보육진흥원 또는 위탁 교육기관)[3]",
+        "유치원 정교사 1급·사회복지사 1급 등 보육교사 외 대안 경로로 원장 자격 취득 가능[4]"
+      ],
+      "recruit": [
+        "국공립·직장 어린이집 원장 공개채용에 지원[1]",
+        "어린이집 설치·인가 신청 후 직접 개원하여 운영[2]",
+        "보육교직원 통합정보 포털에서 구인·구직 정보 확인 및 지원[3]"
+      ],
+      "training": [
+        "한국보육진흥원 원장 직무교육 및 보수교육 이수[1]",
+        "어린이집 원장 보수교육 매 3년 주기 의무 이수[2]"
+      ]
+    },
+    "sidebarJobs": ["사회복지시설관리자", "사회사업단체임원", "보육교사", "유치원교사", "사회복지사"],
+    "sidebarMajors": ["유아교육학과", "사회복지학과", "아동학과", "아동가족학과", "아동복지학과", "사회학과"],
+    "sidebarCerts": [
+      {"name": "보육교사", "url": "https://www.kcpi.or.kr/kcpi/business/certificate2.do"},
+      {"name": "어린이집원장 자격증", "url": "https://www.kcpi.or.kr/kcpi/business/certificate1.do"},
+      {"name": "사회복지사 1급", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&jmCd=9738"}
+    ],
+    "sidebarOrgs": [
+      {"name": "한국어린이집총연합회", "url": "https://www.koreaeducare.or.kr/home/"},
+      {"name": "한국보육진흥원", "url": "https://www.kcpi.or.kr/"}
+    ],
+    "heroTags": ["보육시설원장", "어린이집원장", "보육시설", "원장", "영유아보육", "보육교사"],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "탐색어: '어린이집 원장 되는법', '어린이집원장 인터뷰', '보육시설원장 현직자', '어린이집 원장 하루 브이로그', '보육교사에서 원장으로', '어린이집 원장 연봉', '어린이집 원장 현직 진로'. KEIS 채널(@KEISwork2011)에서 '보육시설원장' '어린이집원장' 탐색. 카테고리 커버: 현직자·인터뷰(어린이집원장 인터뷰 검색), 직무·실무(보육시설원장 현직자), 강의·교육(어린이집 원장 되는법), 진로·면접(어린이집 원장 현직 진로). 검증된 한국어 영상 발견되지 않아 빈 배열 제출 (2026-04-17).",
+    "careerTree": null,
+    "_careerTreeNote": "탐색 카테고리: 공공·정부(보건복지부 고위직, 지방자치단체 보육담당 공무원 출신 원장 탐색 — 보육시설원장 직접 경력자 확인 안됨), 학계·연구(아동학·유아교육학 교수 중 어린이집 원장 경력자 탐색 — 확인 안됨), 재벌·대기업(기업 직장어린이집 원장 출신 공인 탐색 — 확인 안됨). 위키피디아·나무위키에서 '어린이집원장' '보육시설원장' 검색 — 해당 직업을 주요 경력으로 하는 공인 없음. 지역 기반 직업 특성상 전국 단위 공인 없음."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국보육진흥원 어린이집원장 자격 기준", "url": "https://www.kcpi.or.kr/kcpi/business/certificate1.do"},
+      {"id": 2, "text": "[2] 보육교직원 통합정보 어린이집원장 자격증", "url": "https://chrd.childcare.go.kr/ctis/content/fcl_kind_01_1.jsp"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 보건복지부 2023년 보육통계", "url": "https://www.mohw.go.kr/board.es?mid=a10412000000&bid=0020&tag=&act=view&list_no=1481247"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 한국보육진흥원 보육교직원 규정", "url": "https://www.kcpi.or.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국어린이집총연합회 역할 소개", "url": "https://www.koreaeducare.or.kr/home/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 보건복지부 2023년 보육통계", "url": "https://www.mohw.go.kr/board.es?mid=a10412000000&bid=0020&tag=&act=view&list_no=1481247"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국보육진흥원 보육교사 자격 기준", "url": "https://www.kcpi.or.kr/kcpi/business/certificate2.do"},
+      {"id": 2, "text": "[2] 한국보육진흥원 어린이집원장 자격 기준", "url": "https://www.kcpi.or.kr/kcpi/business/certificate1.do"},
+      {"id": 3, "text": "[3] 보육교직원 통합정보 원장 자격증 절차", "url": "https://chrd.childcare.go.kr/ctis/content/fcl_kind_01_1.jsp"},
+      {"id": 4, "text": "[4] 찾기쉬운 생활법령 어린이집원장 자격", "url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=1291&ccfNo=3&cciNo=1&cnpClsNo=1"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 한국어린이집총연합회 채용정보", "url": "https://www.koreaeducare.or.kr/home/"},
+      {"id": 2, "text": "[2] 찾기쉬운 생활법령 어린이집 운영", "url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=1291&ccfNo=3&cciNo=1&cnpClsNo=1"},
+      {"id": 3, "text": "[3] 보육교직원 통합정보 포털 구인구직", "url": "https://chrd.childcare.go.kr/ctis/content/cnt_kind_01_2.jsp"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국보육진흥원 원장 직무교육", "url": "https://www.kcpi.or.kr/kcpi/business/certificate1.do"},
+      {"id": 2, "text": "[2] 보육교직원 통합정보 원장 보수교육", "url": "https://chrd.childcare.go.kr/ctis/content/fcl_kind_01_1.jsp"}
+    ]
+  },
+  "changeSummary": "way·trivia·detailWlb·overviewProspect·detailReady(curriculum/recruit/training)·sidebarJobs/Majors/Certs/Orgs·heroTags 신규 보완 (Phase 1~3)"
+}

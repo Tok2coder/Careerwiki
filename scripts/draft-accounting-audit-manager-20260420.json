@@ -1,0 +1,192 @@
+{
+  "jobId": "1765283546297809",
+  "jobName": "회계감사관리자",
+  "fields": {
+    "way": "회계감사관리자는 보통 회계학·경영학 전공 후 공인회계사 자격을 취득하고 회계법인 감사본부에서 실무를 시작하는 경우가 많다.[1] 감사 현장 경험을 쌓으며 산업별 회계 이슈와 내부통제, 공시 기준을 익힌 뒤 팀 리더와 파트너급 관리자로 성장하는 흐름이 일반적이다.[2]",
+    "overviewProspect": {
+      "main": "IFRS 18 도입, 내부회계관리제도 강화, 금융감독원의 심사·감리 지적사례 축적은 고품질 감사와 회계 자문 수요를 계속 자극하고 있다.[1] 특히 중견·중소기업도 새로운 재무제표 표시 기준과 시스템 개편에 대비해야 해 감사관리자의 실무 수요가 유지될 가능성이 높다.[2] AI가 감사 도구를 바꾸고 있지만, 데이터를 해석하고 위험을 판단하는 고숙련 감사관리자의 역할은 오히려 더 중요해지고 있다.[3]"
+    },
+    "overviewAbilities": {
+      "technKnow": "회계감사관리자는 K-IFRS, 외부감사 관련 규정, 내부회계관리제도, 감사증거 평가, 팀 리뷰 프로세스를 이해해야 한다.[1] 최근에는 데이터 기반 감사기법과 AI 도구의 활용, 규제와 윤리 이슈를 함께 다루는 역량도 중요해지고 있다.[2]"
+    },
+    "trivia": "금융감독원은 기업과 감사인이 같은 오류를 반복하지 않도록 심사·감리 주요 지적사례를 매년 공개하고 있으며, 회계감사관리자는 이런 사례를 실무 교육과 품질관리의 교재처럼 활용한다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "평시에는 프로젝트 단위로 움직이지만 결산·법정감사 시즌과 감리 대응 시기에는 업무량이 급증한다. 고객사 자료 검토와 현장 미팅, 팀 리뷰가 이어져 마감 압박이 큰 편이다.[1]",
+      "socialDetail": "외부감사의 품질은 투자자 신뢰와 자본시장 투명성을 좌우한다.[1] 회계감사관리자는 기준서 해석과 내부통제 검토, 지적사례 확산을 통해 기업의 회계 투명성을 높이는 역할을 한다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "회계학·경영학 기반으로 회계원리, 중급회계, 세법, K-IFRS를 탄탄히 익힌다.[1]",
+        "공인회계사 실무수습과 직업윤리 교육을 거치며 외부감사 기준과 문서화 절차를 훈련한다.[2]",
+        "IFRS 18과 내부회계관리제도, 공시 이슈처럼 기준 변화가 큰 주제는 세미나와 교육으로 계속 보완한다.[3]"
+      ],
+      "recruit": [
+        "Big4와 중견 회계법인의 감사본부 채용 페이지를 통해 신입·경력 감사직에 지원한다.[1]",
+        "회계감사와 회계자문, 전략재무자문 직군이 함께 열리는 채용 구조를 이해하고 산업별 감사조직을 살핀다.[2]",
+        "경력직은 IFRS, 내부회계, 공시, 데이터 분석 경험을 강조하는 것이 유리하다.[3]"
+      ],
+      "training": [
+        "감사 실무자는 IFRS 18 도입처럼 기준 변화에 맞춘 세미나와 업데이트 교육을 지속적으로 받는다.[1]",
+        "감사위원회와 내부통제, 회계 심사 쟁점을 다루는 최신 자료를 꾸준히 읽으며 품질관리 역량을 높인다.[2]",
+        "현장 경험을 쌓는 동시에 감사본부 실무 영상과 인터뷰를 통해 팀 운영 방식과 업무 흐름을 익히는 것도 도움이 된다.[3]"
+      ]
+    },
+    "sidebarMajors": [
+      "회계학과",
+      "경영학과",
+      "세무학과",
+      "경제학과",
+      "경영정보학과"
+    ],
+    "sidebarOrgs": [
+      {
+        "name": "삼일PwC",
+        "url": "https://www.pwc.com/kr/ko/career.html"
+      },
+      {
+        "name": "한국공인회계사회",
+        "url": "https://www.kicpa.or.kr/"
+      },
+      {
+        "name": "금융감독원",
+        "url": "https://www.fss.or.kr/"
+      }
+    ],
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=n-QO9vwFU68",
+        "title": "직장으로서 삼일은 몇 점? | 삼일PwC 이호경 회계사"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=6zmqnPgS7gw",
+        "title": "삼일회계법인 감사본부 3년차 회계사의 하루"
+      }
+    ],
+    "_careerTreeNote": "조사한 인물: 홍준기(삼일PwC Assurance Leader, 현재 감사부문 대표 이력은 확인되나 단계별 연차 공개 제한), 홍종성(딜로이트 총괄대표, 회계감사 출신이지만 공개 약력의 단계형 세부 정보 부족), 윤훈수(삼일PwC CEO, 감사부문 총괄 이력은 있으나 회계감사관리자 페이지용 세부 초기 단계 부족), 장수재(딜로이트 안진 회계감사 부문 대표, 현재 역할 확인 가능하나 공개 약력 제한), 이승호(삼일PwC FS Leader, 감사 및 디지털감사 이력은 있으나 단계형 경력 공개 제한). 공식 출처 2개 이상으로 안정적인 단계형 경로를 재구성하기 어려워 적합 인물 없음 (2026-04-20)."
+  },
+  "careerTree": null,
+  "_careerTreeNote": "조사한 인물: 홍준기(삼일PwC Assurance Leader, 현재 감사부문 대표 이력은 확인되나 단계별 연차 공개 제한), 홍종성(딜로이트 총괄대표, 회계감사 출신이지만 공개 약력의 단계형 세부 정보 부족), 윤훈수(삼일PwC CEO, 감사부문 총괄 이력은 있으나 회계감사관리자 페이지용 세부 초기 단계 부족), 장수재(딜로이트 안진 회계감사 부문 대표, 현재 역할 확인 가능하나 공개 약력 제한), 이승호(삼일PwC FS Leader, 감사 및 디지털감사 이력은 있으나 단계형 경력 공개 제한). 공식 출처 2개 이상으로 안정적인 단계형 경로를 재구성하기 어려워 적합 인물 없음 (2026-04-20).",
+  "changeSummary": "[job-data-enhance] 회계감사관리자 full enhance 1차",
+  "sources": {
+    "overviewProspect.main": [
+      {
+        "id": 1,
+        "text": "[1] 삼일PwC GAAS 2025.06",
+        "url": "https://www.pwc.com/kr/ko/assurance/gaas/samilpwc_gaas_202506.pdf"
+      },
+      {
+        "id": 2,
+        "text": "[2] 삼일PwC - IFRS 18 대응 전략 세미나",
+        "url": "https://www.pwc.com/kr/ko/events/event_260407.html"
+      },
+      {
+        "id": 3,
+        "text": "[3] 삼일PwC Career",
+        "url": "https://www.pwc.com/kr/ko/career.html"
+      }
+    ],
+    "overviewAbilities.technKnow": [
+      {
+        "id": 1,
+        "text": "[1] 삼일PwC - IFRS 18 대응 전략 세미나",
+        "url": "https://www.pwc.com/kr/ko/events/event_260407.html"
+      },
+      {
+        "id": 2,
+        "text": "[2] 딜로이트 코리아 Careers",
+        "url": "https://www.deloitte.com/kr/ko/careers.html"
+      }
+    ],
+    "trivia": [
+      {
+        "id": 1,
+        "text": "[1] 삼일PwC GAAS 2025.06",
+        "url": "https://www.pwc.com/kr/ko/assurance/gaas/samilpwc_gaas_202506.pdf"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "id": 1,
+        "text": "[1] 유튜브 - 삼일회계법인 감사본부 3년차 회계사의 하루",
+        "url": "https://www.youtube.com/watch?v=6zmqnPgS7gw"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "id": 1,
+        "text": "[1] 삼일PwC GAAS 2025.06",
+        "url": "https://www.pwc.com/kr/ko/assurance/gaas/samilpwc_gaas_202506.pdf"
+      },
+      {
+        "id": 2,
+        "text": "[2] 삼일PwC - IFRS 18 대응 전략 세미나",
+        "url": "https://www.pwc.com/kr/ko/events/event_260407.html"
+      }
+    ],
+    "way": [
+      {
+        "id": 1,
+        "text": "[1] 삼일PwC Career",
+        "url": "https://www.pwc.com/kr/ko/career.html"
+      },
+      {
+        "id": 2,
+        "text": "[2] 삼일PwC Our Leadership",
+        "url": "https://www.pwc.com/kr/ko/about-us/our-leadership.html"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "id": 1,
+        "text": "[1] 삼일PwC Career",
+        "url": "https://www.pwc.com/kr/ko/career.html"
+      },
+      {
+        "id": 2,
+        "text": "[2] KICPA 사이버연수원 - 수습 OT",
+        "url": "https://cyber.kicpa.or.kr/Contents/202521_601030319/4/01/dunetcont.html"
+      },
+      {
+        "id": 3,
+        "text": "[3] 삼일PwC - IFRS 18 대응 전략 세미나",
+        "url": "https://www.pwc.com/kr/ko/events/event_260407.html"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "id": 1,
+        "text": "[1] 삼일PwC Career",
+        "url": "https://www.pwc.com/kr/ko/career.html"
+      },
+      {
+        "id": 2,
+        "text": "[2] 딜로이트 코리아 Careers",
+        "url": "https://www.deloitte.com/kr/ko/careers.html"
+      },
+      {
+        "id": 3,
+        "text": "[3] 삼일PwC Our Leadership",
+        "url": "https://www.pwc.com/kr/ko/about-us/our-leadership.html"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "id": 1,
+        "text": "[1] 삼일PwC - IFRS 18 대응 전략 세미나",
+        "url": "https://www.pwc.com/kr/ko/events/event_260407.html"
+      },
+      {
+        "id": 2,
+        "text": "[2] 삼일PwC GAAS 2025.06",
+        "url": "https://www.pwc.com/kr/ko/assurance/gaas/samilpwc_gaas_202506.pdf"
+      },
+      {
+        "id": 3,
+        "text": "[3] 유튜브 - 삼일PwC 이호경 회계사 인터뷰",
+        "url": "https://www.youtube.com/watch?v=n-QO9vwFU68"
+      }
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+    "jobId":  "1765284218856936",
+    "jobName":  "경마검량원",
+    "fields":  {
+                   "youtubeLinks":  [
+
+                                    ],
+                   "_youtubeSearchNote":  "탐색어: \u0027경마검량원\u0027, \u0027한국마사회 검량원\u0027, \u0027경마 심판 인터뷰\u0027, \u0027경마 검량 업무\u0027, \u0027경마 심판 직업\u0027, \u0027KEIS 경마검량원\u0027. 카테고리 커버: 현직자·인터뷰, 직무·실무, 강의·교육, 진로·면접. 직업명에 직접 대응하는 검증 가능한 한국어 영상을 찾지 못함 (2026-04-20).",
+                   "_careerTreeNote":  "조사 인물 5명: 박태종(기수 경력 중심, 경마검량원 경력 확인 안 됨), 문세영(기수 경력 중심, 경마검량원 경력 확인 안 됨), 김영관(조교사 경력 중심, 경마검량원 경력 확인 안 됨), 함완식(조교사 경력 중심, 경마검량원 경력 확인 안 됨), 조재로(기수·재결 관련 공개 이력 중심, 경마검량원 경력 확인 안 됨). 적합 인물 없음 (2026-04-20).",
+                   "detailReady":  {
+                                       "curriculum":  [
+                                                          "한국마사회 경주 운영 구조와 부담중량 기준을 이해한다.[1]",
+                                                          "출전정보표에서 부담중량·기수·마체중 표기를 읽는 법을 익힌다.[2]",
+                                                          "경마 운영 조직과 채용 공고를 확인하며 직무 요구 역량을 파악한다.[3]"
+                                                      ],
+                                       "recruit":  [
+                                                       "한국마사회 채용정보에서 경마지원직·위촉직 공고를 수시 확인한다.[1]",
+                                                       "서울·부산경남·제주 경마장 운영 정보를 확인해 근무지를 검토한다.[2]",
+                                                       "채용 공고의 지원 자격과 제출 서류를 확인해 지원 준비를 한다.[3]"
+                                                   ],
+                                       "training":  [
+                                                        "입직 후 한국마사회 내부 규정과 현장 운영 절차를 교육받는다.[1]",
+                                                        "경주일 출전정보와 검량 기록을 반복 확인하며 실무 숙련도를 높인다.[2]",
+                                                        "공정 경마 운영 원칙과 현장 판정 절차를 지속적으로 익힌다.[3]"
+                                                    ]
+                                   },
+                   "sidebarOrgs":  [
+                                       {
+                                           "name":  "한국마사회",
+                                           "url":  "https://www.kra.co.kr/"
+                                       }
+                                   ]
+               },
+    "careerTree":  null,
+    "_careerTreeNote":  "조사 인물 5명: 박태종(기수 경력 중심, 경마검량원 경력 확인 안 됨), 문세영(기수 경력 중심, 경마검량원 경력 확인 안 됨), 김영관(조교사 경력 중심, 경마검량원 경력 확인 안 됨), 함완식(조교사 경력 중심, 경마검량원 경력 확인 안 됨), 조재로(기수·재결 관련 공개 이력 중심, 경마검량원 경력 확인 안 됨). 적합 인물 없음 (2026-04-20).",
+    "changeSummary":  "[job-data-enhance] 경마검량원 detailReady/sidebarOrgs 및 youtube 탐색노트/careerTree 탐색노트 보강",
+    "sources":  {
+                    "detailReady.curriculum":  [
+                                                   {
+                                                       "id":  1,
+                                                       "text":  "[1] 한국마사회 경마지원직 채용정보",
+                                                       "url":  "https://recruit.kra.co.kr/web/main.do?strToken=XXXXX"
+                                                   },
+                                                   {
+                                                       "id":  2,
+                                                       "text":  "[2] 한국마사회 출전정보",
+                                                       "url":  "https://race.kra.co.kr/thisweekrace/ChulmaDate.do"
+                                                   },
+                                                   {
+                                                       "id":  3,
+                                                       "text":  "[3] 한국마사회 2024 ESG 보고서",
+                                                       "url":  "https://www.kra.co.kr/cms/contents/kr/resource/pdf/report/2024_esgSustainabilityReport.pdf"
+                                                   }
+                                               ],
+                    "detailReady.recruit":  [
+                                                {
+                                                    "id":  1,
+                                                    "text":  "[1] 한국마사회 채용정보",
+                                                    "url":  "https://recruit.kra.co.kr/web/main.do?strToken=XXXXX"
+                                                },
+                                                {
+                                                    "id":  2,
+                                                    "text":  "[2] 한국마사회 금주의 경마",
+                                                    "url":  "https://race.kra.co.kr/thisweekrace/ChulmaDate.do"
+                                                },
+                                                {
+                                                    "id":  3,
+                                                    "text":  "[3] 한국마사회 위촉직 채용공고 예시",
+                                                    "url":  "https://recruit.kra.co.kr/web/sfr003/sfr00301P013.do?eptminfoKey=K20210200573\u0026etrpDiscrHash=kra1410\u0026menuId=M0030\u0026pageType=main"
+                                                }
+                                            ],
+                    "detailReady.training":  [
+                                                 {
+                                                     "id":  1,
+                                                     "text":  "[1] 한국마사회 2024 ESG 보고서",
+                                                     "url":  "https://www.kra.co.kr/cms/contents/kr/resource/pdf/report/2024_esgSustainabilityReport.pdf"
+                                                 },
+                                                 {
+                                                     "id":  2,
+                                                     "text":  "[2] 한국마사회 출전정보",
+                                                     "url":  "https://race.kra.co.kr/thisweekrace/ChulmaDate.do"
+                                                 },
+                                                 {
+                                                     "id":  3,
+                                                     "text":  "[3] 한국마사회 홈페이지",
+                                                     "url":  "https://www.kra.co.kr/"
+                                                 }
+                                             ]
+                }
+}

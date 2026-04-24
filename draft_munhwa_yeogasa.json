@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "way": "문화여가사가 되기 위한 별도의 학력·자격 요건은 없으나, 전문대학이나 대학의 레크리에이션과·레저스포츠학과·사회체육학과·사회복지학과 관련 전공을 졸업하면 취업에 유리하다. 대학교 졸업 외에도 한국레크리에이션협회·YMCA 등 민간 교육기관에서 레크리에이션지도자 양성 과정을 이수하고 현장 실습을 거쳐 진입할 수 있다. 취업 경로는 학교·사회복지관·노인복지관·기업체 복지팀·스포츠센터·이벤트 기획사 등으로 다양하며, 프리랜서 강사로 독립하는 경우도 많다.[1]",
+    "trivia": "2024년 국민여가활동조사(문화체육관광부·한국문화관광연구원)에 따르면, 한국인의 여가 동반 형태 1위는 혼자(54.9%)이며 가족(29.8%), 친구·연인(13.2%)이 그 뒤를 잇는다. 문화여가사가 '함께하는 여가'를 기획·진행하는 직업이라는 점에서 역설적인 데이터다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "노인복지관·학교·기업체 등 근무지에 따라 근무시간이 크게 다르며, 프리랜서는 주말·저녁 행사가 많아 불규칙한 일정을 감수해야 한다. 정규직 기관 소속의 경우 주 5일 근무가 일반적이다.[1]",
+      "socialDetail": "노인·장애인·아동 등 취약계층의 여가 참여를 지원하고, 생활체육·문화예술 프로그램을 통해 사회 통합과 삶의 질 향상에 기여한다.[1]"
+    },
+    "heroTags": ["문화여가사", "레크리에이션강사", "여가전문가", "여가상담사"],
+    "sidebarJobs": ["사회복지사", "스포츠강사", "스포츠트레이너", "음악치료사", "미술치료사", "여행안내원", "놀이치료사"],
+    "sidebarMajors": ["레크리에이션과", "레저스포츠과", "레저스포츠학과", "사회체육학과", "체육학과"],
+    "sidebarCerts": [
+      {"name": "생활스포츠지도사 2급", "url": "https://sqms.kspo.or.kr/info/licenseInfoLsc2.kspo"},
+      {"name": "문화예술교육사 2급", "url": "https://acei.arte.or.kr"}
+    ],
+    "detailReady": {
+      "curriculum": [
+        "전문대학·대학교 레크리에이션과, 레저스포츠학과, 사회체육학과, 사회복지학과 관련 전공 이수.",
+        "한국레크리에이션협회·YMCA 등 민간 교육기관의 레크리에이션지도자 과정 수료.[1]"
+      ],
+      "recruit": [
+        "노인복지관·사회복지관·장애인복지관 문화여가 프로그램 담당자",
+        "학교 방과후 강사(레크리에이션·생활체육)",
+        "기업체 복지팀, 이벤트 기획사, 스포츠센터 문화여가 강사.[1]"
+      ],
+      "training": [
+        "한국레크리에이션협회(www.creckorea.or.kr) 레크리에이션지도자 자격 취득 과정.",
+        "HRD-Net(work24.go.kr)에서 '레크리에이션' 직업훈련 과정 검색 후 수강.[1]"
+      ]
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 문화여가사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=10042"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 문화체육관광부·한국문화관광연구원 2024년 국민여가활동조사", "url": "https://koreafuture.co.kr/m/view.php?idx=16900"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 문화여가사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=10042"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 문화여가사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=10042"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 문화여가사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=10042"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 워크넷 직업정보 문화여가사", "url": "https://www.work.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국레크리에이션협회 지도자 과정", "url": "http://www.creckorea.or.kr/"}
+    ]
+  },
+  "changeSummary": "way·trivia·detailWlb 신규 작성, sidebarMajors 객체→string 교체+보강, sidebarJobs 보강, heroTags 공백 제거, sidebarCerts 추가, detailReady 보강"
+}

@@ -1,0 +1,103 @@
+[
+  {
+    "slug": "주유원",
+    "urls": [
+      { "field": "way", "text": "한국산업인력공단", "url": "https://www.q-net.or.kr/search.do?query=%EC%A3%BC%EC%9C%A0%EC%9B%90", "domain": "q-net.or.kr" },
+      { "field": "detailWlb.wlbDetail", "text": "커리어넷", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1115", "domain": "career.go.kr" },
+      { "field": "detailWlb.socialDetail", "text": "커리어넷", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1115", "domain": "career.go.kr" },
+      { "field": "overviewProspect.main", "text": "에너지경제연구원", "url": "https://www.keei.re.kr/search/search.do?query=%EC%A3%BC%EC%9C%A0%EC%9B%90", "domain": "keei.re.kr" },
+      { "field": "trivia", "text": "소방청 위험물안전관리", "url": "https://www.nfa.go.kr/search/search.do?query=%EC%A3%BC%EC%9C%A0%EC%9B%90", "domain": "nfa.go.kr" }
+    ]
+  },
+  {
+    "slug": "산업용로봇제어조작원",
+    "urls": [
+      { "field": "detailWlb.socialDetail", "text": "제4차 지능형 로봇 기본계획", "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156610879", "domain": "korea.kr" },
+      { "field": "way", "text": "NCS 학습모듈", "url": "https://www.ncs.go.kr/th06/TH-107-004-02.scdo", "domain": "ncs.go.kr" },
+      { "field": "way", "text": "HRD-net 훈련과정", "url": "https://www.hrd.go.kr/hrdp/ti/ptiao/PTIAO0100L.do", "domain": "hrd.go.kr" },
+      { "field": "way", "text": "Q-net 생산자동화산업기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&gSite=Q&gId=&jmCd=2034", "domain": "q-net.or.kr" },
+      { "field": "overviewProspect.main", "text": "한국고용정보원 직업전망 2024", "url": "https://www.keis.or.kr/keis/ko/conts/105/web.do", "domain": "keis.or.kr" },
+      { "field": "detailWlb.wlbDetail", "text": "워크넷 직업정보", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do", "domain": "work.go.kr" },
+      { "field": "detailWlb.wlbDetail", "text": "NCS 능력단위 해설", "url": "https://www.ncs.go.kr/unity/th03/ncsSearchMain.do", "domain": "ncs.go.kr" }
+    ]
+  },
+  {
+    "slug": "연구관리자",
+    "urls": [
+      { "field": "overviewProspect.main", "text": "한국고용정보원", "url": "https://www.keis.or.kr/keis/ko/conts/105/web.do", "domain": "keis.or.kr" },
+      { "field": "overviewProspect.main", "text": "과학기술정보통신부", "url": "https://www.msit.go.kr/bbs/view.do?sCode=user&nttSeqNo=3184190&pageIndex=7&searchOpt=ALL&bbsSeqNo=94&mId=113&mPid=238", "domain": "msit.go.kr" },
+      { "field": "detailWlb.wlbDetail", "text": "워크넷 직업정보", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do?cond=key&searchCode=%EC%97%B0%EA%B5%AC%EA%B4%80%EB%A6%AC%EC%9E%90", "domain": "work.go.kr" },
+      { "field": "way", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%97%B0%EA%B5%AC%EA%B4%80%EB%A6%AC%EC%9E%90", "domain": "career.go.kr" },
+      { "field": "detailWlb.socialDetail", "text": "커리어넷 (인코딩 깨짐)", "url": "https://www.career.go.kr/cnet/front/base/job/jobList.do", "domain": "career.go.kr", "note": "text 필드 인코딩 깨짐 — 수정 필요" },
+      { "field": "trivia", "text": "한국연구재단", "url": "https://www.nrf.re.kr/search/search.do?query=%EC%97%B0%EA%B5%AC%EA%B4%80%EB%A6%AC%EC%9E%90", "domain": "nrf.re.kr" }
+    ]
+  },
+  {
+    "slug": "직업상담사",
+    "urls": [
+      { "field": "overviewProspect.main", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=428", "domain": "career.go.kr" },
+      { "field": "way", "text": "Q-net", "url": "https://www.q-net.or.kr/search.do?query=%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC", "domain": "q-net.or.kr" },
+      { "field": "trivia", "text": "한국고용정보원", "url": "https://www.keis.or.kr/search/totalSearch.do?query=%EC%A7%81%EC%97%85%EC%83%81%EB%8B%B4%EC%82%AC", "domain": "keis.or.kr" }
+    ]
+  },
+  {
+    "slug": "택시운전원",
+    "urls": [
+      { "field": "way", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=444", "domain": "career.go.kr" },
+      { "field": "way", "text": "워크넷 직업정보", "url": "https://www.work.go.kr/jobMain.do", "domain": "work.go.kr" },
+      { "field": "overviewProspect.main", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=444", "domain": "career.go.kr" },
+      { "field": "trivia", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/대base/job/jobView.do?SEQ=444", "domain": "career.go.kr", "note": "URL에 '대' 한글 문자 포함 오타 — 수정 필요" }
+    ]
+  },
+  {
+    "slug": "전자공학기술자",
+    "urls": [
+      { "field": "overviewProspect.main", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=435", "domain": "career.go.kr" },
+      { "field": "way", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=435", "domain": "career.go.kr" },
+      { "field": "way", "text": "한국반도체산업협회", "url": "https://www.ksia.or.kr/bbs/board.php?bo_table=importExportStat", "domain": "ksia.or.kr" },
+      { "field": "trivia", "text": "Bell Labs", "url": "https://www.bell-labs.com/about/", "domain": "bell-labs.com" }
+    ]
+  },
+  {
+    "slug": "실내장식-디자이너",
+    "urls": [
+      { "field": "way", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobList.do?searchJobNm=%EC%8B%A4%EB%82%B4%EC%9E%A5%EC%8B%9D%20%EB%94%94%EC%9E%90%EC%9D%B4%EB%84%88", "domain": "career.go.kr" },
+      { "field": "way", "text": "워크넷 직업정보", "url": "https://www.work.go.kr/seekWk/jobInfo/occpSrch/occpInfoSrch.do", "domain": "work.go.kr" },
+      { "field": "overviewProspect.main", "text": "한국고용정보원 직업전망", "url": "https://www.keis.or.kr/user/extra/main/2085/publication/publicationList/jsp/LayOutPage.do", "domain": "keis.or.kr" },
+      { "field": "trivia", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobList.do?searchJobNm=%EC%8B%A4%EB%82%B4%EC%9E%A5%EC%8B%9D%20%EB%94%94%EC%9E%90%EC%9D%B4%EB%84%88", "domain": "career.go.kr" }
+    ]
+  },
+  {
+    "slug": "채소특용작물재배원",
+    "urls": [
+      { "field": "overviewProspect.main", "text": "한국고용정보원 직업전망", "url": "https://www.keis.or.kr/search/totalSearch.do?query=%EC%B1%84%EC%86%8C%C2%B7%ED%8A%B9%EC%9A%A9%EC%9E%91%EB%AC%BC%EC%9E%AC%EB%B0%B0%EC%9B%90", "domain": "keis.or.kr" },
+      { "field": "way", "text": "농림축산식품부 귀농귀촌종합센터", "url": "https://www.returnfarm.com/search?query=%EC%B1%84%EC%86%8C%C2%B7%ED%8A%B9%EC%9A%A9%EC%9E%91%EB%AC%BC%EC%9E%AC%EB%B0%B0%EC%9B%90", "domain": "returnfarm.com" },
+      { "field": "trivia", "text": "국립농산물품질관리원 GAP", "url": "https://www.naqs.go.kr/search/search.do?query=%EC%B1%84%EC%86%8C%C2%B7%ED%8A%B9%EC%9A%A9%EC%9E%91%EB%AC%BC%EC%9E%AC%EB%B0%B0%EC%9B%90", "domain": "naqs.go.kr" }
+    ]
+  },
+  {
+    "slug": "가스공급설비기계관리원",
+    "urls": [
+      { "field": "way", "text": "한국가스공사", "url": "https://www.kogas.or.kr/site/koGas/goBoard.do?boardNo=44&Key=1010800000000", "domain": "kogas.or.kr" },
+      { "field": "overviewProspect.main", "text": "워크넷", "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do", "domain": "work.go.kr" },
+      { "field": "trivia", "text": "NCS 가스설비관리", "url": "https://www.ncs.go.kr/unity/th03/ncsSearchMain.do", "domain": "ncs.go.kr" }
+    ]
+  },
+  {
+    "slug": "애니메이터",
+    "urls": [
+      { "field": "way", "text": "잡스타트 진로정보", "url": "https://jstart.co.kr/bbs/board.php?bo_table=school_news&wr_id=765", "domain": "jstart.co.kr" },
+      { "field": "way", "text": "잇다 현직자 멘토링", "url": "https://www.itdaa.net/open_mentorings/2552", "domain": "itdaa.net" },
+      { "field": "way", "text": "GarageFarm 애니메이션 소프트웨어", "url": "https://garagefarm.net/ko-blog/10-best-3d-and-2d-animation-software-for-creating-animation-in-2025", "domain": "garagefarm.net" },
+      { "field": "way", "text": "GarageFarm 애니메이터 역할", "url": "https://garagefarm.net/ko-blog/what-does-an-animator-do-career-guide-industry-insights", "domain": "garagefarm.net" },
+      { "field": "way", "text": "Unreal Engine", "url": "https://www.unrealengine.com/ko/explainers/animation/what-is-a-3d-animator", "domain": "unrealengine.com" },
+      { "field": "overviewProspect.main", "text": "Mordor Intelligence 시장 보고서", "url": "https://www.mordorintelligence.kr/industry-reports/anime-market", "domain": "mordorintelligence.kr" },
+      { "field": "overviewProspect.main", "text": "전자신문", "url": "https://www.etnews.com/20210624000008", "domain": "etnews.com" },
+      { "field": "overviewProspect.main", "text": "헤럴드경제", "url": "https://biz.heraldcorp.com/article/10420922", "domain": "heraldcorp.com" },
+      { "field": "trivia", "text": "위키백과 Fantasmagorie", "url": "https://en.wikipedia.org/wiki/Fantasmagorie_(film)", "domain": "wikipedia.org" },
+      { "field": "trivia", "text": "한국애니메이션제작자협회", "url": "https://www.koreaanimation.or.kr/", "domain": "koreaanimation.or.kr" },
+      { "field": "detailWlb.wlbDetail", "text": "잡코리아 직업사전", "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=18800", "domain": "jobkorea.co.kr" },
+      { "field": "detailWlb.socialDetail", "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=248", "domain": "career.go.kr" }
+    ]
+  }
+]

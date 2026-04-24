@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "way": "물류관리사가 되려면 국토교통부 주관 자격시험에 합격해야 한다. 응시 자격 제한이 없어 누구나 도전할 수 있으며, 시험은 매년 1회(7월 초) 시행된다. 물류관리론·화물운송론·보관하역론·국제물류론·물류관련법 5개 과목 모두 40점 이상이면서 전 과목 평균 60점 이상이어야 합격이다. 대학원에서 관련 과목을 이수하고 석사 이상 학위를 취득한 경우 법규를 제외한 과목의 시험이 면제된다.[1]",
+    "overviewSalary": {
+      "sal": "2021년 기준 관련 직업인 물류사무원의 평균 연봉(중앙값)은 3,305만 원으로, 전체 직업 평균 연봉(중앙값) 4,072만 원보다 낮은 수준이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 물류관리사의 관련 직업인 물류사무원의 일자리는 다소 증가할 전망이다. 기업경영에서 물류가 차지하는 중요성이 날로 증가하고 있으며, 물류 전담 부서 또는 물류 연구소를 운영하는 경향도 늘어나고 있다.[1]"
+    },
+    "trivia": "물류관리사 자격시험은 1997년 제1회에 30,027명이 응시해 합격률 3.69%에 그쳤으나, 2025년 제29회에는 7,948명이 응시해 2,653명(합격률 33.38%)이 합격하며 제도가 안정화됐다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "주로 실내 사무환경에서 근무하며 마감시간 엄수가 중요한 업무 특성을 지닌다. 근무여건은 전반적으로 보통 수준으로 평가되며, 직업만족도는 67.8%로 집계된다.[1]",
+      "socialDetail": "화물의 유통 촉진과 물류비 절감을 통해 경제 효율성 향상에 기여하며, 물류시스템 개선으로 산업 발전을 지원한다.[1]"
+    },
+    "sidebarCerts": [
+      {"name": "물류관리사", "url": "https://www.nlic.go.kr/nlic/WhsGudeHtm10.action"},
+      {"name": "유통관리사", "url": "https://license.korcham.net/co/examguide.do?mm=31&cd=0201"},
+      {"name": "ERP물류정보관리사", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=330"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 국가물류통합정보센터 물류관리사 시험안내", "url": "https://www.nlic.go.kr/nlic/WhsGudeHtm10.action"}],
+    "overviewSalary.sal": [{"id": 1, "text": "[1] 워크넷 직업정보 (물류사무원, 2021년 기준)", "url": "https://m.work.go.kr/jobInfo/occuInfo/srchJobInfoDetail.do?jobNm=028302"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 워크넷 직업정보", "url": "https://m.work.go.kr/jobInfo/occuInfo/srchJobInfoDetail.do?jobNm=028302"}],
+    "trivia": [{"id": 1, "text": "[1] 국가물류통합정보센터 물류관리사 시험안내", "url": "https://www.nlic.go.kr/nlic/WhsGudeHtm10.action"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 한국직업능력연구원 직업정보 (물류사무원)", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000000855"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 한국직업능력연구원 직업정보 (물류사무원)", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000000855"}]
+  },
+  "changeSummary": "물류관리사: way/sal/prospect/trivia/wlbDetail/socialDetail 신규 작성, detailWlb.wlb/social 공백 교정(보통이상→보통 이상), sidebarCerts URL 추가"
+}

@@ -1,0 +1,68 @@
+{
+  "jobName": "건축가건축설계사",
+  "jobId": "176528344210340",
+  "fields": {
+    "way": "건축설계사가 되려면 건축학과(5년제)를 졸업하고 건축사 자격시험에 합격하는 것이 핵심 경로다. 건축사 자격을 취득하려면 건축학과 5년 졸업 후 건축사사무소에서 3년 이상 실무 수련을 이수해야 한다.[1] 대형 건축설계사무소·종합건설사·공공기관(LH·SH공사·조달청 등) 취업이 일반적이며, 경력 후 독립 개업도 가능하다.[2] BIM(빌딩정보모델링)·디지털 패브리케이션·친환경 건축 설계 역량이 현업에서 필수적으로 요구된다. 해외 건축학교(AA스쿨·하버드 GSD·ETH 취리히 등) 유학 후 귀국해 국내 건축계에서 활동하는 경로도 있다.[3]",
+    "overviewSalary": {
+      "sal": "2024년 기준 커리어넷 조사에서 하위(25%) 3,000만 원, 평균(50%) 4,200만 원, 상위(25%) 6,500만 원이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 보통 전망이다. 도시 재생·리모델링·친환경 건축 수요 증가로 건축설계 시장이 꾸준히 유지되고 있다. 스마트 빌딩·그린 빌딩·제로에너지 건축 등 친환경 설계 역량을 갖춘 전문가 수요가 확대되고 있다. 다만 부동산 경기 변동에 따라 건설·건축 설계 일감이 민감하게 반응하는 구조적 불안정성이 있다.[1]"
+    },
+    "trivia": "승효상은 1952년생 한국의 대표적 건축가로, 1986년 이로재(履露齋) 건축연구소를 설립하고 '빈자의 미학'을 철학으로 삼아 소박하지만 깊이 있는 건축 세계를 개척했다. 그의 대표작으로는 노무현 전 대통령의 봉하마을 사저·묘역 설계(2009), 수졸당, 웰콤시티 등이 있으며, 2019년 대통령직속 국가건축정책위원회 위원장을 역임했다. 스승 김수근의 영향을 받았지만 이를 넘어 한국 고유의 건축 언어를 탐구해온 그는 한국 건축계의 대표 거장으로 국내외에서 높은 평가를 받는다.[1]",
+    "detailReady": {
+      "curriculum": [
+        "건축설계 스튜디오 — 설계 과정 전반에 걸쳐 공간 구성과 도면 표현 능력 배양",
+        "건축구조 — RC·철골·목구조 등 구조 시스템의 원리와 계산법 학습",
+        "건축환경 및 설비 — 채광·단열·냉난방·급배수 등 건물 환경 성능 이해",
+        "BIM(빌딩정보모델링) — Revit·ArchiCAD 등 소프트웨어를 활용한 3D 통합 설계",
+        "건축법규 — 건축법·건축기준·소방법 등 국내외 건축 관련 법령 이해",
+        "도시설계 및 단지계획 — 도시 구조와 주거 단지 설계 원리 학습"
+      ],
+      "recruit": [
+        "대형 건축설계사무소 신입 채용 — 삼우종합건축사사무소·해안건축·간삼건축·희림·무영 등 공채 지원[1]",
+        "공공기관 건축직 공채 — LH한국토지주택공사·SH서울주택도시공사·조달청·문화재청 건축직 채용",
+        "소규모 아틀리에형 건축사무소 — 작품성 있는 소규모 사무소에서 실무 역량 강화"
+      ],
+      "training": [
+        "건축사 실무 수련 3년 — 건축사사무소에서 건축사 자격시험 응시 전 이수 필수",
+        "한국건축사협회 건축사 연수원 교육 — 자격 취득 후 전문성 강화를 위한 계속교육",
+        "BIM 기반 통합 설계 실무 교육 — 한국BIM학회 및 민간 교육기관 제공"
+      ]
+    },
+    "sidebarCerts": [
+      {
+        "name": "건축사",
+        "url": "https://www.kira.or.kr/index.do"
+      },
+      {
+        "name": "건축기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5110&gSite=Q&gId="
+      },
+      {
+        "name": "건축산업기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5111&gSite=Q&gId="
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "한국건축사협회", "url": "https://www.kira.or.kr/index.do"},
+      {"id": 2, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"},
+      {"id": 3, "text": "대한건축학회", "url": "https://www.aik.or.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "사람인 건축설계 채용", "url": "https://www.saramin.co.kr/zf_user/jobs/list/job-category?cat_kewd=84&panel_type=large"}
+    ]
+  },
+  "changeSummary": "way 마커-sources 불일치 해소(orphan 마커 제거 및 재구성 3개로 정리), sources text에 URL 포함 오류 수정(기관명으로 교체), sources id를 필드별 1부터 재설정, overviewSalary.sal 연도 추가, overviewProspect.main 및 trivia에 [1] 마커 추가, sidebarCerts 신규 추가(건축사·건축기사·건축산업기사), detailReady curriculum 및 training 보강"
+}

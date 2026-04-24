@@ -1,0 +1,116 @@
+{
+  "fields": {
+    "way": "소방관이 되는 주요 경로는 소방공무원 채용시험 합격이다. 소방청 주관으로 소방사(최하위 계급) 공개채용 시험을 통해 임용된다.[1] 시험은 필기(소방학개론, 소방관계법규, 행정법 등)와 체력검정(윗몸일으키기, 팔굽혀펴기, 왕복달리기, 50m 수영 등), 신체·적성 검사, 면접으로 구성된다. 2020년 4월부터 소방공무원은 국가직으로 전환되어 채용 주체가 소방청으로 일원화됐다.[2] 소방공무원법에 따라 소방사→소방교→소방장→소방위→소방경→소방령→소방정→소방준감→소방감→소방총감의 계급 체계로 승진한다. 구급·구조 분야 전문성을 쌓으면 119구조대·항공구조대 등 특수 부서로 배치될 수 있다. 구급대원으로 활동하려면 응급구조사 자격증이 있으면 유리하다.[3]",
+
+    "overviewProspect": {
+      "main": "향후 5년간 소방관의 일자리는 늘어날 것으로 전망된다. 정부는 구조·구급 등 전문화된 소방 인력의 수요 증가에 따라 소방 인력을 계속 증원하고 있으며, 이러한 추세는 지속될 것으로 전망된다.[1]"
+    },
+
+    "trivia": "연간 119 신고 건수는 약 1,196만 건에 달하며, 소방공무원 수는 2023년 기준 약 6만 7,000명이다.[1]",
+
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "3교대(24시간 근무 후 48시간 휴무) 또는 4교대 근무가 일반적이다.[1] 화재·구조·구급 현장 출동에 따른 신체적·정신적 긴장이 상시적이며, 소방공무원의 44%가 PTSD 등 심리질환 위험군에 해당한다는 조사 결과가 있다.[2]",
+      "socialDetail": "화재 진압, 인명 구조, 구급 등 생명을 직접 구하는 역할로 직업적 사명감이 매우 높다. 공무원 직업 만족도 조사에서 소방관은 최상위권을 차지하며, 사회적 기여도에 대한 자부심이 높은 직종으로 평가된다.[1]"
+    },
+
+    "detailReady": {
+      "curriculum": [
+        "소방 관련 학과(소방방재학과, 소방안전관리학과 등) 또는 응급구조학과 진학 — 소방학 기초 및 법규 습득[1]",
+        "소방공무원 필기시험(소방학개론, 소방관계법규) 및 체력검정(윗몸일으키기, 팔굽혀펴기, 왕복달리기, 50m 수영) 체계적 준비[2]",
+        "소방간부후보생 시험 준비 — 소방학개론, 소방관계법규, 행정법 포함 필기시험 학습[3]",
+        "소방청 사이버교육센터 온라인 과정 또는 중앙소방학교 예비교육 과정 활용[4]"
+      ],
+      "recruit": [
+        "소방청 소방사 공개채용 시험 응시[1]",
+        "소방간부후보생 시험 응시 — 대졸 이상, 합격 후 소방위(간부) 임용[2]",
+        "의무소방원 복무 후 소방공무원 경력 채용 활용[3]"
+      ],
+      "training": [
+        "소방공무원 임용 후 중앙소방학교 신임교육(24주) 이수[1]",
+        "응급구조사 2급 또는 1급 자격 취득 — 119구급대 배치 및 구급 전문성 강화[2]",
+        "수상인명구조사 또는 무도 관련 자격 취득 — 소방특수구조단 지원 시 가산점[3]"
+      ]
+    },
+
+    "sidebarJobs": [
+      "경찰관",
+      "응급구조사",
+      "간호사",
+      "교통안전관리사무원",
+      "소방서장",
+      "소방감리원",
+      "소방안전관리자",
+      "화재감식전문가",
+      "해양경찰관"
+    ],
+
+    "sidebarOrgs": [
+      {"name": "소방청", "url": "https://www.nfa.go.kr"},
+      {"name": "중앙소방학교", "url": "https://www.nfsa.go.kr"},
+      {"name": "중앙119구조본부", "url": "https://www.rescue.go.kr"},
+      {"name": "한국소방안전원", "url": "https://www.kfsa.or.kr"}
+    ],
+
+    "heroTags": [
+      "소방공무원",
+      "119구조대",
+      "화재진압전문가",
+      "구급대원",
+      "소방간부",
+      "Firefighter",
+      "재난안전전문가"
+    ],
+
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=CvKiGGq0hlc",
+        "title": "소방관 송령 인터뷰(부산 항만소방서)"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=5h4UwCb_zOQ",
+        "title": "직업 인터뷰 2탄 (ver. 소방관OX)"
+      }
+    ]
+  },
+
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 소방청 채용공고", "url": "https://www.nfa.go.kr/nfa/news/job/nfajob/"},
+      {"id": 2, "text": "[2] 행정안전부", "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=76479"},
+      {"id": 3, "text": "[3] 소방청", "url": "https://www.nfa.go.kr"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 워크넷 직업전망", "url": "https://www.work.go.kr/consltJobCarpa/srch/korJobProspect/korJobProspectDtlInfo.do?pageType=SrchByJobCl&choiceCode=KR16&fjobCd=KR160009"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 소방청 2024 통계연보", "url": "https://www.newszone.co.kr/news/articleView.html?idxno=5539"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 소방공무원 근무규칙", "url": "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000138730"},
+      {"id": 2, "text": "[2] 서울경제(2023 소방공무원 마음건강 설문)", "url": "https://www.sedaily.com/NewsView/2D5893HJA1"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 파이낸셜뉴스", "url": "https://www.fnnews.com/news/202404300943366862"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=229"},
+      {"id": 2, "text": "[2] 소방청 채용공고", "url": "https://www.nfa.go.kr/nfa/news/job/nfajob/"},
+      {"id": 3, "text": "[3] 소방청", "url": "https://www.nfa.go.kr"},
+      {"id": 4, "text": "[4] 중앙소방학교", "url": "https://www.nfsa.go.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 소방청 채용공고", "url": "https://www.nfa.go.kr/nfa/news/job/nfajob/"},
+      {"id": 2, "text": "[2] 소방청", "url": "https://www.nfa.go.kr"},
+      {"id": 3, "text": "[3] 행정안전부", "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=76479"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 중앙소방학교", "url": "https://www.nfsa.go.kr"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"},
+      {"id": 3, "text": "[3] 대한적십자사", "url": "https://www.redcross.or.kr"}
+    ]
+  },
+
+  "changeSummary": "소방관 데이터 고도화: way 연도 오류 수정(2022→2020), 출처 전체 등록(_sources), wlb 등급 띄어쓰기 교정(보통이하→보통 이하), detailReady 항목 보강 및 각주 추가, prospect 방향 forecastList 일치, trivia 수치 최신화(1196만건), sidebarJobs 4→9개, heroTags 영문명 추가, sidebarOrgs URL 수정, youtubeLinks 제목 교정"
+}

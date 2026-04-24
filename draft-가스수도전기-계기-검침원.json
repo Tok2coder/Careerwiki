@@ -1,0 +1,71 @@
+{
+  "fields": {
+    "way": "가스·수도·전기 계기 검침원 및 안전점검원이 되려면 고등학교 졸업 이상의 학력이 요구되며, 한국전력공사·한국가스안전공사·지방자치단체 수도사업소 등에서 직접 채용하거나 협력 용역업체를 통해 채용된다. 가스 분야의 경우 한국가스안전공사 사이버교육원에서 사용시설점검원 교육을 이수해야 한다.[1] 전기기능사·가스기능사 등 관련 자격증이 있으면 취업에 유리하며, 체력이 좋고 성실함과 정직성, 기본적인 수리 계산 능력이 필요하다. 경력을 쌓으면 현장 감독자나 관리 직무로 전환되는 경로도 있다.[2]",
+    "overviewSalary": {
+      "sal": "관련 직업인 계기검침원 및 가스점검원의 평균 연봉(중앙값)은 2,799만 원(2021년 기준)으로, 전체 직업 평균 연봉 4,072만 원에 비해 낮은 수준이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 다소 감소할 것으로 전망된다. 스마트 계량기(AMI) 보급 확대로 인해 원격 검침 비중이 늘어나면서 현장 검침 인력 수요가 점차 감소하고 있으나, 안전점검 수요는 꾸준히 유지될 전망이다.[1]"
+    },
+    "trivia": "스마트 계량기(AMI: Advanced Metering Infrastructure) 도입으로 일부 지역에서는 원격 자동 검침이 가능해졌으나, 노후 주택이나 외진 지역은 여전히 사람이 직접 방문하여 검침한다. 가스 안전점검원은 연간 약 1,000만 가구 이상의 가스 시설을 점검하며, 가스 사고 예방에 핵심적인 역할을 한다. 전기 계기는 5년마다 법적 검정 의무가 있어 전국적으로 교체 점검 수요가 꾸준히 발생한다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통",
+      "wlbDetail": "야외 순회 업무 특성상 날씨 영향을 받지만 정해진 구역을 돌며 검침하는 규칙적인 업무 패턴으로 워라밸은 비교적 양호하다. 독립적으로 업무를 수행하는 경우가 많아 자율성이 높으며, 오전 중심 근무로 저녁 시간 여유가 있는 편이다.[1]",
+      "socialDetail": "에너지 및 수도 공급망의 안전을 유지하는 역할로 지역 사회 안전에 기여한다. 공공성이 높은 업무로 인식되나 단순 노무직으로 간주되는 경향이 있다.[1]"
+    },
+    "sidebarJobs": [
+      "계기검침원 및 가스점검원",
+      "전기안전관리원",
+      "가스시설안전관리원",
+      "보일러설치·정비원",
+      "소방관",
+      "배관원",
+      "산업안전원 및 위험관리원",
+      "철로설치·보수원"
+    ],
+    "sidebarMajors": [
+      "전기공학과",
+      "기계공학과",
+      "환경공학과",
+      "산업공학과"
+    ],
+    "sidebarCerts": [
+      {"name": "가스기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=6335&gSite=Q"},
+      {"name": "전기기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7780&gSite=Q"},
+      {"name": "에너지관리기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7761&gSite=Q"}
+    ],
+    "heroTags": [
+      "검침원",
+      "안전점검원",
+      "가스점검",
+      "전기검침",
+      "수도검침",
+      "에너지안전",
+      "공공서비스"
+    ],
+    "youtubeLinks": []
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1"},
+      {"id": 2, "text": "더잡 직업분석", "url": "https://www.thejobnews.kr/news/articleView.html?idxno=255"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1"}
+    ]
+  },
+  "changeSummary": "각주 중복/전역번호 수정(way/prospect/trivia/wlbDetail/socialDetail), wlb 등급 띄어쓰기 수정, sal 서술 보강, sidebarCerts [{name,url}] 형식화, sidebarJobs DB미존재 건물관리원 제거, sidebarMajors 4개로 트림"
+}

@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국립수산과학원</title>
+    <link href="/cmmn/css/common.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- wrap -->
+  <div id="wrap" class="error">
+    <div id="container">
+      <div class="content">
+        <img src="/cmmn/images/bb_404.png" alt="404" class="error-img">
+        <div class="error-text">
+          <h2>PAGE <strong>NOT FOUND</strong></h2>
+          <div class="home-btn">
+            <a href="/main.do" class="home">메인으로</a>
+            <a href="javascript:;" class="back" onclick="history.back();">이전으로</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //container -->
+  </div>
+  <!-- //wrap -->
+</body>
+</html>

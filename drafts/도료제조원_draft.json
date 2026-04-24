@@ -1,0 +1,90 @@
+{
+  "fields": {
+    "way": "도료제조원은 학력 제한이 크지 않아 고등학교 졸업 이상이면 지원할 수 있으며, 화학·화공 계열 직업훈련을 이수하거나 관련 제조 현장 경험이 있으면 취업에 유리합니다. 일반적으로 도료 제조 공장의 생산직으로 입사해 배합, 분산, 조정, 충전 등 도료 제조 전 공정을 단계별로 익히게 됩니다. 화학분析기능사 등의 자격을 취득하면 직무 범위를 넓히는 데 도움이 됩니다. 경력 축적 후에는 도료배합원, 도료조정원, 품질관리 담당자 등으로 직무를 세분화하거나 도료제조현장감독자로 승진할 수 있습니다.[1] 관련 훈련 정보는 HRD-Net에서 확인할 수 있습니다.[2]",
+    "overviewSalary": {
+      "sal": "도료제조원의 연봉은 기업 규모와 경력에 따라 다양하며, 초봉은 연 2,500만~3,000만원 수준이고, 경력 3년 이상의 숙련 제조원은 연 3,000만~3,800만원 수준입니다. 교대 근무 시 야간 수당 및 위험수당이 추가로 지급됩니다.[1]"
+    },
+    "overviewProspect": {
+      "main": "도료 제조 산업은 국내 건축, 자동차, 조선, 전자 산업과 밀접하게 연결되어 있어 기초 수요가 안정적입니다. 친환경·기능성 도료 수요 증가로 다양한 제품 생산 역량을 갖춘 제조 인력의 중요성은 지속될 것으로 전망됩니다. 다만, 생산 자동화에 따라 단순 반복 작업은 감소할 수 있습니다.[1]"
+    },
+    "trivia": "도료 한 배치(Batch)의 생산에는 수지, 안료, 용제, 첨가제 등 수십 가지 원료가 정밀하게 사용되며, 배치 기록 관리(Batch Record)를 통해 품질 이력을 추적합니다. 제약 산업의 GMP와 유사한 관리 체계가 고품질 도료 생산에도 적용되고 있습니다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "도료 제조 현장은 교대 근무(2교대·3교대)가 일반적이며, 화학 원료 취급에 따른 안전장비 착용이 필수입니다. 소음·진동·분진 환경에 노출될 수 있어 정기적인 건강검진과 안전교육이 중요합니다.[1]",
+      "socialDetail": "건물 보호, 자동차 마감, 선박 방청 등 생활 인프라 전반에 필수적인 도료를 생산하는 역할을 담당합니다. 친환경 수성 도료 생산에 참여함으로써 환경 보호에도 간접적으로 기여할 수 있습니다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        "도료 원료(수지, 안료, 용제, 첨가제) 종류 및 특성 이해",
+        "도료 제조 전 공정(계량→배합→분산→조정→여과→충전) 숙지",
+        "점도·비중·pH 등 공정 중 품질 측정 방법",
+        "충전·포장 기계 조작 및 제품 라벨링 규정",
+        "화학 원료 취급 안전 수칙, GHS 표지, 방화·방폭 기준[1]"
+      ],
+      "recruit": [
+        "KCC, 삼화페인트, 노루페인트, 조광페인트 등 도료 대기업 생산직 공개채용",
+        "중소·중견 도료 제조업체 생산직 수시채용",
+        "고용노동부 워크넷·HRD-Net 도료 제조 분야 구인 공고[1]"
+      ],
+      "training": [
+        "HRD-Net 화학제조 생산 직업훈련 과정 (혼합·분산·충전 장비 조작 포함)",
+        "도료 제조업체 사내 교육 프로그램(OJT)[1]"
+      ]
+    },
+    "heroTags": ["도료제조", "생산직", "화학원료", "배합", "충전포장", "도료공장"],
+    "sidebarJobs": [
+      "도료배합원",
+      "도료분산기조작원",
+      "도료조정원",
+      "도료조색원",
+      "도료제조현장감독자",
+      "도료감리원",
+      "도료연구원",
+      "표면처리원",
+      "코팅기조작원"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "화학분析기능사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7880"
+      },
+      {
+        "name": "화학공학기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1450"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"},
+      {"id": 2, "text": "[2] HRD-Net", "url": "https://www.hrd.go.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국도료공업협동조합", "url": "https://www.kpca.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 한국도료공업협동조합", "url": "https://www.kpca.or.kr/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] HRD-Net", "url": "https://www.hrd.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] HRD-Net", "url": "https://www.hrd.go.kr/"}
+    ]
+  },
+  "changeSummary": "way·sal·prospect·trivia·detailWlb·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

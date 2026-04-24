@@ -1,0 +1,91 @@
+{
+  "fields": {
+    "way": "데이터 엔지니어는 컴퓨터공학, 소프트웨어공학, 통계학 관련 학사 이상 학위가 일반적인 진입 경로이며, 부트캠프나 독학으로 전환하는 사례도 증가하고 있다. Python·SQL 프로그래밍 능력은 필수이며, Apache Spark·Kafka·Airflow 같은 빅데이터 처리 프레임워크와 클라우드 데이터 플랫폼(AWS Redshift, Google BigQuery, Snowflake 등) 경험이 요구된다. 데이터 분석가나 백엔드 개발자에서 데이터 엔지니어로 전환하는 경로도 흔하며, ETL 파이프라인 구축 포트폴리오가 이직에 결정적이다. 정보처리기사·빅데이터분석기사 취득 후 클라우드 자격증(AWS Data Engineer, Google Professional Data Engineer)을 병행하는 것이 권장된다.[1]",
+    "overviewSalary": {
+      "sal": "초봉은 연 4,500만~5,500만 원 수준이며, 경력 3~5년 차에는 연 7,000만~9,000만 원까지 오른다. Spark·Kafka 등 대용량 처리 기술과 클라우드 데이터 웨어하우스 전문성이 높을수록 협상력이 강해진다.[1]"
+    },
+    "overviewProspect": {
+      "main": "AI·LLM 시대의 도래로 고품질 데이터 파이프라인 수요가 폭증하고 있다. 국내외 데이터 엔지니어 수요가 꾸준히 성장할 것으로 예측되며, 인력 부족이 심각한 분야 중 하나로 꼽힌다.[1]"
+    },
+    "trivia": "아마존이 내부적으로 사용하다 2012년 공개 서비스로 출시한 Amazon Redshift는 페타바이트급 데이터 분석을 가능하게 해 데이터 엔지니어링의 패러다임을 바꿨다. 출시 5년 만에 수만 개 기업이 도입하며 클라우드 데이터 웨어하우스 시장을 사실상 개척했다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통",
+      "wlbDetail": "주 40~50시간 근무가 일반적이며 데이터 파이프라인 장애 발생 시 긴급 대응이 필요할 수 있다. 원격·하이브리드 근무를 허용하는 기업이 많고, 집중적인 개발·배포 주기 외에는 비교적 규칙적인 근무 패턴을 유지한다.[1]",
+      "socialDetail": "AI 시스템과 비즈니스 의사결정의 근간이 되는 데이터 인프라를 구축하는 역할로 디지털 경제 발전에 기여한다. 의료·공공 분야 데이터 파이프라인을 다룰 때 사회적 의미가 크다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "Python 고급 및 SQL 최적화", "text": "pandas, PySpark 등 Python 데이터 처리 라이브러리와 복잡한 SQL 쿼리 최적화를 학습해 대용량 데이터를 효율적으로 처리하는 역량을 갖춘다.", "link": null},
+        {"title": "Apache Spark·Kafka·Flink 대용량 데이터 처리", "text": "분산 데이터 처리 프레임워크인 Spark, 실시간 스트리밍 플랫폼 Kafka, Flink를 학습해 대규모 데이터 파이프라인 구축 역량을 키운다.", "link": null},
+        {"title": "데이터 파이프라인(ETL/ELT) 설계 및 Apache Airflow 오케스트레이션", "text": "데이터 수집·변환·적재(ETL/ELT) 파이프라인 설계와 Apache Airflow를 이용한 워크플로우 오케스트레이션을 실습한다.", "link": null},
+        {"title": "클라우드 데이터 플랫폼 (AWS Redshift, GCP BigQuery, Snowflake)", "text": "주요 클라우드 데이터 웨어하우스 플랫폼의 아키텍처와 운영 방법을 학습해 클라우드 환경에서 데이터 엔지니어링을 수행하는 역량을 갖춘다.", "link": null},
+        {"title": "데이터 모델링 (스타 스키마, 레이크하우스 아키텍처)", "text": "스타 스키마, 스노우플레이크 스키마, 데이터 레이크하우스 아키텍처 등 현업에서 활용되는 데이터 모델링 방법론을 학습한다.", "link": null},
+        {"title": "dbt(data build tool)를 이용한 변환 계층 설계", "text": "dbt를 활용해 SQL 기반의 데이터 변환 계층을 설계하고 버전 관리·테스트·문서화를 적용하는 데이터 엔지니어링 현대화 방법을 익힌다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "IT 대기업·테크 유니콘 (토스, 카카오, 배달의민족 등) 데이터 플랫폼팀 채용", "text": "국내 주요 테크 기업의 데이터 플랫폼팀에서 데이터 엔지니어를 수시 채용한다. 링크드인·원티드·점핏에서 공고를 확인할 수 있다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "금융·이커머스 데이터 엔지니어링 경력직 공채", "text": "금융권과 이커머스 기업에서 대용량 데이터 파이프라인 구축 경력자를 경력직으로 채용한다. 포트폴리오(GitHub 레포지토리)가 필수다.", "link": null},
+        {"title": "클라우드 MSP 및 데이터 컨설팅 기업 신입·경력 채용", "text": "클라우드 관리형 서비스 제공업체(MSP)와 데이터 컨설팅 기업에서 데이터 엔지니어링 인력을 상시 채용한다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "빅데이터분석기사 취득 후 클라우드 Data Engineer 자격증 병행", "text": "Q-net에서 빅데이터분석기사를 취득한 후 AWS Certified Data Engineer - Associate 또는 Google Professional Data Engineer 자격증을 병행 취득하면 취업 경쟁력이 크게 높아진다.", "link": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1440"},
+        {"title": "K-Digital Training — 데이터 엔지니어링 국비 과정", "text": "고용노동부 K-Digital Training 과정에서 Spark, Airflow, 클라우드 데이터 엔지니어링 국비 지원 교육을 받을 수 있으며, HRD-Net에서 관련 훈련과정을 검색해 수료할 수 있다.[1]", "link": "https://www.hrd.go.kr/"}
+      ]
+    },
+    "heroTags": ["데이터파이프라인", "ETL", "Spark", "클라우드DW", "SQL", "빅데이터"],
+    "sidebarJobs": [
+      "데이터분석가(일반)",
+      "데이터베이스운영원",
+      "데이터 매니저",
+      "데이터 라벨러",
+      "빅데이터전문가",
+      "응용 소프트웨어 개발자"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "정보처리기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0120"
+      },
+      {
+        "name": "SQL개발자(SQLD)",
+        "url": "https://www.kdata.or.kr/info/info_04_view.html?field=&keyword=SQLD&type=all&page=1&idx=51888"
+      },
+      {
+        "name": "빅데이터분석기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1440"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국데이터산업진흥원 데이터 직종 역량 안내", "url": "https://www.kdata.or.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 고용노동부 고용형태별근로실태조사", "url": "https://www.moel.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 과학기술정보통신부 데이터산업 현황 조사", "url": "https://www.msit.go.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] Amazon Web Services Redshift 공식 발표 자료", "url": "https://aws.amazon.com/redshift/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국데이터산업진흥원", "url": "https://www.kdata.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 원티드 채용정보", "url": "https://www.wanted.co.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/"}
+    ]
+  },
+  "changeSummary": "데이터 엔지니어 진입경로·임금·전망·WLB·trivia·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

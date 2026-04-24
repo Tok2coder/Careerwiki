@@ -1,0 +1,39 @@
+{
+  "jobName": "학예사",
+  "jobId": "1765283468738131",
+  "fields": {
+    "way": "학예사(큐레이터)가 되려면 대학교에서 고고학·사학·미술사학·민속학·인류학·예술학 등 관련 전공을 이수하는 것이 기본 경로이다. 대졸 이상의 학력으로 국·공립 박물관·미술관 공개채용에 지원하거나, 대학원 진학 후 학예사 자격 취득으로 전문성을 높이는 경우가 많다.[1] 정식 학예사 자격은 문화체육관광부가 관할하며, 준학예사(필기시험 합격+현장실습)·3급 정학예사(준학예사+2년 실무)·2급 정학예사(3급+5년 실무 또는 석사)·1급 정학예사(2급+10년 실무 또는 박사) 순으로 승급한다. 소장품 관리·전시 기획·교육 프로그램 운영 등 다양한 실무를 직접 경험하는 인턴십과 자원봉사 활동이 입직에 도움이 된다.[2]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "높음",
+      "wlbDetail": "국공립 박물관·미술관 소속은 주 5일, 09~18시 근무가 기본이나 전시 개막 전후에는 야근이 잦다. 사립 기관은 주말 근무를 요구하는 경우가 많으며, 대신 평일에 대체 휴무를 부여한다.[1] 국공립 대비 민간 기관의 처우 격차가 큰 편이다.[2]",
+      "socialDetail": "문화유산의 보존·연구·교육을 통해 국민의 문화 향유 기회를 확대하고, 전시 기획으로 역사·예술적 가치를 대중에게 전달하는 공익적 역할을 수행한다.[1]"
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 학예사(큐레이터) 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=348"},
+      {"id": 2, "text": "[2] 국립중앙박물관 학예사 자격제도 안내", "url": "https://www.museum.go.kr/site/main/content/curator_certificate_schemes"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 나무위키 박물관 및 미술관 준학예사 (학예사 자격 현황)", "url": "https://namu.wiki/w/%EB%B0%95%EB%AC%BC%EA%B4%80%20%EB%B0%8F%20%EB%AF%B8%EC%88%A0%EA%B4%80%20%EC%A4%80%ED%95%99%EC%98%88%EC%82%AC"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 학예사(큐레이터) 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=348"},
+      {"id": 2, "text": "[2] 나무위키 큐레이터 근무환경", "url": "https://namu.wiki/w/%ED%81%90%EB%A0%88%EC%9D%B4%ED%84%B0"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 국립중앙박물관 학예사 자격제도 안내", "url": "https://www.museum.go.kr/site/main/content/curator_certificate_schemes"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 학예사(큐레이터) 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=348"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 국립중앙박물관 채용공고", "url": "https://www.museum.go.kr/site/main/content/job"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국박물관협회 교육 프로그램", "url": "https://www.museum.or.kr/"}
+    ]
+  },
+  "changeSummary": "F1 각주 위치 수정(way/wlbDetail — 첫 문장→마지막 문장으로 이동), F2 detailReady sources 추가"
+}

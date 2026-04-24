@@ -1,0 +1,29 @@
+배포 상태 확인
+생성일: 2026-04-05
+================================================================================
+
+1. git log --oneline -3
+--------------------------------------------------------------------------------
+8193bb7 Merge claude/practical-mendeleev: fix 318 TypeScript errors + runtime bugs
+1945d68 fix: conditional disclaimers + resolve all 318 TypeScript errors
+77258da fix: 닉네임 설정에서 한국어 입력 허용
+
+2. 배포 결과
+--------------------------------------------------------------------------------
+상태: 성공 ✅
+
+Deployment ID:  059538d9-80c6-40cd-b72a-eecffc2b6f05
+Environment:    Production
+Branch:         main
+Source commit:  8193bb7
+Deployed at:    1 minute ago
+Deployment URL: https://059538d9.careerwiki-phase1.pages.dev
+Production URL: https://careerwiki.org
+
+이전 배포 (비교용):
+  ID:     0afbcaa6-c834-495d-8a0a-a5a589f41766
+  Commit: 77258da
+  When:   1 day ago
+
+결론: 커밋 8193bb7 (318개 TypeScript 에러 수정)이 Production에 정상 배포됨.
+================================================================================

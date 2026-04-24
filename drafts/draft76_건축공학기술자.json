@@ -1,0 +1,48 @@
+{
+  "jobName": "건축공학기술자",
+  "jobId": "1765283282556876",
+  "fields": {
+    "way": "건축공학기술자(토목·건축 엔지니어)가 되는 주요 경로는 건축공학과·토목공학과·도시공학과 등 관련 학과를 졸업한 후 건설 회사·엔지니어링 회사에 취업하는 것이다.[1] 학사 졸업 후 대형 건설사(현대건설·GS건설·삼성물산 등), 건축사사무소, 엔지니어링 회사(도화엔지니어링·유신 등)에 입사해 설계·시공·감리 업무를 수행한다.[2] 취업 후에는 건축기사, 토목기사 등 국가기술자격 취득이 경력 발전에 유리하며, 한국건설기술인협회에 기술인 등록을 마치면 공공 발주 현장 배치 자격이 주어진다. 대학원 진학을 통해 구조·환경·도시계획 등 전문 분야로 심화하거나 기술사 자격 취득 후 독립 엔지니어로 활동하는 경로도 있다.",
+    "overviewSalary": {
+      "sal": "2024년 기준 커리어넷 직업정보에 따르면 하위(25%) 약 3,800만 원, 중위(50%) 약 5,200만 원, 상위(25%) 약 7,500만 원이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 현상태 유지 전망이다. 국내 사회 인프라 노후화 대응(교량·터널·댐 보수), 도시 재개발·재건축 수요는 안정적이다. 해외 건설 수주(중동·아시아 플랜트·인프라) 확대로 글로벌 경험 보유 엔지니어 수요가 증가하고 있다. BIM(건물정보모델링)·스마트 건설 기술 도입으로 디지털 역량 있는 엔지니어 수요가 확대되고 있다.[1]"
+    },
+    "trivia": "한국의 건설업 취업자 수는 2024년 기준 약 200만 명이며, 건설기술인 자격 보유자는 약 100만 명에 달한다. 현대건설·삼성물산·GS건설 등 국내 대형 건설사는 해외 수주 누계 5,000억 달러를 돌파했으며, 중동·아시아 인프라 건설에서 세계적 경쟁력을 보유하고 있다. 건설기술사 자격증은 기술사 중 가장 많이 취득되는 자격증 중 하나로 프로젝트 관리직 진출에 필수적이다.[1]",
+    "sidebarCerts": [
+      {"name": "건축기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5110&gSite=Q&gId="},
+      {"name": "토목기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5150&gSite=Q&gId="},
+      {"name": "건설기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5102&gSite=Q&gId="},
+      {"name": "건축시공기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5105&gSite=Q&gId="}
+    ],
+    "detailReady": {
+      "recruit": [
+        "대형 건설사(현대건설·GS건설·삼성물산·대우건설·롯데건설) 신입 엔지니어 공채",
+        "건축·토목 엔지니어링 회사(도화엔지니어링·유신·삼안·한국종합기술) 기술직 채용",
+        "한국도로공사·LH공사·K-water 등 공기업 토목·건축직 채용[1]",
+        "잡코리아·사람인 등 취업 포털의 건축공학 기술직 공고를 통해 중견·중소 건설사 지원 가능[2]"
+      ]
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=46"},
+      {"id": 2, "text": "한국건설기술인협회", "url": "https://www.kocea.or.kr"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=46"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=46"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "한국건설산업연구원", "url": "https://www.cerik.re.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "잡코리아 채용정보", "url": "https://www.jobkorea.co.kr"},
+      {"id": 2, "text": "사람인 채용정보", "url": "https://www.saramin.co.kr"}
+    ]
+  },
+  "changeSummary": "sources text 필드 URL 제거 후 기관명으로 교체, sources ID 필드별 1부터 재설정, way/trivia/prospect/sal에 [N] 마커 추가, sidebarCerts 건축기사·토목기사·건설기술사 추가, detailReady.recruit sources 등록"
+}

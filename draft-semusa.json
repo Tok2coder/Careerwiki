@@ -1,0 +1,86 @@
+{
+  "fields": {
+    "way": "세무사가 되려면 세무사 자격시험 합격이 필수다. 한국산업인력공단 주관으로 연 1회 시행된다. 1차 시험(객관식)은 재정학, 세법학 개론, 회계학 개론, 상법(또는 행정소송법), 민법(5과목), 2차 시험(논술형)은 회계학 1부, 회계학 2부, 세법학 1부, 세법학 2부(4과목)로 구성된다.[1] 2024년 기준 최종 합격률은 약 10~13% 수준이다. 시험 합격 후 6개월 실무수습을 거쳐 한국세무사회에 등록하면 개업 또는 세무법인 취업이 가능하다. 공인회계사·변호사는 별도 시험 없이 세무사 등록이 가능하다. 세무사는 세무 신고·조정, 세무 조사 대응, 법인세·소득세 절세 컨설팅, 상속·증여세 신고 등을 주요 업무로 한다.[2]",
+    "trivia": "국내 세무사 등록 인원은 2025년 약 1만 4,200명에 이를 것으로 전망되며, 세무법인·개인 사무소가 전국에 분포해 있다. 세무공무원 경력자 중 일정 요건을 충족하면 별도 시험 없이 세무사 자동등록이 가능하여, 퇴직 후 개업 세무사로 전환하는 사례도 꾸준히 발생한다.[1]",
+    "overviewProspect": {
+      "main": "향후 5년간 현상태 유지 전망이다. 법인·개인 사업자 세무 수요는 경기 변동과 무관하게 안정적이다. 복잡한 세법 개정과 국제 조세 이슈(역외 탈세, 가상자산 과세 등) 증가로 세무 전문가 수요가 유지되고 있다. 반면 AI 세무 자동화 서비스(홈택스, AI 세무 플랫폼) 확산이 단순 세무 수요를 대체하는 변화가 진행 중이다.[1]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "연말정산(1~2월), 종합소득세 신고(5월), 법인세 신고(3월, 6월) 등 세무 시즌에 업무가 집중된다. 고객 민원 대응, 세무 조사 동행 등으로 불규칙 근무가 발생할 수 있다. 비시즌에는 비교적 안정적 근무 환경이 유지된다. 커리어넷 재직자 조사에서 워라밸은 '보통 이상'으로 분류된다.[1]",
+      "socialDetail": "납세자가 정당한 세금만 납부하도록 도와 과세의 공정성을 실현하는 역할이다. 세무 전문 지식이 없는 중소기업·개인 사업자의 세무 리스크를 낮추는 사회적 기여도가 크다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통 이상'으로 나타난다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "회계학과·세무학과·경영학과·법학과 등 관련 학과 진학 또는 세무사 수험 학원 등록[1]",
+        "세무사 1차 필기(재정학·세법·회계학 등 5과목) + 2차 논술(회계학·세법학 4과목) 준비[2]",
+        "세무사 시험 합격 후 한국세무사회 주관 실무수습(6개월) 이수[3]",
+        "세무법인·회계법인 인턴십으로 실무 세무 신고·조정 경험 조기 확보[4]",
+        "전산세무1급·2급 등 관련 자격증 취득으로 세무 소프트웨어 실무 역량 강화[5]"
+      ],
+      "recruit": [
+        "대형 세무법인 신입 세무사 공개채용 지원 (세무법인 다솔·세연 등)[1]",
+        "중소 세무사 사무소 취업 후 다양한 업종 세무 신고·조정 실무 경험 축적[2]",
+        "한국세무사회 취업 지원 시스템을 통해 전국 회원 사무소 채용 정보 확인[3]"
+      ],
+      "training": [
+        "세무사 자격시험 합격 후 실무수습(6개월) 이수 — 한국세무사회 수습 절차 확인[1]",
+        "국제 조세, 상속·증여세, 가상자산 과세 등 특수 분야 심화 교육으로 고부가 업무 역량 강화[2]",
+        "공인회계사 자격 취득 시 세무사 중복 등록 가능 — 서비스 범위 대폭 확대[3]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "세무사(국가전문)", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&gId=&jmCd=1321"},
+      {"name": "전산세무1급", "url": "https://license.kacpta.or.kr/"},
+      {"name": "재경관리사", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=192"}
+    ],
+    "sidebarOrgs": [
+      {"name": "한국세무사회", "url": "https://www.kacpta.or.kr"},
+      {"name": "국세청", "url": "https://www.nts.go.kr"},
+      {"name": "국세공무원교육원", "url": "http://taxstudy.nts.go.kr"}
+    ],
+    "sidebarJobs": ["회계사", "변호사", "감정평가사", "변리사", "관세사", "노무사"],
+    "heroTags": ["세무사자격증", "법인세전문가", "상속세전문가", "절세컨설턴트", "국제조세전문가", "세무대리인", "Tax Accountant"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=NJXmm1fYW0I", "title": "세무사, 좋은 직업인가요? 세무사를 만나보았다 1편ㅣ직업의 모든 것, 슬기로운직업생활"},
+      {"url": "https://www.youtube.com/watch?v=OdrnkshmEGU", "title": "세무사 연봉? 수학 못하면 세무사 어렵나요..? 세무사를 만나보았다 2편ㅣ직업의 모든 것, 슬기로운직업생활"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] Q-net 세무사 자격시험", "url": "https://www.q-net.or.kr/crf021.do?id=crf02101&gSite=Q&gId="},
+      {"id": 2, "text": "[2] 커리어넷 직업백과 세무사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=224"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 세무사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=224"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 세무사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=224"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 세무사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=224"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 세무사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=224"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 세무사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=224"},
+      {"id": 2, "text": "[2] Q-net 세무사 자격시험", "url": "https://www.q-net.or.kr/crf021.do?id=crf02101&gSite=Q&gId="},
+      {"id": 3, "text": "[3] 한국세무사회 실무수습 안내", "url": "https://www.kacpta.or.kr"},
+      {"id": 4, "text": "[4] 한국고용정보원 직업정보", "url": "https://www.keis.or.kr/"},
+      {"id": 5, "text": "[5] 한국세무사회 전산세무회계 자격시험", "url": "https://license.kacpta.or.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 세무사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=224"},
+      {"id": 2, "text": "[2] 한국고용정보원 직업정보", "url": "https://www.keis.or.kr/"},
+      {"id": 3, "text": "[3] 한국세무사회 채용지원", "url": "https://www.kacpta.or.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국세무사회 실무수습 안내", "url": "https://www.kacpta.or.kr"},
+      {"id": 2, "text": "[2] 커리어넷 직업백과 세무사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=224"},
+      {"id": 3, "text": "[3] Q-net 세무사 자격시험", "url": "https://www.q-net.or.kr/crf021.do?id=crf02101&gSite=Q&gId="}
+    ]
+  },
+  "changeSummary": "세무사 데이터 보완: 각주 정합성 수선(GN/FP/무출처문장), detailWlb.wlb 등급 추가, detailReady 항목 보강·각주 추가, sidebarCerts/Orgs/Jobs 보강, YouTube 영상 교체(2편 추가), heroTags 보강, trivia 출처 검증 업데이트"
+}

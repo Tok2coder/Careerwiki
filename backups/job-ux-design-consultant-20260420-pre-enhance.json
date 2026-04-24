@@ -1,0 +1,238 @@
+{
+  "name": "UX 디자인 컨설턴트",
+  "summary": "UX 디자인 컨설턴트는 사용자의 마음과 행동에 대한 조사와 이해를 바탕으로 사용자 입장에서 제품을 설계해 더 편리하게 사용하도록 하는 UX(사용자 경험, UX: User Experience) 디자인 업무를 수행합니다.",
+  "heroTags": [
+    "UX리서치",
+    "사용자경험설계",
+    "디자인전략",
+    "인터랙션디자인",
+    "프로토타이핑"
+  ],
+  "heroCategory": "예술·디자인·방송·스포츠직",
+  "isCategoryBreadcrumb": false,
+  "overviewWork": {
+    "main": [
+      "UX 디자인 컨설턴트는 사용자의 마음과 행동에 대한 조사와 이해를 바탕으로 사용자 입장에서 제품을 설계해 더 편리하게 사용하도록 하는 UX(사용자 경험, UX: User Experience) 디자인 업무를 수행합니다.",
+      "사용자들이 제품이나 서비스에 만족 또는 불만족을 느끼는 요소는 무엇이고, 이에 더해 새로 원하는 요구가 무엇인지를 찾아 새로운 제품 기획안을 만들어 냅니다.",
+      "웹, 스마트폰, 태블릿PC에 담기는 각종 애플리케이션을 어떻게 하면 더 편리하게 사용할 수 있을지 문제점을 파악하고 해결책을 제시합니다."
+    ],
+    "workStrong": "",
+    "workPlace": "",
+    "physicalAct": ""
+  },
+  "overviewProspect": {
+    "main": ""
+  },
+  "overviewAbilities": {
+    "abilityList": [
+      "예술시각능력",
+      "창의력"
+    ],
+    "technKnow": "",
+    "eduLevel": "",
+    "skillYear": ""
+  },
+  "overviewAptitude": {
+    "aptitudeList": [
+      "사람들의 사고와 행동, 생활 패턴을 이해하고 파악할 수 있어야 하며, 이를 예술적으로 제품에 적용할 수 있는 예술시각능력이 필요합니다.",
+      "새롭고 독특한 방식으로 문제를 내고, 자신의 아이디어를 구체화할 수 있는 창의력이 필요합니다."
+    ],
+    "interestList": [
+      "새롭고 독특한 방식으로 문제를 해결하는 것을 좋아하는 사람에게 적합합니다.",
+      "제품을 사용하는 사람들에게 필요한 사항을 환경이나 장치에 맞게 표현하고 구성하려면 논리적으로 사고하는 성향의 사람에게 적합합니다."
+    ],
+    "satisfaction": {
+      "value": "74.2"
+    }
+  },
+  "trivia": [
+    "맥킨지(McKinsey) 보고서에 따르면 탁월한 사용자 경험(UX) 설계는 고객 충성도를 32% 높이고 운영 비용을 21% 절감하는 효과가 있으며, 디자인을 전략적으로 활용하는 기업은 그렇지 않은 기업보다 23% 높은 수익 성장을 기록합니다.[1]"
+  ],
+  "overviewSalary": {
+    "sal": "UX 디자인 컨설턴트의 2024년 기준 연봉은 경력에 따라 편차가 큽니다. 신입 UX 디자이너 기준 약 3,045만 원에서 시작하며, 4년 이상 경력의 시니어 컨설턴트는 6,500만 원 이상을 받기도 합니다.[1]"
+  },
+  "detailWlb": {
+    "wlb": "보통",
+    "social": "보통 이상"
+  },
+  "detailReady": {
+    "curriculum": [
+      "산업디자인, 시각디자인, 심리학, 컴퓨터공학 등 UX 관련 전공 이수",
+      "HCI(인간-컴퓨터 상호작용), 인지심리학, 정보구조 설계 관련 과목 수강",
+      "Figma, Sketch, Adobe XD 등 프로토타이핑 도구 실습 및 포트폴리오 제작",
+      "사용자 리서치 방법론(인터뷰, 설문, 사용성 테스트) 교과 또는 프로젝트 경험.[1]"
+    ],
+    "recruit": [
+      "대기업(네이버, 카카오, 삼성, LG 등) UX팀 또는 서비스기획팀 채용 공고 지원",
+      "UX 전문 컨설팅 에이전시(에이치나인, rightbrain, pxd 등) 수시 채용 지원",
+      "원티드, 잡코리아, 링크드인 등 플랫폼에서 'UX 디자이너', 'UX 기획자' 검색",
+      "포트폴리오(케이스 스터디 방식)와 실제 프로젝트 성과 자료 필수 준비.[1]"
+    ],
+    "training": [
+      "한국디자인진흥원 주관 서비스·경험디자인기사 자격증 취득 준비",
+      "Google UX Design Certificate, Interaction Design Foundation 등 글로벌 온라인 과정 이수",
+      "고용24 국비지원 UX/UI 디자인 과정 또는 민간 UX 부트캠프 수강",
+      "개인 프로젝트나 해커톤 참여를 통한 UX 케이스 스터디 포트폴리오 구축.[1]"
+    ],
+    "researchList": [
+      "나만의 사용자 경험 디자인 – 모바일 사이트 등을 활용하여 하루 동안 자신의 이용 경로를 자세히 기록한 후 불편한 점을 찾고 개선안을 세워 봅니다."
+    ],
+    "certificate": []
+  },
+  "sidebarJobs": [
+    "웹 디자이너",
+    "제품 디자이너",
+    "시각 디자이너"
+  ],
+  "sidebarMajors": [
+    "산업디자인학과",
+    "시각디자인학과",
+    "심리학과",
+    "컴퓨터공학과",
+    "산업공학과"
+  ],
+  "sidebarCerts": [],
+  "sidebarOrgs": [
+    {
+      "name": "한국디자인진흥원",
+      "url": "http://www.kidp.or.kr"
+    },
+    {
+      "name": "(사)한국산업디자이너협회",
+      "url": "http://www.kaid.or.kr"
+    }
+  ],
+  "youtubeLinks": [],
+  "detailIndicators": {
+    "chartType": "horizontalBar",
+    "title": "한국의 직업지표",
+    "items": [
+      {
+        "label": "융합성",
+        "value": 84.5
+      },
+      {
+        "label": "대인관계",
+        "value": 83.7
+      },
+      {
+        "label": "창의성",
+        "value": 66
+      },
+      {
+        "label": "일가정균형",
+        "value": 54.8
+      },
+      {
+        "label": "소득수준",
+        "value": 63.3
+      },
+      {
+        "label": "고용유지",
+        "value": 45.1
+      },
+      {
+        "label": "사회공헌",
+        "value": 79.5
+      }
+    ],
+    "unit": "점",
+    "sortDescending": true
+  },
+  "detailEducation": {
+    "educationDistribution": {
+      "chartType": "bar",
+      "title": "학력 분포",
+      "items": [
+        {
+          "label": "고등학교",
+          "value": 7
+        },
+        {
+          "label": "전문대",
+          "value": 13
+        },
+        {
+          "label": "대학",
+          "value": 80
+        }
+      ],
+      "unit": "%",
+      "sortDescending": true
+    },
+    "majorDistribution": {
+      "chartType": "doughnut",
+      "title": "전공 분포",
+      "items": [
+        {
+          "label": "사회계열",
+          "value": 83
+        },
+        {
+          "label": "예체능",
+          "value": 17
+        }
+      ],
+      "unit": "%",
+      "sortDescending": true
+    }
+  },
+  "prospectChart": null,
+  "customCharts": [],
+  "_sources": {
+    "overviewSalary.sal": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — UX 디자인 컨설턴트 직업백과",
+        "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003"
+      }
+    ],
+    "trivia": [
+      {
+        "id": 2,
+        "text": "[1] Fortune Business Insights — UX Services Market Report",
+        "url": "https://www.fortunebusinessinsights.com/ux-services-market-108780"
+      }
+    ],
+    "way": [
+      {
+        "id": 3,
+        "text": "[1] 커리어넷 — UX 디자인 컨설턴트 직업백과",
+        "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003"
+      },
+      {
+        "id": 4,
+        "text": "[2] 한국디자인진흥원 — 서비스·경험디자인기사 국가자격",
+        "url": "https://designq.kidp.or.kr/"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "id": 5,
+        "text": "[1] 커리어넷 직업정보",
+        "url": "https://www.career.go.kr/"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "id": 6,
+        "text": "[1] 워크넷 직업정보",
+        "url": "https://www.work.go.kr/"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "id": 7,
+        "text": "[1] 고용24 직업훈련",
+        "url": "https://www.work24.go.kr/"
+      }
+    ],
+    "overviewSalary.prospects": [
+      {
+        "id": 8,
+        "text": "[1] Fortune Business Insights — UX Services Market Report",
+        "url": "https://www.fortunebusinessinsights.com/ux-services-market-108780"
+      }
+    ]
+  }
+}

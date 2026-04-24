@@ -1,0 +1,87 @@
+{
+  "fields": {
+    "way": "데브옵스관리자는 일반적으로 데브옵스 엔지니어 또는 시스템 엔지니어로 5년 이상 경력을 쌓은 후 팀장·관리자 직책으로 올라서는 경로를 밟는다. 컴퓨터공학·정보시스템 관련 학사 이상 학위가 기본이며, MBA나 IT 경영 관련 대학원 과정이 리더십 역량 강화에 도움을 준다. 기술적으로는 클라우드 아키텍처 설계, 자동화 전략 수립, 보안 규정 준수(DevSecOps) 역량을 보유해야 한다. 조직 관리·예산 책정·벤더 협상 등 비기술 역량도 동시에 요구된다. AWS Solutions Architect Professional, ITIL, PMP 같은 자격증이 관리자 전환에 긍정적으로 평가된다. 국내에서는 인터넷 대기업·금융 IT·클라우드 MSP 회사에서 해당 직책을 별도 채용하는 사례가 늘고 있다.[1]",
+    "overviewSalary": {
+      "sal": "국내 데브옵스관리자의 연봉은 경력과 기업 규모에 따라 연 7,000만~1억 2,000만 원 수준이며, 대기업 클라우드 부문이나 글로벌 IT 기업 한국 법인의 경우 상한이 더 높다. 성과급·스톡옵션 포함 시 실수령 기준으로 상당히 높은 편이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "클라우드·AI 인프라 투자 증가로 데브옵스 조직을 이끌 관리자 수요가 꾸준히 늘고 있다. 특히 금융·커머스·헬스케어 등 서비스 안정성이 중요한 산업에서 DevSecOps·SRE 팀 리더 수요가 확대되는 추세다.[1]"
+    },
+    "trivia": "구글의 'State of DevOps Report'에 따르면 고성과 데브옵스 팀은 저성과 팀 대비 코드 배포 빈도가 973배, 장애 복구 시간이 6,570배 빠른 것으로 나타났다. 관리자가 문화와 프로세스를 잘 설계할수록 팀 성과가 극적으로 달라진다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "주 40~50시간 근무가 일반적이며 관리자 직급은 직접 온콜 당번보다는 에스컬레이션 대응 역할을 한다. 임원 보고·예산 회의 등 행정 업무 비중도 상당하지만 원격 근무 허용 기업이 많아 유연성은 높은 편이다.[1]",
+      "socialDetail": "기업의 디지털 전환과 서비스 안정성을 총괄하는 역할로 조직 내 기여도가 높다. 보안 규정 준수와 개인정보 보호 인프라 구축을 주도하며 사회적 신뢰 기반 조성에 기여한다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "클라우드 아키텍처 설계 및 거버넌스", "text": "AWS·GCP·Azure 클라우드 아키텍처 설계 원칙과 IT 거버넌스 체계를 학습해 조직 전체의 클라우드 전략을 수립하는 역량을 갖춘다.", "link": null},
+        {"title": "DevSecOps 전략과 보안 자동화", "text": "개발·운영 파이프라인에 보안을 통합하는 DevSecOps 방법론과 보안 자동화 도구를 이해하고 조직에 적용하는 역량을 학습한다.", "link": null},
+        {"title": "IT 서비스 관리(ITIL) 및 SLA 운영", "text": "ITIL 프레임워크 기반의 IT 서비스 관리와 SLA(서비스 수준 협약) 설계·운영 방법을 학습한다.", "link": null},
+        {"title": "애자일·린 조직 운영 및 팀 리더십", "text": "애자일·스크럼 방법론에 기반한 IT 팀 운영과 기술 리더십 역량을 키우며, PMP 등 프로젝트 관리 자격증 준비와 병행하면 좋다.", "link": null},
+        {"title": "클라우드 비용 최적화(FinOps) 및 예산 관리", "text": "클라우드 자원 사용 비용을 최적화하는 FinOps 방법론과 IT 예산 수립·관리 방법을 학습한다.", "link": null},
+        {"title": "SRE(Site Reliability Engineering) 원칙과 오류 예산 설계", "text": "구글이 정립한 SRE 원칙을 학습하고, 오류 예산(Error Budget)과 SLO(서비스 수준 목표) 기반의 신뢰성 관리 체계를 설계하는 방법을 익힌다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "IT 대기업·클라우드 MSP 팀장·파트장 공채", "text": "국내 주요 IT 기업과 클라우드 관리형 서비스 제공업체(MSP)에서 데브옵스·SRE 팀 관리자를 경력직으로 채용한다. 링크드인·원티드에서 공고를 확인할 수 있다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "금융·커머스 대규모 IT 조직 내부 승진 또는 경력직 공채", "text": "서비스 안정성이 핵심인 금융·이커머스 기업에서 시니어 데브옵스 엔지니어를 관리자로 내부 승진시키거나 경력직 관리자를 외부 채용한다.", "link": null},
+        {"title": "글로벌 IT 기업(AWS, Google, Microsoft) 한국 법인 관리직 채용", "text": "AWS, Google Cloud, Microsoft Azure 한국 법인에서 솔루션 아키텍처·기술 영업·서비스 관리 직군의 관리자를 채용한다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "AWS Solutions Architect Professional / ITIL Foundation 자격 취득", "text": "AWS Solutions Architect Professional과 ITIL Foundation은 클라우드 아키텍처와 IT 서비스 관리 역량을 공식 인증하는 글로벌 자격증이다.", "link": null},
+        {"title": "기술 리더십·PMP 등 PM 역량 교육 과정 이수", "text": "PMP(프로젝트관리전문가) 자격 취득이나 기술 리더십 과정을 통해 데브옵스관리자로 성장하는 데 필요한 관리·소통 역량을 키울 수 있다.[1]", "link": "https://www.pmi.org/"}
+      ]
+    },
+    "heroTags": ["클라우드관리", "DevSecOps", "팀리더십", "SRE", "자동화전략", "IT거버넌스"],
+    "sidebarJobs": [
+      "데브옵스 엔지니어",
+      "데이터 엔지니어",
+      "데이터베이스운영원",
+      "응용 소프트웨어 개발자",
+      "시스템 엔지니어",
+      "빅데이터전문가"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "정보처리기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0120"
+      },
+      {
+        "name": "SQL개발자(SQLD)",
+        "url": "https://www.kdata.or.kr/info/info_04_view.html?field=&keyword=SQLD&type=all&page=1&idx=51888"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국산업인력공단 NCS 직무정보", "url": "https://www.ncs.go.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 고용노동부 고용형태별근로실태조사", "url": "https://www.moel.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 과학기술정보통신부 클라우드 컴퓨팅 시장 현황", "url": "https://www.msit.go.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] DORA State of DevOps Report", "url": "https://dora.dev/research/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국정보통신기술협회(TTA)", "url": "https://tta.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 원티드 채용정보", "url": "https://www.wanted.co.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] PMI 공식 사이트", "url": "https://www.pmi.org/"}
+    ]
+  },
+  "changeSummary": "데브옵스관리자 진입경로·임금·전망·WLB·trivia·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

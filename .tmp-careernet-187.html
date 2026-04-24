@@ -1,0 +1,1356 @@
+﻿<!DOCTYPE html>
+<html lang="ko" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>직업정보 > 직업백과 > 목록 | 진로정보망 커리어넷</title>
+
+	<head>
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-SH2CJWP8DY"></script>
+	<script>   window.dataLayer = window.dataLayer || [];   function gtag(){dataLayer.push(arguments);}   gtag('js', new Date());   gtag('config', 'G-SH2CJWP8DY'); </script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="description" content="교육부 제공 초등학생용 진로정보망, 진로흥미탐색, 진로카드, 직업정보, 진로상담, 진로고민, 진로검사, 심리검사, 유튜버, 4차산업혁명 등 수록" />
+	
+	<!-- Naver Search tag -->
+	<meta name="naver-site-verification" content="8b1bdcadeda45e4618579bfcd3e8573cb37ab213" />
+	<meta property="og:type" content="website"> 
+	<meta property="og:title" content="진로정보망 커리어넷">
+	<meta property="og:description" content="교육부 제공 초등학생용 진로정보망, 진로흥미탐색, 진로카드, 직업정보, 진로상담, 진로고민, 진로검사, 심리검사, 유튜버, 4차산업혁명 등 수록">
+	<meta property="og:url" content="https://www.career.go.kr/cloud/w/main/home">
+
+	<!-- favicon -->
+	<meta property="og:image" content="/cloud/w/img/favicon/ogimage.png" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/cloud/w/img/favicon/favicon_180.png" />
+	<link rel="icon" type="image/png" sizes="512x512" href="/cloud/w/img/favicon/favicon_512.png" />
+	<link rel="icon" type="image/png" sizes="192x192" href="/cloud/w/img/favicon/favicon_192.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/cloud/w/img/favicon/favicon_32.png" />
+
+	<link id="contextPathHolder" data-contextPath="/cloud"/>
+
+	<script type="text/javascript" src="/cloud/js/vue.global.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/axios.min.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/chart.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/chartjs-plugin-datalabels.min.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/share.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/lodash.min.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/dayjs.min.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/d3.min.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/crypto-js.min.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/string.min.js?v=260306" nonce="2726c7f26c"></script>
+
+	<script type="text/javascript" src="/cloud/component/pagenation.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/modal.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/modalconfirm.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/searchschool.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/zoomlens.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/alert.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/favbutton.js?v=250904" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/thumbsupbutton.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/pdfprintbutton.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/coursemenu.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/counselguide.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/counselsatisfaction.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/questreport.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/surveypopup.js?v=260306" nonce="2726c7f26c"></script>
+
+	<script type="text/javascript" src="/cloud/component/contentsFavbutton.js?" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/contentsThumbsupbutton.js?" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/component/bubblePopup.js?v=260306" nonce="2726c7f26c"></script>
+
+	<script type="text/javascript" src="/cloud/js/commonlib.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/html2pdf.js?v=260306" nonce="2726c7f26c"></script>
+
+	<script type="text/javascript" src="/cloud/library/js/jquery-3.7.1.min.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/library/js/jquery-ui.js?v=260306" nonce="2726c7f26c"></script>
+	<script type="text/javascript" src="/cloud/js/axios_interceptor.js?v=260306" nonce="2726c7f26c"></script>
+	<script src="/cloud/library/js/swiper-bundle.min.js?v=260306"></script>
+	<link rel="stylesheet" href="/cloud/css/jquery-ui.css?v=260306">
+	<link rel="stylesheet" href="/cloud/library/css/swiper-bundle.min.css?v=260306">
+
+	<!-- listFavButton.js 사용시, interview_detail.css 추가 필수 -->
+	<script type="text/javascript" src="/cloud/component/listFavButton.js?v=260306" nonce="2726c7f26c"></script>
+
+	<script type="text/javascript" src="/cloud/component/datepicker.js?v=260306" nonce="2726c7f26c"></script>
+
+
+	<script type="text/javascript" nonce="2726c7f26c">
+		const userInfo = 
+		
+		
+		null
+		
+		;
+		const API_DOMAIN_URL = "https:\/\/api.career.go.kr";
+		const SSO_DOMAIN_URL = "https:\/\/sso.career.go.kr";
+	</script>
+</head>
+
+	<link rel="stylesheet" href="/cloud/w/css/basic.css?v=260306">
+	<link rel="stylesheet" href="/cloud/w/css/layout.css?v=260306">
+	<link rel="stylesheet" href="/cloud/w/css/common.css?v=260306">
+	<link rel="stylesheet" href="/cloud/w/css/sub.css?v=260306">
+
+	<link rel="stylesheet" href="/cloud/w/css/interview_detail.css?v=260306" nonce="2726c7f26c">
+
+	<style>
+        .input-slot-image {
+            height: 16px;
+            width: auto;
+            margin-left: 16px;
+        }
+	</style>
+</head>
+<body>
+	<body>
+	<div id="headerApp">
+		<!-- 본문 바로가기 -->
+		<a id="skip-nav" href="javascript:void(0);" @click="goContent()">본문 바로가기</a>
+		<!-- gnb 배경 -->
+		<div class="gnb-backdrop"></div>
+
+		<!-- header(헤더) - 메인일 경우 class="main" 추가 -->
+		<header id="hd">
+			
+			
+			
+			<div id="hd-top">
+				<div class="logo-box">
+					<a href="/cloud/w/main/home" class="logo"><img src="/cloud/w/img/common/logo.png" alt="CAREERNET"></a>
+					<ul class="link-list">
+						<li class="active"><a href="/cloud/w/main/home">커리어넷</a></li>
+						<li><a href="/cloud/j/main/home">주니어커리어넷</a></li>
+					</ul>
+					
+				</div>
+
+				<div class="util-list">
+					<a v-if="isTeacher" href="javascript:void(0);" @click="checkTchService()">교사 서비스<img src="/cloud/w/img/common/icon_external_link.svg" alt="현재창이동" aria-hidden="true"></a>
+					<a v-if="!isTeacher && isLogin" :href="`${API_DOMAIN_URL}/cloud/api/mate/list.do?spUniqueSn=21`">진로메이트 설정<img src="/cloud/w/img/common/icon_external_link.svg" alt="현재창이동" aria-hidden="true"></a>
+					<a v-if="isLogin" href="javascript:void(0);" @click="goMyCareer()">{{myPageBtnNm}} <img src="/cloud/w/img/common/icon_external_link.svg" alt="현재창이동" aria-hidden="true"></a>
+					<div class="srch-box">
+						<input type="text" placeholder="검색 하세요." title="검색 내용" aria-label="검색어를 입력하세요" v-model="searchText" v-on:keyup.enter="search()">
+						<button type="button" class="btn-srch" @click="search()"><span class="com-sr-only">검색</span></button>
+					</div>
+				</div>
+			</div>
+
+			<div id="hd-bot">
+			<nav id="gnb">
+				<ul class="dep1">
+					<li class="dep1-menu"><a href="javascript:void(0);">진로심리검사</a>
+						<div class="sub-menu-01 sub-menu-cmn">
+							<div class="inner">
+								<div class="gnb-tit-wrap">
+									<h2 class="gnb-tit">진로심리검사</h2>
+									<p class="gnb-exp">자신을 이해하는데 도움이 되는<br>심리검사는 진로 의사결정에<br>유용한 정보를 제공해요 </p>
+								</div>
+								<div class="gnb-menu-wrap">
+									<ul class="dep2 d2-w50">
+										<li><a href="javascript:void(0);">중 · 고등학생용</a>
+											<ul class="dep3 d3-w50">
+												<li><a href="/cloud/w/inspect/student">진로심리검사 소개</a></li>
+												<li><a href="/cloud/w/inspect/holland/intro">직업흥미검사(H)</a></li>
+												<li><a href="/cloud/w/inspect/itrstk/intro">직업흥미검사(K)</a></li>
+												<li><a href="/cloud/w/inspect/vocation/intro">직업적성검사</a></li>
+												<li><a href="/cloud/w/inspect/value2/intro">직업가치관검사</a></li>
+												<li><a href="/cloud/w/inspect/grow3/intro">진로성숙도검사</a></li>
+												<li><a href="/cloud/w/inspect/able/intro">진로개발역량검사</a></li>
+												<li><a href="/cloud/w/inspect/exc/intro">진로실행력검사</a></li>
+												<li><a href="/cloud/w/inspect/aroplus/intro">아로플러스</a></li>
+											</ul>
+										</li>
+										<li><a href="javascript:void(0);">대학생 · 일반용</a>
+											<ul class="dep3 d3-w50">
+												<li><a href="/cloud/w/inspect/normal">진로심리검사 소개</a></li>
+												<li><a href="/cloud/w/inspect/ready/intro">진로개발준비도검사</a></li>
+												<li><a href="/cloud/w/inspect/effect/intro">주요능력효능감검사</a></li>
+												<li><a href="/cloud/w/inspect/engineering/intro">이공계전공적합도검사</a></li>
+												<li><a href="/cloud/w/inspect/value/intro">직업가치관검사</a></li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class="dep1-menu"><a href="javascript:void(0);">진로상담</a>
+						<div class="sub-menu-02 sub-menu-cmn">
+							<div class="inner">
+								<div class="gnb-tit-wrap">
+									<h2 class="gnb-tit">진로상담</h2>
+									<p class="gnb-exp">진로문제로 고민하는 학생과<br>학부모는진로상담 서비스를<br>이용할 수 있어요</p>
+								</div>
+								<div class="gnb-menu-wrap">
+									<ul class="dep2">
+										<li><a href="/cloud/w/counsel/insert">상담신청</a>
+											<ul class="dep3">
+												<li><a href="/cloud/w/counsel/insert">진로상담 신청</a></a></li>
+												<li><a href="javascript:;" @click="fn_loginChk('/w/quest/list');">진로 퀘스트</a></a></li>
+											</ul>
+										</li>
+										<li><a href="/cloud/w/counsel/list">상담보기 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/counsel/lastBestCaseView">이주의 공감상담 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/counsel/jinsolList">진로솔루션 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class="dep1-menu"><a href="javascript:void(0);">직업정보</a>
+						<div class="sub-menu-03 sub-menu-cmn">
+							<div class="inner">
+								<div class="gnb-tit-wrap">
+									<h2 class="gnb-tit">직업정보</h2>
+									<p class="gnb-exp">관심 있는 직업에 대한 다양한 정보를<br>확인해 보세요</p>
+								</div>
+								<div class="gnb-menu-wrap">
+									<ul class="dep2">
+										<li><a href="/cloud/w/job/list">직업백과 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/interview/job">직업인 인터뷰 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/jobMajor/matrix">직업·학과 매트릭스<img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class="dep1-menu"><a href="javascript:void(0);">학과정보</a>
+						<div class="sub-menu-04 sub-menu-cmn">
+							<div class="inner">
+								<div class="gnb-tit-wrap">
+									<h2 class="gnb-tit">학과정보</h2>
+									<p class="gnb-exp">관심 있는 학과에 대한 다양한 정보를<br>확인해 보세요</p>
+								</div>
+								<div class="gnb-menu-wrap">
+									<ul class="dep2">
+										<li><a href="/cloud/w/major/hList">고등학교 학과정보 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/major/uList">대학교 학과정보 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/school/list">학교 정보 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/interview/major">학과인터뷰 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/jobMajor/matrix?type=major">학과·직업 매트릭스 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class="dep1-menu"><a href="javascript:void(0);">진로동영상</a>
+						<div class="sub-menu-05 sub-menu-cmn">
+							<div class="inner">
+								<div class="gnb-tit-wrap">
+									<h2 class="gnb-tit">진로동영상 </h2>
+									<p class="gnb-exp">직업과 학과에 관한 다양한 동영상<br>자료를 통해 진로탐색을<br>해보세요</p>
+								</div>
+								<div class="gnb-menu-wrap">
+									<ul class="dep2">
+										<li><a href="/cloud/w/jinroMovie/list">전체 동영상 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="/cloud/w/jinroMovie/programList">프로그램별 동영상  <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class="dep1-menu"><a href="javascript:void(0);">진로교육자료</a>
+						<div class="sub-menu-06 sub-menu-cmn">
+							<div class="inner">
+								<div class="gnb-tit-wrap">
+									<h2 class="gnb-tit">진로교육자료</h2>
+									<p class="gnb-exp">진로교육과 진로지도에 필요한<br>다양한 자료를 찾을 수 있어요<br></p>
+								</div>
+								<div class="gnb-menu-wrap">
+									<ul class="dep2 d2-w50">
+										<li><a href="/cloud/w/data/list">전체 자료게시판 <img src="/cloud/w/img/common/dep3_arrw_icon.png" alt=""></a></li>
+										<li><a href="javascript:void(0);">진로교육자료 모아보기</a>
+											<ul class="dep3 d3-w50">
+												<li><a href="/cloud/w/industry/intro">신산업 진로체험 프로그램</a></li>
+												<li><a href="/cloud/w/courseEdu/intro">진로교육 현황조사</a></li>
+												<li><a href="/cloud/w/lectData/list">진로와 직업 수업자료</a></li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</nav>
+
+			<div class="util-list">
+				<span class="user-info">{{encptUserNm}}</span>
+				<a v-if="isLogin" :href="`${API_DOMAIN_URL}/cloud/api/mber/chmngmt/cnfirm.do`" class="btn-setting">개인정보관리</a>
+				<a v-if="isLogin" href="/cloud/sso/ssologout" class="btn-login-in-out">로그아웃</a>
+				<a v-if="!isLogin" :href="`${API_DOMAIN_URL}/cloud/api/mber/type.do`"><img src="/cloud/w/img/common/icon_profile.svg" alt="회원가입"></a>
+				<a v-if="!isLogin" href="/cloud/sso/useragent3" class="btn-login-in-out">로그인</a>
+				<div class="sub-menu-wrap">
+					<button type="button" class="sub-menu-trigger" :class="{active:isShowMenu}" :title="isShowMenu?'메뉴닫기':'메뉴보기'" aria-label="서브메뉴" :aria-expanded="isShowMenu" @click="toggleMenu()"></button>
+					<div id="sub-menu-list" :class="{active:isShowMenu}">
+						<a href="javascript:;">알림마당</a>
+						<ul>
+							<li><a href="/cloud/w/event/list">행사/이벤트</a></li>
+							<li><a href="/cloud/w/notice/list">공지사항</a></li>
+							<li><a href="/cloud/w/webzine/recent">진로 웹소식지</a></li>
+						</ul>
+						<a href="javascript:;">이용안내</a>
+						<ul>
+							<li><a href="/cloud/w/iqr/list">이용 문의</a></li>
+							<li><a href="/cloud/w/guide/info">자주 묻는 질문(FAQ)</a></li>
+							<li><a href="/cloud/w/guide/map">사이트 맵</a></li>
+							<li><a href="/cloud/w/guide/video">이용 가이드(영상)</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		</header>
+		<div ref="teacherpopup" class="cc-modal com-modal" :class="{active:isTeacherPopup}">
+			<div class="inner">
+				<div class="modal-hd-box">
+					<h2>교사서비스</h2>
+					<button type="button" class="btn-cls" title="닫기" @click="isTeacherPopup=false"><img src="/cloud/w/img/common/icon_x.svg" alt="닫기"></button>
+				</div>
+				<div class="cc-box-04">
+					<div class="cc-box-03">
+						<p class="cc-txt-10">
+							교사 인증을 완료해야 서비스를 이용할 수 있습니다.
+							<br>인증 화면으로 이동하시겠습니까?
+						</p>
+					</div>
+					<div class="cc-btn-box-06">
+						<button type="button" class="com-btn type-01 third md" @click="isTeacherPopup=false">취소</button>
+						<button type="button" class="com-btn type-01 primary md" @click="goTchService()">확인</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<login-popup ref="loginpopup" title="login" subtitle="서브 타이틀" html="" size="lg"></login-popup>
+	</div>
+	<!-- // header(헤더) -->
+	<script type="text/javascript" nonce="2726c7f26c">
+        const headerApp = Vue.createApp({
+			components: {
+				"login-popup": ModalConfirm
+			},
+            data() {
+                return {
+					searchText : ''
+	                , isShowMenu:false
+	                , isTeacherPopup: false
+					, encptUserNm : ''
+					, API_DOMAIN_URL: API_DOMAIN_URL
+                }
+            }
+            , methods: {
+				search () {
+					window.location.href = CONTEXTPATH+'/w/search/intro?text='+encodeURIComponent(this.searchText);
+				},
+                toggleMenu() {
+                    this.isShowMenu = !this.isShowMenu;
+                },
+                checkTchService(){
+                    if(userInfo.careerMbrCualfCd === '100214' && userInfo.tcherCrtfcYn !== 'Y' ) {
+                        this.isTeacherPopup = true;
+                    } else if(userInfo.careerMbrCualfCd === '100214' && userInfo.tcherCrtfcYn === 'Y' ) {
+                        location.href= CONTEXTPATH + "/w/teacher/list";
+                    }
+                },
+                goTchService(){
+                    location.href=API_DOMAIN_URL+"/cloud/api/mber/chmngmt/cnfirm.do";
+                },
+				fn_loginChk(url) {
+					if(fn_isEmpty(userInfo)) {
+						this.$refs.loginpopup.openPromise('','로그인','로그인 후 이용 가능합니다.</br> 로그인 하시겠습니까?','sm').then((r) => {
+							if(r) {
+								location.href = CONTEXTPATH + '/sso/useragent3?requestURL=' + location.href;
+							}
+						});
+					}else {
+						location.href = CONTEXTPATH + url;
+					}
+				},
+				goMyCareer(){
+					if(!fn_isEmpty(userInfo) && userInfo.careerMbrCualfCd === '100205') {
+						this.$refs.loginpopup.openPromise('','알림','초등학생은 주니어커리어넷을 이용해주세요.<br/>주니어커리어넷으로 이동합니다.','sm').then((r) => {
+							if(r) {
+								location.href = CONTEXTPATH + "/j/mypage/jinroact";
+							}
+						});
+					} else {
+						location.href = CONTEXTPATH+ "/w/mypage/act/list";
+					}
+				},
+				goContent() {
+					// 250902 - 웹접근성 개선 : 좌측 메뉴가 있는 경우 좌측 메뉴를 건너뛰도록 처리
+					const content2El = document.querySelector("#container #content #content2");
+					if (content2El) {
+						this.$nextTick(() => window.location.hash = "content2");
+					} else {
+						window.location.hash = "container";
+					}
+				}
+            },
+            computed: {
+                isLogin() {
+                    return !fn_isEmpty(userInfo) && !fn_isEmpty(userInfo.spMberUniqueKey);
+                },
+                isTeacher() {
+                    if(this.isLogin) {
+                        return userInfo.careerMbrCualfCd === '100214'
+                    }
+                    return false;
+                },
+	            isStudent() {
+                    if(this.isLogin) {
+                        return userInfo.careerMbrCualfCd === '100206' || userInfo.careerMbrCualfCd === '100207';
+                    }
+                    return false;
+                },
+				myPageBtnNm() {
+					//중등,고등
+					if(userInfo.careerMbrCualfCd === '100206' || userInfo.careerMbrCualfCd === '100207'){
+						return '나의 진로 모아보기';
+					} else {
+						return '나의 진로활동';
+					}
+				}
+            }
+            , mounted() {
+                if(this.isStudent) {
+                    document.querySelector("#headerApp").classList.add("student");
+                } else {
+                    if(this.isLogin && userInfo.careerMbrCualfCd === '100214') {
+                        document.querySelector("#headerApp").classList.add("teacher");
+                    }
+                }
+                // depth-01 클릭 이벤트
+		        document.querySelectorAll("#gnb .dep1 > li").forEach((el)=>{
+                    el.addEventListener("mouseenter", (event) => {
+                        event.target.classList.add("on");
+						event.target.setAttribute('aria-expanded',true);
+                        document.querySelectorAll(".sub-menu-cmn").forEach(o=> o.style.display = 'none');
+                        event.target.querySelector(".sub-menu-cmn").style.display='block';
+                        document.querySelector(".gnb-backdrop").style.display='block';
+                    });
+		        });
+                document.querySelectorAll("#gnb .dep1 > li").forEach((el)=>{
+                    el.addEventListener("mouseleave", (event) => {
+                        document.querySelectorAll("#gnb .dep1 > li").forEach(o=>{
+							o.classList.remove('on');
+							o.setAttribute('aria-expanded',false);
+						});
+                        document.querySelectorAll(".sub-menu-cmn").forEach(o=>o.style.display = 'none');
+                        document.querySelector(".gnb-backdrop").style.display='none';
+                    });
+                });
+
+				// depth-01 메뉴 포커스 이벤트
+				document.querySelectorAll("#gnb .dep1 > li a").forEach((el)=>{
+                    el.addEventListener("focus", (event) => {
+						const targetEl = event.target.closest('li.dep1-menu');
+                        targetEl.classList.add("on");
+						targetEl.setAttribute('aria-expanded',true);
+                        document.querySelectorAll(".sub-menu-cmn").forEach(o=> o.style.display = 'none');
+                        targetEl.querySelector(".sub-menu-cmn").style.display='block';
+                        document.querySelector(".gnb-backdrop").style.display='block';
+                    });
+		        });
+                document.querySelectorAll("#gnb .dep1 > li a").forEach((el)=>{
+                    el.addEventListener("focusout", (event) => {
+						if (event.relatedTarget) {
+							const activeEl = event.relatedTarget.closest('li.dep1-menu')
+							document.querySelectorAll("#gnb .dep1 > li").forEach(o=>{
+								if (activeEl !== o.closest('li.dep1-menu')) {
+									o.classList.remove('on');
+									o.setAttribute('aria-expanded',false);
+								}
+							});
+							if (!activeEl) {
+								document.querySelectorAll(".sub-menu-cmn").forEach(o=>o.style.display = 'none');
+								document.querySelector(".gnb-backdrop").style.display='none';
+							}
+						}
+                    });
+                });
+
+				if(!fn_isEmpty(userInfo) && !fn_isEmpty(userInfo.spMberUniqueKey)) this.encptUserNm = userInfo.encptUserNm;
+
+				const viewport = document.querySelector("meta[name=viewport]");
+				viewport.setAttribute('content', 'width=device-width');
+				
+            }
+        }).mount("#headerApp");
+	</script>
+
+</body>
+	<div id="wrap">
+
+		<div id="container">
+			<div id="inner" class="type-02">
+				<div class="com-page-title hasTitle">
+					<nav class="breadcrumb-wrap" aria-label="페이지 경로">
+						<ol class="breadcrumb">
+							<li class="home"><span class="txt">홈</span></li>
+							<li><span class="txt">직업정보</span></li>
+							<li><span class="txt">직업백과</span></li>
+						</ol>
+					</nav>
+
+					<div class="title-box">
+						<h2>직업백과</h2>
+					</div>
+
+					<div class="page-info">
+						다양한 직업에 대하여 충분한 정보를 갖추도록 직업 정보를 제공합니다.
+						<br>인기 직업 버튼을 선택하여 인기 직업 순위도 확인해보세요.
+					</div>
+				</div>
+				<div id="content">
+					<div class="content">
+						<div class="com-srch-box">
+							<!-- 검색조건 드롭 다운 + 검색어 입력 필드 + 검색 필터 / 검색어 필터 박스-->
+							<ul class="srch-box-wrap filter">
+								<li>
+									<div class="com-select-box type-01 md">
+										<select title="검색조건" v-model="searchGubun" v-on:change="changedGubun()">
+											<option :value="1">전체</option>
+											<option :value="2">직업명</option>
+											<option :value="3">하는일</option>
+										</select>
+									</div>
+									<div class="srch-input">
+										<input type="text" placeholder="검색어를 입력해 주시기 바랍니다." title="검색어 입력" v-model="keyword" v-on:keyup.enter="doSearch('Y')">
+										<button type="button" class="btn-srch" title="검색" @click="doSearch('Y')"><span class="com-sr-only" aria-label="검색">검색</span></button>
+									</div>
+									<button class="detail-srch-btn" :class="{ active: isShow }" @click="toggleAccordion" :title="isShow ? '열림' : '닫힘'" :aria-expanded="isShow">상세검색</button>
+								</li>
+							</ul>
+							
+						</div>
+						<!-- 조건 검색 박스 - 셀렉트 박스 -->
+						<div class="com-detail-srch-wrap">
+							<ul v-if="isShow" class="com-accordion" :class="{active : isShow}">
+								<li class="column-reverse">
+									<div class="accordion-ctt" :class="{active : isShow}">
+										<div class="ji-tab-wrap-02">
+											<ul class="com-tab type-01">
+												<li>
+													<button type="button" @click="onSelect('1')" v-bind:class="{active:mode==='1'}" v-bind:title="mode==='1'?'현재 탭':''">테마별 검색</button>
+												</li>
+												<li>
+													<button type="button" @click="onSelect('2')" v-bind:class="{active:mode==='2'}" v-bind:title="mode==='2'?'현재 탭':''">적성유형별 검색</button>
+												</li>
+												<li>
+													<button type="button" @click="onSelect('3')" v-bind:class="{active:mode==='3'}" v-bind:title="mode==='3'?'현재 탭':''">조건별 검색</button>
+												</li>
+												<li>
+													<button type="button" @click="onSelect('4')" v-bind:class="{active:mode==='4'}" v-bind:title="mode==='4'?'현재 탭':''">직업 분류별 검색</button>
+												</li>
+											</ul>
+										</div>
+										<div class="inner">
+											<ul v-if="mode == '1'" class="detail-srch-box type-select">
+												<li>
+													<p class="label-txt">직업별 테마</p>
+														<ul class="com-grid-box col-10 ji-dic-type-list">
+															<li v-for="(item,index) in tab1s" class="">
+																<label v-bind:for="'test-rad-chk-'+item.seq" :class="jobctgClass(item.seq,index,'1')">
+																	{{item.code_nm}}
+																</label>
+																<input type="checkbox" name="job" v-bind:id="'test-rad-chk-'+item.seq" v-model="selectedtab1" v-bind:value="item.seq" >
+															</li>
+														</ul>
+												</li>
+												<li class="com-srchBtn-box">
+													<button type="button" class="com-btn type-01 secondary md" @click="doReset()">초기화</button>
+													<button type="button" class="com-btn type-01 primary md" @click="doSearch('Y')">검색</button>
+												</li>
+											</ul>
+											<ul v-if="mode == '2'" class="detail-srch-box">
+											<li>
+												<ul class="com-grid-box col-11 ji-dic-type-list-02">
+												<li v-for="(item,index) in tab2s">
+													<input type="radio" v-bind:id="item.seq" v-bind:value="item.seq" v-model="selectedtab2" v-on:change="tab2_click_ability(item,index)" :class="{ active : selectedtab2 == 'item.seq' }">
+													<label v-bind:for="item.seq" :class="abilityClass(item)" :data-tab="'tab_panel_'+index">
+														<span>{{item.code_nm}}</span>
+													</label>
+												</li>
+												</ul>
+												<ul class="dic-con-list">
+													<li class="tab_con" id="tab_panel_0" role="tabpanel">
+														<p class="title">신체·운동능력</p>
+														<p class="con">신체·운동능력 관련 직업군은 운동 관련직, 무용 관련직, 안전 관련직, 일반운전 관련직입니다. </p>
+													</li>
+													<li class="tab_con" id="tab_panel_1" role="tabpanel">
+														<p class="title">손재능</p>
+														<p class="con">손재능 관련 직업군은 기능직, 의복제조 관련직, 조리 관련직, 이미용 관련직, 기타 게임·오락·스포츠 관련직입니다.</p>
+													</li>
+													<li class="tab_con" id="tab_panel_2" role="tabpanel">
+														<p class="title">공간지각력</p>
+														<p class="con">공간지각력 관련 직업군은 기타 게임·오락·스포츠 관련직, 고급 운전 관련직, 공학 기술직, 공학 전문직입니다.</p>
+													</li>
+													<li class="tab_con" id="tab_panel_3" role="tabpanel">
+														<p class="title">음악능력</p>
+														<p class="con">음악능력 관련 직업군은 음악 관련직, 악기 관련직입니다.</p>
+													</li>
+													<li class="tab_con" id="tab_panel_4" role="tabpanel">
+														<p class="title">창의력</p>
+														<p class="con">창의력 관련 직업군은 연기 관련직, 웹·게임·애니메이션 관련직, 미술 및 공예 관련직, 기타 특수 예술직, 작가 관련직, 디자인 관련직, 예술기획 관련직입니다.</p>
+													</li>
+													<li class="tab_con" id="tab_panel_5" role="tabpanel">
+														<p class="title">언어능력</p>
+														<p class="con">언어능력 관련 직업군은 인문계 교육 관련직, 인문 및 사회과학 관련직, 언어 관련 전문직, 작가 관련직, 법률 및 사회활동 관련직입니다.</p>
+													</li>
+													<li class="tab_con" id="tab_panel_6" role="tabpanel">
+														<p class="title">수리·논리력</p>
+														<p class="con">수리·논리력 관련 직업군은 공학 기술직, 공학 전문직, 이공계 교육 관련직, 의료 관련 전문직, IT관련 전문직, 인문계 교육 관련직, 금융 및 경영 관련직, 인문 및 사회과학 관련직, 회계 관련직, 법률 및 사회활동 관련직, 이학 전문직입니다.</p>
+													</li>
+													<li class="tab_con" id="tab_panel_7" role="tabpanel">
+														<p class="title">자기성찰능력</p>
+														<p class="con">자기성찰능력 관련직은 사회서비스직, 인문계 교육 관련직, 이공계 교육 관련직, 의료관련 전문직, 교육관련 서비스직, 법률 및 사회활동 관련직입니다. </p>
+													</li>
+													<li class="tab_con" id="tab_panel_8" role="tabpanel">
+														<p class="title">대인관계능력</p>
+														<p class="con">대인관계능력 관련직은 교육관련 서비스직, 기획서비스직, 매니지먼트 관련직, 보건의료 관련 서비스직, 사무 관련직, 영업관련 서비스직, 일반 서비스직입니다.</p>
+													</li>
+													<li class="tab_con" id="tab_panel_9" role="tabpanel">
+														<p class="title">자연친화력</p>
+														<p class="con">자연친화력 관련직은 자연친화 관련직, 농생명산업 관련직, 환경관련 전문직입니다.</p>
+													</li>
+													<li class="tab_con" id="tab_panel_10" role="tabpanel">
+														<p class="title">예술시각능력</p>
+														<p class="con">예술시각능력은 웹·게임·애니메이션 관련직, 미술 및 공예 관련직,기타 특수 예술직, 영상 관련직, 예술기획 관련직, 디자인 관련직입니다.</p>
+													</li>
+												</ul>
+											</li>
+											<li class="com-srchBtn-box">
+												<button type="button" class="com-btn type-01 secondary md" @click="doReset()">초기화</button>
+												<button type="button" class="com-btn type-01 primary md" @click="doSearch('Y')">검색</button>
+											</li>
+											</ul>
+											<ul v-if="mode == '3'" class="detail-srch-box type-select">
+												<li>
+													<p class="label-txt">평균연봉 <span>일의 대가로 1년 동안 받는 임금이나 봉급의 합계</span></p>
+													<div class="checkBox-wrap col-5">
+														<div class="com-checkbox sm">
+															<input type="checkbox" id="wageAll" v-model="all_selectedtab3_wage" aria-label="평균연봉 전체">
+															<label for="wageAll">
+																전체
+															</label>
+														</div>
+														<div  v-for="item in wage_checkList" class="com-checkbox sm">
+															<input type="checkbox" v-bind:id="'wage'+item.eng" v-bind:value="item.eng" v-model="selectedtab3_wage" :aria-label="'평균연봉 '+item.kor">
+															<label v-bind:for="'wage'+item.eng">
+																{{item.kor}}
+															</label>
+														</div>
+													</div>
+												</li>
+												<li>
+													<p class="label-txt">일가정균형 <span>일과 가정 생활을 함께하기 쉬운 정도</span></p>
+													<div class="checkBox-wrap col-5">
+														<div class="com-checkbox sm" >
+															<input type="checkbox" id="wlbAll" v-model="all_selectedtab3_wlb" aria-label="일가정균형 전체">
+															<label for="wlbAll">
+																전체
+															</label>
+														</div>
+														<div  v-for="item in wlb_checkList" class="com-checkbox sm">
+															<input type="checkbox" v-bind:id="'wlb'+item.eng" v-bind:value="item.eng" v-model="selectedtab3_wlb" :aria-label="'일가정균형 '+item.kor">
+															<label v-bind:for="'wlb'+item.eng">
+																{{item.kor}}
+															</label>
+														</div>
+													</div>
+												</li>
+												<li>
+													<p class="label-txt">사회공헌 <span>이 직업이 우리 사회에 공헌하는 정도</span></p>
+													<div class="checkBox-wrap col-5">
+														<div class="com-checkbox sm" >
+															<input type="checkbox" id="socialAll" v-model="all_selectedtab3_social" aria-label="사회공헌">
+															<label for="socialAll">
+																전체
+															</label>
+														</div>
+														<div  v-for="item in social_checkList" class="com-checkbox sm">
+															<input type="checkbox" v-bind:id="'social'+item.eng" v-bind:value="item.eng" v-model="selectedtab3_social" :aria-label="'사회공헌 '+item.kor">
+															<label v-bind:for="'social'+item.eng">
+																{{item.kor}}
+															</label>
+														</div>
+													</div>
+												</li>
+												<li class="com-srchBtn-box">
+													<button type="button" class="com-btn type-01 secondary md" @click="doReset()">초기화</button>
+													<button type="button" class="com-btn type-01 primary md" @click="doSearch('Y')">검색</button>
+												</li>
+											</ul>
+											<ul v-if="mode == '4'" class="detail-srch-box type-select">
+												<li>
+													
+														<ul class="com-grid-box col-10 ji-dic-type-list-04">
+															<li v-for="(item,index) in tab4s">
+																<label v-bind:for="item.seq" :class="jobctgClass(item.code_nm,index,'4')">
+																	{{item.code_nm}}
+																</label>
+															<input type="checkbox" name="job" v-bind:id="item.seq" v-bind:value="item.code_nm" v-model="selectedtab4">
+															</li>
+														</ul>
+												</li>
+												<li class="com-srchBtn-box">
+													<button type="button" class="com-btn type-01 secondary md" @click="doReset()">초기화</button>
+													<button type="button" class="com-btn type-01 primary md" @click="doSearch('Y')">검색</button>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div id="jobRankWrap">
+							<a href="javascript:void(0);" class="job-rank-btn" @click="toggleRank()" role="button" :aria-expanded="isShowRank">인기직업 BEST</a>
+							<div v-if="isShowRank" class="jobRank" style="display: block;">
+								<a href="javascript:void(0);" class="close-btn" @click="closeRank()" role="button"><img src="../img/sub/icon-rank-close.svg" alt="인기직업 BEST 팝업 닫기"></a>
+								<div class="tit-wrap">
+									<h2 class="tit">인기 직업 <span>BEST</span></h2>
+									<p class="exp">한 주간 가장 많이 찾아본 직업은 무엇일까요?</p>
+								</div>
+								<ul class="rank-tab">
+									<li :class="{on:rank.mode==='total'}">
+										<a href="javascript:void(0);" @click="rank.mode='total'" role="button" :aria-expanded="rank.mode==='total'">전체</a>
+										<ul class="con-result" style="display: block;" v-if="rank.mode==='total'">
+											<li v-for="item in rank.total">
+												<a :href="'view?seq='+item.code">
+													<span class="num">{{item.rank}}</span>
+													<span class="txt">{{item.name}}</span>
+												</a>
+											</li>
+										</ul>
+									</li>
+									<li :class="{on:rank.mode==='gender'}">
+										<a href="javascript:void(0);" @click="rank.mode='gender';rank.tab='M'" role="button" :aria-expanded="rank.mode==='gender'">성별</a>
+										<ul class="con-tab">
+											<li :class="{active:rank.tab==='M'}" v-if="rank.mode==='gender'">
+												<a href="javascript:void(0);" @click="rank.tab='M'" role="button" :aria-pressed="rank.tab==='M'">남성</a>
+												<ul class="con-result"  style="display: block;" v-if="rank.tab==='M'">
+													<li v-for="item in rank.man">
+														<a :href="'view?seq='+item.code">
+															<span class="num">{{item.rank}}</span>
+															<span class="txt">{{item.name}}</span>
+														</a>
+													</li>
+												</ul>
+											</li>
+											<li :class="{active:rank.tab==='W'}" v-if="rank.mode==='gender' ">
+												<a href="javascript:void(0);" @click="rank.tab='W'" role="button" :aria-pressed="rank.tab==='W'">여성</a>
+												<ul class="con-result" style="display: block;" v-if="rank.tab==='W'">
+													<li v-for="item in rank.woman">
+														<a :href="'view?seq='+item.code">
+															<span class="num">{{item.rank}}</span>
+															<span class="txt">{{item.name}}</span>
+														</a>
+													</li>
+												</ul>
+											</li>
+										</ul>
+									</li>
+									<li :class="{on:rank.mode==='type'}">
+										<a href="javascript:void(0);" @click="rank.mode='type';rank.tab='M'" role="button" :aria-expanded="rank.mode==='type'">유형별</a>
+										<ul class="con-tab">
+											<li :class="{active:rank.tab==='M'}" v-if="rank.mode==='type'">
+												<a href="javascript:void(0);" @click="rank.tab='M'" role="button" :aria-pressed="rank.tab==='M'">중학생</a>
+												<ul class="con-result"  style="display: block;" v-if="rank.tab==='M'">
+													<li v-for="item in rank.mid">
+														<a :href="'view?seq='+item.code">
+															<span class="num">{{item.rank}}</span>
+															<span class="txt">{{item.name}}</span>
+														</a>
+													</li>
+												</ul>
+											</li>
+											<li :class="{active:rank.tab==='W'}" v-if="rank.mode==='type'">
+												<a href="javascript:void(0);" @click="rank.tab='W'" role="button" :aria-pressed="rank.tab==='W'">고등학생</a>
+												<ul class="con-result" style="display: block;" v-if="rank.tab==='W'">
+													<li v-for="item in rank.high">
+														<a :href="'view?seq='+item.code">
+															<span class="num">{{item.rank}}</span>
+															<span class="txt">{{item.name}}</span>
+														</a>
+													</li>
+												</ul>
+											</li>
+										</ul>
+									</li>
+								</ul>
+								<div class="closing-wrap">
+									<div class="com-checkbox sm">
+										<input type="checkbox" id="chk-1" v-model="chkRank">
+										<label for="chk-1">
+											<i class="square"></i>
+											24시간동안 열지 않기
+										</label>
+									</div>
+									<a href="javascript:void(0);" class="txt-close" @click="closeRank()">닫기</a>
+								</div>
+							</div>
+						</div>
+						<ul class="com-board-hd">
+							<li class="total-srch-num"><p>검색 결과 <span class="num">{{totalRecords}}</span>개</p></li>
+							<li>
+								<div v-if="type === 'list'" class="com-select-box type-02 lg">
+									<label for="test-select-01">목록 개수</label>
+									<select id="test-select-01" v-model="pageSize">
+										<option value="10">10개</option>
+										<option value="20">20개</option>
+										<option value="30">30개</option>
+									</select>
+								</div>
+								<div v-if="type === 'card'"  class="com-select-box type-02 lg">
+									<label for="test-select-02">목록 개수</label>
+									<select id="test-select-02" v-model="pageSize">
+										<option value="9">9개</option>
+										<option value="18">18개</option>
+										<option value="27">27개</option>
+									</select>
+								</div>
+								<button type="button" class="btn-apply" @click="handlePaging(0)" title="목록 개수 적용">적용</button>
+							</li>
+							<li class="sort-type">
+								<div class="com-select-box type-02 lg">
+									<label for="test-select-03">정렬기준</label>
+									<select id="test-select-03" v-model="sortmode">
+										<option value="R">최신순</option>
+										<option value="V">조회순</option>
+										<option value="L">추천순</option>
+									</select>
+								</div>
+								<button type="button" class="btn-apply" @click="selectSort()" title="정렬기준 적용">적용</button>
+							</li>
+							<li class="list-type">
+								<button type="button" v-bind:class="{selected:type==='card'}" title="카드형으로 보기"  @click="selectType('card')" :aria-pressed="type==='card'" :aria-label="`카드형으로 보기 ${type==='card'?'선택됨':''}`"><img src="../img/common/icon_grid.svg" alt="카드형으로 보기"></button>
+								<button type="button"  v-bind:class="{selected:type==='list'}"  title="리스트형으로 보기" @click="selectType('list')" :aria-pressed="type==='list'" :aria-label="`리스트형으로 보기 ${type==='list'?'선택됨':''}`"><img src="../img/common/icon_list.svg" alt="리스트형으로 보기"></button>
+							</li>
+						</ul>
+						<h3 class="com-sr-only">{{type==='card'?'카드형':'리스트형'}}</h3>
+						<div v-if="list.length != 0" class="ji-tbl-box-01">
+							<div v-if="type == 'card'" class="com-grid-box col-3">
+								<div v-for="item in list" class="interview_list_w">
+									<a :href="'view?seq=' + item.job_cd" class="com-card text type-01" :title="item.job_nm">
+										<div class="con-box">
+											<p class="title">{{item.job_nm}}</p>
+
+											<div class="con-hd">
+												<div class="img-box">
+													<img :src="item.thumbnail" alt="">
+												</div>
+												<ul class="terms-list">
+													<li>
+														<p>평균연봉</p>
+														<span v-if="item.wage_level != null">{{replace_kor(item.wage_level,1)}}</span>
+														<span v-else>-</span>
+													</li>
+													<li>
+														<p>일가정균형</p>
+														<span v-if="item.indicator4_level != null">{{replace_kor(item.indicator4_level,2)}}</span>
+														<span v-else>-</span>
+													</li>
+													<li>
+														<p>사회공헌</p>
+														<span v-if="item.indicator7_level != null">{{replace_kor(item.indicator7_level,2)}}</span>
+														<span v-else>-</span>
+													</li>
+												</ul>
+											</div>
+											<p class="con second-line">
+												{{item.work}}
+											</p>
+										</div>
+										<div class="tail-item-list">
+											<div><img src="../img/common/icon_visibility.svg" alt="조회수"> {{formattedViews(item.views)}} </div>
+											<div><img src="../img/common/icon_heart_blank.svg" alt="좋아요"> {{formattedViews(item.likecnt)}}</div>
+											<div class="fake-btn">자세히 보기<img src="../img/common/icon_right_arrow.svg" alt="" aria-hidden="true"></div>
+										</div>
+									</a>
+									<list-fav-button :fav-type="favType" :fav-code="item.job_cd" :fav-name="item.job_nm"
+												v-model:is-fav="item.is_fav" v-model:fav-cnt="item.favorite_cnt" v-model:is-thumbsup="item.is_thumbs_up" v-model:like-cnt="item.likecnt"></list-fav-button>   
+								</div>
+							</div>
+
+							<div v-if="type == 'list'" class="com-grid-box col-2">								
+								<div v-for="item in list" class="com-card img type-03 interview_list_w">
+									<div class="top-box">
+										<div class="img-box">
+											<img :src="item.thumbnail" alt="">
+										</div>
+										<a :href="'view?seq=' + item.job_cd" class="con-box">
+											<p class="title">{{item.job_nm}}</p>
+											<p class="con second-line">
+												{{item.work}}
+											</p>
+											<ul class="terms-list">
+												<li>
+													<p>평균연봉</p>
+													<span v-if="item.wage_level != null">{{replace_kor(item.wage_level,1)}}</span>
+													<span v-else>-</span>
+												</li>
+												<li>
+													<p>일가정균형</p>
+													<span v-if="item.indicator4_level != null">{{replace_kor(item.indicator4_level,2)}}</span>
+													<span v-else>-</span>
+												</li>
+												<li>
+													<p>사회공헌</p>
+													<span v-if="item.indicator7_level != null">{{replace_kor(item.indicator7_level,2)}}</span>
+													<span v-else>-</span>
+												</li>
+											</ul>
+										</a>
+									</div>
+									<div class="tail-item-list">
+										<div><img src="../img/common/icon_visibility.svg" alt="조회수"> {{formattedViews(item.views)}}</div>
+										<div><img src="../img/common/icon_heart_blank.svg" alt="좋아요"> {{formattedViews(item.likecnt)}}</div>
+										<button type="button" class="com-link-btn">자세히 보기</button>
+									</div>
+									<list-fav-button :fav-type="favType" :fav-code="item.job_cd" :fav-name="item.job_nm"
+												v-model:is-fav="item.is_fav" v-model:fav-cnt="item.favorite_cnt" v-model:is-thumbsup="item.is_thumbs_up" v-model:like-cnt="item.likecnt"></list-fav-button>   
+								</div>
+							</div>
+						</div>
+						<div class="com-no-result type-01" v-if="list.length == 0 ">
+							<div class="img-box"><img src="../img/common/icon_document.svg"  alt=""></div>
+							<div class="notice-box">
+								<p v-if="searchOpt.keyword != '' ">검색어 <span>"{{searchOpt.keyword}}"에 대한 검색 결과가 없습니다.</span></p>
+								<p v-if="searchOpt.keyword == '' "><span>해당 검색 조건에 대한 검색 결과가 없습니다.</span></p>
+								<ul>
+									<li><img src="../img/common/icon_notice_blue.svg" alt="">철자나 맞춤법 오류가 있는지 확인해 주세요.</li>
+									<li><img src="../img/common/icon_notice_blue.svg" alt="">여러 단어로 나누거나 다른 검색어로 검색해 주세요.</li>
+									<li><img src="../img/common/icon_notice_blue.svg" alt="">보다 일반적인 단어로 검색해 보세요.</li>
+								</ul>
+							</div>
+						</div>
+						<!-- 로딩 중일 경우 
+						<div class="com-no-result type-01" v-if="">
+							<div class="notice-box">
+								<p>데이터를 불러오는 중입니다.<br>잠시만 기다려주세요.</p>
+							</div>
+							<div class="img-box"><img src="../img/common/gif_indicator.gif"></div>
+						</div>
+						-->
+						<page-indexer :current="pageNo" :total="totalPages" @handler="handlePaging"/>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- // Container -->
+	</div>
+	<body>
+	<!-- footer(푸터) - 메인일 경우 class="main" 추가 -->
+	<footer id="ft">
+		<div id="ft-top">
+			<div class="info-box">
+				<img class="logo" src="/cloud/w/img/common/logo_ft.png" alt="CAREERNET">
+				<p class="txt">
+					주소 : 세종특별자치시 시청대로 370 세종국책연구단지 사회정책동 한국직업능력연구원
+					<br><span class="com-fw-500">운영 : 한국직업능력연구원 국가진로교육연구센터</span>
+					<br><span class="com-fw-500">지원 : 교육부</span>
+				</p>
+				<div class="ft-r">
+					<div class="main-family-site" :class="{open:isFooterOpen}" role="region" aria-label="패밀리사이트 메뉴" @mouseenter="footerOpen()" @mouseleave="footerClose()">
+						<button class="family-toggle" aria-haspopup="true" :aria-expanded="isFooterOpen" @focus="footerOpen()">패밀리사이트</button>
+						<ul class="family-menu" role="menu" aria-label="패밀리사이트 목록">
+							<li><a href="/cloud/j/main/home" target="_blank" title="새 창 열림" role="menuitem" aria-label="주니어커리어넷 사이트 이동 (새 창 열림)">주니어커리어넷</a></li>
+							<li><a href="https://mentoring.career.go.kr" target="_blank" title="새 창 열림" role="menuitem" aria-label="원격영상진로멘토링 사이트 이동 (새 창 열림)">원격영상진로멘토링</a></li>
+							<li><a href="https://yeep.go.kr//main/main.do" target="_blank" title="새 창 열림" role="menuitem" aria-label="창업체험플랫폼(YEEP) 사이트 이동 (새 창 열림)">창업체험플랫폼(YEEP)</a></li>
+							<li><a href="https://www.ggoomgil.go.kr" target="_blank" title="새 창 열림" role="menuitem" aria-label="꿈길 사이트 이동 (새 창 열림)">꿈길</a></li>
+							<li><a :href="`${API_DOMAIN_URL}/cloud/api/home/main.do`" target="_blank" title="새 창 열림" role="menuitem" aria-label="커리어원패스 사이트 이동(새 창 열림)">커리어원패스</a></li>
+						</ul>
+					</div>
+					<ul class="img-list">
+						<li><a href="https://www.moe.go.kr/" target="_blank" title="새 창 열림" aria-label="교육부 홈페이지 이동 (새 창 열림)"><img src="/cloud/w/img/common/icon_minitry_of_education.png" alt="교육부 Ministry of Education"></a></li>
+						<li><a href="https://www.krivet.re.kr/" target="_blank" title="새 창 열림" aria-label="한국직업능력연구원 홈페이지 이동 (새 창 열림)"><img src="/cloud/w/img/common/icon_krivet.png" alt="KRIVET 한국직업능력연구원"></a></li>
+						<li><a href="https://www.wa.or.kr/board/list.asp?BoardID=0006" target="_blank" title="새 창 열림" aria-label="국가공인 웹 접근성 품질인증마크 확인 페이지 이동 (새 창 열림)"><img src="/cloud/w/img/common/web_certification.png" alt="국가공인 웹 접근성 품질인증마크" height="46"></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="ft-bot">
+			<div class="link-box">
+				<ul class="list">
+					<li class="active"><a :href="`${API_DOMAIN_URL}/cloud/api/bbs/list.stplat.indvdlinfo.do?estnField01=04`">개인정보처리방침</a></li>
+					<li><a href="javascript:void(0)" @click="openEmailInfo()">이메일주소무단수집거부</a></li>
+					<li><a href="/cloud/w/guide/info">이용안내</a></li>
+					
+					
+					
+					<li><a href="https://www.career.go.kr/cnet/front/openapi/openApiMainCenter.do">오픈 API</a></li>
+					<li><a href="/cloud/w/guide/use">진로교육정보망 소개</a></li>
+					<li><a href="/cloud/w/iqr/list">이용문의</a></li>
+				</ul>
+				<p class="copyright">
+					Copyrights © KRIVET All rights reserved.
+					
+
+				</p>
+			</div>
+		</div>
+		<email-info ref="emailinfopopup" title="이메일주소 무단수집거부" html="본 홈페이지에 게시된 이메일 주소가 전자우편 수집 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 수집되는 것을 거부하며, 이를 위반시 정보통신망법 등에 의해 형사처벌됨을 유념하시기 바랍니다." size="lg"></email-info>
+	</footer>
+	<script type="text/javascript" nonce="2726c7f26c">
+		
+		// 250902 - 웹접근성 개선 : 좌측 메뉴가 있는 경우 좌측 메뉴를 건너뛰도록 처리
+		if (document.querySelector("#container #content > #snb")) {
+			document.querySelector("#container .content").id = "content2";
+		}
+        const footerApp = Vue.createApp({
+            data() {
+                return {
+                    isFooterOpen: false
+					, API_DOMAIN_URL: API_DOMAIN_URL
+                }
+            }
+            , components: {
+				"email-info": Modal
+            }
+            , methods: {
+                footerOpen(){
+                    this.isFooterOpen = true;
+                },
+		        footerClose(){
+                    this.isFooterOpen = false;
+                },
+		        openEmailInfo(){
+                    footerApp.$refs.emailinfopopup.open('이메일주소 무단수집거부','','본 홈페이지에 게시된 이메일 주소가 전자우편 수집 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 수집되는 것을 거부하며, 이를 위반시 정보통신망법 등에 의해 형사처벌됨을 유념하시기 바랍니다.','lg','');
+		        }
+            }
+            , mounted() {
+				document.querySelectorAll(".ft-r > .main-family-site > ul > li > a").forEach((el)=>{
+                    el.addEventListener("focus", (event) => {
+						this.footerOpen();
+                    });
+		        });
+
+				document.querySelectorAll(".ft-r > .main-family-site > ul > li > a").forEach((el)=>{
+                    el.addEventListener("focusout", (event) => {
+						const activeEl = event.relatedTarget.closest('ul.family-menu > li');
+						if(!activeEl){
+							this.footerClose();
+						}
+                    });
+		        });
+            }
+        }).mount("#ft");
+	</script>
+</body>
+	<script type="text/javascript" nonce="2726c7f26c">
+        /*<![CDATA[*/
+        const app = Vue.createApp({
+            components: {
+                "page-indexer": Pagination,
+				"list-fav-button": ListFavButton
+            },
+            data() {
+                return {
+                    mode: '1'
+					, type: 'card'
+                    , keyword: ''
+					, searchGubun: '1'
+                    , list: []
+                    , pageNo: 0
+                    , pageSize: 9
+                    , totalPages: 0
+                    , totalRecords: 0
+                    , sortmode: 'R'
+                    , searchItems: []
+                    , tab1s: []
+                    , tab2s: []
+                    , tab22s: []
+                    , tab2group: []
+					, tab4s: []
+					, selectedtab1:	[]
+					, selectedtab2:	''
+                    , selectedtab22: []
+					, selectedtab3_wage:[]
+					, selectedtab4: []
+					, wage_checkList:[{kor:'3천만원 미만',eng:'LOWER'},{kor:'3천만원 이상',eng:'LOW'},{kor:'4천만원 이상',eng:'MID'},{kor:'5천만원 이상',eng:'HGH'}]
+					, selectedtab3_wlb:[]
+					, wlb_checkList:[{kor:'보통 미만',eng:'LOWER'},{kor:'보통 이상',eng:'LOW'},{kor:'좋음',eng:'MID'},{kor:'매우 좋음',eng:'HGH'}]
+					, selectedtab3_social:[]
+					, social_checkList:[{kor:'보통 미만',eng:'LOWER'},{kor:'보통 이상',eng:'LOW'},{kor:'좋음',eng:'MID'},{kor:'매우 좋음',eng:'HGH'}]
+					, isShow: false
+					, isActive: '닫힘'
+					, isShowRank: true
+	                , chkRank: false
+	                , rank:{total:[],man:[],woman:[],mid:[],high:[], mode:'total', tab:'1'}
+					, searchOpt:{
+						seq:''
+						, keyword: ''
+						, mode: ''
+						, searchGubun: ''
+						, pageNo:0
+						, pageSize: 9
+						, sortmode:'R'
+						, type:'card'
+						, selectedtab1: []
+						, selectedtab2: ''
+						, selectedtab22: []
+						, selectedtab3_wage: []
+						, selectedtab3_wlb: []
+						, selectedtab3_social: []
+						, selectedtab4: []
+					}
+
+					, favType: '112503'
+                }
+            }
+            , methods: {
+				formattedViews(num) {
+					return window.formatViews(num);
+				},
+				changedGubun(){
+					this.pageNo=0;
+				},
+                onSelect(mode) {
+                    this.mode = mode;
+                    this.selectedtab1 = [];
+					this.selectedtab2 = '';
+					this.selectedtab22 = [];
+					this.selectedtab3_wage = [];
+					this.selectedtab3_wlb = [];
+					this.selectedtab3_social = [];
+					this.selectedtab4 = [];
+					this.pageNo=0;
+					this.doSearch();
+
+                },
+				doReset(){
+					this.selectedtab1 = [];
+					this.selectedtab2 = '';
+					this.selectedtab22 = [];
+					this.selectedtab3_wage = [];
+					this.selectedtab3_wlb = [];
+					this.selectedtab3_social = [];
+					this.selectedtab4 = [];
+					document.querySelectorAll('.tab_con').forEach(t => t.classList.remove('active'));
+				},
+                doSearch(yn) {
+					if(yn == 'Y'){
+						this.isActive = '닫힘';
+						this.isShow = false;
+						this.pageNo = 0;
+					}
+					localStorage.clear();
+					this.searchOpt=this.get_param();
+					this.searchOpt.pageSize = this.pageSize;
+					this.searchOpt.pageNo = this.pageNo;
+					this.searchOpt.selectedtab2 = this.selectedtab2;
+					this.searchOpt.sortmode = this.sortmode;
+					this.searchOpt.type = this.type;
+					localStorage.setItem('JobsearchOpt', JSON.stringify(this.searchOpt));
+
+					let srtsort = 'reg_dt,desc'
+					if (this.sortmode === 'V') srtsort = 'views,desc'
+					if (this.sortmode === 'L') srtsort = 'LIKECNT,desc'
+
+                    // page=0&size=3&sort=id,desc&sort=username,desc&sort=regdt,desc
+
+                    axios.post('/api/job/search?size=' + this.pageSize + '&page=' + this.pageNo + '&sort=' + srtsort
+                        , this.get_param()).then((res) => {
+                        app.list = res.data.content;
+                        app.pageNo = res.data.number;
+                        app.totalPages = res.data.totalPages;
+                        app.totalRecords = res.data.totalElements;
+                    });
+                },
+				get_param(){
+					return {
+						keyword: this.keyword
+						, mode: this.mode
+						, searchGubun: this.searchGubun
+						, selectedtab1: this.selectedtab1
+						, selectedtab22: this.selectedtab22
+						, selectedtab3_wage: this.selectedtab3_wage
+						, selectedtab3_wlb: this.selectedtab3_wlb
+						, selectedtab3_social: this.selectedtab3_social
+						, selectedtab4: this.selectedtab4
+
+					};
+				},
+				toggleAccordion() {
+					if(this.isShow == true){
+						this.isActive = '열림';
+					} else {
+						this.isActive = '닫힘';
+					}
+					this.isShow = !this.isShow;
+				},
+				selectType(type) {
+					if(type !== this.type || this.pageNo !== 0){
+						this.type = type;
+						this.pageSize = (this.type == 'card' ? 9 : 10);
+						this.pageNo = 0;
+						this.doSearch();
+					}
+				},
+                selectSort() {
+                    this.handlePaging(0);
+                },
+                handlePaging(page) {
+                    this.pageNo = page.requestPage;
+                    this.doSearch();
+                },
+				tab2_click_ability(item,index) {
+					this.selectedtab2= item.seq;
+					this.selectedtab22 = this.tab2group.filter((o) => {
+						return o.ablty_code === item.seq;
+					}).map((m) => m.jbgp_code);
+
+					var panelId = '#tab_panel_'+index;
+
+					document.querySelectorAll('.tab_con').forEach(t => t.classList.remove('active'));
+					document.querySelector(panelId).classList.add('active');
+
+				},
+				abilityClass(item){
+					var no = item.sort_ordr;
+
+					if(Number(item.sort_ordr) < 10) no = '0'+item.sort_ordr;
+					return 'btn-tab tabBtn_01' +' ji-dic-type-icon-' + item.sort_ordr + ' type2';
+
+				},
+				replace_kor(eng,no){
+					if(no=='1'){
+						if(eng == 'HGH'){return '5천만원↑'}
+						else if(eng == 'MID'){return '4천만원↑'}
+						else if(eng == 'LOW'){return '3천만원↑'}
+						else if(eng == 'LOWER'){ return '3천만원↓'}
+					}else{
+						if(eng == 'HGH'){return '매우좋음'}
+						else if(eng == 'MID'){return '좋음'}
+						else if(eng == 'LOW'){return '보통이상'}
+						else if(eng == 'LOWER'){ return '보통미만'}
+					}
+
+				},
+				jobctgClass(seq,idx,no) {
+					let strclass = 'ji-dic-type-icon-' + (idx+1);
+					if(no=='1' && this.selectedtab1.includes(seq)) {
+						strclass += ' selected';
+					}else if (no=='4' && this.selectedtab4.includes(seq)){
+						strclass += ' selected';
+					}
+					return strclass
+				},
+                toggleRank(){
+                    this.isShowRank = !this.isShowRank;
+                },
+                closeRank(){
+                    this.isShowRank = false;
+                    if(this.chkRank) {
+                        setCookie('cookieJobListRank','true',24);
+                    }
+                },
+            },
+			computed: {
+				all_selectedtab3_wage: {
+					get: function () {
+						return this.wage_checkList ? this.selectedtab3_wage.length == this.wage_checkList.length : false;
+					},
+					set: function (value) {
+						var selected = [];
+						if (value) {
+							this.wage_checkList.forEach(function (v) {
+								selected.push(v.eng);
+							});
+						}
+						this.selectedtab3_wage = selected;
+					}
+				},
+				all_selectedtab3_wlb: {
+					get: function () {
+						return this.wlb_checkList ? this.selectedtab3_wlb.length == this.wlb_checkList.length : false;
+					},
+					set: function (value) {
+						var selected = [];
+						if (value) {
+							this.wlb_checkList.forEach(function (v) {
+								selected.push(v.eng);
+							});
+						}
+						this.selectedtab3_wlb = selected;
+					}
+				},
+				all_selectedtab3_social: {
+					get: function () {
+						return this.social_checkList ? this.selectedtab3_social.length == this.social_checkList.length : false;
+					},
+					set: function (value) {
+						var selected = [];
+						if (value) {
+							this.social_checkList.forEach(function (v) {
+								selected.push(v.eng);
+							});
+						}
+						this.selectedtab3_social = selected;
+					}
+				}
+			},
+			created(){
+				if(document.referrer.includes("job/view")){
+					const savedSearchOpt = localStorage.getItem('JobsearchOpt');
+					if (savedSearchOpt) {
+						this.searchOpt = JSON.parse(savedSearchOpt);
+						this.keyword = this.searchOpt.keyword;
+						this.mode = this.searchOpt.mode;
+						this.searchGubun = this.searchOpt.searchGubun;
+						this.pageNo = this.searchOpt.pageNo;
+						this.pageSize = this.searchOpt.pageSize;
+						this.sortmode = this.searchOpt.sortmode;
+						this.selectedtab1 = this.searchOpt.selectedtab1;
+						this.selectedtab2 = this.searchOpt.selectedtab2;
+						this.selectedtab22 = this.searchOpt.selectedtab22;
+						this.selectedtab3_wage = this.searchOpt.selectedtab3_wage;
+						this.selectedtab3_wlb = this.searchOpt.selectedtab3_wlb;
+						this.selectedtab3_social = this.searchOpt.selectedtab3_social;
+						this.selectedtab4 = this.searchOpt.selectedtab4;
+						this.type = this.searchOpt.type;
+					}
+				}else {
+					localStorage.clear();
+				}
+			},
+            mounted() {
+				if(urlParams["mode"])this.mode = urlParams["mode"];
+                if(isCookie('cookieJobListRank','true')) {
+                    this.isShowRank = false;
+                }
+
+                axios.get('/api/job/tab1s').then((res) => {
+                    app.tab1s = res.data;
+                });
+                axios.get('/api/job/tab2s').then((res) => {
+                    app.tab2s = res.data;
+                });
+                axios.get('/api/job/tab22s').then((res) => {
+                    app.tab22s = res.data;
+                });
+                axios.get('/api/job/tab2group').then((res) => {
+                    app.tab2group = res.data;
+                });
+				axios.get('/api/job/tab4s').then((res) => {
+					app.tab4s = res.data;
+				});
+
+                axios.get('/api/ranking/board?menu=112503').then(function (res){
+                    app.rank = res.data;
+                    app.rank.mode='total';
+                });
+				this.doSearch();
+            },
+        }).mount("#wrap");
+		if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+            window.location = "/cloud/m/job/list";
+        }
+        /*]]>*/
+	</script>
+</body>
+</html>

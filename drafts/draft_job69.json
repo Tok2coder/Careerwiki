@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "way": "건설자재시험원이 되려면 건축공학, 토목공학, 재료공학 관련 학과를 졸업한 후 건설재료시험기능사·산업기사·기사 등 국가기술자격증을 취득하는 것이 일반적이다. 한국건설기술연구원, 한국도로공사, 지방자치단체 건설 부서, 민간 건설사 품질관리팀, 품질검사전문기관 등에 취업하여 실무 경력을 쌓는다.[1] 경력을 쌓은 후 건설재료시험기술사로 성장하거나 독립 시험소를 창업하는 경우도 있다.[2]",
+    "overviewSalary": {
+      "sal": "직업백과 2017년 기준 하위 25%는 약 3,056만 원, 중위(평균)는 약 3,696만 원, 상위 25%는 약 4,740만 원 수준이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 건설자재시험원의 고용은 현 상태를 유지할 것으로 전망된다. 도로·철도·항만 등 신규 공공건설 투자 위축과 신도시 개발 감소가 고용 감소 요인으로 작용할 것으로 보인다. 반면 건축물 품질과 안전에 대한 인식이 높아지고 관련 규제가 강화되면서 고품질 건축물 수요가 증가하고 있으며, 중급 기술 이상의 숙련된 시험원을 중심으로 인력 수요가 증가할 것으로 전망된다.[1]"
+    },
+    "trivia": "건설자재시험원이 수행하는 콘크리트 압축강도 시험은 재령 28일 후 실시하는 것이 KS F 2405에서 규정하는 표준 방식으로, 28일은 콘크리트가 설계 기준강도에 도달하기 위한 공식적 양생 기간이다. 현장에서 품질시험 결과가 기준 미달일 경우 철거 또는 재시공 명령으로 이어지기도 하여, 건설자재시험원의 판정이 현장 공사 진행 여부를 결정하는 핵심 관문이 된다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통 이상",
+      "wlbDetail": "실험실 근무와 현장 시료 채취 업무가 병행되며, 공사 일정에 따라 주말이나 야간 현장 방문이 필요한 경우가 있다. 시험 보고서 작성과 데이터 관리 업무가 많아 사무직과 현장직의 중간 성격을 가진다.[1]",
+      "socialDetail": "건설자재의 품질을 검증하여 건축물의 안전성을 보장하는 역할로, 건물 붕괴나 구조물 손상을 예방하는 중요한 공공 안전 기능을 수행한다. 국가 인프라 건설의 품질 관리를 담당하므로 사회적 책임감이 높은 직종이다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "건축공학과 또는 토목공학과에서 재료역학, 콘크리트공학, 구조역학 수강",
+        "건설재료시험기사 자격증 필기·실기 준비 및 취득",
+        "품질관리기사 또는 토목기사 자격증 병행 취득",
+        "KS 규격 및 ASTM 시험 방법 학습",
+        "건설기술인협회 품질분야 경력 신고로 초급 기술인 등록[1]"
+      ],
+      "recruit": [
+        {"text": "한국건설기술연구원, 한국도로공사 등 공공기관 채용 공고 지원", "url": "https://www.kict.re.kr/menu.es?mid=a10201010000"},
+        {"text": "민간 건설사 품질관리팀 또는 전문 건설시험기관 채용 지원", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"},
+        "건설품질시험 전문업체 취업 후 경력 개발[1]"
+      ],
+      "training": [
+        "건설재료시험기술사 취득으로 전문가 경력 개발",
+        "건설기술교육원(COTI) 품질관리 전문교육 이수[1]"
+      ]
+    },
+    "sidebarMajors": ["건축공학과", "토목공학과", "건축학과", "재료공학과"],
+    "sidebarCerts": [
+      {"name": "건설재료시험기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1750"},
+      {"name": "콘크리트기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1760"},
+      {"name": "품질관리기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1640"},
+      {"name": "토목기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1040"},
+      {"name": "건설재료시험기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00501&jmCd=1320"}
+    ],
+    "sidebarOrgs": [
+      {"name": "한국건설기술연구원(KICT)", "url": "https://www.kict.re.kr"},
+      {"name": "건설품질관리종합정보시스템", "url": "https://gcloud.csi.go.kr/cmq/main.do"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 직업백과 건설자재시험원", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B1%B4%EC%84%A4%EC%9E%90%EC%9E%AC%EC%8B%9C%ED%97%98%EC%9B%90/"},
+      {"id": 2, "text": "[2] 큐넷 건설재료시험기사 자격정보", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1750"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 직업백과 건설자재시험원", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B1%B4%EC%84%A4%EC%9E%90%EC%9E%AC%EC%8B%9C%ED%97%98%EC%9B%90/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 직업백과 건설자재시험원 직업전망", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B1%B4%EC%84%A4%EC%9E%90%EC%9E%AC%EC%8B%9C%ED%97%98%EC%9B%90/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] KS F 2405 콘크리트 압축강도 시험방법(국가표준인증)", "url": "https://www.kssn.net/search/stddetail.do?itemNo=K001010141709"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 직업백과 건설자재시험원", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B1%B4%EC%84%A4%EC%9E%90%EC%9E%AC%EC%8B%9C%ED%97%98%EC%9B%90/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 건설품질관리종합정보시스템", "url": "https://gcloud.csi.go.kr/cmq/main.do"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 큐넷 건설재료시험기사 자격정보", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1750"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 고용24 워크넷 채용정보", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 건설기술교육원(COTI) 교육과정", "url": "https://www.coti.or.kr/"}
+    ]
+  },
+  "changeSummary": "Phase 0-D→1: sal 서술형 교체(2017년 기준 명시), trivia 재작성(KS F 2405 기반), way/wlb/social/detailReady sources 직접URL로 교체, sidebarMajors DB 미존재 항목 제거, sidebarOrgs 추가"
+}

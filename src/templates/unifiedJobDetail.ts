@@ -27,6 +27,7 @@ import {
   renderYouTubeSection,
   renderCareerTreeSection
 } from './detailTemplateUtils'
+import type { FootnoteMap } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
 
@@ -160,40 +161,54 @@ const renderDutyListItems = (items: string[]): string => {
       (sentence) => `
         <li class="flex items-start gap-2 text-base leading-relaxed text-wiki-text" data-job-duty-item>
           <span class="text-wiki-primary mt-0.5 text-xs font-semibold">▶</span>
-          <span>${escapeHtml(sentence)}</span>
+          <span>${sentence}</span>
         </li>
       `
     )
     .join('')
 }
 
-const renderDutyBulletList = (value?: string | null): string => {
-  if (!value || !safeTrim(value)) {
-    return formatRichText(value)
-  }
+const stripDutyListPrefix = (value: string): string => {
+  return safeTrim(value).replace(/^(?:[-*•]+|\d+[.)])\s+/, '')
+}
 
+const splitDutySentences = (value: string): string[] => {
   const normalizedValue = value.replace(/\\n/g, '\n').replace(/\r/g, '\n')
   let sentences = normalizedValue
     .split(/\n+/)
-    .map((line) => safeTrim(line).replace(/^[\d\-\.\)\(]+\s*/, ''))
+    .map(stripDutyListPrefix)
     .filter(Boolean)
 
   if (sentences.length <= 1) {
     const sentenceSplit = normalizedValue
-      .replace(/([.!?])\s+(?=[^\s])/g, '$1|')
+      .replace(/([.!?](?:\[\d+\])*)\s+(?=[^\s])/g, '$1|')
       .split('|')
-      .map((line) => safeTrim(line).replace(/^[\d\-\.\)\(]+\s*/, ''))
+      .map(stripDutyListPrefix)
       .filter(Boolean)
     if (sentenceSplit.length > sentences.length) {
       sentences = sentenceSplit
     }
   }
 
+  return sentences
+}
+
+const renderDutyBulletList = (
+  value?: string | null,
+  footnoteMap?: FootnoteMap,
+  sourceTextMap?: Record<number, string>
+): string => {
+  if (!value || !safeTrim(value)) {
+    return formatRichText(value)
+  }
+
+  const sentences = splitDutySentences(value)
+
   if (!sentences.length) {
     return formatRichText(value)
   }
 
-  return `<ul class="space-y-2" data-job-duty-list>${renderDutyListItems(sentences)}</ul>`
+  return `<ul class="space-y-2" data-job-duty-list>${renderDutyListItems(sentences.map((sentence) => applyInlineFootnotes(sentence, 'overviewWork.main', footnoteMap, sourceTextMap)))}</ul>`
 }
 
 const resolveAbilityLabel = (item: any): string => {
@@ -3617,7 +3632,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     if (workMainDesc) {
       let workMainContent = ''
       if (typeof workMainDesc === 'string' && safeTrim(workMainDesc)) {
-        workMainContent = renderDutyBulletList(workMainDesc)
+        workMainContent = renderDutyBulletList(workMainDesc, footnoteMap, sourceTextMap)
       } else if (Array.isArray(workMainDesc) && workMainDesc.length > 0) {
         // 배열인 경우 불릿 리스트로 렌더링
         const validItems = workMainDesc.filter((item: any) => typeof item === 'string' && safeTrim(item))
@@ -3625,7 +3640,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           workMainContent = `<ul class="space-y-2">${validItems.map((item: string) => 
             `<li class="flex items-start gap-2 text-base text-wiki-text">
               <span class="text-wiki-secondary mt-1">▶</span>
-              <span>${escapeHtml(safeTrim(item))}</span>
+              <span>${applyInlineFootnotes(safeTrim(item), 'overviewWork.main', footnoteMap, sourceTextMap)}</span>
             </li>`
           ).join('')}</ul>`
         }
@@ -5170,10 +5185,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           'summary': ['직업 설명', '.hero-description', '[data-field="summary"]'],
           'heroCategory': ['직업 분류', '.hero-category', '[data-field="heroCategory"]'],
           'heroTags': ['태그', '.hero-tags', '[data-field="heroTags"]'],
-          'overviewWork.main': ['수행 직무', 'h4:contains("수행 직무")', '[data-field="overviewWork.main"]'],
           'overviewWork.workStrong': ['작업강도', ':contains("작업강도")', '[data-field="overviewWork.workStrong"]'],
           'overviewAbilities.abilityList': ['핵심 역량', 'h4:contains("핵심 역량")', '[data-field="overviewAbilities.abilityList"]'],
           'trivia': ['여담', 'h3:contains("여담")', '[data-field="trivia"]'],
+          // overviewWork.main은 문장 끝 인라인 각주를 사용하므로 heading badge를 붙이지 않음
           // detailReady.curriculum/recruit/training은 applyInlineFootnotes로 항목 텍스트에 인라인 렌더링
           // → heading badge 불필요 (등록 시 헤딩에 붙는 버그 방지)
           'detailReady.researchList': ['진로 탐색 활동', 'h3:contains("진로 탐색 활동")', '[data-field="detailReady.researchList"]'],

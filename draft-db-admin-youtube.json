@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=aMPS4DOLdkQ",
+        "title": "열정 가득한 신입 DBA의 하루 ❤‍🔥🐣  | LINE DEV Vlog"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=frjPP8pUGMI",
+        "title": "DA(데이터 애널리스트)와 DBA(데이터베이스 관리자)의 차이점"
+      }
+    ]
+  },
+  "sources": {},
+  "changeSummary": "youtubeLinks 영어 영상 2개 → 한국어 영상 2개로 교체 (LINE DBA 현직자 브이로그, DA vs DBA 차이점)"
+}

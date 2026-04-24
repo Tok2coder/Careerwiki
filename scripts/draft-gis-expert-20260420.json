@@ -1,0 +1,152 @@
+{
+  "jobId": "1765283405826185",
+  "jobName": "GIS전문가",
+  "fields": {
+    "way": "GIS전문가는 보통 지리학·공간정보공학·지적학 계열에서 공간 분석, 측량, 데이터베이스, 원격탐사 기초를 익힌 뒤 QGIS·ArcGIS 같은 도구와 SQL·파이썬 기반 데이터 처리 역량을 쌓아 진입한다.[1] 최근에는 LX공간정보아카데미 같은 실무 중심 교육에서 오픈소스 GIS, 지도 API, AI·빅데이터, 드론 영상 처리까지 함께 익히며 공공기관·공간정보 기업·스마트시티 분야로 연결되는 경로가 강화되고 있다.[2] 공간정보 특성화 학과와 현장형 프로젝트 경험은 공공 인프라와 디지털 트윈 사업으로 이어지는 취업 경쟁력을 높여 준다.[3]",
+    "overviewAbilities": {
+      "technKnow": "GIS전문가는 좌표계와 공간데이터 구조, 공간데이터베이스, 원격탐사, 지도 API, QGIS·ArcGIS 운용 지식을 이해해야 한다.[1] 최근 현장에서는 오픈소스 GIS, SQL·웹 구현, 응용 애플리케이션 개발, AI·빅데이터 기반 공간정보 처리까지 함께 요구하는 흐름이 뚜렷하다.[2]"
+    },
+    "detailWlb": {
+      "wlbDetail": "GIS전문가는 공간데이터를 수집·정제하고 현장 확인과 분석 결과를 반복해야 해 마감기에는 업무 밀도가 높아질 수 있다.[1] 다만 영업 중심 직무보다 분석과 시스템 구축 비중이 크고 공공·연구·엔지니어링 조직에서는 비교적 계획된 일정 안에서 일하는 편이라 일가정 균형은 보통 수준으로 볼 수 있다.[2]",
+      "socialDetail": "공간정보는 디지털 트윈국토, 안전 국토관리, 스마트시티, 교통·환경 분석처럼 공공 의사결정의 기반이 되기 때문에 GIS전문가의 사회적 기여도는 꾸준히 높아지고 있다.[1] 지도와 위치 데이터를 활용해 재난 대응, 국토 관리, 산업 분석의 정확도를 높인다는 점에서 공익성과 확장성이 크다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "지리학·공간정보공학·지적학 계열에서 공간 분석과 측량, 데이터베이스 기초를 익히는 편이다.[1]",
+        "공간정보 특성화 학과나 현장형 실습에서 GIS 소프트웨어와 데이터 처리 경험을 쌓을 수 있다.[2]",
+        "LX 공간정보아카데미 같은 과정에서 오픈소스 GIS, 웹 구현, 지도 API를 함께 훈련할 수 있다.[3]"
+      ],
+      "recruit": [
+        "공공기관과 공간정보 기업은 공간정보 실무 교육과 프로젝트 경험을 갖춘 인력을 선호한다.[1]",
+        "스마트시티, 디지털트윈, 공간데이터 구축 사업과 연결된 민간·공공 수요가 이어지고 있다.[2]",
+        "지적·측량·공간정보 관련 자격과 데이터 처리 역량을 함께 준비하면 입직에 유리하다.[3]"
+      ],
+      "training": [
+        "오픈소스 GIS, 공간데이터 분석, 지도 API 실습은 현장 적응력을 높이는 핵심 훈련이다.[1]",
+        "AI·빅데이터·드론 영상 처리 같은 최신 공간정보 교육이 확대되고 있다.[2]",
+        "공간정보 정책과 디지털트윈 사업 흐름을 함께 이해하면 공공 프로젝트 대응력이 높아진다.[3]"
+      ],
+      "certificate": null
+    },
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=GoGA69PN_7U",
+        "title": "단, 20분에 끝내는 지리정보시스템 (GIS) 개념 총 정리!!"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=z0rs5i-w5ok",
+        "title": "GoUN GIS 부트캠프 1주차 영상! QGIS 설치부터 지도 제작까지"
+      }
+    ],
+    "_careerTreeNote": "탐색 카테고리: 공공·정부(LX한국국토정보공사, 국토교통부 공간정보정책, 국토지리정보원), 학계·연구(공간정보공학·지리학 연구자), 대기업·플랫폼(지도·모빌리티·스마트시티 서비스), 스타트업·CxO(드론·디지털트윈 기업), 컨설팅(공간정보 SI·엔지니어링). 'GIS전문가'에 직접 대응하는 한국인 공인 인물의 단계형 공식 경력을 출처 2개 이상으로 안정적으로 재구성하기 어려워 적합 인물 없음 (2026-04-20)."
+  },
+  "careerTree": null,
+  "_careerTreeNote": "탐색 카테고리: 공공·정부(LX한국국토정보공사, 국토교통부 공간정보정책, 국토지리정보원), 학계·연구(공간정보공학·지리학 연구자), 대기업·플랫폼(지도·모빌리티·스마트시티 서비스), 스타트업·CxO(드론·디지털트윈 기업), 컨설팅(공간정보 SI·엔지니어링). 'GIS전문가'에 직접 대응하는 한국인 공인 인물의 단계형 공식 경력을 출처 2개 이상으로 안정적으로 재구성하기 어려워 적합 인물 없음 (2026-04-20).",
+  "changeSummary": "[job-data-enhance] GIS전문가 full enhance 1차",
+  "sources": {
+    "way": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — GIS전문가 직업백과",
+        "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=1092"
+      },
+      {
+        "id": 2,
+        "text": "[2] LX 공간정보아카데미",
+        "url": "https://lxsiedu.or.kr/"
+      },
+      {
+        "id": 3,
+        "text": "[3] 인하공업전문대학 — 공간정보빅데이터학부 학과소개",
+        "url": "https://gisup.inhatc.ac.kr/gisup/2315/subview.do"
+      }
+    ],
+    "overviewAbilities.technKnow": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — GIS전문가 직업백과",
+        "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=1092"
+      },
+      {
+        "id": 2,
+        "text": "[2] LX 공간정보아카데미",
+        "url": "https://lxsiedu.or.kr/"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — GIS전문가 직업백과",
+        "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=1092"
+      },
+      {
+        "id": 2,
+        "text": "[2] 인하공업전문대학 — 공간정보빅데이터학부 학과소개",
+        "url": "https://gisup.inhatc.ac.kr/gisup/2315/subview.do"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "id": 1,
+        "text": "[1] 국가전략포털 — 2025년도 국가공간정보정책 시행계획",
+        "url": "https://nsp.nanet.go.kr/plan/subject/detail.do?nationalPlanControlNo=PLAN0000054852"
+      },
+      {
+        "id": 2,
+        "text": "[2] 커리어넷 — GIS전문가 직업백과",
+        "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=1092"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 — GIS전문가 직업백과",
+        "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=1092"
+      },
+      {
+        "id": 2,
+        "text": "[2] 인하공업전문대학 — 공간정보빅데이터학부 학과소개",
+        "url": "https://gisup.inhatc.ac.kr/gisup/2315/subview.do"
+      },
+      {
+        "id": 3,
+        "text": "[3] LX 공간정보아카데미",
+        "url": "https://lxsiedu.or.kr/"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "id": 1,
+        "text": "[1] LX 공간정보아카데미",
+        "url": "https://lxsiedu.or.kr/"
+      },
+      {
+        "id": 2,
+        "text": "[2] 국가전략포털 — 2025년도 국가공간정보정책 시행계획",
+        "url": "https://nsp.nanet.go.kr/plan/subject/detail.do?nationalPlanControlNo=PLAN0000054852"
+      },
+      {
+        "id": 3,
+        "text": "[3] 커리어넷 — GIS전문가 직업백과",
+        "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=1092"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "id": 1,
+        "text": "[1] LX 공간정보아카데미",
+        "url": "https://lxsiedu.or.kr/"
+      },
+      {
+        "id": 2,
+        "text": "[2] 국가전략포털 — 2025년도 국가공간정보정책 시행계획",
+        "url": "https://nsp.nanet.go.kr/plan/subject/detail.do?nationalPlanControlNo=PLAN0000054852"
+      },
+      {
+        "id": 3,
+        "text": "[3] 대한공간정보학회",
+        "url": "https://ksgis.or.kr/"
+      }
+    ]
+  }
+}

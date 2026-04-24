@@ -1,0 +1,48 @@
+{
+  "jobName": "건축목공",
+  "jobId": "1765283494731969",
+  "fields": {
+    "way": "건축목공이 되는 가장 일반적인 경로는 직업훈련원(한국폴리텍대학, 건설기술교육원 등)에서 목공 기초 과정을 이수한 후 현장에서 견습 조공으로 실무를 시작하는 것이다.[1] 건축목공기능사, 거푸집기능사 등의 국가기술자격증을 취득하면 현장 취업과 임금 협상에 유리하다.[2] 경력을 쌓은 후 현장 반장·소장으로 승진하거나 목공 전문 업체를 창업하는 경로도 있으며, 인테리어·실내 목공 분야로 전직하는 사례도 많다.",
+    "overviewSalary": {
+      "sal": "2024년 기준 일당 약 20~28만 원이다.[1] 일당 기준이며 숙련도와 공종(거푸집·마감·구조목공)에 따라 편차가 있다."
+    },
+    "overviewProspect": {
+      "main": "건축목공 고용은 향후 5년간 현 수준을 유지하거나 소폭 감소할 것으로 전망된다.[1] 신규 주택 건설 경기 변동에 민감하나, 노후 건축물 리모델링 수요와 목구조 건축물 관심 증가로 일부 전문 분야에서 수요가 유지될 것이다.[2]"
+    },
+    "trivia": "거푸집(폼) 목공은 콘크리트를 붓기 위한 틀을 짜는 작업으로, 콘크리트 구조물 품질의 핵심이 되는 숙련 기술 분야다. 한식 목공은 쐐기와 장부 등 전통 이음새 방식을 사용하여 못을 최소화하는 전통 건축 기법으로, 궁궐이나 사찰 수리 복원에 쓰인다. 현대 건축 목공에서는 조립식 유로폼(유럽식 철제 거푸집)과 알루미늄폼 사용이 늘어나 전통 목재 거푸집 사용은 줄어드는 추세다. 목공 기능 올림픽(WorldSkills) 종목에서 한국 선수들은 다수의 메달을 획득한 강세 종목이다.[1]",
+    "sidebarCerts": [
+      {"name": "건축목공기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=4215&gSite=Q&gId="},
+      {"name": "거푸집기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5110&gSite=Q&gId="},
+      {"name": "건축기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=5110&gSite=Q&gId="}
+    ],
+    "detailReady": {
+      "recruit": [
+        "한국폴리텍대학 목공·건설 관련 학과 졸업 후 취업 연계",
+        "건설현장 인력사무소·건설 전문 인력소개소를 통한 현장 일용직 입직",
+        "건설워커 등 건설 전문 구인구직 사이트를 통한 목공 기능공 채용[1]",
+        "인테리어 시공 전문업체·가구 제조업체 목공 기술직 직접 채용[2]"
+      ]
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=78"},
+      {"id": 2, "text": "한국산업인력공단 Q-net", "url": "https://www.q-net.or.kr"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "워크넷 임금정보", "url": "https://www.work24.go.kr/cm/f/cvl/retrieveOccpDtl.do?SEQ=CC2040010"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업전망", "url": "https://www.career.go.kr/cloud/w/job/view?seq=78"},
+      {"id": 2, "text": "한국건설산업연구원", "url": "https://www.cerik.re.kr"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "한국산업인력공단 Q-net", "url": "https://www.q-net.or.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "건설워커 채용정보", "url": "https://www.worker.co.kr"},
+      {"id": 2, "text": "잡코리아 채용정보", "url": "https://www.jobkorea.co.kr"}
+    ]
+  },
+  "changeSummary": "sources ID 필드별 1부터 재설정, 동적 검색결과 URL을 정적 포털 URL로 교체, way/trivia/prospect/sal에 [N] 마커 추가, sal 일당 기준 명확화 및 연도 추가, detailReady.recruit sources 등록, sidebarCerts 업데이트"
+}

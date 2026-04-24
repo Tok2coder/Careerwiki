@@ -568,16 +568,47 @@ async function runJob(job) {
     if (!imageResult) {
       throw new Error('ComfyUI image generation returned no image (cold-start failed or LoRA missing)');
     }
+    // ComfyUI의 SaveImage 노드는 항상 PNG를 반환한다.
+    // CareerWiki 표준은 WebP (CLAUDE.md: R2 이미지 키는 job-{slug}.webp).
+    // 여기서 sharp로 WebP 변환 후 클라에 전송 — 서버측 /api/admin/image/save는
+    // mimeType=image/webp를 받아 R2에 .webp로 저장한다.
+    //
+    // ⚠ PNG 폴백 금지: sharp가 실패하면 job 자체를 실패 처리한다.
+    //    (과거 폴백으로 PNG를 그대로 올린 탓에 R2에 orphan .png 1.6GB가 누적됐음.
+    //     2026-04-16 일괄 삭제 완료. 재발 방지 차원에서 WebP 외엔 업로드하지 않음.)
+    let finalBuffer = imageResult.buffer;
+    let finalMime = 'image/webp';
     const isPng = imageResult.buffer[0] === 0x89 && imageResult.buffer[1] === 0x50;
-    const mimeType = isPng ? 'image/png' : 'image/webp';
+    if (isPng) {
+      updateJob(job.id, { progress: 'WebP 변환 중' });
+      try {
+        const sharp = require('sharp');
+        finalBuffer = await sharp(imageResult.buffer)
+          .webp({ quality: 85, effort: 4 })
+          .toBuffer();
+      } catch (err) {
+        // sharp 미설치/실패 → job 실패. PNG 원본 업로드 금지 (orphan 방지).
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error('[CW-BRIDGE] sharp WebP 변환 실패 → job FAIL:', msg);
+        throw new Error(`sharp WebP 변환 실패 (PNG 업로드 차단): ${msg}`);
+      }
+    } else {
+      // ComfyUI SaveImage는 PNG만 내보내므로 여기 도달하면 이상 상황.
+      // 매직 넘버로 WebP인지만 확인하고, 아니면 실패 처리.
+      const isWebp = imageResult.buffer.slice(0, 4).toString() === 'RIFF'
+        && imageResult.buffer.slice(8, 12).toString() === 'WEBP';
+      if (!isWebp) {
+        throw new Error('ComfyUI 출력이 PNG도 WebP도 아님 — 업로드 거부');
+      }
+    }
     const settings = loadWorkflowSettings();
     updateJob(job.id, {
       status: 'done',
       progress: '완료',
       result: {
         success: true,
-        imageBase64: imageResult.buffer.toString('base64'),
-        mimeType,
+        imageBase64: finalBuffer.toString('base64'),
+        mimeType: finalMime,
         prompt: promptResult.prompt,
         source: { prompt: promptResult.source, image: imageResult.source },
         loraApplied: useLora,

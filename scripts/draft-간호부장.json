@@ -1,0 +1,86 @@
+{
+  "jobName": "간호부장",
+  "jobId": "1765283562294120",
+  "fields": {
+    "way": "간호부장이 되려면 먼저 4년제 간호학과 또는 3년제 간호과를 졸업하고 한국보건의료인국가시험원 주관 간호사 국가면허시험에 합격해야 한다.[1] 면허를 취득한 뒤 종합병원·대형병원에 일반 간호사로 입사하여 임상 경력을 쌓는다. 수간호사로 승진한 뒤 병원 내 인사 심사와 역량 평가를 거쳐 간호부서 전반을 지휘하는 간호부장으로 임명되며, 채용 시에는 초대졸 이상의 학력과 폭넓은 간호 경력을 갖춘 자를 우선 선발한다.[2]",
+    "overviewProspect": {
+      "main": "2025년 기준 국내 활동 간호사는 29만 8,554명으로 인구 1,000명당 5.8명 수준이며, 의료인력 확충 수요가 지속되고 있다.[1] 2024년부터 간호관리료 차등제 기준이 환자당 간호사 비율 방식으로 강화되는 등 의료기관의 간호인력 관리 중요성이 높아지고 있어, 전문 관리 역량을 갖춘 간호부장의 역할도 더욱 주목받고 있다.[2]"
+    },
+    "trivia": "한국 병원은 간호관리료 차등제에 따라 간호사 1인이 담당하는 환자 수 비율로 등급이 결정되며, 2024년부터 기준이 '병상당 간호사 수'에서 '환자 대비 간호사 비율(PpN)'로 전환됐다 — 간호부장의 인력 배치 결정이 병원 수가(의료비 청구액) 수준과 직결되는 구조다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "간호부장은 일반 간호사의 3교대 근무와 달리 주로 주간 행정 업무를 담당하지만, 병원 내 인력 위기나 돌발 상황 발생 시 야간·주말에도 대응이 필요하다. 수백 명의 간호 인력과 다수 부서를 총괄하는 특성상 정해진 근무 시간 외에도 조율 업무가 이어지는 경우가 많다.[1]",
+      "socialDetail": "간호부장은 병원 전체의 간호 서비스 품질과 환자 안전을 총괄하여 의료의 질 향상에 기여하며, 간호학생 임상 교육 감독과 지역사회 의료봉사 기획을 통해 공공 의료 수준 향상에도 이바지한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "4년제 간호학과 또는 3년제 간호과를 졸업하고 간호사 국가면허시험에 응시·합격한다[1]",
+        "성인·아동·정신·지역사회·노인 간호학 임상실습을 이수하며 병원 현장 실무 경험을 쌓는다[2]",
+        "간호관리학 및 간호관리학실습 교과목을 이수하여 부서 운영과 인력 관리 기초 역량을 기른다[3]",
+        "임상 간호사로 10년 이상 경력을 쌓은 뒤 수간호사를 거쳐 간호부장 자리에 지원한다[4]",
+        "노인·중환자·감염관리 등 전문간호사 자격을 취득하거나 간호관리자 연수를 이수하면 관리직 진출에 유리하다[5]"
+      ],
+      "recruit": [
+        "잡코리아·사람인 등 취업포털에서 요양병원·종합병원의 간호부장 채용공고를 확인하고 지원한다[1]",
+        "병원간호사회 등 간호 전문 단체 공지를 통해 간호부장 직위 채용 정보를 확인하고 지원한다[2]",
+        "한국간호과학회·간호행정학회 세미나 참가를 통해 병원 간호관리자 네트워크를 구축하고 취업 기회를 모색한다[3]"
+      ],
+      "training": [
+        "병원간호사회 주관 간호관리자 교육 프로그램에 참여하여 간호부장 직무 역량을 강화한다[1]",
+        "한국간호과학회·간호행정학회 주관 세미나·연수에 참가하여 간호행정 전문 지식을 심화한다[2]"
+      ]
+    },
+    "sidebarMajors": ["간호학과", "간호과", "보건관리학과", "보건행정학과", "의료경영학과"],
+    "sidebarOrgs": [
+      {"name": "병원간호사회", "url": "https://khna.or.kr/"},
+      {"name": "한국간호과학회", "url": "https://www.kan.or.kr"}
+    ],
+    "sidebarCerts": [
+      {"name": "간호사", "url": "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0731"},
+      {"name": "전문간호사", "url": "https://exam.koreanursing.or.kr/www/front/exam/info.do"},
+      {"name": "보건교육사", "url": "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7023"}
+    ],
+    "heroTags": ["간호부장", "병원", "간호관리자", "수간호사", "CNO", "간호팀장", "병원간호"],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "'간호부장 현직자인터뷰', '간호부장 진로탐색', '수간호사 직무실무', '간호관리자 인터뷰', '간호부장 하루일과', 'KEIS 간호부장 진로', '간호관리자 교육' 탐색 (2026-04-17). 카테고리 커버: 현직자·인터뷰, 직무·실무, 강의·교육, 진로·면접. 한국어 영상 없음.",
+    "careerTree": null,
+    "_careerTreeNote": "조사 인물 5명: 김모임(연세대 간호대학장·대한간호협회장·복지부장관 역임, 병원 간호부장 직책 명확한 출처 없음), 김화중(서울대병원 간호사→교수→협회장→복지부장관, 간호부장 직접 역임 미확인), 이효정(국립마산결핵요양원 간호원장 역임이나 2000년 이전 활동으로 선정 기준 미달), 이수진(간호사→노조위원장→국회의원, 간호관리자 경력 없음), 구성애(간호학과 졸업→성교육 활동가, 간호관리자 경력 없음). 간호부장은 병원 내부 행정 관리직으로 공인으로 알려지기 어려운 구조. 적합한 한국인 공인 없음."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/subcnt/c_2005/1/view.do?seq=7&itm_seq=05"},
+      {"id": 2, "text": "[2] 잡코리아 간호부장 채용공고", "url": "https://www.jobkorea.co.kr/Recruit/GI_Read/5351263/Ext?siteCode=WN"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 건강보험심사평가원 임상간호인력 현황", "url": "https://opendata.hira.or.kr/op/opc/olapCliNhstPrsntInfmTab1.do?docNo=11-001"},
+      {"id": 2, "text": "[2] 건강보험심사평가원 간호관리료 차등제", "url": "https://www.hira.or.kr/bbsDummy.do?pgmid=HIRAA020002000100&brdScnBltNo=4&brdBltNo=11701"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 건강보험심사평가원", "url": "https://www.hira.or.kr/bbsDummy.do?pgmid=HIRAA020002000100&brdScnBltNo=4&brdBltNo=11701"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 병원간호사회", "url": "https://khna.or.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국간호과학회", "url": "https://www.kan.or.kr"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/subcnt/c_2005/1/view.do?seq=7&itm_seq=05"},
+      {"id": 2, "text": "[2] 서울대학교 간호대학", "url": "https://nursing.snu.ac.kr/education/undergraduate/curriculum"},
+      {"id": 3, "text": "[3] 병원간호사회", "url": "https://khna.or.kr/"},
+      {"id": 4, "text": "[4] 잡코리아 간호부장 채용공고", "url": "https://www.jobkorea.co.kr/Recruit/GI_Read/5351263/Ext?siteCode=WN"},
+      {"id": 5, "text": "[5] 전문간호사 자격시험", "url": "https://exam.koreanursing.or.kr/www/front/exam/info.do"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 잡코리아 간호부장 채용공고", "url": "https://www.jobkorea.co.kr/Recruit/GI_Read/5351263/Ext?siteCode=WN"},
+      {"id": 2, "text": "[2] 병원간호사회", "url": "https://khna.or.kr/"},
+      {"id": 3, "text": "[3] 한국간호과학회", "url": "https://www.kan.or.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 병원간호사회", "url": "https://khna.or.kr/"},
+      {"id": 2, "text": "[2] 한국간호과학회", "url": "https://www.kan.or.kr"}
+    ]
+  },
+  "changeSummary": "간호부장 way·prospect·trivia·detailWlb·detailReady·sidebarMajors·sidebarOrgs·sidebarCerts·heroTags 보완 (신규 Phase 1)"
+}

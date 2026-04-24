@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "detailReady": {
+      "curriculum": [
+        "약학대학 통합 6년제 직접 입학 또는 PEET(약학대학입문자격시험) 합격 후 2+4 편입 경로 선택 — 선수과목(일반화학·생물학·유기화학 등) 이수 필수[1]",
+        "약사 국가면허시험(필기·실기) 준비 — 한국보건의료인국가시험원 시험일정 및 응시자격 확인[2]",
+        "병원 약국·지역 약국 실습(1,200시간 이상) 이수 — 임상 약학 및 복약 지도 실무 경험 확보[3]",
+        "면허 취득 후 전문약사 자격 취득 도전 — 한국병원약사회 전문약사 자격시험 응시 (종양·감염·심혈관 등 분야)[4]",
+        "대한약사회 연수교육 이수 — 면허신고 요건 충족 및 최신 약학 지식·법령 변화 대응[5]"
+      ],
+      "recruit": [
+        "대학병원·종합병원 약제팀 신입 약사 채용 — 각 병원 공식 채용 페이지에서 공고 확인 후 지원[1]",
+        "대형 약국 프랜차이즈(올리브영 드럭스토어 등) 및 지역 약국 약사 채용 — 대한약사회 채용정보 활용[2]",
+        "제약회사(유한양행·동아쏘시오그룹 등) 약무팀·의학부 약사직 지원 — 각 회사 공식 채용 페이지 확인[3]"
+      ],
+      "training": [
+        "약사 국가면허 취득 — 한국보건의료인국가시험원 시험일정·응시자격 확인[1]",
+        "임상약사 전문화 교육(한국임상약학회) — 항암·감염·심혈관 분야 약물 치료 전문성 강화[2]",
+        "약국 개설 목표 시 의약품 도매·관리 교육 및 약국 경영 실무 학습[3]"
+      ],
+      "researchList": null,
+      "certificate": null
+    },
+    "sidebarOrgs": [
+      {"name": "대한약사회", "url": "https://www.kpanet.or.kr"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"},
+      {"name": "보건복지부", "url": "https://www.mohw.go.kr"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=KS1xeLtLga0", "title": "약사, 좋은 직업인가요? 약사를 만나봤다 1편ㅣ직업의 모든 것, 슬기로운직업생활"},
+      {"url": "https://www.youtube.com/watch?v=SPAWigcOmYI", "title": "\"그래서 손님은 언제 오시죠..?\" 20대에 압구정에 약국을 여신 중앙대 출신 '구름약사'님 | 직업탐구 영역 ep.3"}
+    ]
+  },
+  "sources": {
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 약사 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원 약사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2009/1/view.do?seq=7"},
+      {"id": 3, "text": "[3] 커리어넷 약학부 학과정보", "url": "https://www.career.go.kr/cloud/w/major/uView?seq=341"},
+      {"id": 4, "text": "[4] 한국병원약사회 전문약사 자격시험", "url": "https://exam.kshp.or.kr/main.asp"},
+      {"id": 5, "text": "[5] 대한약사회 연수교육", "url": "https://www.kpanet.or.kr/eduSchedule.cm?menuCd=1002300000"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 서울아산병원 채용", "url": "https://www.amc.seoul.kr/asan/join/recruitInfo.do"},
+      {"id": 2, "text": "[2] 대한약사회 채용정보", "url": "https://svc.kpanews.co.kr/pharmple_re/job_offer.asp"},
+      {"id": 3, "text": "[3] 동아쏘시오그룹 채용", "url": "https://talent.dongasocio.com/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국보건의료인국가시험원 약사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2009/1/view.do?seq=7"},
+      {"id": 2, "text": "[2] 한국병원약사회 전문약사 자격시험", "url": "https://exam.kshp.or.kr/main.asp"},
+      {"id": 3, "text": "[3] 대한약사회 연수교육", "url": "https://www.kpanet.or.kr/eduSchedule.cm?menuCd=1002300000"}
+    ]
+  },
+  "changeSummary": "약사 detailReady 보강: curriculum 5개+각주, recruit·training 각주 추가, sidebarOrgs 추가, youtubeLinks title 수정"
+}

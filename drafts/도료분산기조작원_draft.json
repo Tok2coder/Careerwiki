@@ -1,0 +1,90 @@
+{
+  "fields": {
+    "way": "도료분산기조작원은 특별한 학력 제한 없이 고등학교 졸업 이상이면 지원 가능한 경우가 많으며, 화학·화공 계열 직업훈련 이수 또는 관련 분야 경력이 있으면 취업에 유리합니다. 도료 제조 공장에서 생산직으로 입사한 뒤, 선임자의 지도를 받으며 볼밀(Ball Mill), 샌드밀(Sand Mill), 비드밀(Bead Mill) 등 분산·연마 기계 조작 방법을 습득하는 방식으로 경력을 시작합니다. 장비 작동 원리와 안료 분산도 측정 방법을 익히면 숙련 조작원이 될 수 있으며, 이후 배합·품질관리 부문으로 이동하거나 반장으로 성장하는 경우도 있습니다.[1] 직업훈련 정보는 HRD-Net에서 확인할 수 있습니다.[2]",
+    "overviewSalary": {
+      "sal": "도료분산기조작원의 연봉은 경력과 근무 형태에 따라 차이가 있으며, 초봉은 연 2,500만~3,000만원 수준이고, 숙련 조작원은 연 3,200만~3,800만원 수준입니다. 교대 근무 시 야간 수당과 위험수당이 추가 지급될 수 있습니다.[1]"
+    },
+    "overviewProspect": {
+      "main": "도료 분산 공정은 도료 품질을 좌우하는 핵심 공정으로, 자동화가 일부 진행되고 있으나 다품종 소량 생산, 특수 안료 분산, 품질 판정 등의 영역에서는 숙련된 조작원의 역할이 여전히 중요합니다. 친환경·기능성 도료 생산 확대에 따라 분산 기술의 중요성은 더욱 높아질 전망입니다.[1]"
+    },
+    "trivia": "도료용 분산기는 안료 입자를 수 마이크로미터(μm) 이하로 분쇄하는데, 분산 입도에 따라 도료의 광택·색상·내구성이 크게 달라집니다. 특히 나노 안료 분산 기술은 고성능 자동차 도료와 항공기 코팅에도 적용되어 첨단 소재 산업의 기초를 이룹니다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "볼밀·비드밀 등 분산 기계는 소음과 진동이 크며, 안료 분진 및 용제 증기 노출 가능성이 있어 개인보호장구(방진 마스크, 귀마개, 보호 장갑) 착용이 필수입니다. 교대 근무가 일반적이며 장시간 기계 주변에서 서서 작업하는 환경입니다.[1]",
+      "socialDetail": "자동차, 건축, 선박, 전자제품 등 다양한 산업에 필요한 도료의 품질을 결정하는 핵심 공정을 담당하며, 분산 품질 향상을 통해 제품 수명 연장 및 자원 절약에 기여합니다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        "볼밀·샌드밀·비드밀 등 분산 기계 종류 및 작동 원리",
+        "안료 분산도 측정 방법 (Hegman 게이지, 입도분석기 활용)",
+        "분산 조건 설정 (회전속도, 시간, 미디어 볼 선택)",
+        "안료·수지 특성에 따른 최적 분산 공정 조정",
+        "분산기 청소, 유지보수 및 안전 점검 절차[1]"
+      ],
+      "recruit": [
+        "KCC, 삼화페인트, 노루페인트 등 도료 대기업 생산직(분산 파트) 공개채용",
+        "도료·코팅 전문 중소기업 분산 조작원 수시채용",
+        "고용노동부 워크넷 도료 제조 생산직 구인 공고[1]"
+      ],
+      "training": [
+        "HRD-Net 화학제조 및 생산 직업훈련 과정 (분산·혼합 장비 조작 포함)",
+        "사업장 내 OJT(현장직무훈련)를 통한 분산기 조작 습득[1]"
+      ]
+    },
+    "heroTags": ["분산기조작", "볼밀", "안료", "도료제조", "생산직", "화학공정"],
+    "sidebarJobs": [
+      "도료배합원",
+      "도료제조원",
+      "도료조정원",
+      "도료조색원",
+      "도료제조현장감독자",
+      "도료연구원",
+      "표면처리원",
+      "코팅기조작원",
+      "화학공학기술자"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "화학분석기능사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7880"
+      },
+      {
+        "name": "화학공학기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1450"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"},
+      {"id": 2, "text": "[2] HRD-Net", "url": "https://www.hrd.go.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국도료공업협동조합", "url": "https://www.kpca.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 한국도료공업협동조합", "url": "https://www.kpca.or.kr/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 커리어넷", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] HRD-Net", "url": "https://www.hrd.go.kr/"}
+    ]
+  },
+  "changeSummary": "way·sal·prospect·trivia·detailWlb·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

@@ -1,0 +1,64 @@
+{
+  "fields": {
+    "way": "독서지도사는 국가공인자격이 아닌 등록 민간자격으로, 만 18세 이상이면 학력 제한 없이 누구나 취득할 수 있다.[1] 한국평생학습진흥원, 한우리 등 교육기관에서 운영하는 온라인 또는 오프라인 과정(4~12주)을 이수한 뒤 자격시험에 합격하면 자격증이 발급된다.[2] 국어국문학, 문헌정보학, 교육학, 아동학 등 관련 학과를 전공하면 이론적 기반이 탄탄하여 유리하다.[3] 독서지도사 2급을 먼저 취득한 뒤 실무 경력을 쌓아 1급으로 승급하는 경로가 일반적이며, 독서논술지도사, 독서치료사 등 관련 자격을 병행 취득하면 활동 범위가 넓어진다.[4]",
+    "overviewSalary": {
+      "sal": "독서지도사의 시간당 강사료는 2~4만 원 수준으로, 활동량에 따라 월 100~150만 원 정도인 경우가 많다.[1] 학원 강사나 방과후 교실 채용 시에는 더 안정적인 수입이 가능하지만, 프리랜서의 경우 수업 수에 따라 수입 편차가 크다.[2]"
+    },
+    "overviewProspect": {
+      "main": "학령인구 감소로 사교육 시장이 전반적으로 축소되는 추세이지만, 독서 교육에 대한 수요는 교과 연계 독서 활동과 논술 평가 확대로 꾸준히 유지되고 있다.[1] 공공도서관과 지역아동센터 확충에 따라 독서 프로그램 운영 인력 수요가 늘어나는 한편, 온라인 독서 플랫폼을 활용한 비대면 지도 영역도 새롭게 열리고 있다.[2] 다만 진입 장벽이 낮아 경쟁이 치열하며, 차별화된 교수법이나 전문 분야(유아 독서, 독서치료 등)를 갖추는 것이 중요하다.[3] 초등 돌봄교실 확대 정책에 따라 방과후 독서 강사 수요가 일정 수준 이상 유지될 전망이다.[4]"
+    },
+    "trivia": "독서지도사 자격증은 민간자격으로 등록번호 2015-001324이며, 교육부가 주무부처이다.[1] 한국에서 독서 교육이 제도적으로 확산된 계기는 2006년 '독서문화진흥법' 제정으로, 공공도서관에 독서 프로그램 운영이 의무화되었다.[2] 독서지도사는 단순 책 추천이 아니라 읽기 전-중-후 활동을 설계하고, 토론과 글쓰기를 결합한 통합적 독서 교육을 수행한다.[3] 최근에는 그림책 읽기, 북아트, 독서토론 등 다양한 형태의 독서 활동이 인기를 끌며 독서지도사의 역할이 다변화되고 있다.[4]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "주로 오후 시간대에 수업이 집중되어 오전 시간을 자유롭게 활용할 수 있으며, 프리랜서 형태로 활동하는 경우 근무 일정을 자율적으로 조정할 수 있다.[1] 다만 방과후 교실이나 학원 소속의 경우 평일 오후와 주말 수업이 기본이며, 방학 중에는 수업이 줄어 수입 변동이 있다.[2]",
+      "socialDetail": "아동과 청소년의 독서 습관 형성과 사고력 발달에 기여하는 교육적 의미가 있으며, 학부모와 교육 현장에서 전문성을 인정받는 직업이다.[1] 공공도서관이나 복지 시설에서의 활동은 지역사회 문화 발전에 기여한다.[2]"
+    },
+    "sidebarMajors": [
+      "문헌정보학과",
+      "교육학과",
+      "아동학과",
+      "유아교육과",
+      "초등교육과"
+    ],
+    "sidebarCerts": [
+      {"name": "독서지도사 1급", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=1225"},
+      {"name": "독서지도사 2급", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=1225"},
+      {"name": "독서논술지도사", "url": "https://www.pqi.or.kr/inf/qul/infQulList.do"},
+      {"name": "독서치료사", "url": "https://www.pqi.or.kr/inf/qul/infQulList.do"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국평생학습진흥원(LLI) — 독서지도사 자격증", "url": "https://www.lli.or.kr/license/license09.asp"},
+      {"id": 2, "text": "[2] 한우리캠퍼스 — 독서지도사 자격 과정", "url": "https://www.hanuricampus.com/test/test_info.jsp"},
+      {"id": 3, "text": "[3] 세종사이버대학교 — 독서지도사 자격증", "url": "https://cms.sjcu.ac.kr/korean/curriculum/certificate01.do"},
+      {"id": 4, "text": "[4] 에듀파이 — 독서지도사 자격증 취득방법 2026", "url": "https://geteduify.com/career-guidance/%EB%8F%85%EC%84%9C%EC%A7%80%EB%8F%84%EC%82%AC-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%B7%A8%EB%93%9D%EB%B0%A9%EB%B2%95-%EB%B0%8F-%EC%A2%85%EB%A5%98-2026%EB%85%84-%EA%B5%AD%EB%B9%84%EC%A7%80%EC%9B%90/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 독서지도사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=365"},
+      {"id": 2, "text": "[2] 한국평생학습진흥원(LLI) — 독서지도사 자격 현황", "url": "https://www.lli.or.kr/license/license09.asp"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 독서지도사 직업전망", "url": "https://www.career.go.kr/cloud/w/job/view?seq=365"},
+      {"id": 2, "text": "[2] 한국평생학습진흥원(LLI)", "url": "https://www.lli.or.kr/license/license09.asp"},
+      {"id": 3, "text": "[3] PQI 한국자격정보원 — 독서지도사", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=1225"},
+      {"id": 4, "text": "[4] 에듀한솔 — 독서지도사 자격 안내", "url": "https://academy.eduhansol.com/reading/CertificationGuide.do"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] PQI 한국자격정보원 — 독서지도사 민간자격", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=1225"},
+      {"id": 2, "text": "[2] 국가법령정보센터 — 독서문화진흥법", "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=255817"},
+      {"id": 3, "text": "[3] 한국독서학회(KLER)", "url": "http://kler.or.kr/information/reading01_01.asp"},
+      {"id": 4, "text": "[4] 한국독서문화교육원", "url": "https://korea-kcac.com/home/curriculum/info.php?item=386"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 독서지도사 근무환경", "url": "https://www.career.go.kr/cloud/w/job/view?seq=365"},
+      {"id": 2, "text": "[2] PQI 한국자격정보원 — 독서지도사 자격 활동", "url": "https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=1225"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 독서지도사 직업의의", "url": "https://www.career.go.kr/cloud/w/job/view?seq=365"},
+      {"id": 2, "text": "[2] 국가법령정보센터 — 독서문화진흥법", "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=255817"}
+    ]
+  },
+  "changeSummary": "Phase 5 수선: GN 수정(way 15~18→1~4 / prospect 19~22→1~4 / trivia 23~26→1~4), sources text URL→[N]출처명 형식 변경, wlb·social 띄어쓰기 수정, wlbDetail·socialDetail 각주 추가, sal 텍스트 규격화, sidebarMajors 9→5개, sidebarCerts {name,url} 형식 적용"
+}

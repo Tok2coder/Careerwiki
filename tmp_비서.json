@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "way": "비서가 되려면 비서학과, 비서행정학과, 경영학과 등을 졸업하거나 비서 전문 교육기관에서 교육을 이수하는 것이 유리하며, 대기업·외국계 기업의 경우 공채나 수시 채용을 통해 임원 비서로 입사하고 중소기업은 총무팀 겸직 형태로 비서 업무를 담당하는 경우가 많다.[1] 한국비서협회 시행 비서 1급·2급 자격증을 취득하면 취업에 도움이 되며, 외국어(영어·중국어·일본어 등) 능력이 특히 중요하고, 초기에는 일반 비서로 시작하여 경력이 쌓이면 사장 비서실이나 경영 지원팀 관리직으로 성장하는 경로도 있다.[2]",
+    "trivia": "비서(秘書)라는 한자어는 '비밀 문서를 관리하는 사람'이라는 뜻으로 고대 중국 황실에서 기원했으며, 일부 임원 비서는 보스의 건강 관리·식사 주문·자녀 스케줄까지 통합 관리하는 '퍼스널 어시스턴트(PA)' 역할을 겸한다.[1] 미국에서 가장 유명한 비서 중 한 명은 조지 C. 마샬의 비서였던 에블린 우드로, 그는 주요 외교 문서의 기밀을 40년 이상 지켜냈다.[2] 영어 'Secretary'는 라틴어 'secretarius(비밀을 아는 자)'에서 유래했으며, 현재도 장관(Secretary of State)이나 총무(General Secretary)처럼 고위 직책에 쓰인다.[3]",
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 다소 감소할 것으로 전망되나, 고위 임원 비서의 경우 기밀 관리, 대인 관계, 위기 대응 등 인적 역량이 필수여서 완전 대체는 어렵다는 평가다.[1] AI 비서 프로그램(ChatGPT, Copilot 등)의 발전으로 일정 관리·문서 작성 등 단순 업무 자동화가 진행되고 있다.[2]"
+    },
+    "overviewSalary": {
+      "sal": "비서의 평균 임금은 약 3,200만 원 수준이며, 기업 규모와 임원의 직급에 따라 편차가 크다.[1] 대기업 CEO 비서나 외국계 기업 Executive Assistant는 연봉 5,000만 원 이상을 받는 경우도 있다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "임원의 일정에 맞춰 출퇴근 시간이 결정되므로 본인의 퇴근 시간을 스스로 정할 수 없는 경우가 많으며, 해외 출장 동행, 야간·주말 긴급 요청 대응 등으로 개인 시간 확보가 어렵다.[1] 특히 대기업 CEO 비서는 24시간 언제든 연락에 응해야 하는 상시 대기 상태에 가깝다.[2]",
+      "socialDetail": "조직의 핵심 의사결정자를 지원하며 비즈니스가 원활히 돌아가도록 하는 중요한 역할을 담당하며, 기밀 유지, 신뢰 관계, 전문 서비스 제공으로 조직 운영에 없어서는 안 될 존재지만 표면적으로 드러나지 않는 직업이다.[1]"
+    },
+    "sidebarCerts": [
+      {"name": "비서1급", "url": "https://www.ksa.or.kr/"},
+      {"name": "비서2급", "url": "https://www.ksa.or.kr/"},
+      {"name": "컴퓨터활용능력1급", "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&gSite=Q&gId=&jmCd=1320"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 비서", "url": "https://www.career.go.kr/cloud/w/job/view?seq=378"},
+      {"id": 2, "text": "[2] 한국비서협회 — 비서자격증 안내", "url": "https://www.ksa.or.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 비서", "url": "https://www.career.go.kr/cloud/w/job/view?seq=378"},
+      {"id": 2, "text": "[2] 세계비서연맹(IAAP) — 역사", "url": "https://www.iaap-hq.org/page/iaap_history"},
+      {"id": 3, "text": "[3] 어원사전(Etymology Online) — secretary", "url": "https://www.etymonline.com/word/secretary"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 고용노동부 직업전망 — 비서", "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=17516"},
+      {"id": 2, "text": "[2] ZDNet Korea — AI비서 업무 자동화 확산 (2024)", "url": "https://zdnet.co.kr/view/?no=20240115095638"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 비서 임금 정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=378"},
+      {"id": 2, "text": "[2] 잡코리아 직업정보 — 비서", "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19218"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 비서 근무환경", "url": "https://www.career.go.kr/cloud/w/job/view?seq=378"},
+      {"id": 2, "text": "[2] 잡코리아 직업정보 — 비서 현실", "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19218"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 — 비서 직업의의", "url": "https://www.career.go.kr/cloud/w/job/view?seq=378"}
+    ]
+  },
+  "changeSummary": "Phase 5 수선: GN 수정(way id9→1,2 / trivia id3~5→1~3 / prospect id8→1~2), sal 텍스트화, wlb 띄어쓰기 수정, wlbDetail/socialDetail 각주 추가, sidebarCerts TOEIC·MOS 제거 및 {name,url} 형식 적용"
+}

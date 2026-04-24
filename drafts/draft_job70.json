@@ -1,0 +1,76 @@
+{
+  "fields": {
+    "way": "건설장비관리사무원이 되려면 건축공학, 토목공학, 기계공학 관련 학과를 졸업하거나 건설 현장에서 장비 관련 실무 경험을 쌓은 후 건설 회사 자재·장비 관리 부서에 입사하는 것이 일반적이다. 건설기계 등록, 검사, 보험 관련 업무는 행정 절차와 관련 법규 이해가 필수이며, 건설기계관리법 및 관련 법령을 숙지해야 한다.[1] 전문대졸 이상 학력에 2~4년 실무 경력이 쌓이면 독립적으로 장비 관리 업무를 수행할 수 있으며, 대형 건설사의 장비관리팀이나 건설기계 임대 전문업체로의 진출도 가능하다.[2]",
+    "overviewSalary": {
+      "sal": "건설사 자재·구매·물류 사무직으로 분류되며, 2025년 기준 대형 건설사 신입 사무직 계약연봉은 약 4,500만 원 내외이고, 경력 5년 이상이면 5,000만~6,000만 원 수준으로 상승한다.[1]"
+    },
+    "overviewProspect": {
+      "main": "건설 프로젝트 규모가 대형화되고 국내외 건설 현장이 복잡해짐에 따라 장비 관리 및 임대차 업무의 전문화 필요성이 높아지고 있다. 건설기계관리법 강화와 안전검사 의무화로 관련 행정 업무가 증가하는 추세이나, 건설 경기 변동에 직접적인 영향을 받아 고용은 현 수준을 유지할 것으로 전망된다.[1]"
+    },
+    "trivia": "건설장비관리사무원이 담당하는 건설기계 정기검사는 타워크레인(6개월)부터 일부 장비(3년)까지 장비 종류에 따라 유효기간이 크게 다르며, 검사 기간을 초과하면 수리 명령과 과태료가 부과될 수 있어 수십 대 장비의 검사 일정을 정밀하게 관리하는 것이 핵심 업무다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통",
+      "wlbDetail": "주로 실내 사무실 근무로 이루어지나 현장 장비 확인이나 검사 동행을 위해 건설현장 출장이 발생하기도 한다. 장비 검사 일정이나 보험 만료 등 마감 기한이 촉박할 때 초과근무가 생길 수 있으나 전반적으로 정시출퇴근이 가능한 편이다.[1]",
+      "socialDetail": "건설현장에서 사용되는 장비의 안전검사와 보험가입을 관리함으로써 건설현장 안전사고 예방에 기여한다. 장비의 효율적 운용과 임대차 관리를 통해 건설 프로젝트의 원활한 진행을 지원하는 역할을 한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "건축공학·토목공학·기계공학 관련 학과 전공",
+        "건설기계관리법 및 관련 행정 법규 학습",
+        "건설 현장 자재·장비 관리 실무 교육 이수",
+        "컴퓨터 활용 능력 및 ERP 장비관리 시스템 사용 역량 배양",
+        "건설 현장 인턴십 또는 현장 사무소 실습을 통한 실무 경험 습득[1]"
+      ],
+      "recruit": [
+        {"text": "대형·중견 건설사 장비관리팀 또는 자재·구매·물류 부서 신입 공채 지원", "url": "https://www.worker.co.kr/job/list.asp"},
+        {"text": "건설기계 임대 전문업체 행정 사무직 취업", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"},
+        "공공기관(도로공사, LH 등) 장비관리 행정직 채용 지원[1]"
+      ],
+      "training": [
+        "건설기계관리법 관련 법규 및 행정 절차 연수",
+        "대한건설기계안전관리원 교육과정 이수[1]"
+      ]
+    },
+    "sidebarMajors": ["건축공학과", "토목공학과", "기계공학과", "경영학과"],
+    "sidebarOrgs": [
+      {"name": "대한건설기계안전관리원(KCESI)", "url": "https://www.kcesi.or.kr"},
+      {"name": "건설워커(건설취업포털)", "url": "https://www.worker.co.kr"}
+    ],
+    "sidebarCerts": [
+      {"name": "건설기계정비기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1980"},
+      {"name": "물류관리사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2570"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 건설워커 건설사 채용정보", "url": "https://www.worker.co.kr/job/list.asp"},
+      {"id": 2, "text": "[2] 대한건설기계안전관리원 검사안내", "url": "https://www.kcesi.or.kr/home/mainBusiness/ctcqInspct/fdrmInspct/fdrmInspct01.jsp"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 건설워커 2025년 건설사 신입 연봉 정보", "url": "https://consline.co.kr/524216"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 대한건설기계안전관리원 검사안내", "url": "https://www.kcesi.or.kr/home/mainBusiness/ctcqInspct/fdrmInspct/fdrmInspct01.jsp"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 대한건설기계안전관리원 정기검사 안내", "url": "https://www.kcesi.or.kr/home/mainBusiness/ctcqInspct/fdrmInspct/fdrmInspct01.jsp"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 고용24 건설사무직 직업정보", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 대한건설기계안전관리원", "url": "https://www.kcesi.or.kr"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 건설워커 건설취업 가이드", "url": "https://www.worker.co.kr/job/list.asp"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 고용24 워크넷 건설 채용정보", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한건설기계안전관리원 교육안내", "url": "https://www.kcesi.or.kr"}
+    ]
+  },
+  "changeSummary": "Phase 1: 완전 빈 직업 데이터 신규 작성 - way/sal/prospect/trivia/detailWlb/detailReady/sidebarMajors/sidebarOrgs/sidebarCerts"
+}

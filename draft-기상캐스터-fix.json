@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "trivia": "한국의 기상캐스터 제도는 1991년 KBS가 이익선을 첫 여성 프리랜서 기상캐스터로 채용하면서 시작됐다. 그 이전까지 날씨 예보는 기상청 소속 기상통보관이 직접 방송에 출연해 전달했다. KBS 도입 후 1992년 SBS, 1994년 MBC가 잇따라 같은 제도를 도입했다.[1]",
+    "detailReady": {
+      "curriculum": [
+        "발성·발음·낭독 훈련 (카메라 앞 전달력 강화)",
+        "기상학 기초 (대기과학·기상청 날씨 자료 해석 방법)",
+        "방송 뉴스 작성 및 편집 (날씨 대본 작성·그래픽 구성)",
+        "카메라 테스트 실습 (방송 아카데미 기상캐스터 전문과정)",
+        "기상기사 자격 준비 (기상학 이론·계산기상학·예보이론)"
+      ],
+      "recruit": [
+        "KBS·MBC·SBS·EBS 방송사 공채 기상캐스터 모집 (연 1~2회)",
+        "지역 방송사 (G1·KNN·tbc 등) 기상캐스터 수시 채용",
+        "케이블·종편 채널 (YTN·연합뉴스TV 등) 프리랜서 계약"
+      ],
+      "training": [
+        "KBS·MBC 아카데미·한국아나운서학원 기상캐스터 전문과정",
+        "기상청 기상기후인재개발원 기상예보관 양성교육"
+      ]
+    }
+  },
+  "sources": {
+    "trivia": [
+      {"text": "[1] 위키백과 기상캐스터", "url": "https://ko.wikipedia.org/wiki/%EA%B8%B0%EC%83%81_%EC%BA%90%EC%8A%A4%ED%84%B0"}
+    ],
+    "detailReady.curriculum": [
+      {"text": "[1] 직업백과 기상캐스터 교육정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%EC%83%81%EC%BA%90%EC%8A%A4%ED%84%B0/"}
+    ],
+    "detailReady.recruit": [
+      {"text": "[1] 직업백과 기상캐스터 채용정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%EC%83%81%EC%BA%90%EC%8A%A4%ED%84%B0/"}
+    ],
+    "detailReady.training": [
+      {"text": "[1] 직업백과 기상캐스터 훈련정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B8%B0%EC%83%81%EC%BA%90%EC%8A%A4%ED%84%B0/"}
+    ]
+  },
+  "changeSummary": "기상캐스터 F1: trivia [1] 마지막 문장으로 이동. F2: detailReady sources 추가."
+}

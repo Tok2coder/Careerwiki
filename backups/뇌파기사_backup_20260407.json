@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "way": "뇌파기사는 독립된 국가자격이 아니라, 임상병리사 면허를 취득한 뒤 신경과·정신건강의학과에 배치되어 뇌전도(EEG) 검사를 전담하는 직무를 말한다. 임상병리사 면허는 4년제 임상병리학과(또는 동등 학과) 졸업 후 한국보건의료인국가시험원이 시행하는 국가시험에 합격해야 취득된다.[1] 취업 후에는 대한임상신경생리학회의 교육과정을 이수해 뇌파 판독·유발전위 검사 등 전문 역량을 발전시킬 수 있다.[2]",
+    "overviewSalary": {
+      "sal": "임상병리사 기준 중위 연봉은 약 3,461만 원이며, 상위 25%는 약 3,965만 원 수준이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "고령화로 치매·뇌전증 등 신경계 질환 진단 수요가 증가하면서 뇌파 검사 수요도 꾸준히 늘고 있어 뇌파기사의 고용은 안정적으로 유지될 전망이다.[1]"
+    },
+    "trivia": "뇌파(EEG, Electroencephalography)는 1924년 독일 의사 한스 베르거(Hans Berger)가 인류 최초로 기록하는 데 성공했다. 그는 자신의 아들 두피에 전극을 부착해 최초의 인간 뇌파 기록을 남겼으며, 이 발견은 이후 뇌전증 진단법의 혁신적 토대가 되었다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통 이상",
+      "wlbDetail": "병원 근무 특성상 주간 정시 근무가 기본이나 응급 뇌파 검사 요청 시 야간 호출이 발생하기도 한다. 뇌파 검사는 고도의 집중력이 필요한 업무이나 업무 루틴이 비교적 정형화되어 있어 전반적인 업무 강도는 보통 수준이다.[1]",
+      "socialDetail": "뇌전증·치매·뇌졸중 등 중증 신경과 질환의 정확한 진단을 가능하게 하여 환자의 치료 방향 결정에 직접 기여하는 직업이다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "임상병리학과(4년제)", "text": "뇌파 검사를 포함한 임상검사 전반을 학습하며, 졸업 후 임상병리사 국가시험 응시 자격을 취득한다.", "link": null},
+        {"title": "신경생리학 관련 대학원", "text": "신경과학·신경생리학 분야 대학원 진학으로 뇌파 연구 역량을 심화할 수 있으며, 연구직 임상병리사로도 진출 가능하다.", "link": null},
+        {"title": "대한임상신경생리학회 교육과정", "text": "뇌파·유발전위·근전도 등 임상신경생리 특수검사 전문 교육과정을 이수하여 현직 뇌파기사로서의 역량을 강화할 수 있다.[1]", "link": "https://www.kcns.or.kr"}
+      ],
+      "recruit": [
+        {"title": "상급종합병원·종합병원 임상병리사 채용", "text": "신경과·정신건강의학과 등 뇌파 업무 수행 부서에 임상병리사로 지원한다. 채용 공고는 사람인·잡코리아 등 포털에서 확인할 수 있다.", "link": null},
+        {"title": "의료기관 취업 포털 활용", "text": "대한임상병리사협회 구인구직 게시판 및 의료잡(medicaljob) 등에서 뇌파 검사 경험자 우대 공고를 확인할 수 있다.[1]", "link": "https://www.kamt.com"}
+      ],
+      "training": [
+        {"title": "대한임상신경생리학회 연수강좌", "text": "뇌파 판독, 유발전위·수면다원검사 관련 연수강좌를 매년 운영하며 현직 임상병리사의 심화 학습을 지원한다.", "link": "https://www.kcns.or.kr"},
+        {"title": "대한임상병리사협회 보수교육", "text": "면허 유지 보수교육 외에 신경생리 분야 특수검사 전문과정을 제공하여 뇌파기사로서의 역량을 지속적으로 유지하도록 돕는다.[1]", "link": "https://www.kamt.com"}
+      ]
+    },
+    "heroTags": ["뇌파기사", "EEG", "임상병리사", "신경과", "뇌전도검사", "의료기사", "뇌기능검사"],
+    "sidebarJobs": ["근전도기사", "심전도기사", "인공심폐기기사", "임상병리사", "폐기능검사기사", "한방검사기사"],
+    "sidebarCerts": [
+      {"name": "임상병리사", "url": "https://www.kuksiwon.or.kr/Examination/ExamSubject.aspx?SiteGB=A&MENU_CD=A0401"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"},
+      {"id": 2, "text": "[2] 대한임상신경생리학회", "url": "https://www.kcns.or.kr"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 잡코리아 임상병리사 연봉정보", "url": "https://www.jobkorea.co.kr/Recruit/GI_Read/35491"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 대입정보포털 임상병리사 직업정보", "url": "https://adiga.kr/PageLinkSvl.do?pageCode=VS_EP_A0100"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 위키백과 — 뇌전도", "url": "https://ko.wikipedia.org/wiki/%EB%87%8C%EC%A0%84%EB%8F%84"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 잡코리아 임상병리사 직업정보", "url": "https://www.jobkorea.co.kr/Recruit/GI_Read/35491"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 대한임상신경생리학회", "url": "https://www.kcns.or.kr"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 대한임상신경생리학회 교육프로그램", "url": "https://www.kcns.or.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 대한임상병리사협회 구인구직", "url": "https://www.kamt.com"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한임상병리사협회 보수교육", "url": "https://www.kamt.com"}
+    ]
+  },
+  "changeSummary": "way·sal·prospect·trivia·detailWlb·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

@@ -1,0 +1,76 @@
+{
+  "fields": {
+    "way": "대중무용수가 되려면 어린 시절부터 무용 학원이나 전문 댄스 스튜디오에서 장르별(걸스힙합, 왁킹, 팝핀, 재즈댄스 등) 훈련을 시작하는 것이 일반적이며, SM·YG·HYBE 등 대형 엔터테인먼트 회사의 댄서 오디션, 공중파 방송사 댄스팀 오디션에 합격하거나 뮤지컬·공연 기획사에 소속 댄서로 계약하는 방식이 주요 진입 경로이다.[1] 대학교 무용학과·실용무용학과 진학 후 포트폴리오를 쌓거나 댄스 크루 활동을 통해 실력을 인정받아 K-pop 백댄서 오디션이나 공연 에이전시에 등록하는 경로도 일반적이며, 최근에는 유튜브·인스타그램에서 댄스 콘텐츠를 통해 팔로워를 확보한 후 브랜드 협업이나 공연 섭외로 진출하는 신생 경로도 생겨났다.[2]",
+    "overviewSalary": {
+      "sal": "대중무용수의 연봉은 커리어넷·워크넷 직업백과(2024년 기준) 평균 약 2,600만 원 수준이다. 대형 엔터테인먼트사 소속 또는 전속 계약 댄서는 이보다 높을 수 있으나, 프리랜서로 활동하는 경우 수입이 불안정하며 공연 건수에 따라 편차가 크다.[1]"
+    },
+    "overviewProspect": {
+      "main": "향후 5년간 고용은 보통 수준을 유지하거나 소폭 증가할 것으로 전망되며, 경쟁이 치열하고 신체 부상 위험으로 장기 활동이 어려운 구조적 한계가 있다.[1] K-pop 한류 확산에 따라 K-팝 댄서 수요가 글로벌로 확대되고 있으며, 유튜브·틱톡 등 숏폼 댄스 콘텐츠 수요도 급증하고 있다.[2]"
+    },
+    "trivia": "BTS의 전 세계 콘서트 투어에 동행하는 백댄서 팀은 연간 수천만 원의 계약으로 활동하며, K-pop 댄서의 위상을 대폭 높였다.[1] 댄서는 한 공연을 위해 보통 3~6개월의 집중 연습을 하며, 실제 공연 시간의 10배 이상을 훈련에 쏟는다.[2] '스트릿댄서'로 시작하여 세계 규모 배틀 대회(BOTY, R16 코리아)를 통해 국제 무대로 진출하는 경로도 활발하다.[3]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통 이상",
+      "wlbDetail": "공연 일정에 따라 야간·주말 작업이 빈번하고, 연습과 실전 사이 체력 소모가 크다. 신체 부상(무릎, 발목, 허리) 위험이 상존하며 활동 기간이 평균 30~35세까지로 짧은 편이다. 프리랜서로 활동하는 경우 소득이 불안정하며, 공연 성수기와 비수기의 수입 격차가 크다.[1]",
+      "socialDetail": "K-pop, 뮤지컬, 축제 등 대중문화 행사를 풍성하게 만드는 역할로 문화적 가치를 창출한다. 한류 확산에 따라 한국 댄스 문화(K-dance)가 해외 젊은이들에게 전파되고, 글로벌 문화 교류에도 기여하고 있다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        {"title": "어린 시절 장르별 기초 훈련", "text": "댄스 스튜디오에서 힙합·왁킹·팝핀·재즈댄스 등 장르별 기초 훈련을 어릴 때부터 시작한다.", "link": null},
+        {"title": "무용학과·실용무용학과 진학", "text": "대학교 무용학과 또는 실용무용학과에서 이론과 실기를 체계적으로 학습하고 포트폴리오를 구축한다.", "link": null},
+        {"title": "댄스 크루 활동 및 공연·배틀 경험", "text": "크루를 결성하거나 기존 크루에 합류하여 공연과 댄스 배틀에 참가하며 실력을 인정받는다.", "link": null},
+        {"title": "SNS 댄스 콘텐츠 포트폴리오 구축", "text": "유튜브·인스타그램에 댄스 영상을 업로드하여 팔로워를 확보하고 브랜드 협업·공연 섭외 채널로 활용한다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "대형 엔터테인먼트사 댄서 오디션", "text": "SM·YG·HYBE·JYP 등 대형 엔터테인먼트사에서 정기·수시로 진행하는 댄서 오디션이 주요 채용 경로이다.", "link": null},
+        {"title": "뮤지컬·공연 기획사 댄서 오디션", "text": "뮤지컬·공연 기획사에서 소속 댄서를 선발하는 오디션을 통해 정기계약 댄서로 합류한다.", "link": null},
+        {"title": "댄스팀 에이전시 등록", "text": "댄스팀 에이전시에 등록하면 기업 행사, 방송 출연, 뮤직비디오 촬영 등의 계약을 중개받을 수 있다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "해외 워크숍·글로벌 배틀 참가", "text": "BOTY, R16 코리아 등 글로벌 댄스 배틀 참가와 해외 워크숍 수강으로 국제 수준의 기량을 강화한다.", "link": null},
+        {"title": "안무가·댄스 강사로 커리어 전환", "text": "가수·그룹의 안무를 직접 제작하는 안무가나 스튜디오·대학 강사로 활동 영역을 넓히는 경우가 많다.[1]", "link": null}
+      ]
+    },
+    "heroTags": ["댄서", "K-pop댄서", "백댄서", "대중무용수", "안무가", "스트릿댄스"],
+    "sidebarJobs": ["무용가", "안무가", "배우", "공연기획자"],
+    "sidebarCerts": [
+      {"name": "무용지도사", "url": null},
+      {"name": "스포츠지도사(에어로빅)", "url": "https://www.kspo.or.kr/"},
+      {"name": "생활체육지도사", "url": "https://www.kspo.or.kr/"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=304"},
+      {"id": 2, "text": "[2] 한국콘텐츠진흥원", "url": "https://www.kocca.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 워크넷 임금정보", "url": "https://www.work.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=304"},
+      {"id": 2, "text": "[2] 한국콘텐츠진흥원", "url": "https://www.kocca.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 한국콘텐츠진흥원", "url": "https://www.kocca.kr/"},
+      {"id": 2, "text": "[2] 자격증넷 직업백과", "url": "https://janet.co.kr/jnJob/view.php?jobdicSeq=304"},
+      {"id": 3, "text": "[3] R16 Korea 공식 사이트", "url": "https://www.r16korea.com/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=304"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국콘텐츠진흥원", "url": "https://www.kocca.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=304"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 워크넷 채용정보", "url": "https://www.work.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과", "url": "https://www.career.go.kr/cloud/w/job/view?seq=304"}
+    ]
+  },
+  "changeSummary": "대중무용수 각주 중복 수정(way/prospect/trivia), wlb 인코딩 깨짐 복원, detailReady 객체배열 변환, sidebarCerts 객체배열 변환, sal 서술형 보강"
+}

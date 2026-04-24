@@ -1,0 +1,173 @@
+{
+  "name": "3D 프린팅 전문가",
+  "summary": "3D 프린팅 전문가는 소재를 쌓아 물체를 만드는 3D프린터를 이용해 고객의 요구에 따라 제품(미니어처, 액세서리, 일상용품, 개인 편의 제품, 기계 부품 등)을 만들어 냅니다.",
+  "heroTags": [
+    "3D프린팅전문가",
+    "프린팅엔지니어",
+    "적층제조전문가",
+    "3D모델러",
+    "프로토타입엔지니어",
+    "3D프린터운용사"
+  ],
+  "heroCategory": "공학 전문직",
+  "isCategoryBreadcrumb": false,
+  "overviewWork": {
+    "main": [],
+    "workStrong": "",
+    "workPlace": "",
+    "physicalAct": ""
+  },
+  "overviewProspect": {
+    "main": ""
+  },
+  "overviewAbilities": {
+    "abilityList": [
+      "수리·논리력",
+      "공간지각력"
+    ],
+    "technKnow": "",
+    "eduLevel": "",
+    "skillYear": ""
+  },
+  "overviewAptitude": {
+    "aptitudeList": [
+      "과학적 원리를 이해하고 논리적으로 생각하고 문제를 해결할 수 있는 수리·논리력이 필요합니다.",
+      "미적 감각과 컴퓨터 활용 관련 지식(컴퓨터 그래픽, 프로그래밍언어 등)을 가지고 3D로 제품을 입체적으로 제작할 수 있는 공간지각력이 필요합니다."
+    ],
+    "interestList": [
+      "내용을 이해하기 위해 자료를 깊이 있게 분석하는 일에 흥미를 갖는 사람에게 적합합니다.",
+      "모험을 시도하고 경쟁적인 활동에 참여하는 것을 좋아하는 사람에게 적합합니다."
+    ],
+    "satisfaction": {
+      "value": "79.4"
+    }
+  },
+  "trivia": [
+    "한국 3D프린팅 산업의 소프트웨어 부문 매출 중 외산 제품 비중이 76.6%에 달하며, 국산화가 진행된 3D프린터 장비와 달리 설계·슬라이싱 소프트웨어는 해외 의존도가 높은 구조다.[1]"
+  ],
+  "overviewSalary": {
+    "sal": "관련 직업인 3D프린팅모델러 기준 연봉 중위값은 약 3,715만 원으로, 전체 직업 평균(4,072만 원)보다 다소 낮은 수준이며 신입은 약 2,500~3,000만 원에서 시작한다.[1] 의료·항공·자동차 특화 분야에서 경력을 쌓으면 5,000만 원 이상도 가능하다."
+  },
+  "detailWlb": {
+    "wlb": "보통 이상",
+    "social": "높음"
+  },
+  "detailReady": {
+    "curriculum": [
+      "3D 프린팅 전문가는 컴퓨터그래픽 프로그램 및 장비에 대한 이해가 필수적이므로 대학에서 컴퓨터공학, 재료공학, 기계공학 등을 전공하여 업무의 이해 수준을 높이는 것이 좋습니다. 제품을 이미지로 구상해야 하고 도색, 코팅 등의 작업을 해야 하기에 미술, 산업디자인 등의 관련 전공자가 유리할 수 있습니다.[1]"
+    ],
+    "recruit": [
+      "3D 프링팅 관련 정규교육이나 직업훈련을 하면 3D 프린팅 전문가가 될 수 있습니다.",
+      "3D 프린팅 전문가는 3D 프린팅 기술을 활용한 제품 개발 자문, 제품 설계 지원, 측정 분석 지원, 시제품 제작 지원 등을 하는 기업에서 일할 수 있습니다.[1]"
+    ],
+    "training": [
+      "전국의 직업훈련기관에서 3D 프린터 운용, 3D 프린팅 모델링 등을 배울 수 있으며, 3D 프린터 운용기능사 자격증 준비를 할 수 있습니다.[1]"
+    ],
+    "researchList": [
+      "3D 프린팅 진로체험 프로그램 참여 - 지역의 진로체험지원센터, 창업체험교육센터, 대학교, 민간기업에서 운영하는 3D 프린팅 진로체험 프로그램에 참여하여 3D 프린팅 관련 직업에 대해 알아볼 수 있습니다.",
+      "원격영상 진로멘토링 사이트 - 3D프린팅 전문가의 수업 자료, 멘토 소개 자료, 그리고 영상물을 통해 3D 프린팅 전문가의 직업에 대해 알아볼 수 있습니다.",
+      "3D 프린팅 체험 공방 방문 – 3D 프린터를 체험할 수 있는 공방에 방문하여 3D 프린터에 대한 설명을 듣고 직접 출력을 할 수 있습니다."
+    ],
+    "certificate": [
+      "관련 자격증으로 3D프린터운용기능사, 3D프린터개발산업기사 등이 있습니다."
+    ]
+  },
+  "sidebarJobs": [],
+  "sidebarMajors": [
+    "기계공학과",
+    "재료공학과",
+    "산업디자인학과",
+    "신소재공학과",
+    "메카트로닉스공학과"
+  ],
+  "sidebarCerts": [
+    "3D프린터운용기능사",
+    "3D프린터개발산업기사"
+  ],
+  "sidebarOrgs": [
+    {
+      "name": "한국지능정보사회진흥원",
+      "url": "http://www.nia.or.kr"
+    },
+    {
+      "name": "사단법인 한국3D프린팅협회",
+      "url": "http://www.k3dprinting.or.kr"
+    }
+  ],
+  "youtubeLinks": [],
+  "detailIndicators": null,
+  "detailEducation": {
+    "educationDistribution": null,
+    "majorDistribution": null
+  },
+  "prospectChart": null,
+  "customCharts": [],
+  "_sources": {
+    "detailWlb.wlbDetail": [
+      {
+        "id": 1,
+        "text": "[1] 커리어넷 직업백과",
+        "url": "https://www.career.go.kr/cloud/w/job/view?seq=10001"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "id": 2,
+        "text": "[1] 대한민국 정책브리핑",
+        "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148812070"
+      }
+    ],
+    "overviewSalary.sal": [
+      {
+        "id": 3,
+        "text": "[1] 워크넷 직업정보",
+        "url": "https://www.work.go.kr/"
+      },
+      {
+        "id": 4,
+        "text": "[2] 메이저맵",
+        "url": "https://www.majormap.net/content/670"
+      }
+    ],
+    "trivia": [
+      {
+        "id": 5,
+        "text": "[1] NIPA 2023 3D프린팅산업 실태조사",
+        "url": "https://www.nipa.kr/home/2-7-1-2/15425"
+      }
+    ],
+    "way": [
+      {
+        "id": 6,
+        "text": "[1] 에듀인사이트",
+        "url": "https://exitbasic.com/3d%ED%94%84%EB%A6%B0%ED%84%B0%EC%9A%B4%EC%9A%A9%EA%B8%B0%EB%8A%A5%EC%82%AC/"
+      },
+      {
+        "id": 7,
+        "text": "[2] 메이저맵",
+        "url": "https://www.majormap.net/content/670"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "id": 8,
+        "text": "[1] 커리어넷 직업정보",
+        "url": "https://www.career.go.kr/"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "id": 9,
+        "text": "[1] 커리어넷 직업정보",
+        "url": "https://www.career.go.kr/"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "id": 10,
+        "text": "[1] 커리어넷 직업정보",
+        "url": "https://www.career.go.kr/"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "changeSummary": "각주 위치 수정: way[2]/prospect[1]/trivia[1] → 마지막 문장 끝으로 이동, detailReady 배열 마지막 항목에 [1] 추가",
+  "fields": {
+    "way": "가상현실(VR/AR/XR) 전문가가 되는 주요 경로는 컴퓨터공학과·소프트웨어학과·시각디자인학과 등 관련 학과 졸업 후 게임사·XR 전문기업·콘텐츠 스튜디오에 취업하는 것이다.[1] 유니티(Unity)·언리얼 엔진(Unreal Engine) 기반 XR 콘텐츠 개발 역량이 핵심 요건이다. 채용 전형은 서류, 기술 포트폴리오(VR/AR 프로젝트), 실기·면접으로 구성된다. 주요 취업처는 SK텔레콤 메타버스·삼성 XR 연구소·게임사(넥슨·크래프톤)·VR 교육·의료 스타트업 등이다. 메타(Meta)·애플 Vision Pro 등 글로벌 XR 플랫폼 성장으로 해외 취업 기회도 확대되고 있다.[2]",
+    "overviewProspect": {
+      "main": "향후 5년간 증가 전망이다. 애플 Vision Pro 출시(2024)와 메타 Quest 시리즈 확산으로 XR 콘텐츠 수요가 급증하고 있다. 의료(수술 시뮬레이션)·교육(가상 실험실)·군사훈련·산업 교육(가상 현장 훈련) 분야에서 VR/AR 활용이 빠르게 확대되고 있다. 공간 컴퓨팅(Spatial Computing) 패러다임 전환으로 XR 전문 인력 수요가 장기적으로 증가할 전망이다.[1]"
+    },
+    "trivia": "한국의 XR 산업 시장 규모는 2024년 기준 약 3조 원이며, 2030년까지 10조 원 이상 성장이 전망된다. SKT·KT·LG유플러스 통신3사가 메타버스·XR 서비스에 대규모 투자를 진행하고 있다. 한국콘텐츠진흥원(KOCCA)은 XR 콘텐츠 개발 지원 펀드를 운영하며 국내 XR 산업 육성에 나서고 있다.[1]",
+    "detailReady": {
+      "curriculum": [
+        "컴퓨터공학과·소프트웨어학과·시각디자인학과 진학 — Unity·Unreal Engine 기반 XR 개발 기초 학습",
+        "Unity/Unreal Engine을 활용한 VR/AR 포트폴리오 프로젝트 2~3개 완성 — GitHub 공개",
+        "한국콘텐츠진흥원(KOCCA) XR 콘텐츠 개발 지원 프로그램 참가 — 실무 경험 및 지원금 확보.[1]"
+      ],
+      "recruit": [
+        "SK텔레콤·KT·LG유플러스 XR/메타버스 사업부 개발자 채용",
+        "넥슨·크래프톤·컴투스 VR/메타버스 게임 개발 직군 채용",
+        "VR 교육·의료 스타트업(버넥트·글로스퍼 등) XR 개발자 채용.[1]"
+      ],
+      "training": [
+        "Unity XR Toolkit·Unreal Engine 5 전문 교육 이수 — Meta Quest·Apple Vision Pro 대응 개발 역량 강화",
+        "3D 모델링(블렌더·Maya)·공간 음향 설계 교육 — XR 콘텐츠 품질 향상",
+        "글로벌 XR 플랫폼 개발자 인증(Meta Certified Developer·Apple visionOS) 취득 — 글로벌 경쟁력 강화.[1]"
+      ],
+      "certificate": [{"certificate": "국가자격증으로 한국산업인력공단에서 시행하는 컴퓨터그래픽스운용기능사, 시각디자인산업기사, 시각디자인기사 자격증이 있습니다."}],
+      "researchList": [
+        {"research": "가상현실 전문가 진로체험 프로그램 참여 - 각 지역의 진로체험지원센터, 한국과학창의재단 등에서 가상현실체험 교육을 통해 미래 유망 기술을 경험해 보고 시공간에서 가상시스템을 개발하는 업무를 탐색해 볼 수 있습니다."},
+        {"research": "원격영상 진로멘토링 사이트 - 가상현실 전문가 멘토의 수업자료, 멘토 소개 자료, 그리고 영상물을 통하여 가상현실전문가에 대해 알아볼 수 있습니다."}
+      ]
+    }
+  },
+  "sources": {
+    "way": [
+      {"id": 12, "text": "[1] 한국콘텐츠진흥원(KOCCA)", "url": "https://www.kocca.kr/kocca/subPage.do?menuNo=204902"},
+      {"id": 13, "text": "[2] 커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1093"}
+    ],
+    "overviewProspect.main": [
+      {"id": 14, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1093"}
+    ],
+    "trivia": [
+      {"id": 15, "text": "[1] 정보통신산업진흥원(NIPA)", "url": "https://www.nipa.kr/home/2-7-1-1/15042"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 16, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1093"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 17, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1093"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 18, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1093"}
+    ],
+    "detailReady.recruit": [
+      {"id": 19, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1093"}
+    ],
+    "detailReady.training": [
+      {"id": 20, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1093"}
+    ]
+  }
+}

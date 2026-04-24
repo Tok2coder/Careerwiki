@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "way": "동물교감전문가가 되기 위해서는 동물매개치유, 동물행동학, 심리학, 사회복지학 등 관련 학과를 졸업하는 것이 일반적입니다. 4년제 대학의 동물자원학과, 반려동물학과, 심리학과, 사회복지학과 등에서 기초를 쌓은 후 동물매개활동사 또는 동물매개치유사 자격을 취득하는 경로가 많습니다. 사설 교육기관이나 대학원에서 운영하는 동물매개치유 관련 과정을 이수하면 실무 역량을 높일 수 있습니다. 복지관, 병원, 요양원, 학교 등 다양한 현장에서 자원봉사 또는 인턴십을 통해 경험을 쌓은 후 정규직으로 진입하는 방식도 일반적이며, 일부는 프리랜서로 활동하거나 동물매개치유 전문 기관을 창업하기도 합니다 [1].",
+    "overviewSalary": {
+      "sal": "동물교감전문가의 평균 연봉은 초보 단계에서 약 2,400만~3,000만 원 수준이며, 경력이 쌓이고 전문 자격을 보유한 경우 3,500만~4,500만 원 이상을 기대할 수 있습니다. 복지기관, 병원, 학교 등 소속 기관의 성격과 근무 형태(정규직·프리랜서)에 따라 수입 차이가 큽니다 [1]."
+    },
+    "overviewProspect": {
+      "main": "고령화 사회 심화와 정신건강 문제에 대한 사회적 관심 증가로 동물교감치유 프로그램의 수요는 지속적으로 확대되고 있습니다. 요양원, 병원, 학교, 교정시설 등 다양한 기관에서 프로그램 도입이 늘고 있으며, 정부 차원의 복지 서비스 확대 정책과 맞물려 전문 인력 수요도 성장세를 보입니다 [1]."
+    },
+    "trivia": "반려동물을 이용한 치유 활동은 1960년대 미국 아동심리학자 보리스 레빈슨이 개를 치료 보조로 활용한 것이 학문적 출발점으로, 이후 전 세계적으로 '동물보조치유(Animal-Assisted Therapy)'라는 분야로 발전하였습니다 [1].",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "주로 복지관·병원·요양원 등 기관에 소속되어 정해진 시간에 프로그램을 운영하기 때문에 근무 시간은 비교적 규칙적인 편입니다. 다만 야외 현장 방문이나 기관 일정에 따라 유연하게 움직여야 하는 경우도 있어 완전한 규칙적 일상이 보장되지는 않습니다 [1].",
+      "socialDetail": "취약계층, 노인, 장애인, 아동 등 정서적 돌봄이 필요한 사람들의 심리적 안정과 회복을 돕는 직업으로, 사회적 기여도가 매우 높은 분야입니다 [1]."
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "동물행동학", "text": "동물의 본능적 행동 패턴과 학습 행동을 이해하는 과목으로, 치유 활동에 적합한 동물 선별 및 관리에 기초가 됩니다.", "link": null},
+        {"title": "심리학 개론", "text": "인간의 심리적 특성과 상담 기법을 학습하며, 동물교감 활동 시 대상자의 정서 상태를 파악하는 데 활용됩니다.", "link": null},
+        {"title": "동물매개치유 이론과 실습", "text": "동물보조치유(AAT)와 동물보조활동(AAA)의 차이, 프로그램 설계 방법, 실제 현장 실습을 포함한 핵심 전공 과목입니다.", "link": null},
+        {"title": "사회복지 실천론", "text": "복지 현장에서 서비스 대상자를 이해하고 적절한 개입 방법을 학습하며, 기관 연계 및 케이스 관리 역량을 기릅니다.", "link": null}
+      ],
+      "recruit": [
+        {"title": "복지기관·의료기관 채용", "text": "사회복지관, 요양원, 병원, 장애인복지시설 등에서 동물매개치유 프로그램 담당자로 정규직 또는 계약직으로 채용됩니다.", "link": null},
+        {"title": "프리랜서·창업", "text": "동물매개치유 전문 센터를 창업하거나 학교, 기업 등에 프리랜서로 프로그램을 공급하는 방식으로 활동합니다.", "link": null}
+      ],
+      "training": [
+        {"title": "동물매개활동사 양성 과정", "text": "한국동물매개심리치료학회 등 단체에서 운영하는 자격 과정으로, 이론과 실습을 통해 현장 적용 능력을 기릅니다.", "link": null},
+        {"title": "반려동물 행동교정 전문가 과정", "text": "동물의 행동 문제를 이해하고 교정하는 기술을 익히는 과정으로, 치유 동물 관리 역량 향상에 도움이 됩니다.", "link": null}
+      ]
+    },
+    "heroTags": ["동물치유", "심리지원", "복지서비스", "동물매개활동"],
+    "sidebarJobs": ["동물매개치유사", "반려동물행동교정전문가", "동물보호관리사"],
+    "sidebarCerts": [
+      {"name": "동물매개활동사", "url": "https://www.q-net.or.kr/man001.do?gSite=Q"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "overviewSalary.sal": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "overviewProspect.main": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "trivia": [{"id": 1, "text": "[1] 한국동물매개심리치료학회", "url": "https://www.kaapt.or.kr"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}],
+    "detailReady.training": [{"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}]
+  },
+  "changeSummary": "동물교감전문가 신규 보완"
+}

@@ -1,0 +1,279 @@
+{
+  "name": "IT기술지원전문가",
+  "summary": "IT기술지원전문가는 시스템 사용상의 고장이나 문제가 발생했을 때 이를 원활히 해결해주고 기술적인 지원을 제공한다.",
+  "heroTags": [
+    "IT기술지원",
+    "헬프데스크",
+    "기술지원전문가",
+    "네트워크지원",
+    "ITIL",
+    "시스템운영"
+  ],
+  "heroCategory": "IT·연구직 및 공학 기술직",
+  "isCategoryBreadcrumb": false,
+  "overviewWork": {
+    "main": [
+      "설치지시서에 따라 컴퓨터에 소프트웨어를 설치하거나 하드웨어의 가벼운 고장을 수리한다.",
+      "새로운 시스템을 구성하거나 시스템 변경에 필요한 것을 결정하기 위하여 사용자와 관리자, 간부 등과 협의한다.",
+      "매뉴얼을 읽고 사용자와 협의하며 컴퓨터에 나타난 문제를 진단하고 전문적인 기술지원을 해준다.",
+      "사용자가 상품을 사용하는 데 불편이 없는지를 평가하기 위해 소프트웨어, 하드웨어, 주변장치 등을 검사하고 모니터링한다.",
+      "소프트웨어나 하드웨어를 평가한 보고서를 준비하여 관리자가 참고할 수 있는 제언을 한다.",
+      "일상적인 데이터 전송기록과 문제 유무를 살펴 문제가 있을 경우에 이를 어떻게 처리했으며, 소프트웨어를 어떻게 설치했는지에 대한 기록을 남긴다.",
+      "하드웨어나 소프트웨어에 관한 지식을 최신화하기 위해 전문잡지나 매뉴얼을 읽고, 회의나 세미나에 참석한다.",
+      "문제해결을 수행하는 작업자, 모니터링 담당자, 자료 전송장비와 소프트웨어를 다루는 사람 등과 협조하거나 이들에게 지시한다.",
+      "사용자에게 전달할 서류를 준비하거나 장비를 조사한다."
+    ],
+    "workStrong": "",
+    "workPlace": "",
+    "physicalAct": ""
+  },
+  "overviewProspect": {
+    "main": "컴퓨터하드웨어 위주의 전통적 기술지원 분야는 모바일·클라우드 확산으로 향후 취업자 수가 다소 감소할 것으로 전망된다.[1] 다만 IoT·로봇·드론 등 신기술 기기 증가와 기업의 IT 인프라 고도화에 따라 클라우드 및 시스템 기술지원 분야의 수요는 유지될 것으로 예상된다.[2]"
+  },
+  "overviewAbilities": {
+    "abilityList": [],
+    "technKnow": "IT기술지원전문가가 되기 위해서는 전문대 혹은 대학교 이상에서 컴퓨터공학이나 전자공학을 전공하는 것이 유리하다. 이들은 높은 수준의 이론적 지식을 갖추고 집중적인 현장훈련을 받아야 설계, 개발 및 기술지원 업무가 가능하며 어떤 경우이든 급속히 발전하는 신기술을 습득하고 현장에 적용하기 위해 끊임없이 연구하여야 한다. 또한 IT기술지원전문가가 되기 위해서는 우선 컴퓨터를 좋아해야 하고, 전기·전자·기계 분야에 흥미가 있는 것이 중요하다. 그리고 수학이나 물리, 화학 등 이과계열 과목에 적성이 있는 사람이면 유리하다. 또 복잡한 문제를 해결하기 위해 논리적이고 독창적인 사고력과 인내력을 갖고 연구하는 자세가 필요하다.",
+    "eduLevel": "",
+    "skillYear": ""
+  },
+  "overviewAptitude": {
+    "aptitudeList": [],
+    "interestList": [],
+    "satisfaction": {
+      "value": "72"
+    }
+  },
+  "trivia": [
+    "ITIL(IT Infrastructure Library)은 전 세계적으로 통용되는 IT 서비스 관리 표준으로, IT기술지원전문가가 SLA(서비스수준계약)에 따라 인시던트를 체계적으로 처리하는 데 핵심 프레임워크로 활용된다.[1]"
+  ],
+  "overviewSalary": {
+    "sal": "커리어넷 직업백과 2023년 기준 컴퓨터하드웨어·기술지원 관련 직종의 평균 연봉은 약 3,997만 원(하위 25% 약 3,204만 원, 상위 25% 약 5,340만 원)으로 나타난다. IT서비스 기업이나 대기업 내 IT 지원 부서 소속 시 임금이 높은 편이다.[1]"
+  },
+  "detailWlb": {
+    "wlb": "보통",
+    "social": "보통"
+  },
+  "detailReady": {
+    "curriculum": [
+      "컴퓨터공학·전자공학·정보통신공학 관련 전문대 이상 졸업 — IT 기술 기반 습득",
+      "네트워크관리사·정보처리기사·리눅스마스터 자격 취득 — 기술지원 역량 공식 인증",
+      "AWS·Azure 클라우드 어소시에이트 자격 취득 — 클라우드 기술지원 수요 대응",
+      "ITIL 4 Foundation 자격 취득 — IT 서비스 관리 국제 표준 역량 인증.[1]"
+    ],
+    "recruit": [
+      "IT서비스 기업(삼성SDS·LG CNS·SK C&C 등) 헬프데스크·기술지원팀 채용",
+      "대기업·금융권 내부 IT지원팀(IT운영팀) 채용",
+      "통신사(KT·SKT·LG U+) 기술지원 전문 인력 채용.[1]"
+    ],
+    "training": [
+      "한국정보통신진흥협회(KAIT) 네트워크 관리 실무과정",
+      "K-디지털 트레이닝 클라우드 기술지원 전문가 과정",
+      "ITIL 4 Foundation 인증 과정 (Axelos 공인 교육기관 이수).[1]"
+    ],
+    "researchList": [],
+    "certificate": []
+  },
+  "sidebarJobs": [
+    "네트워크 관리자",
+    "네트워크 시스템 개발자",
+    "데이터베이스운영·관리자",
+    "웹 운영자",
+    "정보시스템운영자",
+    "컴퓨터하드웨어기술지원원",
+    "클라우드 기술지원 엔지니어",
+    "시스템 엔지니어",
+    "IT 컨설턴트"
+  ],
+  "sidebarMajors": [
+    "컴퓨터공학과",
+    "컴퓨터과학과",
+    "전자공학과",
+    "전기전자공학과",
+    "정보통신과",
+    "소프트웨어공학과",
+    "정보보안·보호학과"
+  ],
+  "sidebarCerts": [
+    "네트워크관리사(국가공인 민간)",
+    "리눅스마스터(국가공인 민간)",
+    "전자계산기조직응용기사, 기술사(국가기술)",
+    "정보처리기능사, 산업기사, 기사(국가기술)"
+  ],
+  "sidebarOrgs": [],
+  "youtubeLinks": [],
+  "detailIndicators": null,
+  "detailEducation": {
+    "educationDistribution": {
+      "chartType": "bar",
+      "title": "학력 분포",
+      "items": [
+        {
+          "label": "중학교 이하",
+          "value": 0
+        },
+        {
+          "label": "고등학교",
+          "value": 0
+        },
+        {
+          "label": "전문대",
+          "value": 9
+        },
+        {
+          "label": "대학",
+          "value": 75
+        },
+        {
+          "label": "석사 이상",
+          "value": 16
+        },
+        {
+          "label": "박사",
+          "value": 0
+        }
+      ],
+      "unit": "%",
+      "sortDescending": true
+    },
+    "majorDistribution": {
+      "chartType": "doughnut",
+      "title": "전공 분포",
+      "items": [
+        {
+          "label": "인문계열",
+          "value": 0
+        },
+        {
+          "label": "사회계열",
+          "value": 17
+        },
+        {
+          "label": "교육계열",
+          "value": 0
+        },
+        {
+          "label": "공학계열",
+          "value": 81
+        },
+        {
+          "label": "자연계열",
+          "value": 2
+        },
+        {
+          "label": "의약계열",
+          "value": 0
+        },
+        {
+          "label": "예체능",
+          "value": 0
+        }
+      ],
+      "unit": "%",
+      "sortDescending": true
+    }
+  },
+  "prospectChart": {
+    "chartType": "bar",
+    "title": "재직자가 생각하는 일자리 전망",
+    "items": [
+      {
+        "label": "증가",
+        "value": 5
+      },
+      {
+        "label": "다소 증가",
+        "value": 16
+      },
+      {
+        "label": "유지",
+        "value": 23
+      },
+      {
+        "label": "다소 감소",
+        "value": 53
+      },
+      {
+        "label": "감소",
+        "value": 2
+      }
+    ],
+    "unit": "%",
+    "note": "직업당 평균 30명의 재직자가 해당 직업의 향후 5년간 일자리 변화에 대해 응답한 결과입니다."
+  },
+  "customCharts": [],
+  "_sources": {
+    "overviewProspect.main": [
+      {
+        "id": 1,
+        "text": "[1] 한국고용정보원 — 한국직업전망 컴퓨터하드웨어기술자",
+        "url": "https://www.work.go.kr/consltJobCarpa/srch/korJobProspect/korJobProspectNotes.do"
+      },
+      {
+        "id": 2,
+        "text": "[2] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "id": 3,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "id": 4,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      }
+    ],
+    "overviewSalary.sal": [
+      {
+        "id": 5,
+        "text": "[1] 커리어넷 직업백과 — 컴퓨터하드웨어 기술자 임금 정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      }
+    ],
+    "trivia": [
+      {
+        "id": 6,
+        "text": "[1] IBM Think — ITIL(IT인프라 라이브러리)이란?",
+        "url": "https://www.ibm.com/think/topics/it-infrastructure-library"
+      }
+    ],
+    "way": [
+      {
+        "id": 7,
+        "text": "[1] 커리어넷 — 컴퓨터하드웨어 기술자 직업정보",
+        "url": "https://www.career.go.kr/cloud/m/job/view?seq=948"
+      },
+      {
+        "id": 8,
+        "text": "[2] 고용24 — IT기술지원전문가 직업정보",
+        "url": "https://www.work.go.kr/consltJobCarpa/srch/jobInfoSrch/srchJobInfo.do"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "id": 9,
+        "text": "[1] 커리어넷 직업정보",
+        "url": "https://www.career.go.kr/"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "id": 10,
+        "text": "[1] 워크넷 직업정보",
+        "url": "https://www.work.go.kr/"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "id": 11,
+        "text": "[1] 한국정보통신진흥협회",
+        "url": "https://www.kait.or.kr/"
+      }
+    ]
+  }
+}

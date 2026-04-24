@@ -1,0 +1,72 @@
+{
+  "fields": {
+    "way": "단청기술자로 진입하는 주된 경로는 국가유산수리기술자(단청) 자격 취득이다. 응시 자격은 국가유산수리 분야 1년 이상 종사자, 중학교 졸업 이상 학력자, 기능사 이상 자격 취득자, 국가유산수리기능자 중 하나에 해당하면 된다. 시험은 문화재보호법·한국건축사·색채론·도학 등 필기와 면접으로 구성되며, 한국산업인력공단이 매년 시행한다.[1] 사전 준비 경로로는 한국전통문화대학교 전통문화교육원의 국가유산수리기능인 양성과정(화공·모사공 과정) 수료, 단청장 전수교육학교의 3개년 과정 이수가 대표적이다.[2] 현장에서는 문화재수리업체에 기능자로 입직한 뒤 경력을 쌓으며 기술자 시험에 응시하는 도제식 진입이 일반적이다.",
+    "overviewSalary": {
+      "sal": "단청기술자의 연봉은 경력과 자격 수준에 따라 편차가 크다. 신입 기능자 수준에서는 연 3,000만~4,000만 원 수준이며, 자격증 취득 후 경력이 쌓이면 연 5,000만 원 이상에 달한다.[1] 문화재보존원 기준 평균 연봉은 약 3,387만 원(하위 25% 2,770만 원, 상위 25% 4,529만 원)으로 집계된다.[2]"
+    },
+    "overviewProspect": {
+      "main": "문화재(국가유산) 보수·정비에 대한 국가 예산이 꾸준히 편성되고 있어 단청기술자의 수요는 안정적으로 유지된다.[1] 다만 전체 자격자 수가 매우 적어 진입 자체가 제한적이며, 신규 자격자 공급도 많지 않아 숙련 기술자 부족 현상이 지속될 가능성이 높다. 고령화로 인한 기존 기술자 은퇴 이후 후계자 부족이 과제로 남아 있다."
+    },
+    "trivia": "단청에 쓰이는 '뇌록(磊綠)'은 전 세계에서 한반도(경상도 장기현 일대)에서만 산출되는 광물을 갈아 만든 고유 안료다. 조선 궁궐 단청의 초록 계열은 이 뇌록 없이는 재현이 불가능하며, 현대에도 전통 복원 작업 시 반드시 국산 뇌록을 사용한다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "높음",
+      "wlbDetail": "단청 작업은 목조 건축물의 외부 비계 위에서 장시간 반복 작업하는 특성상 체력 소모가 크다. 기후에 따라 작업 일정이 결정되므로 우기·동절기에는 현장이 중단되고 비수기가 발생한다. 독립 수주 형태로 일하는 기술자가 많아 안정적 고용 보장이 제한적이다.[1]",
+      "socialDetail": "궁궐·사찰·사당 등 국가지정 문화유산의 원형을 복원·보존하는 핵심 역할을 담당하며, 국가무형문화재와 연결된 전통 미술·건축 문화의 계승에 직접 기여한다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "한국전통문화대학교 전통문화교육원 — 국가유산수리기능인 양성과정", "text": "화공·모사공 과정을 운영하며 전통안료 채색기법, 단청 이론, 현장실습을 포함한 체계적 교육을 제공한다. 수료 후 국가유산수리기능자 자격 취득으로 연결된다.", "link": "https://www.knuh.ac.kr/hei/"},
+        {"title": "문화재수리업체 도제 실습", "text": "자격 취득 전 문화재수리업체에 기능자로 입직해 현장 경력을 쌓는 방식이 일반적이다. 국가유산수리기술자 시험 응시에는 국가유산수리 분야 1년 이상 종사 경력이 필요하다.", "link": "https://kcpra.or.kr/"},
+        {"title": "국가무형문화재 단청장 전수교육", "text": "국가무형유산전수교육관에서 단청장 보유자가 진행하는 전수 교육에 참여할 수 있다. 후계자 양성 목적의 장기 교육 프로그램이다.[1]", "link": "https://www.kh.or.kr/cms/content/view/421"}
+      ],
+      "recruit": [
+        {"title": "국가유산수리업체 채용", "text": "국가유산수리협회 회원사(문화재수리업체)를 통해 현장 기능자·기술자로 채용된다. 협회 홈페이지에서 수리업체 목록 확인 가능하다.", "link": "https://kcpra.or.kr/"},
+        {"title": "국가유산청 문화재 보수 사업 참여", "text": "국가·지자체 문화재 보수 사업에 기술자 자격으로 참여한다. 조달청 나라장터를 통한 입찰 또는 문화재수리업체 소속으로 현장 투입된다.[1]", "link": "https://www.cha.go.kr/"}
+      ],
+      "training": [
+        {"title": "국가유산수리기술자(단청) 자격시험 — Q-net", "text": "한국산업인력공단이 매년 시행하는 국가자격시험. 1차 필기(2~3월)와 2차 면접(5~6월)으로 진행되며 Q-net에서 원서 접수한다.", "link": "https://www.q-net.or.kr/site/surigisul"},
+        {"title": "국가유산진흥원 전수교육관 교육", "text": "국가무형유산전수교육관에서 단청장 보유자가 진행하는 전수 교육 프로그램을 통해 전통 채색 기법 심화 학습이 가능하다.[1]", "link": "https://www.kh.or.kr/cms/content/view/421"}
+      ]
+    },
+    "heroTags": ["전통공예", "문화재", "단청", "오방색", "목조건축", "국가자격", "장인"],
+    "sidebarJobs": ["전통건축원", "문화재실측설계기술자", "문화재분석원", "도배공", "건축석공반장", "국가유산석조각공"],
+    "sidebarCerts": [
+      {"name": "국가유산수리기술자(단청)", "url": "https://www.q-net.or.kr/site/surigisul"},
+      {"name": "국가유산수리기능자(화공)", "url": "https://www.q-net.or.kr/site/surigineung"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] Q-net 국가유산수리기술자(단청) 자격정보", "url": "https://www.q-net.or.kr/site/surigisul"},
+      {"id": 2, "text": "[2] 한국전통문화대학교 전통문화교육원", "url": "https://www.knuh.ac.kr/hei/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 한솔아카데미 국가유산수리기술자 연봉정보", "url": "https://munwha.inup.co.kr/page/page.jsp?code=T001"},
+      {"id": 2, "text": "[2] 커리어넷 문화재보존원 직업정보", "url": "https://www.career.go.kr/cnet/app/base/job/jobView.m?SEQ=299"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] Q-net 국가유산수리기술자 현황", "url": "https://www.q-net.or.kr/site/surigisul"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 한국민족문화대백과 — 단청", "url": "https://encykorea.aks.ac.kr/Article/E0013680"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 국가유산수리협회 문화재수리업 안내", "url": "https://kcpra.or.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] Q-net 국가유산수리기술자(단청) 자격정보", "url": "https://www.q-net.or.kr/site/surigisul"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 국가유산진흥원 전수교육관", "url": "https://www.kh.or.kr/cms/content/view/421"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 국가유산청 문화재 보수사업 안내", "url": "https://www.cha.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 국가유산진흥원 전수교육관", "url": "https://www.kh.or.kr/cms/content/view/421"}
+    ]
+  },
+  "changeSummary": "way·sal·prospect·trivia·detailWlb·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

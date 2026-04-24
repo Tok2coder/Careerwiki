@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-04-09T02:55:17.972Z",
+  "results": [
+    {
+      "slug": "소방관",
+      "type": "jobs",
+      "prompt": "A small cute baby beaver with tiny teeth, big round glossy eyes, soft rounded cheeks, short limbs, light-brown fluffy fur and a creamy belly, drawn in simple 2D cartoon style, is positioned in the middle third of the composition, occupying approximately 12% of the frame. The beaver is wearing a bright yellow fire-resistant jacket with reflective silver stripes and a heavy red fire helmet. It is actively gripping a thick, pressurized fire hose with both paws, squeezing the brass nozzle to direct a powerful, concentrated stream of water forward. The scene is set within a dimly lit fire station bay, featuring a large red fire engine with chrome bumpers parked beside a heavy-duty metal tool rack holding polished axes and Halligan bars, near a stack of coiled yellow fire hoses and a large red oxygen tank. The visual style is 2D stylized realism with soft painterly shading, gentle gradients, and atmospheric haze, illuminated by a cinematic rim light. The color palette consists of deep indigo, muted blue-violet, and a dark navy background, accented by the soft blue glow of water droplets catching the light.",
+      "source": "ollama",
+      "lora": false,
+      "analysis": {
+        "mentionsCenter": true,
+        "themeOk": true,
+        "hasEnvironmentDensity": true,
+        "hasConcreteToolCue": true,
+        "abstractTerms": []
+      },
+      "localImageCommand": "node scripts/local-image-gen.cjs --type=jobs --slug=소방관 --local-only"
+    },
+    {
+      "slug": "치과의사",
+      "type": "jobs",
+      "prompt": "A small cute baby beaver with tiny teeth, big round glossy eyes, soft rounded cheeks, short limbs, light-brown fluffy fur and a creamy belly, drawn in simple 2D cartoon style, is centered in the middle third of the composition, occupying approximately 12% of the frame, wearing a miniature white lab coat and a blue surgical mask. The beaver is carefully using a high-speed dental handpiece to polish a white tooth model, with tiny droplets of water spraying from the precision tip. The scene is set in a highly detailed dental clinic featuring a bright overhead dental examination light, a stainless-steel tray holding silver dental explorers and mirrors, and a large ergonomic dental chair with a blue cushioned headrest. The visual style is 2D stylized realism with soft painterly shading, gentle gradients, atmospheric haze, and cinematic rim light, utilizing a color palette of deep indigo (#4F46E5), muted blue-violet (#6366F1), and a dark navy background (#0a0f1e), accented by soft blue glows emanating from the dental lamp.",
+      "source": "ollama",
+      "lora": false,
+      "analysis": {
+        "mentionsCenter": true,
+        "themeOk": true,
+        "hasEnvironmentDensity": true,
+        "hasConcreteToolCue": true,
+        "abstractTerms": []
+      },
+      "localImageCommand": "node scripts/local-image-gen.cjs --type=jobs --slug=치과의사 --local-only"
+    }
+  ]
+}

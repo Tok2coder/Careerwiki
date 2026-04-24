@@ -1,0 +1,87 @@
+{
+  "fields": {
+    "way": "데이터 매니저는 통계학, 컴퓨터공학, 경영정보학, 정보관리학 등 관련 학과의 학사 이상 학위를 가진 인력이 주로 진입한다. 데이터 분석가나 데이터 엔지니어로 경력을 쌓은 후 데이터 거버넌스·품질 관리 역할을 맡게 되는 경로가 많다. 핵심 역량으로는 데이터 거버넌스 체계 설계, 메타데이터 관리, 데이터 품질(DQ) 정책 수립, SQL 및 BI 도구 활용 능력이 있다. ADsP(데이터분석 준전문가) 또는 DAP(데이터아키텍처 전문가) 자격증이 역량 증명에 유효하다. 기업 규모가 클수록 데이터 거버넌스 전담 팀이 별도로 운영되며, 중소기업에서는 데이터 분석가가 매니저 업무를 겸하는 경우도 있다. 디지털 전환을 추진하는 금융·제조·유통 업계의 채용이 활발하다.[1]",
+    "overviewSalary": {
+      "sal": "경력 초기에는 연 4,500만~5,500만 원 수준이며, 데이터 거버넌스 경험이 풍부한 중견 인력은 연 6,000만~7,000만 원을 받는다. 금융·대기업 계열사에서 상한이 더 높게 형성된다.[1]"
+    },
+    "overviewProspect": {
+      "main": "GDPR·개인정보보호법 강화와 AI 모델 데이터 품질 이슈로 데이터 거버넌스 전문가 수요가 지속 증가 중이다. 데이터 기반 경영이 확산되면서 데이터 자산을 체계적으로 관리하는 데이터 매니저의 역할이 중요해지고 있다.[1]"
+    },
+    "trivia": "IDC 조사에 따르면 기업들이 보유한 데이터의 68%는 활용되지 않은 채 방치되는 이른바 '다크 데이터(Dark Data)'로 분류된다. 데이터 매니저의 핵심 임무 중 하나가 이 잠재 데이터를 가치 있는 자산으로 전환하는 것이다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "주 40~45시간 정규 근무가 대부분이며, 데이터 마이그레이션이나 시스템 전환 프로젝트 기간에는 야근이 발생할 수 있다. 사무직 특성상 재택·하이브리드 근무를 허용하는 기업이 많아 전반적인 워라밸은 양호하다.[1]",
+      "socialDetail": "기업의 데이터 신뢰성과 개인정보 보호 체계를 유지하는 역할로 규제 준수와 디지털 신뢰 구축에 기여한다. 공공 데이터 관리나 의료 데이터 품질 관리를 담당할 때 사회적 기여 체감이 높다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "데이터 거버넌스 프레임워크(DAMA-DMBOK) 이해", "text": "국제 데이터 관리 협회(DAMA)가 정립한 데이터 거버넌스·마스터 데이터 관리·메타데이터 관리 등 핵심 지식체계(DMBOK)를 학습한다.", "link": null},
+        {"title": "메타데이터 관리 및 데이터 카탈로그 구축", "text": "데이터 자산의 위치·형식·품질을 체계적으로 기록하는 메타데이터 관리와 데이터 카탈로그 구축 방법을 실습한다.", "link": null},
+        {"title": "데이터 품질 관리(DQ) 지표 설계 및 모니터링", "text": "데이터 완전성·정확성·일관성 등 품질 지표를 설계하고 모니터링 체계를 구축하는 방법을 학습한다.", "link": null},
+        {"title": "SQL 심화 및 BI 도구(Tableau, Power BI) 활용", "text": "복잡한 SQL 쿼리 최적화와 Tableau·Power BI를 활용한 데이터 시각화 및 대시보드 구축 역량을 키운다.", "link": null},
+        {"title": "개인정보보호법·GDPR 규제 이해 및 데이터 컴플라이언스", "text": "국내 개인정보보호법과 유럽 GDPR 규제를 이해하고 조직의 데이터 컴플라이언스 체계를 구축하는 방법을 학습한다.", "link": null},
+        {"title": "클라우드 데이터 플랫폼(AWS Glue, Google Data Catalog 등) 운영", "text": "AWS Glue, Google Data Catalog 등 클라우드 기반 데이터 관리 플랫폼 운영 방법을 학습해 현업 역량을 강화한다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "대기업 데이터 거버넌스팀·CDO 조직 경력직 채용", "text": "CDO(최고데이터책임자) 조직을 별도로 운영하는 대기업에서 데이터 거버넌스 경력 전문가를 채용한다. 링크드인·원티드에서 공고를 확인할 수 있다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "금융·유통·제조업 IT 부서 데이터 품질 관리 담당 채용", "text": "데이터 규제가 강화된 금융권과 디지털 전환을 추진하는 유통·제조업에서 데이터 품질·거버넌스 전담 인력을 채용하고 있다.", "link": null},
+        {"title": "컨설팅 펌(삼정KPMG, 딜로이트 등) 데이터 관리 컨설턴트 채용", "text": "주요 컨설팅 기업에서 고객사의 데이터 거버넌스 체계 구축 프로젝트를 위한 전문 컨설턴트를 채용한다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "한국데이터산업진흥원 — ADsP/DAP 자격증 취득 및 연계 교육", "text": "한국데이터산업진흥원에서 ADsP(데이터분석 준전문가)와 DAP(데이터아키텍처 전문가) 자격증 취득을 위한 교육과정을 운영한다.", "link": "https://www.kdata.or.kr/"},
+        {"title": "빅데이터분석기사 취득 후 데이터 거버넌스 실무 교육 이수", "text": "빅데이터분석기사 취득 후 데이터 거버넌스 실무 심화 교육과정을 이수하면 데이터 매니저로서의 전문성을 한 단계 높일 수 있다.[1]", "link": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1440"}
+      ]
+    },
+    "heroTags": ["데이터거버넌스", "메타데이터", "데이터품질", "컴플라이언스", "SQL", "BI분석"],
+    "sidebarJobs": [
+      "데이터 라벨러",
+      "데이터 엔지니어",
+      "데이터분석가(일반)",
+      "데이터베이스운영원",
+      "빅데이터전문가",
+      "통계학연구원"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "데이터분석전문가(DAP)",
+        "url": "https://www.kdata.or.kr/info/info_04_view.html?field=&keyword=DAP&type=all&page=1&idx=51887"
+      },
+      {
+        "name": "빅데이터분석기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1440"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국데이터산업진흥원 데이터 직종 역량 안내", "url": "https://www.kdata.or.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 고용노동부 고용형태별근로실태조사", "url": "https://www.moel.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 과학기술정보통신부 데이터산업 현황 조사", "url": "https://www.msit.go.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] IDC Global DataSphere Forecast", "url": "https://www.idc.com/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국데이터산업진흥원", "url": "https://www.kdata.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 원티드 채용정보", "url": "https://www.wanted.co.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] Q-net 국가자격정보", "url": "https://www.q-net.or.kr/"}
+    ]
+  },
+  "changeSummary": "데이터 매니저 진입경로·임금·전망·WLB·trivia·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

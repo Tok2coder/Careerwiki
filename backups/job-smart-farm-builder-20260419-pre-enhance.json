@@ -1,0 +1,27 @@
+{
+  "jobId": "1775053184425",
+  "jobName": "스마트 팜 구축가",
+  "jobSlug": "스마트-팜-구축가",
+  "capturedAt": "2026-04-19T00:00:00+09:00",
+  "currentRevision": {
+    "id": 2996,
+    "revisionNumber": 5,
+    "changeSummary": "sidebarJobs 404 수정: \"농업연구사\" 제거; \"농업인\" 제거; \"식물재배기술자\" 제거; \"수직농장전문가\" 제거"
+  },
+  "lastUpdatedAt": 1775233609716,
+  "restorePayload": {
+    "fields": {
+      "way": "",
+      "overviewProspect": {
+        "main": ""
+      },
+      "trivia": ""
+    },
+    "sources": {
+      "way": [],
+      "overviewProspect.main": [],
+      "trivia": []
+    },
+    "changeSummary": "[job-data-enhance] restore 스마트 팜 구축가 pre-enhance backup (2026-04-19)"
+  }
+}

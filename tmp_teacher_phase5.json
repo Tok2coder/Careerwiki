@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "overviewSalary": {
+      "sal": "특수교사의 연봉은 일반 교원 봉급표를 동일하게 적용받는다.[1] 2025년 기준 초임 실수령액은 약 237만 원(기본급 201만 원 + 수당 포함)이며, 10년 경력 기준 세전 약 360만 원, 20년 이상 경력이면 세전 약 450만 원 수준이다.[2] 담임수당(월 13만 원), 특수학교 교원 추가 가산봉 등 별도 수당이 있으며, 공무원 연금·의료보험 등 복지를 포함한 실질 처우는 높은 편이다.[3]",
+      "source": "교육부 교원보수기준(2025), 특수교사노조"
+    },
+    "overviewProspect": {
+      "main": "특수교육 대상자 수는 2022년 10만 3,695명에서 2024년 11만 5,610명, 2025년 12만 735명으로 꾸준히 증가하고 있어 특수교사에 대한 수요도 함께 늘어나고 있다.[1] 교육부는 2025년 1학기에 특수학급 804개를 신설하고 기간제 교원 임용을 확대하는 등 특수교사 부족 문제 해소에 나서고 있으며, 특수학교 수도 2024년 195교에서 2025년 196교로, 특수학급은 1만 3,931학급에서 1만 4,658학급으로 727학급이 증가했다.[2] 2025학년도 신규 교사 선발에서 특수교육교사는 733명이 배정되었고, 2026학년도에는 유·초등 특수교사 선발이 540명에서 572명으로 확대되었다.[3] 장애 조기 발견 체계의 개선과 통합교육 확대 기조에 따라 특수교사의 수요는 당분간 지속적으로 증가할 전망이다.[4]"
+    },
+    "trivia": "정규 특수교사 충원율은 항상 80%대를 맴돌며, 나머지는 기간제 교사로 채워지거나 아예 지원을 받지 못하는 학급도 있다.[1] 2025년 조사에서 특수교사의 44.5%가 전년보다 교권이 더 침해받고 있다고 응답했으며, 학생의 폭행·폭언뿐 아니라 학부모의 근무 시간 외 무리한 요구, 관리자의 부당한 업무 지시 등이 복합적으로 작용하고 있다.[2]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "특수교사는 정규직 공무원으로 정해진 수업 시수(주 22시간 내외)와 근무 시간(8~17시)이 보장되어 워라밸은 일반 교사와 비슷한 수준이다.[1] 다만 장애 학생의 개별 행동 지원, 부모 상담, IEP(개별화교육계획) 작성 등의 추가 업무가 있으며, 응급 상황에 대처해야 하는 심리적 부담이 크다.[2] 특히 중증 장애 학생 비율이 높은 학교에서는 신체적 피로도도 높아 소진(Burnout) 위험이 있는 편이다.[3]",
+      "socialDetail": "특수교사는 장애 학생의 교육권과 사회통합을 지원하는 역할로 사회적으로 높은 의미와 가치를 인정받는 직업이다.[1] 학부모·치료사·사회복지사·담임교사 등 다양한 전문가와 협업하는 과정에서 팀워크와 관계 능력이 중요하며, 학생의 성장을 직접 목격하는 보람이 크다.[2]"
+    }
+  },
+  "sources": {
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보 - 특수교사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=413"},
+      {"id": 2, "text": "[2] 2025년 교원 초임 실수령액 정보 (2025년 기준)", "url": "https://www.career.go.kr/cloud/w/job/view?seq=413"},
+      {"id": 3, "text": "[3] 커리어넷 직업정보 - 특수교사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=413"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 2025년 특수교육대상자 120,735명 - chohongjoong.com", "url": "http://chohongjoong.com/gnu4/bbs/board.php?bo_table=board02&wr_id=354"},
+      {"id": 2, "text": "[2] 특수교육 대상자 증가에도 과밀학급은 감소 - 뉴데일리", "url": "https://biz.newdaily.co.kr/site/data/html/2025/04/08/2025040800212.html"},
+      {"id": 3, "text": "[3] 2025학년도 특수교육교사 733명 선발 - 고시위크", "url": "https://www.gosiweek.com/article/1065581303245809"},
+      {"id": 4, "text": "[4] 커리어넷 직업정보 - 특수교사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=413"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 법적 정원이라도 지켜달라…매년 과밀학급 특수교사의 현실 (국민일보)", "url": "https://www.kukinews.com/article/view/kuk202411070183"},
+      {"id": 2, "text": "[2] 특수교사 44.5% 교권침해 실태조사 (2025) - 전북미래교육신문", "url": "https://edujb.com/news/articleView.html?idxno=6081"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보 - 특수교사 근무환경", "url": "https://www.career.go.kr/cloud/w/job/view?seq=413"},
+      {"id": 2, "text": "[2] 특수교사 소진 연구 - 한국특수교육학회지", "url": "https://www.ksse.or.kr/subList/32000006307"},
+      {"id": 3, "text": "[3] 특수교사 소진 연구 - 한국특수교육학회지", "url": "https://www.ksse.or.kr/subList/32000006307"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 교육부 특수교육 연차보고서 2024", "url": "https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=316&boardSeq=96804"},
+      {"id": 2, "text": "[2] 임금직업포털(워크피디아) 특수교사 직업정보", "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do"}
+    ]
+  },
+  "changeSummary": "특수교사 Phase 5: GN 수선(sal [8][9][10]→[1][2][3], wlbDetail [11][12]→[1][2], socialDetail [13][14]→[1][2]), OM 수선(trivia [2] 출처 추가, wlbDetail [3] 추가, prospect [3][4] 추가), wlbDetail 마지막 문장 [3] 추가, 워라뱸 오타 수정"
+}

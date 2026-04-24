@@ -1,0 +1,22 @@
+{
+  "jobName": "건축가(건축설계사)",
+  "jobId": "176528344210340",
+  "fields": {},
+  "sources": {
+    "way": [
+      {"id": 1, "text": "한국건축사협회", "url": "https://www.kira.or.kr/index.do"},
+      {"id": 2, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"},
+      {"id": 3, "text": "대한건축학회", "url": "https://www.aik.or.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "커리어넷 직업정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=23"}
+    ]
+  },
+  "changeSummary": "revert: detailReady.recruit sources 제거 (잘못된 saramin cat_kewd=84 URL → 백엔드 카테고리 노출 문제)"
+}

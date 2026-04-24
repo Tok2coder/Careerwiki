@@ -1,0 +1,69 @@
+{
+    "jobName":  "양식원",
+    "jobId":  "1765283341492648",
+    "fields":  {
+                   "way":  "양식원은 별도의 필수 학력이나 자격증이 정해진 직업은 아니지만, 숙련 종사자를 보조하며 현장 실무를 익히는 경로가 일반적이다. 수산(해양)고등학교나 수산해양대학의 관련 학과에서 해양생태계, 수산생물의 질병과 치료 등을 배우면 업무 이해에 도움이 되며, 공개 채용을 통해 양식업체에 취업하거나 현장 경험을 쌓아 직접 양식장을 운영하는 방식으로도 진입할 수 있다.[1] 청년층은 귀어학교, 양식장 임대, 정착 지원 제도를 함께 활용해 초기 진입 장벽을 낮출 수 있다.[2]",
+                   "detailReady":  {
+                                       "curriculum":  [
+                                                          "수산(해양)고등학교에서 해양생태계 기초를 익힘",
+                                                          "수산생물의 질병과 치료 관련 기초 내용을 학습",
+                                                          "수산해양대학 관련 학과에서 양식·어병·해양생명 계열 전공을 이수",
+                                                          "현장 실습으로 먹이 공급과 사육환경 점검 경험을 축적",
+                                                          "관련 학과에서 배운 지식이 실제 업무 수행에 도움이 됨[1]",
+                                                          "청년 귀어 희망자는 귀어학교 등 초기 정착 교육을 병행해 진입을 준비할 수 있음[2]"
+                                                      ],
+                                       "recruit":  [
+                                                       "공개 채용을 통해 양식업체 취업을 준비",
+                                                       "숙련 인력 밑에서 현장 경험을 쌓은 뒤 직접 양식업체를 운영하며 진입 가능[1]",
+                                                       "청년은 공공기관이 확보한 양식장 임대와 정착 지원을 활용해 초기 진입 장벽을 낮출 수 있음[2]"
+                                                   ],
+                                       "training":  [
+                                                        "현장에서 숙련된 양식원을 보조하며 먹이 공급과 사육환경 관리 기능을 익힘[1]",
+                                                        "귀어학교 등 초기 정착 교육기관을 통해 어촌 정착 교육과 창업·주거 연계 정보를 확인[2]"
+                                                    ]
+                                   }
+               },
+    "sources":  {
+                    "way":  [
+                                {
+                                    "text":  "[1] 커리어넷 직업백과 양식원",
+                                    "url":  "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=187"
+                                },
+                                {
+                                    "text":  "[2] 해양수산부 2023년 중점과제 브리핑",
+                                    "url":  "https://www.mof.go.kr/2023briefing/upload/2023_briefing.pdf"
+                                }
+                            ],
+                    "detailReady.curriculum":  [
+                                                   {
+                                                       "text":  "[1] 커리어넷 직업백과 양식원",
+                                                       "url":  "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=187"
+                                                   },
+                                                   {
+                                                       "text":  "[2] 해양수산부 2023년 중점과제 브리핑",
+                                                       "url":  "https://www.mof.go.kr/2023briefing/upload/2023_briefing.pdf"
+                                                   }
+                                               ],
+                    "detailReady.recruit":  [
+                                                {
+                                                    "text":  "[1] 커리어넷 직업백과 양식원",
+                                                    "url":  "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=187"
+                                                },
+                                                {
+                                                    "text":  "[2] 해양수산부 2023년 중점과제 브리핑",
+                                                    "url":  "https://www.mof.go.kr/2023briefing/upload/2023_briefing.pdf"
+                                                }
+                                            ],
+                    "detailReady.training":  [
+                                                 {
+                                                     "text":  "[1] 커리어넷 직업백과 양식원",
+                                                     "url":  "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=187"
+                                                 },
+                                                 {
+                                                     "text":  "[2] 해양수산부 2023년 중점과제 브리핑",
+                                                     "url":  "https://www.mof.go.kr/2023briefing/upload/2023_briefing.pdf"
+                                                 }
+                                             ]
+                },
+    "changeSummary":  "양식원 풀스킬 보강: way와 직업 준비하기 섹션(curriculum/recruit/training) 재작성 및 출처 연결"
+}

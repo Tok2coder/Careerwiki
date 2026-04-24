@@ -1,0 +1,77 @@
+{
+  "fields": {
+    "way": "건설재료연구원이 되려면 건축공학, 토목공학, 재료공학 관련 학과에서 학사 이상 학위를 취득하는 것이 기본 조건이다. 한국건설기술연구원(KICT), 한국도로공사 도로교통연구원 등 공공 연구기관은 주로 석사 이상을 요구하며, 연구직 지원 시 관련 논문 실적이 중요하다.[1] 건설재료시험기사 또는 콘크리트기사 자격증을 보유하면 취업 경쟁력이 높아지며, 민간 건설사의 기술연구소나 건설재료 전문업체 연구팀으로 진출하는 경우도 많다.[2]",
+    "overviewSalary": {
+      "sal": "한국건설기술연구원 등 공공 연구기관의 2025년 기준 신입 학사 초봉은 약 4,750만 원, 박사 무경력 연구직은 약 6,200만 원 수준이다. 민간 건설사 기술연구소는 경력·성과에 따라 차이가 크다.[1]"
+    },
+    "overviewProspect": {
+      "main": "건설재료연구원은 신규 건설재료 개발 및 친환경 소재 연구 수요 증가로 안정적인 고용 전망을 보인다. 탄소 저감을 위한 저탄소 콘크리트, 친환경 단열재 등 새로운 건설재료에 대한 연구 수요가 늘고 있으며, 건설 시설물의 안전 기준 강화로 재료 성능 연구의 중요성이 높아지고 있다.[1]"
+    },
+    "trivia": "건설재료연구원이 연구하는 콘크리트 크리프(Creep)는 지속 하중 하에서 시간이 경과함에 따라 변형이 증가하는 현상으로, 고층 건물과 장경간 교량의 장기 안전성 평가에 핵심적인 시험 항목이다. 이 변형이 과다하면 구조물의 처짐 및 균열을 유발하므로, 건설재료연구원의 크리프 시험 데이터가 설계 기준 수립에 직접 활용된다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "높음",
+      "wlbDetail": "주로 연구소 실험실 환경에서 근무하며, 현장 시료 채취나 성능 시험을 위해 건설 현장을 방문하기도 한다. 연구 프로젝트 마감이나 시험 일정에 따라 업무 강도가 달라지나, 전반적으로 공공 연구기관은 안정적인 근무 환경이다.[1]",
+      "socialDetail": "건설 구조물의 장기 안전성을 보장하는 재료를 연구·개발함으로써 교량·건물 붕괴 사고를 예방하는 공공 안전 기능을 담당한다. 저탄소·친환경 건설재료 연구로 건설 산업의 탄소 감축에 기여하는 환경적 역할도 수행한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "건축공학·토목공학·재료공학 관련 학과 전공(학사 이상 권장)",
+        "건설재료시험기사 또는 콘크리트기사 자격증 취득",
+        "재료역학, 콘크리트공학, 구조역학 심화 학습",
+        "한국건설기술연구원(KICT) 인턴십 또는 대학 연구실 참여",
+        "연구 논문 작성 및 학술 대회 발표 경험 축적[1]"
+      ],
+      "recruit": [
+        {"text": "한국건설기술연구원(KICT) 신입 연구원 공채 지원", "url": "https://kict.recruiter.co.kr/"},
+        {"text": "한국도로공사 도로교통연구원 연구직 채용 지원", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"},
+        "대형 건설사 기술연구소 연구원 채용 지원[1]"
+      ],
+      "training": [
+        "한국건설기술연구원 단기 교육과정 및 세미나 참여",
+        "대한토목학회·한국콘크리트학회 학술 교육 이수[1]"
+      ]
+    },
+    "sidebarMajors": ["건축공학과", "토목공학과", "재료공학과", "건축학과"],
+    "sidebarOrgs": [
+      {"name": "한국건설기술연구원(KICT)", "url": "https://www.kict.re.kr"},
+      {"name": "한국콘크리트학회", "url": "https://www.kci.re.kr"}
+    ],
+    "sidebarCerts": [
+      {"name": "건설재료시험기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1750"},
+      {"name": "콘크리트기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1760"},
+      {"name": "토목품질시험기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00501&jmCd=1340"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국건설기술연구원 채용정보", "url": "https://kict.recruiter.co.kr/"},
+      {"id": 2, "text": "[2] 큐넷 건설재료시험기사 자격정보", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1750"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 한국건설기술연구원 채용 연봉정보", "url": "https://kict.recruiter.co.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국건설기술연구원 연구사업 소개", "url": "https://www.kict.re.kr"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 한국콘크리트학회 콘크리트 성질", "url": "https://www.kci.re.kr"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 한국건설기술연구원 채용정보", "url": "https://kict.recruiter.co.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국건설기술연구원 연구사업 소개", "url": "https://www.kict.re.kr"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국건설기술연구원 채용정보", "url": "https://kict.recruiter.co.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 고용24 워크넷 연구직 채용정보", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국콘크리트학회 교육안내", "url": "https://www.kci.re.kr"}
+    ]
+  },
+  "changeSummary": "Phase 1: 완전 빈 직업 데이터 신규 작성 - way/sal/prospect/trivia/detailWlb/detailReady/sidebarMajors/sidebarOrgs/sidebarCerts"
+}

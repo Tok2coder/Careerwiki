@@ -1,0 +1,22 @@
+{
+    "jobId":  "1765284218856936",
+    "jobName":  "경마검량원",
+    "jobSlug":  "경마검량원",
+    "capturedAt":  "2026-04-20T00:00:00+09:00",
+    "currentRevision":  {
+                            "id":  10737,
+                            "revisionNumber":  7
+                        },
+    "restorePayload":  {
+                           "fields":  {
+                                          "youtubeLinks":  [
+
+                                                           ],
+                                          "_youtubeSearchNote":  null,
+                                          "_careerTreeNote":  null
+                                      },
+                           "careerTree":  null,
+                           "_careerTreeNote":  null,
+                           "changeSummary":  "[job-data-enhance] restore 경마검량원 pre-note backup (2026-04-20)"
+                       }
+}

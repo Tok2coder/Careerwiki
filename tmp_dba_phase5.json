@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "overviewSalary": {
+      "sal": "데이터베이스 관리자(DBA)의 연봉은 경력·산업군·회사 규모에 따라 편차가 크다.[1] 잡인덱스 조사(2025년 기준)에 따르면 DBA의 평균 연봉은 약 5,200만 원 수준이며, 10년 이상 경력의 시니어 DBA나 금융권·대기업 소속은 7,000만 원 이상을 받는 경우도 있다.[2] 프리랜서 DBA는 프로젝트 단위로 계약하며 시니어급은 월 500만 원 이상의 수입도 가능하나, 고용 안정성이 낮은 편이다.[3]",
+      "wage": "5,200",
+      "wageSource": "DBA(데이터베이스관리자)의 평균연봉은 약 5,200만원으로 조사됩니다. (자료: 잡인덱스, 그룹바이 블로그 2025)",
+      "source": "잡인덱스, 그룹바이 블로그(2025)"
+    },
+    "overviewProspect": {
+      "main": "데이터 기반 의사결정이 확산되면서 데이터베이스 설계, 관리, 최적화에 대한 수요는 지속적으로 높아지고 있다.[1] 다만 클라우드 환경(AWS RDS, Azure SQL 등)으로 전환이 가속화되면서 전통적인 온프레미스 DBA의 역할은 축소되는 추세이며, 클라우드 DB 관리와 데이터 파이프라인 설계 역량이 새롭게 요구된다.[2] AI를 활용한 자동 튜닝과 모니터링 도구가 등장하면서 단순 운영 업무는 줄어들지만, 대규모 분산 시스템 설계나 보안 관리 등 고도화된 역할은 여전히 전문가를 필요로 한다.[3] 향후 DBA는 데이터 엔지니어, 클라우드 아키텍트 등으로 역할이 확장될 전망이다.[4]"
+    },
+    "trivia": "전 세계적으로 가장 많이 사용되는 관계형 데이터베이스는 Oracle이며, 한국 기업의 약 60% 이상이 Oracle DB를 주력으로 사용한다.[1] DBA는 IT 직군 중에서도 야간 장애 대응이 빈번한 직종으로 알려져 있어 새벽 호출을 뜻하는 콜(call) 당직이 일상적이다.[2] 글로벌 기술 시장조사기관 가트너에 따르면 2025년까지 전체 데이터베이스의 75%가 클라우드로 이전될 것으로 전망된다.[3] 한국에서 DBA가 독립 직군으로 자리 잡은 것은 2000년대 초반 인터넷 서비스가 본격 확산되면서부터이다.[4]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통",
+      "wlbDetail": "서비스 장애가 발생하면 시간에 관계없이 즉각 대응해야 하므로 야간과 주말에도 호출이 잦다.[1] 정기 점검이나 마이그레이션 작업은 서비스 영향을 최소화하기 위해 심야 시간대에 진행되는 경우가 많으며, 금융권이나 대형 서비스 운영 DBA일수록 당직 부담이 크다.[2]",
+      "socialDetail": "직접적인 대외 인지도는 낮지만, 기업의 핵심 데이터를 보호하고 시스템 안정성을 책임지는 역할로 조직 내 신뢰와 영향력이 높은 편이다.[1] 데이터 보안과 개인정보 보호 의무를 수행함으로써 고객과 조직의 이익을 직접적으로 지킨다.[2]"
+    },
+    "way": "컴퓨터공학, 정보통신 등 IT 관련 학과를 졸업하는 것이 일반적이나, 비전공자도 실무 경험과 자격증으로 진입이 가능하다.[1] 대학에서 데이터베이스, 운영체제, 네트워크 등의 기초를 학습한 후 Oracle, MySQL, PostgreSQL 등 주요 DBMS를 실습하는 것이 권장된다.[2] 신입으로 DBA 직접 채용은 드물기 때문에 백엔드 개발자나 시스템 엔지니어로 경력을 쌓은 뒤 전환하는 경우가 많다.[3] OCP(Oracle Certified Professional) 자격증을 우선 취득하고, SQLD, SQLP, DAsP 등 국가공인 자격증을 추가로 준비하면 취업에 유리하다.[4]"
+  },
+  "sources": {
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보 - 데이터베이스관리자", "url": "https://www.career.go.kr/cloud/w/job/view?seq=242"},
+      {"id": 2, "text": "[2] 잡인덱스 DBA 연봉 정보 (2025년 기준)", "url": "https://www.jobindexworld.com/contents/view/7917"},
+      {"id": 3, "text": "[3] 이랜서 DBA 프리랜서 정보", "url": "https://www.elancer.co.kr/blog/detail/239"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 이랜서 블로그 - DBA 직업 전망", "url": "https://www.elancer.co.kr/blog/detail/239"},
+      {"id": 2, "text": "[2] ITWorld - DBA 미래 데이터베이스 전문가의 역할", "url": "https://www.itworld.co.kr/article/3829695/dba%EA%B0%80-%EC%82%AC%EB%9D%BC%EC%A7%84%EB%8B%A4-%EB%AF%B8%EB%9E%98-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%A0%84%EB%AC%B8%EA%B0%80%EC%9D%98-%EC%97%AD%ED%95%A0.html"},
+      {"id": 3, "text": "[3] 잡인덱스 DBA 직업 전망", "url": "https://www.jobindexworld.com/contents/view/4383"},
+      {"id": 4, "text": "[4] 테크인터뷰 블로그 - DBA 클라우드 전환", "url": "https://techinterviewblog.com/1720/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] Oracle - What is a DBA", "url": "https://www.oracle.com/database/what-is-a-dba/"},
+      {"id": 2, "text": "[2] DBA 입장에서 바라보는 데이터베이스 직군 이야기 - rastalion.dev", "url": "https://rastalion.dev/dba-%EC%9E%85%EC%9E%A5%EC%97%90%EC%84%9C-%EB%B0%94%EB%9D%BC%EB%B3%B4%EB%8A%94-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%A7%81%EA%B5%B0-%EC%9D%B4%EC%95%BC%EA%B8%B0/"},
+      {"id": 3, "text": "[3] 잡코리아 DBA 직업정보", "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=18758"},
+      {"id": 4, "text": "[4] DBA 입장에서 바라보는 데이터베이스 직군 이야기 - rastalion.dev", "url": "https://rastalion.dev/dba-%EC%9E%85%EC%9E%A5%EC%97%90%EC%84%9C-%EB%B0%94%EB%9D%BC%EB%B3%B4%EB%8A%94-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%A7%81%EA%B5%B0-%EC%9D%B4%EC%95%BC%EA%B8%B0/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] DBA 입장에서 바라보는 데이터베이스 직군 이야기 - rastalion.dev", "url": "https://rastalion.dev/dba-%EC%9E%85%EC%9E%A5%EC%97%90%EC%84%9C-%EB%B0%94%EB%9D%BC%EB%B3%B4%EB%8A%94-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%A7%81%EA%B5%B0-%EC%9D%B4%EC%95%BC%EA%B8%B0/"},
+      {"id": 2, "text": "[2] 잡인덱스 DBA 연봉 정보", "url": "https://www.jobindexworld.com/contents/view/7917"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보 - 데이터베이스관리자", "url": "https://www.career.go.kr/cloud/w/job/view?seq=242"},
+      {"id": 2, "text": "[2] ITWorld - DBA 미래 데이터베이스 전문가의 역할", "url": "https://www.itworld.co.kr/article/3829695/dba%EA%B0%80-%EC%82%AC%EB%9D%BC%EC%A7%84%EB%8B%A4-%EB%AF%B8%EB%9E%98-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%A0%84%EB%AC%B8%EA%B0%80%EC%9D%98-%EC%97%AD%ED%95%A0.html"}
+    ],
+    "way": [
+      {"id": 1, "text": "[1] 잡코리아 DBA 직업정보", "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=18758"},
+      {"id": 2, "text": "[2] 잡인덱스 DBA 직무·연봉 정보", "url": "https://www.jobindexworld.com/contents/view/7917"},
+      {"id": 3, "text": "[3] DBA 입장에서 바라보는 데이터베이스 직군 이야기 - rastalion.dev", "url": "https://rastalion.dev/dba-%EC%9E%85%EC%9E%A5%EC%97%90%EC%84%9C-%EB%B0%94%EB%9D%BC%EB%B3%B4%EB%8A%94-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%A7%81%EA%B5%B0-%EC%9D%B4%EC%95%BC%EA%B8%B0/"},
+      {"id": 4, "text": "[4] IT다 멘토링 - DBA 자격증 준비", "url": "https://www.itdaa.net/open_mentorings/86"}
+    ]
+  },
+  "changeSummary": "Phase 5: sources 순서를 페이지 렌더링 순서로 재정렬 (sal→prospect→trivia→wlbDetail→socialDetail→way)"
+}

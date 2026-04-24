@@ -780,6 +780,28 @@ uploadRoutes.post('/api/admin/image/save', requireAuth, async (c) => {
       return c.json({ success: false, error: uploadResult.error || 'R2 업로드 실패' }, 500)
     }
 
+    // 새 파일 업로드 성공 후 다른 포맷의 orphan 정리 (webp ↔ png ↔ jpg)
+    // 예: 과거 PNG로 저장됐다가 WebP로 재업로드되면 old PNG 자동 삭제
+    // turbo callback(`/image-save`)와 동일한 패턴 사용
+    try {
+      const prefix = tableType === 'jobs' ? 'job' : 'major'
+      const safeSlug = slug.replace(/\//g, '_')
+      const encodedSlug = encodeURIComponent(safeSlug)
+      const variantKeys = new Set<string>()
+      for (const ext of ['webp', 'png', 'jpg']) {
+        variantKeys.add(`${tableType}/${prefix}-${safeSlug}.${ext}`)
+        variantKeys.add(`${tableType}/${prefix}-${encodedSlug}.${ext}`)
+      }
+      variantKeys.delete(fileKey) // 방금 업로드한 키는 보존
+      await Promise.all(
+        Array.from(variantKeys).map(k =>
+          c.env.UPLOADS.delete(k).catch(() => undefined)
+        )
+      )
+    } catch {
+      // orphan 정리 실패는 무시 — 핵심 업로드는 이미 성공
+    }
+
     const baseUrl = new URL(c.req.url).origin
     const publicUrl = getImagePublicUrl(fileKey, baseUrl)
     const cacheBustedUrl = `${publicUrl}?v=${Date.now()}`
@@ -827,6 +849,79 @@ uploadRoutes.post('/api/admin/image/save', requireAuth, async (c) => {
     return c.json({
       success: false,
       error: error instanceof Error ? error.message : '이미지 저장 중 오류가 발생했습니다.'
+    }, 500)
+  }
+})
+
+/**
+ * R2 orphan 이미지 일괄 삭제 (관리자 전용)
+ *
+ * 입력: { items: Array<{ type: 'jobs'|'majors'; slug: string; ext: 'png'|'webp'|'jpg' }> }
+ *   - 각 항목의 R2 키를 계산해 삭제 시도. 두 가지 인코딩(한글 그대로 / encodeURIComponent)
+ *     모두 시도하여 과거 혼재 저장된 키도 정리.
+ *
+ * 출력: { success, deleted, notFound, errors }
+ *
+ * 용도: PNG → WebP 마이그레이션 후 남은 PNG orphan 정리 등.
+ *       현재 DB image_url이 해당 키를 참조하면 안 됨 (사용자 측에서 보장해야 함).
+ */
+uploadRoutes.post('/api/admin/image/delete-orphan', requireAuth, async (c) => {
+  try {
+    const user = c.get('user')!
+    if (!hasImageAdminRole(user.role)) {
+      return c.json({ success: false, error: '관리자 권한이 필요합니다.' }, 403)
+    }
+
+    const body = await c.req.json() as {
+      items?: Array<{ type: 'jobs' | 'majors'; slug: string; ext: 'png' | 'webp' | 'jpg' }>
+    }
+    const items = body.items || []
+    if (!Array.isArray(items) || items.length === 0) {
+      return c.json({ success: false, error: 'items 배열이 필요합니다.' }, 400)
+    }
+    if (items.length > 1000) {
+      return c.json({ success: false, error: '한 번에 최대 1000개까지만 처리 가능합니다.' }, 400)
+    }
+
+    let deleted = 0
+    let notFound = 0
+    const errors: Array<{ key: string; error: string }> = []
+
+    await Promise.all(items.map(async (item) => {
+      const { type, slug, ext } = item
+      if (!type || !slug || !ext) return
+      if (!['jobs', 'majors'].includes(type)) return
+      if (!['png', 'webp', 'jpg'].includes(ext)) return
+
+      const prefix = type === 'jobs' ? 'job' : 'major'
+      const safeSlug = slug.replace(/\//g, '_')
+      const encodedSlug = encodeURIComponent(safeSlug)
+      // 두 인코딩 모두 삭제 시도 (과거 생성 방식이 두 형식으로 나뉘어 있었음)
+      const keys = new Set<string>([
+        `${type}/${prefix}-${safeSlug}.${ext}`,
+        `${type}/${prefix}-${encodedSlug}.${ext}`,
+      ])
+
+      for (const key of keys) {
+        try {
+          const head = await c.env.UPLOADS.head(key)
+          if (!head) {
+            notFound++
+            continue
+          }
+          await c.env.UPLOADS.delete(key)
+          deleted++
+        } catch (e) {
+          errors.push({ key, error: e instanceof Error ? e.message : String(e) })
+        }
+      }
+    }))
+
+    return c.json({ success: true, deleted, notFound, errors: errors.slice(0, 20), errorCount: errors.length })
+  } catch (error) {
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : '삭제 중 오류가 발생했습니다.'
     }, 500)
   }
 })

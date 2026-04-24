@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "way": "데브옵스 엔지니어가 되려면 컴퓨터공학, 정보시스템, 소프트웨어공학 등 관련 학과의 학사 학위가 일반적인 출발점이다. 비전공자도 부트캠프나 독학으로 전환하는 사례가 많으나, Linux 시스템 관리·네트워킹 기초·프로그래밍 능력을 반드시 갖춰야 한다. 현업에서는 AWS·GCP·Azure 같은 클라우드 플랫폼 경험, Docker·Kubernetes 컨테이너 기술, CI/CD 파이프라인(Jenkins, GitHub Actions) 구축 역량을 핵심 요건으로 요구한다. 정보처리기사, AWS Solutions Architect, CKA(Certified Kubernetes Administrator) 등 자격증이 취업과 이직에 유리하게 작용한다. 신입은 시스템 엔지니어나 백엔드 개발자로 커리어를 시작한 뒤 데브옵스로 전환하는 경로도 흔하며, 사이드 프로젝트나 오픈소스 기여를 통한 포트폴리오 구축이 중요하다.[1]",
+    "overviewSalary": {
+      "sal": "초봉은 연 4,000만~5,500만 원 수준이며, 경력 3~5년 차에는 연 6,000만~9,000만 원까지 오른다. 클라우드·Kubernetes 전문성이 높을수록 연봉 상승 폭이 크며, 대기업·스타트업 모두 수요가 많아 협상력이 높은 편이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "AI·클라우드 인프라 확산으로 데브옵스 수요는 2030년까지 꾸준히 성장할 전망이다. 한국 IT 기업의 클라우드 전환이 가속화되면서 파이프라인 자동화와 신뢰성 엔지니어링 수요가 함께 늘고 있다. 고급 인력 부족으로 취업 경쟁력이 높고, 해외 원격 근무 기회도 많다.[1]"
+    },
+    "trivia": "데브옵스(DevOps)라는 용어는 2009년 벨기에 개발자 패트릭 드부와(Patrick Debois)가 'DevOpsDays' 컨퍼런스를 처음 개최하면서 공식화됐다. 이후 구글이 SRE(Site Reliability Engineering) 모델을 발전시키며 현대 데브옵스 문화의 이론적 토대를 마련했다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통",
+      "wlbDetail": "대부분 주 40~50시간 근무이나 장애 대응 시 야간·주말 온콜 당번이 발생한다. 원격·하이브리드 근무를 허용하는 기업이 많아 유연성이 높은 편이며, 자동화 수준이 높아질수록 긴급 대응 빈도는 줄어드는 추세다.[1]",
+      "socialDetail": "안정적인 서비스 운영을 통해 수백만 사용자의 디지털 경험을 지탱하는 역할로 사회적 기여도가 있다. 의료·금융·공공 인프라 시스템 운영을 지원하는 경우 기여 체감이 높다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "Linux 시스템 관리 및 Shell 스크립트", "text": "Linux 서버 환경에서의 시스템 관리 명령어와 Shell 스크립트 자동화를 학습해 DevOps의 기반 역량을 갖춘다.", "link": null},
+        {"title": "Docker·Kubernetes 컨테이너 오케스트레이션", "text": "컨테이너 기반 배포 자동화의 핵심인 Docker와 Kubernetes를 학습하며, CKA(Certified Kubernetes Administrator) 자격증 준비와 병행하면 효과적이다.", "link": null},
+        {"title": "CI/CD 파이프라인 설계 (Jenkins, GitHub Actions, GitLab CI)", "text": "소스 코드 변경사항을 자동으로 빌드·테스트·배포하는 파이프라인 구현을 Jenkins, GitHub Actions 등 도구로 직접 실습한다.", "link": null},
+        {"title": "AWS·GCP·Azure 클라우드 서비스 핵심 아키텍처", "text": "주요 클라우드 제공업체의 컴퓨팅, 스토리지, 네트워킹 서비스를 이해하고 클라우드 아키텍처 설계 역량을 갖춘다.", "link": null},
+        {"title": "모니터링·로깅 (Prometheus, Grafana, ELK Stack)", "text": "Prometheus와 Grafana로 서비스 상태를 실시간 모니터링하고, ELK Stack으로 로그를 분석하는 관찰가능성(Observability) 역량을 키운다.", "link": null},
+        {"title": "Infrastructure as Code (Terraform, Ansible)", "text": "Terraform과 Ansible을 이용해 인프라를 코드로 관리함으로써 일관성 있고 재현 가능한 환경을 구축하는 방법을 학습한다.", "link": null},
+        {"title": "네트워킹 기초 (DNS, HTTP/S, 로드밸런서, VPN)", "text": "DNS, HTTP/S, 로드밸런서, VPN 등 네트워크 기초 지식은 데브옵스 엔지니어가 인프라 문제를 진단·해결하는 데 필수적이다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "IT 대기업·인터넷 기업 (카카오, 네이버, 쿠팡, 라인 등) 경력 공채", "text": "국내 주요 IT 기업에서 데브옵스·SRE 직군을 수시·정기 채용한다. 링크드인·원티드 등 플랫폼에서 공고를 확인할 수 있다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "스타트업 데브옵스 팀 신입·주니어 채용 (원티드, 점핏 등 플랫폼)", "text": "기술 스타트업에서 신입·주니어 데브옵스 엔지니어를 적극 채용한다. 포트폴리오(GitHub 레포지토리, 개인 프로젝트)가 지원에 유리하게 작용한다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "클라우드 서비스 기업(AWS, GCP 파트너사) 및 SI 업체 기술 채용", "text": "클라우드 관리형 서비스 제공업체(MSP)와 SI 기업에서 클라우드 인프라 구축·운영 인력을 상시 채용한다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "정보처리기사 취득 후 클라우드 자격증(AWS SAA, CKA) 병행 준비", "text": "정보처리기사로 기본 IT 역량을 인증한 뒤, AWS Solutions Architect Associate나 CKA 등 클라우드·컨테이너 전문 자격증을 취득하면 취업 경쟁력이 높아진다.", "link": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0120"},
+        {"title": "국비지원 클라우드·데브옵스 부트캠프 (K-Digital Training 과정 활용)", "text": "고용노동부 K-Digital Training 과정에서 클라우드·데브옵스 국비 지원 교육을 받을 수 있으며, HRD-Net에서 관련 훈련과정을 검색해 수료할 수 있다.[1]", "link": "https://www.hrd.go.kr/"}
+      ]
+    },
+    "heroTags": ["클라우드", "CI/CD", "자동화", "Kubernetes", "인프라", "Linux"],
+    "sidebarJobs": [
+      "데브옵스관리자",
+      "데이터 엔지니어",
+      "데이터베이스운영원",
+      "응용 소프트웨어 개발자",
+      "시스템 엔지니어",
+      "빅데이터전문가"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "정보처리기사",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0120"
+      },
+      {
+        "name": "SQL개발자(SQLD)",
+        "url": "https://www.kdata.or.kr/info/info_04_view.html?field=&keyword=SQLD&type=all&page=1&idx=51888"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국산업인력공단 NCS 직무정보", "url": "https://www.ncs.go.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 고용노동부 고용형태별근로실태조사", "url": "https://www.moel.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 과학기술정보통신부 클라우드 컴퓨팅 시장 현황", "url": "https://www.msit.go.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] DORA State of DevOps Report", "url": "https://dora.dev/research/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국정보통신기술협회(TTA)", "url": "https://tta.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 원티드 채용정보", "url": "https://www.wanted.co.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/"}
+    ]
+  },
+  "changeSummary": "데브옵스 엔지니어 진입경로·임금·전망·WLB·trivia·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

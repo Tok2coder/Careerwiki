@@ -1,0 +1,82 @@
+{
+  "fields": {
+    "way": "데이터라벨링검수원은 데이터 라벨러로 6개월~1년 이상 실무 경험을 쌓은 후 품질 관리 역할로 전환하는 경로가 일반적이다. 별도의 학위 요건은 없으나, 라벨링 가이드라인을 이해하고 오류를 식별하는 분석적 사고력이 요구된다. AI·머신러닝 기초 개념을 이해하면 라벨 품질의 AI 영향을 파악하는 데 유리하다. AiPB(AI 활용능력검정) 자격증 취득이 전문성 입증에 도움이 된다. 전문 라벨링 기업에서 QA(Quality Assurance) 담당으로 내부 전환하거나, 프리랜서로 검수 프로젝트를 수주하는 형태도 있다. 경력이 더 쌓이면 라벨링 가이드라인 설계·프로젝트 관리 업무로 확장이 가능하다.[1]",
+    "overviewSalary": {
+      "sal": "라벨러보다 다소 높은 연 2,800만~4,000만 원 수준이며, 프로젝트 규모와 전문 분야에 따라 차이가 있다. 의료·자율주행 등 고난도 전문 검수 인력은 더 높은 단가를 받는다.[1]"
+    },
+    "overviewProspect": {
+      "main": "AI 학습 데이터의 품질이 모델 성능을 좌우한다는 인식이 높아지며 검수 전문 인력 수요는 유지될 전망이다. 단순 라벨링보다 자동화 대체 위험이 낮아 상대적으로 안정적이나, 자동 품질 검증 도구의 발전에는 대응이 필요하다.[1]"
+    },
+    "trivia": "AI 업계에서는 '학습 데이터 품질이 모델 품질의 80%를 결정한다'는 말이 통용된다. 실제로 구글 연구진이 발표한 'Data-Centric AI' 논문에서는 모델 구조보다 데이터 품질 개선이 성능 향상에 더 효과적임을 실증 분석으로 보여줬다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통",
+      "wlbDetail": "재택 근무와 탄력 근무가 가능한 경우가 많고, 납기 기반 프로젝트 특성상 마감 전 업무 집중이 발생할 수 있다. 라벨러보다 책임 범위가 넓어 정신적 집중도가 높지만 전반적인 워라밸은 양호하다.[1]",
+      "socialDetail": "AI 모델이 올바르게 학습하도록 데이터 품질을 지키는 역할로, 편향 없는 AI 구현에 간접적으로 기여한다. 의료 AI 데이터 검수 시 진단 정확도에 실질적 영향을 미친다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "데이터 라벨링 품질 관리(QA) 기준 및 오류 유형 분류", "text": "라벨링 오류 유형(분류 오류, 경계 오류, 누락 등)을 체계적으로 분류하고 QA 기준을 설계하는 방법을 학습한다.", "link": null},
+        {"title": "라벨링 가이드라인 설계 및 작성 방법론", "text": "라벨러가 일관성 있게 작업할 수 있도록 상세한 라벨링 가이드라인을 작성하고 배포하는 방법을 학습한다.", "link": null},
+        {"title": "AI·머신러닝 기초 — 지도학습, 객체 검출, NLP 태스크 이해", "text": "지도학습, 객체 검출, 자연어처리(NLP) 등 AI 기초 개념을 이해하면 라벨 품질이 모델 성능에 미치는 영향을 더 잘 파악할 수 있다.", "link": null},
+        {"title": "이미지·텍스트·음성 검수 도구 활용 (CVAT, Label Studio, Labelbox 등)", "text": "다양한 라벨링 플랫폼에서 검수자 역할로 작업하는 방법을 익히고, 검수 효율을 높이는 단축키와 고급 기능을 학습한다.", "link": null},
+        {"title": "통계 기반 샘플링 검수 기법 및 불량률 분석", "text": "전수 검수가 어려운 대규모 라벨링 작업에서 통계적 샘플링 기법을 적용해 효율적으로 품질을 검증하는 방법을 학습한다.[1]", "link": null}
+      ],
+      "recruit": [
+        {"title": "데이터 라벨링 전문 기업 (크라우드웍스, 테스트웍스, 에이모 등) QA 담당 채용", "text": "크라우드웍스, 테스트웍스, 에이모 등 AI 데이터 전문 기업에서 라벨링 검수·QA 전담 인력을 채용한다. 기업 채용 사이트와 원티드에서 공고를 확인할 수 있다.", "link": "https://www.wanted.co.kr/"},
+        {"title": "AI 개발 스타트업 데이터 품질 관리 팀 경력직 채용", "text": "자체 AI 모델을 개발하는 스타트업에서 데이터 품질 관리 전담 팀원을 채용하며, 라벨러 경험이 있는 내부 전환 사례도 많다.", "link": null},
+        {"title": "크라우드소싱 플랫폼 프리랜서 검수 프로젝트 수주", "text": "크라우드소싱 플랫폼에서 검수 전문 프리랜서로 프로젝트를 수주하며 포트폴리오를 쌓을 수 있다.[1]", "link": null}
+      ],
+      "training": [
+        {"title": "한국데이터산업진흥원 — AI 데이터 품질 관리 교육", "text": "한국데이터산업진흥원에서 AI 데이터 품질 관리 관련 교육과정을 운영하며, AiPB AI 활용능력검정 취득 지원 프로그램도 제공한다.", "link": "https://www.kdata.or.kr/"},
+        {"title": "K-Digital Training — 데이터 품질 관리 국비 과정 이수", "text": "고용노동부 K-Digital Training 과정에서 데이터 품질 관리·AI 데이터 관련 국비 지원 교육을 받을 수 있으며, HRD-Net에서 관련 훈련과정을 검색해 수료할 수 있다.[1]", "link": "https://www.hrd.go.kr/"}
+      ]
+    },
+    "heroTags": ["QA검수", "AI훈련데이터", "품질관리", "어노테이션", "재택가능", "머신러닝"],
+    "sidebarJobs": [
+      "데이터 라벨러",
+      "데이터 매니저",
+      "데이터 엔지니어",
+      "데이터분석가(일반)",
+      "빅데이터전문가",
+      "응용 소프트웨어 개발자"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "AiPB AI활용능력검정",
+        "url": "https://www.kdata.or.kr/"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국데이터산업진흥원 AI 데이터 직종 안내", "url": "https://www.kdata.or.kr/"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 고용노동부 고용형태별근로실태조사", "url": "https://www.moel.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 과학기술정보통신부 AI 데이터 시장 동향", "url": "https://www.msit.go.kr/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] Google Research Data-Centric AI 논문", "url": "https://research.google/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국데이터산업진흥원", "url": "https://www.kdata.or.kr/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업정보", "url": "https://www.career.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 원티드 채용정보", "url": "https://www.wanted.co.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] HRD-Net 직업훈련포털", "url": "https://www.hrd.go.kr/"}
+    ]
+  },
+  "changeSummary": "데이터라벨링검수원 진입경로·임금·전망·WLB·trivia·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

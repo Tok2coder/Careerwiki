@@ -1,0 +1,1816 @@
+--- .tmp-head-norm.txt	2026-04-14 14:25:11.875604400 +0900
++++ .tmp-backup-norm.txt	2026-04-14 14:25:11.879103400 +0900
+@@ -19,7 +19,7 @@
+ 
+  /**
+  *
+- * UI edit-mode.js (api-client.js / )
++ * UIedit-mode.js (api-client.js/ )
+  */
+  init() {
+  // edit-mode.js
+@@ -29,7 +29,7 @@
+  return;
+  }
+ 
+- // ( , )
++ // ( ,
+  this.initNormalModeEventListeners();
+  },
+ 
+@@ -37,7 +37,7 @@
+  *
+  */
+  initNormalModeEventListeners() {
+- // ( )
++ // ()
+  document.addEventListener('click', (e) => {
+  const editModeTrigger = e.target.closest('[data-edit-mode-trigger]');
+  if (editModeTrigger) {
+@@ -121,7 +121,7 @@
+  if (this._editListenersAttached) return;
+  this._editListenersAttached = true;
+ 
+- // /
++ //
+  document.addEventListener('click', (e) => {
+  const saveBtn = e.target.closest('[data-edit-save]');
+  if (saveBtn) {
+@@ -175,7 +175,7 @@
+  } catch (e) {
+  //
+  }
+- // URL slug (data-major-id fallback)
++ // URL slug (data-major-idfallback)
+  // URL slug
+  const majorIdElement = document.querySelector('[data-major-id]');
+  entityId = slug || majorIdElement.getAttribute('data-major-id');
+@@ -217,7 +217,7 @@
+ 
+  try {
+  let endpoint;
+- // entityId URL ,
++ // entityId URL
+  // decodeURIComponent
+  let normalizedEntityId = entityId;
+  try {
+@@ -290,7 +290,7 @@
+  body.innerHTML = editModeHtml;
+  body.setAttribute('data-edit-mode', 'true');
+ 
+- // (body )
++ // (body
+  this.initEditModeEventListeners();
+  },
+ 
+@@ -374,7 +374,7 @@
+  </div>
+  </div>
+ 
+- <!-- / -->
++ <!-- -->
+  <div class="flex items-center gap-2">
+  <button
+  type="button"
+@@ -423,7 +423,7 @@
+  <div class="px-4 sm:px-6 py-1.5 bg-gradient-to-r from-${gradientFrom}/10 to-${gradientTo}/10 border-b border-${gradientFrom}/10">
+  <div class="flex items-center gap-2 text-xs text-${gradientFrom}">
+  <i class="fas fa-edit"></i>
+- <span class="font-medium">${entityLabel} </span>
++ <span class="font-medium">${entityLabel} /span>
+  </div>
+  </div>
+ 
+@@ -446,14 +446,14 @@
+  </div>
+  </div>
+ 
+- <!-- : -->
++ <!-- -->
+  <button
+  type="button"
+  data-edit-save-all
+  class="shrink-0 px-5 sm:px-6 py-2.5 sm:py-3 min-h-[44px] bg-gradient-to-r from-${gradientFrom} to-${gradientTo} text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-${gradientFrom}/30 active:scale-[0.98] transition-all duration-200 text-sm sm:text-base"
+  >
+  <i class="fas fa-check mr-2 hidden sm:inline"></i>
+- <span></span>
++ <span>/span>
+  </button>
+  </div>
+  </div>
+@@ -463,7 +463,7 @@
+  <!-- ( ) -->
+  <div class="flex-1 overflow-hidden max-w-[1200px] mx-auto w-full px-6 py-6">
+  <div class="bg-wiki-bg/50 border border-wiki-border/60 rounded-xl p-6 flex flex-col h-full">
+- <h2 class="text-lg font-semibold text-white mb-4 flex-shrink-0"></h2>
++ <h2 class="text-lg font-semibold text-white mb-4 flex-shrink-0">/h2>
+  <div class="flex-1 overflow-y-auto space-y-6 pr-2">
+  ${sectionsHtml}
+  </div>
+@@ -488,7 +488,7 @@
+  ]
+  },
+  {
+- title: ' ',
++ title: '',
+  icon: 'fa-circle-info',
+  fields: [
+  { key: 'overview.summary', label: ' ', type: 'textarea' },
+@@ -505,7 +505,7 @@
+  { key: 'enterField', label: ' ', type: 'textarea' }
+  ]
+  }
+- ]
++ ];
+  } else if (entityType === 'job') {
+  return [
+  {
+@@ -513,7 +513,7 @@
+  icon: 'fa-star',
+  fields: [
+  { key: 'name', label: '', type: 'text' },
+- { key: 'summary', label: ' ( )', type: 'textarea' },
++ { key: 'summary', label: ' ', type: 'textarea' },
+  { key: 'tags', label: '', type: 'textarea' }
+  ]
+  },
+@@ -526,16 +526,16 @@
+  { key: 'salary', label: ' ', type: 'textarea' },
+  { key: 'prospect', label: '', type: 'textarea' },
+  { key: 'satisfaction', label: '', type: 'textarea' },
+- { key: 'status', label: ' ', type: 'textarea' }
++ { key: 'status', label: '', type: 'textarea' }
+  ]
+  },
+  {
+  title: ' ',
+  icon: 'fa-layer-group',
+  fields: [
+- { key: 'knowledge', label: '', type: 'textarea' },
+- { key: 'environment', label: '', type: 'textarea' },
+- { key: 'technKnow', label: '/', type: 'textarea' },
++ { key: 'knowledge', label: ' ', type: 'textarea' },
++ { key: 'environment', label: ' ', type: 'textarea' },
++ { key: 'technKnow', label: '', type: 'textarea' },
+  { key: 'aptitude', label: '', type: 'textarea' },
+  { key: 'educationDistribution', label: ' ', type: 'textarea' },
+  { key: 'majorDistribution', label: ' ', type: 'textarea' }
+@@ -571,31 +571,27 @@
+  { key: 'prospect', label: '', type: 'textarea' },
+  { key: 'way', label: ' ', type: 'textarea' },
+  { key: 'abilities', label: '', type: 'textarea' },
+- { key: 'knowledge', label: '', type: 'textarea' },
+- { key: 'environment', label: '', type: 'textarea' },
++ { key: 'knowledge', label: ' ', type: 'textarea' },
++ { key: 'environment', label: ' ', type: 'textarea' },
+  { key: 'personality', label: '', type: 'textarea' },
+  { key: 'interests', label: '', type: 'textarea' },
+  { key: 'values', label: '', type: 'textarea' }
+  ];
+  } else if (entityType === 'major') {
+  return [
+- //
+  { key: 'name', label: '', type: 'text' },
+  { key: 'heroSummary', label: ' ', type: 'textarea' },
+  { key: 'heroTags', label: ' ', type: 'tags' },
+  { key: 'categoryName', label: '', type: 'text' },
+- //
+  { key: 'overview.summary', label: ' ', type: 'textarea' },
+  { key: 'property', label: ' ', type: 'textarea' },
+  { key: 'aptitude', label: ' ', type: 'textarea' },
+  { key: 'enterField', label: ' ', type: 'pairList' },
+  { key: 'trivia', label: '', type: 'list' },
+- //
+  { key: 'whatStudy', label: ' ', type: 'textarea' },
+  { key: 'mainSubject', label: ' ', type: 'tags' },
+  { key: 'relateSubject', label: ' ', type: 'tags' },
+  { key: 'careerAct', label: ' ', type: 'pairList' },
+- //
+  { key: 'sidebarJobs', label: ' ', type: 'autocomplete' },
+  { key: 'sidebarMajors', label: ' ', type: 'autocomplete' },
+  { key: 'sidebarHowtos', label: ' HowTo', type: 'autocomplete' }
+@@ -662,7 +658,7 @@
+  }
+  });
+ 
+- // ( )
++ // (
+  // -
+  // document.addEventListener('input', (e) => {
+  // if (e.target.matches('[data-edit-field]')) {
+@@ -818,7 +814,7 @@
+  },
+ 
+  /**
+- * ( )
++ * (
+  */
+  tempSaveField(fieldKey) {
+  const input = document.getElementById(`input-${fieldKey}`);
+@@ -826,7 +822,7 @@
+ 
+  const content = input.value.trim();
+  if (!content) {
+- alert(' .');
++ alert('.');
+  return;
+  }
+ 
+@@ -840,7 +836,7 @@
+  return;
+  }
+ 
+- // ( )
++ // (
+  this.tempEdits[fieldKey] = {
+  content,
+  editType,
+@@ -876,7 +872,7 @@
+  },
+ 
+  /**
+- * ( )
++ * (
+  */
+  async saveAllEdits() {
+  const editKeys = Object.keys(this.tempEdits);
+@@ -945,7 +941,7 @@
+  url.searchParams.delete('edit');
+ 
+  if (forceRefresh) {
+- // : _t
++ // _t
+  url.searchParams.set('_t', Date.now().toString());
+  window.location.href = url.toString();
+  } else {
+@@ -966,9 +962,9 @@
+  const editType = formData.get('edit-type') || 'source';
+  const source = formData.get('source').trim() || '';
+ 
+- // : URL
++ // URL
+  if (editType === 'source' && !source) {
+- alert(' URL .');
++ alert(' URL.');
+  return;
+  }
+ 
+@@ -976,7 +972,7 @@
+  const edits = {};
+  const originalData = this.editData || {};
+ 
+- // ( document )
++ // ( document
+  document.querySelectorAll('[data-edit-field]').forEach(input => {
+  const key = input.getAttribute('data-edit-field');
+  const currentValue = input.value.trim();
+@@ -989,7 +985,7 @@
+  });
+ 
+  if (Object.keys(edits).length === 0) {
+- alert(' . .');
++ alert('. ');
+  return;
+  }
+ 
+@@ -1042,7 +1038,7 @@
+  },
+ 
+  /**
+- * ( )
++ * ()
+  */
+  handleEditModeClick(button) {
+  const entityType = button.dataset.entityType;
+@@ -1085,7 +1081,7 @@
+ 
+  this.currentEntity = { entityType, entityId, field };
+ 
+- // + ( )
++ // + (
+  try {
+  const endpoint = `${API_BASE}/${entityType}/${encodeURIComponent(entityId)}/edit-data`;
+  const response = await fetch(endpoint);
+@@ -1180,7 +1176,7 @@
+  name="content"
+  rows="8"
+  class="w-full px-4 py-3 rounded-lg bg-wiki-bg/70 border border-wiki-border/60 text-white placeholder-wiki-muted focus:outline-none focus:ring-2 focus:ring-wiki-primary focus:border-transparent resize-y"
+- placeholder=" ..."
++ placeholder=".."
+  required
+  ></textarea>
+  </div>
+@@ -1227,7 +1223,7 @@
+  pattern="[0-9]{4}"
+  inputmode="numeric"
+  />
+- <p class="text-xs text-wiki-muted"> .</p>
++ <p class="text-xs text-wiki-muted"> </p>
+  </div>
+  </div>
+  ` : ''}
+@@ -1294,7 +1290,7 @@
+  *
+  */
+  isLoggedIn() {
+- // window.__USER__ shared-helpers.ts /api/me
++ // window.__USER__shared-helpers.ts/api/me
+  return !!(window.__USER__ && window.__USER__.id);
+  },
+ 
+@@ -1359,26 +1355,26 @@
+ 
+  //
+  if (!content) {
+- this.showError(form, ' .');
++ this.showError(form, '.');
+  return;
+  }
+  if (!source) {
+- this.showError(form, ' URL .');
++ this.showError(form, ' URL.');
+  return;
+  }
+  if (anonymous && !password) {
+- this.showError(form, ' .');
++ this.showError(form, '.');
+  return;
+  }
+  if (password && !/^\d{4}$/.test(password)) {
+- this.showError(form, ' 4 .');
++ this.showError(form, '4 ');
+  return;
+  }
+ 
+  //
+  if (submitBtn) {
+  submitBtn.disabled = true;
+- submitBtn.textContent = ' ...';
++ submitBtn.textContent = '..';
+  }
+ 
+  try {
+@@ -1434,13 +1430,13 @@
+  throw new Error(result.error || result.message || ' .');
+  }
+ 
+- // ( )
++ // (
+  if (result.newTimestamp) {
+  this.editDataTimestamp = result.newTimestamp;
+  }
+ 
+  //
+- this.showSuccess(form, ' . ...');
++ this.showSuccess(form, '. ..');
+ 
+  // ( )
+  setTimeout(() => {
+@@ -1461,7 +1457,7 @@
+  },
+ 
+  /**
+- * ( )
++ * (
+  */
+  showConflictResolution({ field, myContent, mySource, serverData, serverTimestamp, entityType, entityId }) {
+  //
+@@ -1495,7 +1491,7 @@
+  <h2 class="text-lg font-semibold text-white"> </h2>
+  <p class="text-sm text-gray-400 mt-1">
+  <strong class="text-white">${escHtml(fieldLabel)}</strong> .
+- .
++
+  </p>
+  </div>
+  </div>
+@@ -1533,7 +1529,7 @@
+  </div>
+  <textarea data-merge-content rows="8"
+  class="w-full px-4 py-3 rounded-lg bg-[#0d1017] border border-gray-700/60 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-y text-sm"
+- placeholder=" ...">${escHtml(myContent)}</textarea>
++ placeholder=" ..">${escHtml(myContent)}</textarea>
+  </div>
+  </div>
+ 
+@@ -1567,7 +1563,7 @@
+  //
+  const handleConflictSave = async (chosenContent) => {
+  const saveBtn = modal.querySelector('[data-conflict-use-mine]');
+- if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = ' ...'; }
++ if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '..'; }
+ 
+  const payload = {
+  fields: { [field]: chosenContent },
+@@ -1584,14 +1580,14 @@
+  });
+  const result = await response.json();
+  if (!response.ok || !result.success) {
+- throw new Error(result.error || ' ');
++ throw new Error(result.error || '');
+  }
+  modal.remove();
+  const url = new URL(window.location.href);
+  url.searchParams.set('_t', Date.now().toString());
+  window.location.replace(url.toString());
+  } catch (err) {
+- alert(' : ' + err.message);
++ alert(': ' + err.message);
+  if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = ''; }
+  }
+  };
+@@ -1699,7 +1695,7 @@
+  //
+  this.currentHistoryEntity = { entityType, entityId };
+ 
+- // Revision ( , 10)
++ // Revision (, 10)
+  await this.loadRevisions({ entityType, entityId, page: 1, limit: 10 });
+  },
+ 
+@@ -1707,7 +1703,7 @@
+  * HTML
+  */
+  createHistoryModalHtml({ entityType, entityId }) {
+- const entityTypeLabel = entityType === 'job' '' : entityType === 'major' '' : '';
++ const entityTypeLabel = entityType === 'job' '' : entityType === 'major' '' : 'HowTo';
+ 
+  return `
+  <div
+@@ -1736,7 +1732,7 @@
+  <div class="flex-1 overflow-y-auto px-6 py-4">
+  <div id="history-loading" class="text-center py-8">
+  <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-wiki-primary"></div>
+- <p class="mt-4 text-wiki-muted"> ...</p>
++ <p class="mt-4 text-wiki-muted"> ..</p>
+  </div>
+  <div id="history-content" class="hidden">
+  <!-- Revision -->
+@@ -1778,15 +1774,15 @@
+  const { revisions, total } = result.data || { revisions: [], total: 0 };
+  const totalPages = Math.ceil(total / limit);
+ 
+- // DB is_current = 1 revision
+- // is_current = 1 revision
++ // DB is_current = 1revision
++ // is_current = 1revision
+  const hasCurrentRevision = revisions.some(r => r.isCurrent === true);
+  let allRevisions = revisions;
+ 
+- // revision ( )
++ // revision (
+  // revision r1
+  if ((revisions.length === 0 || !hasCurrentRevision) && page === 1) {
+- // revision r1 , + 1
++ // revisionr1, + 1
+  const maxRevisionNumber = revisions.length > 0
+  Math.max(...revisions.map(r => r.revisionNumber || 0))
+  : 0;
+@@ -1796,7 +1792,7 @@
+  id: 'current',
+  revisionNumber: currentRevisionNumber,
+  isCurrent: true,
+- editorName: '',
++ editorName: ' ',
+  editorType: 'admin',
+  changeSummary: ' ',
+  changedFields: [],
+@@ -1830,7 +1826,7 @@
+  },
+ 
+  /**
+- * Revision ( )
++ * Revision ()
+  */
+  renderRevisionsList(revisions, total, currentPage = 1, totalPages = 1, limit = 10) {
+  // ( revision )
+@@ -1846,7 +1842,7 @@
+  `;
+  }
+ 
+- // (r1 )
++ // (r1
+ 
+  const revisionsHtml = revisions.map((rev, index) => {
+  const date = new Date(rev.createdAt);
+@@ -1880,7 +1876,7 @@
+  ${editorPictureHtml}
+  <span class="text-sm text-white font-medium truncate">${this.escapeHtml(editorName)}</span>
+  </div>
+- <!-- : (grid ) -->
++ <!-- (grid ) -->
+  <div class="grid gap-2 shrink-0 grid-cols-[64px_80px]">
+  <div class="flex justify-end">
+  ${rev.revisionNumber > 1 `
+@@ -2001,7 +1997,7 @@
+  paginationHtml = `
+  <div class="flex items-center justify-between px-6 py-4 border-t border-wiki-border/60">
+  <div class="text-sm text-wiki-muted">
+- ${total} ${(currentPage - 1) * limit + 1}-${Math.min(currentPage * limit, total)}
++ ${total}${(currentPage - 1) * limit + 1}-${Math.min(currentPage * limit, total)}
+  </div>
+  <div class="flex items-center gap-2">
+  ${paginationButtons.join('')}
+@@ -2013,7 +2009,7 @@
+  return `
+  <div class="space-y-0">
+  <div class="mb-4 pb-2 border-b border-wiki-border/60">
+- <p class="text-sm text-wiki-muted"> ${total} </p>
++ <p class="text-sm text-wiki-muted">${total} </p>
+  </div>
+  ${revisionsHtml}
+  </div>
+@@ -2022,7 +2018,7 @@
+  },
+ 
+  /**
+- * ( )
++ * ()
+  */
+  calculateChangeSize(revision) {
+  // dataSnapshot
+@@ -2030,8 +2026,8 @@
+  const snapshot = JSON.parse(revision.dataSnapshot || '{}');
+  const snapshotSize = JSON.stringify(snapshot).length;
+ 
+- // revision ( )
+- // revision snapshot ,
++ // revision ()
++ // revisionsnapshot
+  // snapshot
+  return snapshotSize > 1000 snapshotSize - 1000 : 0;
+  } catch {
+@@ -2091,7 +2087,7 @@
+  // revisionId
+  const numericRevisionId = parseInt(revisionId, 10);
+  if (isNaN(numericRevisionId) || numericRevisionId <= 0) {
+- throw new Error(' revision ID.');
++ throw new Error(' revision ID');
+  }
+ 
+  const response = await fetch(`${API_BASE}/revision/${numericRevisionId}/restore`, {
+@@ -2106,9 +2102,9 @@
+ 
+  if (!response.ok || !result.success) {
+  //
+- let errorMessage = result.error || ' .';
++ let errorMessage = result.error || '.';
+  if (result.error === 'PASSWORD_REQUIRED') {
+- const password = prompt(' . :');
++ const password = prompt(' ');
+  if (password) {
+  //
+  const retryResponse = await fetch(`${API_BASE}/revision/${numericRevisionId}/restore`, {
+@@ -2124,20 +2120,20 @@
+  }
+  //
+  } else {
+- throw new Error(' .');
++ throw new Error(' ');
+  }
+  } else {
+  throw new Error(errorMessage);
+  }
+  }
+ 
+- alert(' .');
++ alert(' ');
+  this.closeHistoryModal();
+ 
+  // ( )
+  window.location.reload();
+  } catch (error) {
+- alert(error.message || ' .');
++ alert(error.message || '.');
+  }
+  },
+ 
+@@ -2257,7 +2253,7 @@
+  // revision
+  const numericRevisionId = parseInt(revisionId, 10);
+  if (isNaN(numericRevisionId) || numericRevisionId <= 0) {
+- throw new Error(' revision ID.');
++ throw new Error(' revision ID');
+  }
+ 
+  const revisionResponse = await fetch(`${API_BASE}/revision/${numericRevisionId}fullData=true&formatForEdit=true`);
+@@ -2298,7 +2294,7 @@
+  } catch (error) {
+  }
+ 
+- // editFormattedData fullData ( )
++ // editFormattedDatafullData ( )
+  if (!useDeltaComparison && (revision.editFormattedData || revision.fullData)) {
+  currentRevisionData = revision.editFormattedData || revision.fullData;
+  }
+@@ -2383,8 +2379,8 @@
+ 
+  // ( vs )
+  const compareModal = this.createCompareModalHtml({
+- currentData: currentRevisionData, // ( )
+- revisionData: previousRevisionData, // ( )
++ currentData: currentRevisionData, // ()
++ revisionData: previousRevisionData, // ()
+  revision: revision,
+  previousRevision: previousRevision,
+  comparePrevious: true //
+@@ -2444,7 +2440,7 @@
+  <div class="flex items-center justify-center py-20">
+  <div class="text-center">
+  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-wiki-primary mx-auto mb-4"></div>
+- <p class="text-wiki-muted"> ...</p>
++ <p class="text-wiki-muted"> ..</p>
+  </div>
+  </div>
+  </div>
+@@ -2467,7 +2463,7 @@
+  return val.filter(v => v !== null && v !== undefined && typeof v !== 'function').map(v => {
+  if (typeof v === 'object') return v.name || v.title || JSON.stringify(v);
+  return String(v).trim();
+- }).filter(s => s.length > 0); // , OK
++ }).filter(s => s.length > 0); // OK
+  }
+  if (typeof val === 'object') {
+  if (val.name) return [val.name];
+@@ -2515,7 +2511,7 @@
+  let currentValue = this.getFieldValue(currentData, field.key);
+  let revisionValue = this.getFieldValue(revisionData, field.key);
+ 
+- // (overview.summary )
++ // (overview.summary
+  if (field.key.includes('overview') || field.key === 'property' || field.key === 'aptitude') {
+  }
+ 
+@@ -2550,7 +2546,7 @@
+  minute: '2-digit'
+  });
+ 
+- // (comparePrevious )
++ // (comparePrevious
+  let prevRevisionDateStr = '';
+  if (previousRevision) {
+  const prevDate = new Date(previousRevision.createdAt);
+@@ -2565,11 +2561,11 @@
+ 
+  //
+  const leftHeader = comparePrevious
+- { title: `r${revision.revisionNumber} ( )`, subtitle: `${revisionDateStr} ${this.escapeHtml(revision.editorName || ' ')}`, color: 'text-wiki-primary' }
++ { title: `r${revision.revisionNumber} ()`, subtitle: `${revisionDateStr} ${this.escapeHtml(revision.editorName || '')}`, color: 'text-wiki-primary' }
+  : { title: ' ', subtitle: ' ', color: 'text-wiki-primary' };
+  const rightHeader = comparePrevious && previousRevision
+- { title: `r${previousRevision.revisionNumber} ( )`, subtitle: `${prevRevisionDateStr} ${this.escapeHtml(previousRevision.editorName || ' ')}`, color: 'text-wiki-muted' }
+- : { title: `r${revision.revisionNumber}`, subtitle: `${revisionDateStr} ${this.escapeHtml(revision.editorName || ' ')}`, color: 'text-wiki-muted' };
++ { title: `r${previousRevision.revisionNumber} ( )`, subtitle: `${prevRevisionDateStr} ${this.escapeHtml(previousRevision.editorName || '')}`, color: 'text-wiki-muted' }
++ : { title: `r${revision.revisionNumber}`, subtitle: `${revisionDateStr} ${this.escapeHtml(revision.editorName || '')}`, color: 'text-wiki-muted' };
+ 
+  return `
+  <div
+@@ -2615,7 +2611,7 @@
+  <div class="mb-4">
+  <i class="fas fa-check-circle text-green-400 text-4xl mb-3"></i>
+  </div>
+- <p class="text-white text-lg font-semibold mb-2">${comparePrevious ' ' : ' '}</p>
++ <p class="text-white text-lg font-semibold mb-2">${comparePrevious ' .' : ' .'}</p>
+  <p class="text-wiki-muted text-sm">${comparePrevious ' .' : ' revision .'}</p>
+  </div>
+  ` : comparisons.length === 0 `
+@@ -2627,7 +2623,7 @@
+  ${comparisons.filter(comp => comp.isChanged).map(comp => {
+  const diff = comp.diff;
+ 
+- // ( )
++ // (
+  const renderNewValue = () => {
+  if (diff.newArr.length === 0) return '<span class="text-wiki-muted italic"> </span>';
+  return diff.newArr.map(item => {
+@@ -2639,7 +2635,7 @@
+  }).join('');
+  };
+ 
+- // ( + )
++ // ( +
+  const renderOldValue = () => {
+  if (diff.oldArr.length === 0) return '<span class="text-wiki-muted italic"> </span>';
+  return diff.oldArr.map(item => {
+@@ -2653,9 +2649,9 @@
+ 
+  //
+  const summaryParts = [];
+- if (diff.added.length > 0) summaryParts.push('<span class="text-green-400"><i class="fas fa-plus mr-1"></i>' + diff.added.length + ' </span>');
+- if (diff.removed.length > 0) summaryParts.push('<span class="text-red-400"><i class="fas fa-minus mr-1"></i>' + diff.removed.length + ' </span>');
+- if (diff.kept.length > 0) summaryParts.push('<span class="text-wiki-muted">' + diff.kept.length + ' </span>');
++ if (diff.added.length > 0) summaryParts.push('<span class="text-green-400"><i class="fas fa-plus mr-1"></i>' + diff.added.length + '</span>');
++ if (diff.removed.length > 0) summaryParts.push('<span class="text-red-400"><i class="fas fa-minus mr-1"></i>' + diff.removed.length + '</span>');
++ if (diff.kept.length > 0) summaryParts.push('<span class="text-wiki-muted">' + diff.kept.length + '</span>');
+  const summary = summaryParts.join(' ');
+ 
+  return `
+@@ -2667,10 +2663,10 @@
+  </div>
+ 
+  <div class="p-4 space-y-4">
+- <!-- ( ) -->
++ <!-- ( -->
+  <div>
+  <div class="flex items-center gap-2 mb-2">
+- <span class="px-2 py-0.5 text-xs font-semibold rounded bg-green-500/20 text-green-400 border border-green-500/30"> </span>
++ <span class="px-2 py-0.5 text-xs font-semibold rounded bg-green-500/20 text-green-400 border border-green-500/30">/span>
+  <span class="text-xs text-wiki-muted">r${revision.revisionNumber}</span>
+  </div>
+  <div class="px-4 py-3 rounded-lg bg-green-500/5 border border-green-500/30 text-sm leading-relaxed flex flex-wrap">
+@@ -2683,10 +2679,10 @@
+  <i class="fas fa-arrow-up text-wiki-muted"></i>
+  </div>
+ 
+- <!-- ( ) -->
++ <!-- ( -->
+  <div>
+  <div class="flex items-center gap-2 mb-2">
+- <span class="px-2 py-0.5 text-xs font-semibold rounded bg-red-500/20 text-red-400 border border-red-500/30"> </span>
++ <span class="px-2 py-0.5 text-xs font-semibold rounded bg-red-500/20 text-red-400 border border-red-500/30">/span>
+  <span class="text-xs text-wiki-muted">r${(revision.revisionNumber || 1) - 1}</span>
+  </div>
+  <div class="px-4 py-3 rounded-lg bg-red-500/5 border border-red-500/30 text-sm leading-relaxed flex flex-wrap">
+@@ -2727,28 +2723,23 @@
+  getEditableFields(entityType) {
+  if (entityType === 'job') {
+  return [
+- //
+  { key: 'name', label: '', type: 'text' },
+  { key: 'summary', label: ' ', type: 'textarea' },
+  { key: 'heroTags', label: '', type: 'tags' },
+  { key: 'heroCategory', label: ' ', type: 'text' },
+- //
+  { key: 'overviewWork.main', label: ' ', type: 'textarea' },
+  { key: 'overviewAbilities.abilityList', label: ' ', type: 'tags' },
+  { key: 'overviewAbilities.technKnow', label: ' ', type: 'textarea' },
+  { key: 'overviewAptitude.aptitudeList', label: '', type: 'tags' },
+  { key: 'overviewAptitude.interestList', label: '', type: 'tags' },
+  { key: 'trivia', label: '', type: 'textarea' },
+- // -
+  { key: 'detailReady.curriculum', label: ' ', type: 'list' },
+  { key: 'detailReady.recruit', label: ' ', type: 'list' },
+  { key: 'detailReady.training', label: ' /', type: 'list' },
+  { key: 'detailReady.researchList', label: ' ', type: 'list' },
+- //
+  { key: 'sidebarJobs', label: ' ', type: 'autocomplete' },
+  { key: 'sidebarMajors', label: ' ', type: 'autocomplete' },
+  { key: 'sidebarCerts', label: ' ', type: 'tags' },
+- // ()
+  { key: 'duties', label: ' ()', type: 'textarea' },
+  { key: 'way', label: ' ', type: 'textarea' },
+  { key: 'salary', label: ' ', type: 'text' },
+@@ -2765,23 +2756,19 @@
+  ];
+  } else if (entityType === 'major') {
+  return [
+- //
+  { key: 'name', label: '', type: 'text' },
+  { key: 'summary', label: ' ', type: 'textarea' },
+  { key: 'heroTags', label: ' ', type: 'tags' },
+  { key: 'categoryName', label: '', type: 'text' },
+- //
+  { key: 'overview.summary', label: ' ', type: 'textarea' },
+  { key: 'property', label: ' ', type: 'textarea' },
+  { key: 'aptitude', label: ' ', type: 'textarea' },
+  { key: 'enterField', label: ' ', type: 'pairList' },
+  { key: 'jobProspect', label: '', type: 'list' },
+- //
+  { key: 'whatStudy', label: ' ', type: 'textarea' },
+  { key: 'mainSubject', label: ' ', type: 'tags' },
+  { key: 'relateSubject', label: ' ', type: 'tags' },
+  { key: 'careerAct', label: ' ', type: 'pairList' },
+- //
+  { key: 'sidebarJobs', label: ' ', type: 'autocomplete' },
+  { key: 'sidebarMajors', label: ' ', type: 'autocomplete' },
+  { key: 'sidebarHowtos', label: ' HowTo', type: 'autocomplete' }
+@@ -2799,7 +2786,7 @@
+  return '';
+  }
+ 
+- // 1. flat (: 'overview.summary' )
++ // 1. flat ( 'overview.summary'
+  if (revisionData[fieldKey] !== undefined) {
+  const value = revisionData[fieldKey];
+  if (value === null || value === undefined) return '';
+@@ -2807,7 +2794,7 @@
+  return value;
+  }
+ 
+- // 2. nested (: overview.summary revisionData.overview.summary)
++ // 2. nested ( overview.summary revisionData.overview.summary)
+  if (fieldKey.includes('.')) {
+  const parts = fieldKey.split('.');
+  let current = revisionData;
+@@ -2920,7 +2907,7 @@
+  async getMajorDetail(id, options = {}) {
+  try {
+  if (!id) {
+- throw new Error(' .');
++ throw new Error(' ');
+  }
+ 
+  const params = new URLSearchParams();
+@@ -3005,7 +2992,7 @@
+  async getJobDetail(id, options = {}) {
+  try {
+  if (!id) {
+- throw new Error(' .');
++ throw new Error(' ');
+  }
+ 
+  const params = new URLSearchParams();
+@@ -3067,15 +3054,15 @@
+ };
+ 
+ const JOB_SORT_LABELS = {
+- relevance: ' ',
+- 'salary-desc': ' ',
+- 'name-asc': ' '
++ relevance: ' ,
++ 'salary-desc': ' ,
++ 'name-asc': '
+ };
+ 
+ const MAJOR_SORT_LABELS = {
+- relevance: ' ',
+- 'employment-desc': ' ',
+- 'salary-desc': ' '
++ relevance: ' ,
++ 'employment-desc': ' ,
++ 'salary-desc': '
+ };
+ 
+ const OUTLOOK_SCORE_MAP = {
+@@ -3117,7 +3104,7 @@
+  if (!match) return cleaned;
+  const num = parseFloat(match[1]);
+  if (isNaN(num)) return cleaned;
+- // 1 ,
++ // 1
+  const rounded = Math.round(num * 10) / 10;
+  return Number.isInteger(rounded) `${rounded}%` : `${rounded.toFixed(1)}%`;
+ };
+@@ -3130,7 +3117,7 @@
+  }
+  if (/||/i.test(normalized)) return 4;
+  if (/|/i.test(normalized)) return 3;
+- if (/||/i.test(normalized)) return 1;
++ if (/|/i.test(normalized)) return 1;
+  return 2;
+ };
+ 
+@@ -3256,11 +3243,11 @@
+  const items = entries
+  .map(([source, status]) => {
+  const label = SOURCE_LABEL_MAP[source] || source;
+- let message = ' ';
++ let message = '';
+  if (status.error) {
+  message = `: ${status.error}`;
+  } else if (typeof status.count === 'number' && status.count > 0) {
+- message = ` ${status.count} `;
++ message = `${status.count}`;
+  } else if (status.attempted) {
+  message = ' .';
+  } else if (status.skippedReason) {
+@@ -3325,7 +3312,7 @@
+  if (!el) return;
+  const parts = [];
+  if (typeof meta.total === 'number') {
+- parts.push(` ${meta.total}`);
++ parts.push(`${meta.total});
+  }
+  if (sortKey && sortLabels[sortKey]) {
+  parts.push(`: ${sortLabels[sortKey]}`);
+@@ -3411,7 +3398,7 @@
+  <div class="glass-card p-12 rounded-2xl text-center">
+  <i class="fas fa-circle-info text-4xl text-wiki-secondary mb-4"></i>
+  <h2 class="text-2xl font-semibold text-white mb-2"> </h2>
+- <p class="text-sm text-wiki-muted"> . CareerWiki .</p>
++ <p class="text-sm text-wiki-muted"> CareerWiki .</p>
+  </div>
+  `;
+ 
+@@ -3419,7 +3406,7 @@
+  <div class="glass-card p-12 rounded-2xl text-center">
+  <i class="fas fa-circle-info text-4xl text-wiki-secondary mb-4"></i>
+  <h2 class="text-2xl font-semibold text-white mb-2"> </h2>
+- <p class="text-sm text-wiki-muted"> . CareerWiki .</p>
++ <p class="text-sm text-wiki-muted"> CareerWiki .</p>
+  </div>
+  `;
+ 
+@@ -3462,7 +3449,7 @@
+  case 'name-asc':
+  return cloned.sort((a, b) => (a.profile.name || '').localeCompare(b.profile.name || ''));
+  default:
+- // : ( )
++ // (
+  return cloned.sort((a, b) => calculateJobDataRichness(b) - calculateJobDataRichness(a));
+  }
+  };
+@@ -3478,7 +3465,7 @@
+  case 'name-asc':
+  return cloned.sort((a, b) => (a.profile.name || '').localeCompare(b.profile.name || ''));
+  default:
+- // : ( )
++ // (
+  return cloned.sort((a, b) => calculateMajorDataRichness(b) - calculateMajorDataRichness(a));
+  }
+  };
+@@ -3489,8 +3476,8 @@
+  const resultsSection = document.getElementById(containerId);
+  if (!resultsSection) return;
+ 
+- // aria-label nav (SSR )
+- let nav = document.querySelector('nav[aria-label=""]');
++ // aria-labelnav (SSR )
++ let nav = document.querySelector('nav[aria-label="]');
+ 
+  // (nav p.text-center)
+  let paginationInfo = nav nav.nextElementSibling : null;
+@@ -3511,7 +3498,7 @@
+  if (!nav) {
+  nav = document.createElement('nav');
+  nav.className = 'mt-8 flex justify-center items-center gap-2 flex-wrap';
+- nav.setAttribute('aria-label', '');
++ nav.setAttribute('aria-label', ');
+  resultsSection.parentNode.insertBefore(nav, resultsSection.nextSibling);
+  }
+  nav.style.display = '';
+@@ -3576,7 +3563,7 @@
+  nav.parentNode.insertBefore(paginationInfo, nav.nextSibling);
+  }
+  paginationInfo.style.display = '';
+- paginationInfo.textContent = `${currentPage} / ${totalPages} (${total} )`;
++ paginationInfo.textContent = `${currentPage} / ${totalPages} (${total})`;
+  };
+ 
+  const hydrateJobSerp = () => {
+@@ -3588,12 +3575,12 @@
+  const json = parseJsonScript('job-hydration-data');
+  const state = createState(json.items || [], ensureMetaDefaults(json.meta || {}, (json.items || []).length));
+ 
+- // SSR ( )
++ // SSR (
+  state.originalItems = state.baseItems.slice();
+ 
+  // DB + (AJAX)
+  const render = async (skipFetch = false) => {
+- // skipFetch true ( )
++ // skipFetch true (
+  if (!skipFetch && state.sort !== 'relevance') {
+  //
+  container.innerHTML = '<div class="flex justify-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-wiki-primary"></i></div>';
+@@ -3603,7 +3590,7 @@
+  const params = new URLSearchParams();
+  if (state.meta.keyword) params.set('q', state.meta.keyword);
+  params.set('sort', state.sort);
+- params.set('perPage', '20'); // : 50 20
++ params.set('perPage', '20'); // 50 20
+ 
+  const response = await fetch(`/api/jobs/search${params.toString()}`);
+  const result = await response.json();
+@@ -3618,10 +3605,10 @@
+  }
+  }
+ 
+- // : SSR ( )
++ // SSR ()
+  // : API
+  const items = state.sort === 'relevance'
+- state.originalItems // ( )
++ state.originalItems // (
+  : state.baseItems; // API
+ 
+  if (items.length) {
+@@ -3672,8 +3659,8 @@
+ 
+  //
+  const updateLabel = (value) => {
+- const labels = { relevance: ' ', 'salary-desc': ' ', 'name-asc': ' ' };
+- label.textContent = labels[value] || ' ';
++ const labels = { relevance: ' , 'salary-desc': ' , 'name-asc': ' };
++ label.textContent = labels[value] || ' ;
+  options.forEach(opt => {
+  opt.classList.toggle('active', opt.dataset.sort === value);
+  });
+@@ -3735,12 +3722,12 @@
+  const json = parseJsonScript('major-hydration-data');
+  const state = createState(json.items || [], ensureMetaDefaults(json.meta || {}, (json.items || []).length));
+ 
+- // SSR ( )
++ // SSR (
+  state.originalItems = state.baseItems.slice();
+ 
+  // DB + (AJAX)
+  const render = async (skipFetch = false) => {
+- // skipFetch true ( )
++ // skipFetch true (
+  if (!skipFetch && state.sort !== 'relevance') {
+  //
+  container.innerHTML = '<div class="flex justify-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-wiki-primary"></i></div>';
+@@ -3750,7 +3737,7 @@
+  const params = new URLSearchParams();
+  if (state.meta.keyword) params.set('q', state.meta.keyword);
+  params.set('sort', state.sort);
+- params.set('perPage', '20'); // : 50 20
++ params.set('perPage', '20'); // 50 20
+ 
+  const response = await fetch(`/api/majors/search${params.toString()}`);
+  const result = await response.json();
+@@ -3765,10 +3752,10 @@
+  }
+  }
+ 
+- // : SSR ( )
++ // SSR ()
+  // : API
+  const items = state.sort === 'relevance'
+- state.originalItems // ( )
++ state.originalItems // (
+  : state.baseItems; // API
+ 
+  if (items.length) {
+@@ -3818,8 +3805,8 @@
+ 
+  //
+  const updateLabel = (value) => {
+- const labels = { relevance: ' ', 'employment-desc': ' ', 'salary-desc': ' ', 'name-asc': ' ' };
+- label.textContent = labels[value] || ' ';
++ const labels = { relevance: ' , 'employment-desc': ' , 'salary-desc': ' , 'name-asc': ' };
++ label.textContent = labels[value] || ' ;
+  options.forEach(opt => {
+  opt.classList.toggle('active', opt.dataset.sort === value);
+  });
+@@ -4280,11 +4267,11 @@
+ 
+  let nextSwipeIndex
+  if (diffX > 0) {
+- // ( )
++ // ()
+  if (currentSwipeIndex === 0) return
+  nextSwipeIndex = currentSwipeIndex - 1
+  } else {
+- // ( )
++ // ()
+  if (currentSwipeIndex === swipeableTriggers.length - 1) return
+  nextSwipeIndex = currentSwipeIndex + 1
+  }
+@@ -4626,11 +4613,11 @@
+ 
+  if (!state.viewer.id) {
+  if (!password) {
+- setReplyWarning(box, ' 4 .')
++ setReplyWarning(box, ' 4 ')
+  return
+  }
+  if (!/^\d{4}$/.test(password)) {
+- setReplyWarning(box, ' 4 .')
++ setReplyWarning(box, ' 4.')
+  return
+  }
+  }
+@@ -4657,7 +4644,7 @@
+  throw new Error((payload && payload.error) || `HTTP ${response.status}`)
+  }
+  closeReplyBoxes(section, state)
+- setStatus(section, ' .', 'success')
++ setStatus(section, '', 'success')
+  await loadComments(section, state, { silent: true })
+  } catch (error) {
+  setReplyWarning(box, ' . .')
+@@ -4832,7 +4819,7 @@
+  button.classList.toggle('text-white', isActive)
+  button.classList.toggle('shadow-sm', isActive)
+  button.classList.toggle('border-wiki-primary/60', isActive)
+- // : + ( )
++ // : + ()
+  button.classList.toggle('bg-transparent', !isActive)
+  button.classList.toggle('text-gray-300', !isActive)
+  button.classList.toggle('border-transparent', !isActive)
+@@ -4857,7 +4844,7 @@
+  trigger.classList.toggle('text-white', isActive)
+  trigger.classList.toggle('shadow-sm', isActive)
+  trigger.classList.toggle('border-wiki-primary/50', isActive)
+- // : ( )
++ // : (
+  trigger.classList.toggle('text-gray-300', !isActive)
+  trigger.classList.toggle('border-transparent', !isActive)
+  //
+@@ -4959,13 +4946,13 @@
+  const effectiveRole = effectiveViewer.role || state.viewerRole || 'user'
+  const hasViewer = Boolean(effectiveViewer.id) || effectiveRole === 'admin'
+ 
+- // CTA ( )
++ // CTA (
+  if (authCta) {
+  authCta.hidden = true
+  }
+ 
+  if (form) {
+- // ( )
++ // (
+  const controls = form.querySelectorAll('input, textarea, button')
+  controls.forEach((control) => {
+  if (control instanceof HTMLButtonElement || control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement) {
+@@ -4987,8 +4974,8 @@
+  const nicknamePrefill = nicknameInput instanceof HTMLInputElement (nicknameInput.value || '').trim() : ''
+  const derivedHasViewer = hasViewer || Boolean(nicknamePrefill && nicknamePrefill !== '')
+ 
+- // : ,
+- // : ,
++ // ,
++ // ,
+  if (!derivedHasViewer) {
+  // - ,
+  if (nicknameWrapper instanceof HTMLElement) {
+@@ -5024,7 +5011,7 @@
+  }
+  }
+  } else {
+- // /
++ //
+  if (nicknameWrapper instanceof HTMLElement) {
+  nicknameWrapper.hidden = false
+  }
+@@ -5038,7 +5025,7 @@
+  const hasViewerNickname = Boolean(effectiveViewer.username)
+  if (!hasViewerNickname && !nicknamePrefill) {
+  nicknameInput.hidden = false
+- nicknameInput.placeholder = ' '
++ nicknameInput.placeholder = '
+  nicknameInput.value = ''
+  }
+  }
+@@ -5058,7 +5045,7 @@
+  if (avatarEl instanceof HTMLElement) {
+  const pictureUrl = effectiveViewer.pictureUrl
+  if (pictureUrl) {
+- avatarEl.innerHTML = `<img src="${escapeHtml(pictureUrl)}" alt="" class="w-6 h-6 rounded-full object-cover" />`
++ avatarEl.innerHTML = `<img src="${escapeHtml(pictureUrl)}" alt=" class="w-6 h-6 rounded-full object-cover" />`
+  } else {
+  avatarEl.innerHTML = `<i class="fas fa-user-circle text-sm text-wiki-muted"></i>`
+  }
+@@ -5106,7 +5093,7 @@
+  if (contentTextarea instanceof HTMLTextAreaElement && charCountEl) {
+  const updateCharCount = () => {
+  const length = contentTextarea.value.length
+- charCountEl.textContent = `${length} / 500`
++ charCountEl.textContent = `${length} / 500
+  if (length > 500) {
+  charCountEl.classList.add('text-red-400')
+  charCountEl.classList.remove('text-wiki-muted')
+@@ -5146,23 +5133,23 @@
+  badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-amber-300 bg-amber-500/10 rounded-full"><span class="sr-only"> </span></span>')
+  }
+  if (comment.isEdited) {
+- badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-wiki-muted bg-wiki-border/40 rounded-full"></span>')
++ badges.push('<span class="px-2 py-0.5 text-[11px] font-semibold text-wiki-muted bg-wiki-border/40 rounded-full">/span>')
+  }
+ 
+  const statusLabels = []
+  if (comment.isBest) {
+- statusLabels.push(' ')
++ statusLabels.push('')
+  }
+  if (comment.status !== 'visible') {
+- statusLabels.push(' ')
++ statusLabels.push(' )
+  }
+  if (comment.isEdited) {
+- statusLabels.push('')
++ statusLabels.push(')
+  }
+  const srStatusText = statusLabels.length `<span class="sr-only">(${statusLabels.join(', ')})</span>` : ''
+ 
+  const moderatorInfo = isModeratorRole(state.viewerRole, state)
+- `<span class="inline-flex items-center gap-1 text-[11px] text-wiki-muted" aria-label=" ${comment.reportCount 0}"><i class="fas fa-flag" aria-hidden="true"></i>${comment.reportCount 0}</span>`
++ `<span class="inline-flex items-center gap-1 text-[11px] text-wiki-muted" aria-label=" ${comment.reportCount 0}><i class="fas fa-flag" aria-hidden="true"></i>${comment.reportCount 0}</span>`
+  : ''
+ 
+  const isAdmin =
+@@ -5174,7 +5161,7 @@
+  const canEditOrDelete = isAdmin || isOwner || isAnonymousOwner
+ 
+  const contentHtml = comment.status === 'blinded'
+- `<div class="text-sm text-wiki-muted leading-relaxed italic" data-cw-comment-body> .</div>`
++ `<div class="text-sm text-wiki-muted leading-relaxed italic" data-cw-comment-body> </div>`
+  : (comment.status === 'visible'
+  `<div class="text-sm text-wiki-text leading-relaxed" data-cw-comment-body>${formatContent(comment.content || '')}</div>`
+  : `<div class="text-sm text-wiki-muted leading-relaxed italic" data-cw-comment-body>${formatContent(comment.content || '')}</div>`)
+@@ -5192,7 +5179,7 @@
+  const isAuthorOperator = comment.authorRole === 'admin' || comment.authorRole === 'super-admin' || comment.authorRole === 'operator'
+  const displayNickname = comment.nickname || (comment.isAnonymous && comment.anonymousNumber ` ${comment.anonymousNumber}` : '')
+  const adminBadge = isAuthorOperator
+- '<span class="px-2 py-0.5 text-[11px] font-semibold text-white bg-red-500/20 rounded-full"></span>'
++ '<span class="px-2 py-0.5 text-[11px] font-semibold text-white bg-red-500/20 rounded-full">/span>'
+  : ''
+  const commentLabelParts = [
+  `${displayNickname} `,
+@@ -5255,10 +5242,10 @@
+  </header>
+  ${contentHtml}
+  <footer class="flex items-center gap-4 text-xs">
+- <button type="button" class="inline-flex items-center gap-1 ${likeActive 'text-wiki-primary' : 'text-wiki-muted hover:text-wiki-primary transition'}" data-cw-comment-like data-comment-id="${comment.id}" data-requires-auth="1" aria-pressed="${likeActive 'true' : 'false'}" aria-label=" ${comment.likes 0}" title=" ${comment.likes 0}">
++ <button type="button" class="inline-flex items-center gap-1 ${likeActive 'text-wiki-primary' : 'text-wiki-muted hover:text-wiki-primary transition'}" data-cw-comment-like data-comment-id="${comment.id}" data-requires-auth="1" aria-pressed="${likeActive 'true' : 'false'}" aria-label=" ${comment.likes 0} title=" ${comment.likes 0}">
+  <i class="fas fa-thumbs-up"></i><span data-cw-comment-like-count>${comment.likes comment.likeCount 0}</span>
+  </button>
+- <button type="button" class="inline-flex items-center gap-1 ${dislikeActive 'text-rose-300' : 'text-wiki-muted hover:text-wiki-text transition'}" data-cw-comment-dislike data-comment-id="${comment.id}" data-requires-auth="1" aria-pressed="${dislikeActive 'true' : 'false'}" aria-label=" ${comment.dislikes 0}" title=" ${comment.dislikes 0}">
++ <button type="button" class="inline-flex items-center gap-1 ${dislikeActive 'text-rose-300' : 'text-wiki-muted hover:text-wiki-text transition'}" data-cw-comment-dislike data-comment-id="${comment.id}" data-requires-auth="1" aria-pressed="${dislikeActive 'true' : 'false'}" aria-label="${comment.dislikes 0} title="${comment.dislikes 0}">
+  <i class="fas fa-thumbs-down"></i><span data-cw-comment-dislike-count>${comment.dislikes comment.dislikeCount 0}</span>
+  </button>
+  <button type="button" class="inline-flex items-center gap-1 text-wiki-muted hover:text-wiki-text transition" data-cw-comment-reply data-comment-id="${comment.id}" data-comment-label="${escapeHtml(displayNickname)}">
+@@ -5339,7 +5326,7 @@
+ 
+  container.innerHTML = `
+  <div class="flex items-center justify-between px-4 py-3 border-t border-wiki-border/60">
+- <div class="text-xs text-wiki-muted"> ${total} ${currentPage}/${totalPages}</div>
++ <div class="text-xs text-wiki-muted">${total} ${currentPage}/${totalPages}</div>
+  <div class="flex items-center gap-2">${buttons.join('')}</div>
+  </div>
+  `
+@@ -5721,7 +5708,7 @@
+  section.dataset.commentsStatus = 'error'
+  const message = error && error.name === 'AbortError'
+  ' . .'
+- : ' . .'
++ : ' .'
+  setStatus(section, message, 'error')
+ 
+  //
+@@ -5788,7 +5775,7 @@
+  policySignature: state.policySignature null,
+  governance: getGovernanceFromState(state)
+  })
+- setStatus(section, ' Phase 2 .', 'info')
++ setStatus(section, ' Phase 2 ', 'info')
+  })
+  })
+ 
+@@ -5850,10 +5837,10 @@
+  const defaultPlaceholder = textarea.getAttribute('placeholder') || ''
+  const entityLabel = state.entityType === 'major' '' : state.entityType === 'howto' '' : ''
+  const PROMPT_PLACEHOLDERS = {
+- question: ` ${entityLabel} `,
++ question: `${entityLabel} ,
+  info: ' ',
+- experience: ' ',
+- cheer: ` ${entityLabel} !`
++ experience: ' ,
++ cheer: `${entityLabel} `
+  }
+  promptsContainer.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-comment-prompt]')
+@@ -5905,13 +5892,13 @@
+  const password = isAnonymous (formData.get('password') || '').toString().trim() : ''
+  if (isAnonymous) {
+  if (!password) {
+- const msg = ' 4 .'
++ const msg = ' 4 '
+  setStatus(section, '')
+  setPasswordWarning(section, msg, 'error')
+  return
+  }
+  if (!/^\d{4}$/.test(password)) {
+- const msg = ' 4 .'
++ const msg = ' 4.'
+  setStatus(section, '')
+  setPasswordWarning(section, msg, 'error')
+  return
+@@ -5974,7 +5961,7 @@
+  form.reset()
+  setPasswordWarning(section, '')
+  clearReplyTarget(section, state)
+- showToast(' .', 'success')
++ showToast('', 'success')
+  DetailTelemetry.emit('comment-submit', {
+  component: 'comment-form',
+  entityType: state.entityType,
+@@ -5990,11 +5977,11 @@
+  const rawMessage = error instanceof Error error.message : String(error || '')
+  const normalized = rawMessage.toUpperCase()
+  if (normalized.includes('PASSWORD_REQUIRED') || normalized.includes('PASSWORD IS REQUIRED')) {
+- const msg = ' 4 .'
++ const msg = ' 4 '
+  setStatus(section, '')
+  setPasswordWarning(section, msg, 'error')
+  } else if (normalized.includes('INVALID_PASSWORD') || normalized.includes('INVALID PASSWORD')) {
+- const msg = ' 4 .'
++ const msg = ' 4.'
+  setStatus(section, '')
+  setPasswordWarning(section, msg, 'error')
+  } else if (normalized.includes('DAILY_LIMIT_REACHED')) {
+@@ -6049,7 +6036,7 @@
+  setInlineActionError(section, commentId, msg, 5000)
+  return
+  }
+- // ( IP )
++ // (IP )
+  if (!state.viewer.id && target.isAnonymous && !target.authorId && target.displayIp && state.viewerIp && target.displayIp === state.viewerIp) {
+  const msg = ' .'
+  setInlineActionError(section, commentId, msg, 5000)
+@@ -6110,9 +6097,9 @@
+  } else if (upper.includes('VOTE_LIMIT_REACHED')) {
+  uiMessage = ' . .'
+  } else if (upper.includes('COMMENT_NOT_FOUND')) {
+- uiMessage = ' .'
++ uiMessage = ' '
+  } else if (upper.includes('AUTHENTICATION')) {
+- uiMessage = ' .'
++ uiMessage = ' '
+  } else if (upper.startsWith('HTTP ')) {
+  uiMessage = ` : ${message}`
+  }
+@@ -6154,7 +6141,7 @@
+  setInlineActionError(section, commentId, msg, 5000)
+  return
+  }
+- // ( IP )
++ // (IP )
+  if (!state.viewer.id && target.isAnonymous && !target.authorId && target.displayIp && state.viewerIp && target.displayIp === state.viewerIp) {
+  const msg = ' .'
+  setInlineActionError(section, commentId, msg, 5000)
+@@ -6207,7 +6194,7 @@
+  await loadComments(section, state)
+  } catch (error) {
+  const message = error instanceof Error error.message : String(error)
+- let uiMessage = ' . .'
++ let uiMessage = '. .'
+  if (typeof message === 'string') {
+  const upper = message.toUpperCase()
+  if (upper.includes('SELF_VOTE_NOT_ALLOWED')) {
+@@ -6215,9 +6202,9 @@
+  } else if (upper.includes('VOTE_LIMIT_REACHED')) {
+  uiMessage = ' . .'
+  } else if (upper.includes('COMMENT_NOT_FOUND')) {
+- uiMessage = ' .'
++ uiMessage = ' '
+  } else if (upper.includes('AUTHENTICATION')) {
+- uiMessage = ' .'
++ uiMessage = ' '
+  } else if (upper.startsWith('HTTP ')) {
+  uiMessage = ` : ${message}`
+  }
+@@ -6373,17 +6360,17 @@
+  governance: getGovernanceFromState(state)
+  })
+ 
+- setMessage(' .', 'success')
+- setStatus(section, ' .', 'success')
+- // (3)
++ setMessage(' ', 'success')
++ setStatus(section, ' ', 'success')
++ // (3
+  setTimeout(() => close(), 3000)
+  await loadComments(section, state, { silent: true })
+  } catch (error) {
+  const message = error instanceof Error error.message : String(error)
+  if (typeof message === 'string' && message.toLowerCase().includes('duplicate')) {
+- setMessage(' .', 'error')
++ setMessage(' ', 'error')
+  } else if (typeof message === 'string' && message.toLowerCase().includes('authentication')) {
+- setMessage(' .', 'error')
++ setMessage('.', 'error')
+  } else {
+  setMessage(' . .', 'error')
+  }
+@@ -6413,7 +6400,7 @@
+  const openReportModal = (section, state, commentId) => {
+  const controls = ensureReportModal(section, state)
+  if (!controls) {
+- setStatus(section, ' .', 'error')
++ setStatus(section, ' ', 'error')
+  return
+  }
+  controls.reason.value = ''
+@@ -6430,7 +6417,7 @@
+  return
+  }
+  if (!state.viewer.id) {
+- setStatus(section, ' .', 'info')
++ setStatus(section, '.', 'info')
+  return
+  }
+  openReportModal(section, state, commentId)
+@@ -6470,7 +6457,7 @@
+  ${needsPw `
+  <div class="flex items-center gap-2 text-sm">
+  <input type="password" maxlength="4" pattern="[0-9]{4}" placeholder=" (4 )" class="px-3 py-2 rounded border border-wiki-border bg-wiki-bg text-sm focus:border-wiki-primary focus:outline-none" data-cw-edit-password />
+- <span class="text-xs text-wiki-muted"> .</span>
++ <span class="text-xs text-wiki-muted"> </span>
+  </div>
+  ` : ''}
+  <div class="flex items-center gap-2 text-xs">
+@@ -6504,7 +6491,7 @@
+  if (!needsPw) return true
+  const val = passwordInput.value.trim() || ''
+  if (!/^\d{4}$/.test(val)) {
+- setEditStatus(' 4 .', 'error')
++ setEditStatus(' 4.', 'error')
+  return false
+  }
+  return true
+@@ -6513,7 +6500,7 @@
+  const doSubmit = async () => {
+  const value = textarea.value.trim() || ''
+  if (!value) {
+- setEditStatus(' .', 'error')
++ setEditStatus('.', 'error')
+  return
+  }
+  if (!validatePasswordInput()) {
+@@ -6537,7 +6524,7 @@
+  return
+  }
+  if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_REQUIRED')) {
+- setEditStatus(' .', 'error')
++ setEditStatus(' ', 'error')
+  return
+  }
+  if (typeof msg === 'string' && msg.toUpperCase().includes('AUTHOR_REQUIRED')) {
+@@ -6550,7 +6537,7 @@
+  }
+  throw new Error(msg)
+  }
+- setEditStatus(' .', 'success')
++ setEditStatus('', 'success')
+  closeEditBoxes(section)
+  await loadComments(section, state)
+  } catch (error) {
+@@ -6581,13 +6568,13 @@
+  }
+  const commentId = Number(button.getAttribute('data-comment-id'))
+  if (!Number.isFinite(commentId) || commentId <= 0) {
+- setStatus(section, ' ID.', 'error')
++ setStatus(section, ' ID', 'error')
+  return
+  }
+ 
+  const target = (state.comments || []).find((c) => Number(c.id) === commentId)
+  if (!target) {
+- setStatus(section, ' .', 'error')
++ setStatus(section, ' ', 'error')
+  return
+  }
+ 
+@@ -6659,11 +6646,11 @@
+  if (needsPw) {
+  const val = (pwInput.value || '').trim()
+  if (!val) {
+- showError(' .')
++ showError('.')
+  return
+  }
+  if (!/^\d{4}$/.test(val)) {
+- showError(' 4 .')
++ showError(' 4.')
+  return
+  }
+  close(val)
+@@ -6684,13 +6671,13 @@
+  }
+  const commentId = Number(button.getAttribute('data-comment-id'))
+  if (!Number.isFinite(commentId) || commentId <= 0) {
+- setStatus(section, ' ID.', 'error')
++ setStatus(section, ' ID', 'error')
+  return
+  }
+ 
+  const target = (state.comments || []).find((c) => Number(c.id) === commentId)
+  if (!target) {
+- setStatus(section, ' .', 'error')
++ setStatus(section, ' ', 'error')
+  return
+  }
+ 
+@@ -6726,7 +6713,7 @@
+  continue
+  }
+  if (typeof msg === 'string' && msg.toUpperCase().includes('PASSWORD_REQUIRED')) {
+- deleteModal.showError(' .')
++ deleteModal.showError(' ')
+  delete button.dataset.commentBusy
+  continue
+  }
+@@ -6737,7 +6724,7 @@
+  throw new Error(msg)
+  }
+  await loadComments(section, state)
+- showToast(' .', 'success')
++ showToast('', 'success')
+  return
+  } catch (error) {
+  setStatus(section, ' . .', 'error')
+@@ -6873,7 +6860,7 @@
+  openMenuId: null
+  }
+ 
+- // __USER__ viewer/role ( )
++ // __USER__viewer/role ( )
+  const globalUser = (typeof window !== 'undefined' && window.__USER__) window.__USER__ : null
+  if (globalUser) {
+  state.viewer = {
+@@ -7151,11 +7138,11 @@
+  return `/major/${encodeURIComponent(slug)}${query `${query}` : ''}`;
+  },
+ 
+- // ( composeDetailSlug )
++ // (composeDetailSlug )
+  slugifyName(value) {
+  if (!value) return '';
+- const HANGUL_SEPARATOR_REGEX = /[]/g;
+- const SLUG_INVALID_REGEX = /[^0-9a-z\u3131-\u314e\u314f-\u3163--]+/gi;
++ const HANGUL_SEPARATOR_REGEX = /[/g;
++ const SLUG_INVALID_REGEX = /[^0-9a-z\u3131-\u314e\u314f-\u3163-]+/gi;
+ 
+  const normalized = value.normalize value.normalize('NFKC') : value;
+  const slug = normalized
+@@ -7201,7 +7188,7 @@
+ 
+  const profile = {
+  id: item.id || (item.majorSeq `major:C_${item.majorSeq}` : undefined),
+- name: item.name || item.major || ' ',
++ name: item.name || item.major || '',
+  sourceIds: {
+  careernet: item.sourceIds.careernet || item.majorSeq
+  },
+@@ -7243,7 +7230,7 @@
+ 
+  const profile = {
+  id: item.id || (item.jobdicSeq `job:C_${item.jobdicSeq}` : undefined),
+- name: item.name || item.jobName || ' ',
++ name: item.name || item.jobName || '',
+  sourceIds: {
+  careernet: item.sourceIds.careernet || item.jobdicSeq
+  },
+@@ -7276,7 +7263,7 @@
+  element.innerHTML = `
+  <div class="text-center py-8">
+  <i class="fas fa-spinner fa-spin text-3xl text-wiki-secondary"></i>
+- <p class="mt-4 text-wiki-muted"> ...</p>
++ <p class="mt-4 text-wiki-muted"> ..</p>
+  </div>
+  `;
+  }
+@@ -7295,7 +7282,7 @@
+  }
+  },
+ 
+- // ( )
++ // (
+  createMajorCard(major) {
+  const normalized = this.normalizeMajorItem(major);
+  if (!normalized) return '';
+@@ -7316,14 +7303,14 @@
+  const metricBoxes = [];
+  if (display.employmentRate) {
+  const rateText = formatEmploymentRate(display.employmentRate) || '';
+- metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-chart-line text-blue-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-blue-300/70"></span><span class="text-[11px] sm:text-[13px] font-bold text-blue-300 text-center leading-tight px-1">${rateText}</span></div>` });
++ metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-chart-line text-blue-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-blue-300/70">/span><span class="text-[11px] sm:text-[13px] font-bold text-blue-300 text-center leading-tight px-1">${rateText}</span></div>` });
+  }
+  if (display.firstJobSalary) {
+  const salaryText = display.firstJobSalary.includes('') display.firstJobSalary : `${display.firstJobSalary}`;
+  metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70"> </span><span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${salaryText}</span></div>` });
+  }
+  if (display.firstJobSatisfaction && satisfactionGrade) {
+- metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}"></span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
++ metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">/span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
+  }
+  if (categoryName) {
+  metricBoxes.push({ priority: 4, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-graduation-cap text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70"></span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight px-1">${categoryName.length > 10 categoryName.substring(0, 10) + '...' : categoryName}</span></div>` });
+@@ -7337,10 +7324,10 @@
+  `<div class="flex-shrink-0 self-center w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] rounded-xl overflow-hidden bg-wiki-card/60 border border-wiki-border/30"><img src="${imageUrl}" alt="${profile.name || ''}" class="w-full h-full object-cover" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full text-wiki-muted\\' aria-hidden=\\'true\\'><i class=\\'fas fa-graduation-cap text-3xl\\'></i></div>'" /></div>`
+  : `<div class="flex-shrink-0 self-center w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] rounded-xl bg-gradient-to-br from-wiki-secondary/10 to-wiki-primary/10 border border-wiki-border/30 flex items-center justify-center"><i class="fas fa-graduation-cap text-3xl text-wiki-muted" aria-hidden="true"></i></div>`;
+ 
+- return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4">${thumbnailHtml}<div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2"><h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || ' '}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
++ return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4">${thumbnailHtml}<div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2"><h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || ''}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
+  },
+ 
+- // : (: "1~2" "1~2")
++ // ( "12 "1~2)
+  formatSkillYear(value) {
+  if (!value) return '';
+  let trimmed = String(value).trim();
+@@ -7359,16 +7346,16 @@
+ 
+  const [, start, separator, end] = rangeMatch;
+ 
+- // (, ) -
++ // ( -
+  const startTrimmed = start.trim();
+- const unitMatch = startTrimmed.match(/(\d+)\s*(||)$/);
++ const unitMatch = startTrimmed.match(/(\d+)\s*(|$/);
+  if (!unitMatch) return trimmed; //
+ 
+  const [, startNum, unit] = unitMatch;
+ 
+  // -
+  const endTrimmed = end.trim();
+- const endMatch = endTrimmed.match(/^(\d+)\s*(||)$/);
++ const endMatch = endTrimmed.match(/^(\d+)\s*(|$/);
+  if (!endMatch) return trimmed; //
+ 
+  const [, endNum, endUnit] = endMatch;
+@@ -7382,7 +7369,7 @@
+  return trimmed;
+  },
+ 
+- // ( )
++ // (
+  createJobCard(job) {
+  const normalized = this.normalizeJobItem(job);
+  if (!normalized) return '';
+@@ -7405,10 +7392,10 @@
+  metricBoxes.push({ priority: 1, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-won-sign text-emerald-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-emerald-300/70"> </span><span class="text-[11px] sm:text-[13px] font-bold text-emerald-300 text-center leading-tight px-1">${salaryText}</span></div>` });
+  }
+  if (display.satisfaction && satisfactionGrade) {
+- metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}"></span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
++ metricBoxes.push({ priority: 2, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg ${satisfactionGrade.bg} backdrop-blur-sm border ${satisfactionGrade.border} w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-smile ${satisfactionGrade.iconColor} text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium ${satisfactionGrade.textMuted}">/span><span class="text-[11px] sm:text-[13px] font-bold ${satisfactionGrade.textColor}">${satisfactionGrade.level}</span></div>` });
+  }
+  if (display.wlb) {
+- metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-balance-scale text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70"></span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight">${display.wlb}</span></div>` });
++ metricBoxes.push({ priority: 3, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-balance-scale text-purple-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-purple-300/70">/span><span class="text-[11px] sm:text-[13px] font-bold text-purple-300 text-center leading-tight">${display.wlb}</span></div>` });
+  }
+  if (display.workStrong) {
+  metricBoxes.push({ priority: 4, html: `<div class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 w-[84px] h-[76px] sm:w-[100px] sm:h-[92px] flex-shrink-0"><i class="fas fa-dumbbell text-amber-400 text-base sm:text-lg"></i><span class="text-[9px] sm:text-[10px] font-medium text-amber-300/70"> </span><span class="text-[11px] sm:text-[13px] font-bold text-amber-300 text-center leading-tight">${display.workStrong}</span></div>` });
+@@ -7426,7 +7413,7 @@
+  `<div class="flex-shrink-0 self-center w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] rounded-xl overflow-hidden bg-wiki-card/60 border border-wiki-border/30"><img src="${imageUrl}" alt="${profile.name || ''}" class="w-full h-full object-cover" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full text-wiki-muted\\' aria-hidden=\\'true\\'><i class=\\'fas fa-briefcase text-3xl\\'></i></div>'" /></div>`
+  : `<div class="flex-shrink-0 self-center w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] rounded-xl bg-gradient-to-br from-wiki-primary/10 to-wiki-secondary/10 border border-wiki-border/30 flex items-center justify-center"><i class="fas fa-briefcase text-3xl text-wiki-muted" aria-hidden="true"></i></div>`;
+ 
+- return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4">${thumbnailHtml}<div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2">${display.categoryName `<div class="flex items-center gap-2"><span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20"><i class="fas fa-folder text-[7px] sm:text-[8px]"></i>${display.categoryName}</span></div>` : ''}<h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || ' '}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
++ return `<article class="group relative"><a href="${url}" class="block"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-wiki-card/40 via-wiki-card/60 to-wiki-card/40 backdrop-blur-xl border border-wiki-border/40 p-4 sm:p-6 transition-all duration-500 ease-out hover:border-wiki-primary/40 hover:shadow-xl hover:shadow-wiki-primary/5 hover:-translate-y-1"><div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"><div class="absolute -top-24 -right-24 w-48 h-48 bg-wiki-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-24 -left-24 w-48 h-48 bg-wiki-secondary/10 rounded-full blur-3xl"></div></div><div class="relative flex gap-3 sm:gap-4">${thumbnailHtml}<div class="flex-1 space-y-3 sm:space-y-4 min-w-0 max-w-[60%]"><div class="space-y-1.5 sm:space-y-2">${display.categoryName `<div class="flex items-center gap-2"><span class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider bg-wiki-secondary/10 text-wiki-secondary/80 border border-wiki-secondary/20"><i class="fas fa-folder text-[7px] sm:text-[8px]"></i>${display.categoryName}</span></div>` : ''}<h2 class="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-wiki-primary group-hover:to-wiki-secondary group-hover:bg-clip-text transition-all duration-300">${profile.name || ''}</h2></div><p class="text-[13px] sm:text-[15px] leading-relaxed text-wiki-muted/90 line-clamp-2">${summary}</p></div>${metrics `<div class="flex gap-2 sm:gap-2.5 items-center justify-end flex-shrink-0 ml-auto">${metrics}</div>` : ''}</div></div></a></article>`;
+  }
+ };
+ 
+@@ -7456,7 +7443,7 @@
+  <div class="grid gap-4">
+  ${jobs.map(job => DOMUtils.createJobCard(job)).join('')}
+  </div>
+- ${jobs.length >= 5 `<a href="/jobq=${encodeURIComponent(keyword)}" class="text-wiki-primary hover:underline mt-4 inline-block"> </a>` : ''}
++ ${jobs.length >= 5 `<a href="/jobq=${encodeURIComponent(keyword)}" class="text-wiki-primary hover:underline mt-4 inline-block"> /a>` : ''}
+  `;
+  } else {
+  jobResults.innerHTML = '';
+@@ -7476,7 +7463,7 @@
+  <div class="grid gap-4">
+  ${majors.map(major => DOMUtils.createMajorCard(major)).join('')}
+  </div>
+- ${majors.length >= 5 `<a href="/majorq=${encodeURIComponent(keyword)}" class="text-wiki-primary hover:underline mt-4 inline-block"> </a>` : ''}
++ ${majors.length >= 5 `<a href="/majorq=${encodeURIComponent(keyword)}" class="text-wiki-primary hover:underline mt-4 inline-block"> /a>` : ''}
+  `;
+  } else {
+  majorResults.innerHTML = '';
+@@ -7773,7 +7760,7 @@
+  copyBtn.addEventListener('click', async function () {
+  try {
+  await navigator.clipboard.writeText(currentUrl)
+- copyBtn.textContent = '!'
++ copyBtn.textContent = ''
+  copyBtn.classList.add('bg-green-600')
+  copyBtn.classList.remove('bg-wiki-primary')
+  setTimeout(function () {
+@@ -7829,7 +7816,7 @@
+  link: { mobileWebUrl: currentUrl, webUrl: currentUrl }
+  },
+  buttons: [{
+- title: ' ',
++ title: '',
+  link: { mobileWebUrl: currentUrl, webUrl: currentUrl }
+  }]
+  })
+@@ -7838,14 +7825,14 @@
+  if (navigator.share) {
+  navigator.share({ title: currentTitle, url: currentUrl }).catch(function(){})
+  } else {
+- alert(' .')
++ alert(' ')
+  navigator.clipboard.writeText(currentUrl).catch(function(){})
+  }
+  }
+  })
+  }
+ 
+- // ()
++ // (
+  var nativeBtn = document.querySelector('[data-share-native]')
+  if (nativeBtn) {
+  nativeBtn.addEventListener('click', async function () {
+@@ -7930,7 +7917,7 @@
+ 
+  </h3>
+  <p class="text-wiki-muted text-sm mb-4">
+- "${title}" .
++ "${title}"
+  </p>
+  <div class="mb-4">
+  <details class="group">
+@@ -7942,7 +7929,7 @@
+  id="image-prompt-input"
+  class="w-full mt-2 px-4 py-3 bg-wiki-bg border border-wiki-border rounded-xl text-white placeholder-wiki-muted focus:outline-none focus:border-wiki-primary resize-none"
+  rows="3"
+- placeholder=" AI "
++ placeholder=" AI
+  ></textarea>
+  </details>
+  </div>
+@@ -7958,7 +7945,7 @@
+  <div id="image-regen-status" class="mt-4 hidden">
+  <div class="flex items-center gap-3 p-3 rounded-lg bg-wiki-bg border border-wiki-border">
+  <i class="fas fa-spinner fa-spin text-wiki-primary"></i>
+- <span class="text-sm text-wiki-muted"> ... ( 10-30 )</span>
++ <span class="text-sm text-wiki-muted"> .. (10-30)</span>
+  </div>
+  </div>
+  </div>
+@@ -7983,14 +7970,14 @@
+ 
+  //
+  const pollAndSaveImage = async (taskId, type, slug) => {
+- const maxAttempts = 120; // 120 ( 2)
++ const maxAttempts = 120; // 120(2
+  const pollInterval = 1000; // 1 ( )
+ 
+  for (let i = 0; i < maxAttempts; i++) {
+  statusDiv.innerHTML = `
+  <div class="flex items-center gap-3 p-3 rounded-lg bg-wiki-bg border border-wiki-border">
+  <i class="fas fa-spinner fa-spin text-wiki-primary"></i>
+- <span class="text-sm text-wiki-muted"> ... (${i} )</span>
++ <span class="text-sm text-wiki-muted"> .. (${i})</span>
+  </div>
+  `;
+ 
+@@ -8011,7 +7998,7 @@
+  statusDiv.innerHTML = `
+  <div class="flex items-center gap-3 p-3 rounded-lg bg-wiki-bg border border-wiki-border">
+  <i class="fas fa-spinner fa-spin text-wiki-primary"></i>
+- <span class="text-sm text-wiki-muted"> ...</span>
++ <span class="text-sm text-wiki-muted"> ..</span>
+  </div>
+  `;
+ 
+@@ -8043,7 +8030,7 @@
+  await new Promise(resolve => setTimeout(resolve, pollInterval));
+  }
+ 
+- throw new Error(' (2)');
++ throw new Error(' (2');
+  };
+ 
+  //
+@@ -8053,7 +8040,7 @@
+  //
+  const generateBtn = modal.querySelector('[data-action="generate"]');
+  generateBtn.disabled = true;
+- generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
++ generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ..';
+  statusDiv.classList.remove('hidden');
+ 
+  try {
+@@ -8092,9 +8079,9 @@
+  <div class="flex items-center gap-3">
+  <i class="fas fa-check-circle text-emerald-400"></i>
+  <div>
+- <p class="text-sm text-emerald-300 font-medium"> !</p>
++ <p class="text-sm text-emerald-300 font-medium"> </p>
+  <p class="text-xs text-emerald-400/70 mt-1">
+- <span id="regen-countdown">8</span> ...
++ <span id="regen-countdown">8</span>..
+  </p>
+  </div>
+  </div>
+@@ -8102,7 +8089,7 @@
+  </div>
+  `;
+ 
+- // 8 ( )
++ // 8 (
+  let countdown = 8;
+  const countdownEl = document.getElementById('regen-countdown');
+  const countdownInterval = setInterval(() => {
+@@ -8215,7 +8202,7 @@
+  const prevId = prevUser.id;
+  const newId = data.user.id;
+  if (prevId !== newId) {
+- // / -
++ // -
+  window.location.reload();
+  }
+  })
+@@ -8230,7 +8217,7 @@
+  if (user && user.id) {
+  const pictureUrl = user.pictureUrl || user.picture_url || user.custom_picture_url;
+  if (pictureUrl) {
+- btn.innerHTML = `<img src="${pictureUrl}" alt="" class="w-full h-full object-cover rounded-full">`;
++ btn.innerHTML = `<img src="${pictureUrl}" alt=" class="w-full h-full object-cover rounded-full">`;
+  } else {
+  btn.innerHTML = `<i class="fas fa-user-circle text-base"></i>`;
+  }
+@@ -8251,4 +8238,4 @@
+ //
+ if (typeof window !== 'undefined' && window.__USER_LOADED__ && window.__USER__) {
+  updateHeaderUserIcon(window.__USER__);
+-}
+\ No newline at end of file
++}

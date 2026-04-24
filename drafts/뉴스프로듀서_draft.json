@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "way": "뉴스프로듀서는 방송사 공채 또는 경력 채용을 통해 입직하는 것이 주된 경로다. KBS·MBC·SBS 등 지상파는 매년 또는 격년으로 공개채용을 실시하며 필기(언론 시사·논술)·실무 테스트·면접의 단계별 전형을 거친다.[1] 한국방송아카데미 등 방송 실무 교육기관의 PD 과정을 이수하면 실기 전형에서 유리하다. 종합편성채널·케이블·OTT 제작사는 경력직 중심으로 수시 채용을 진행한다.[2]",
+    "overviewSalary": {
+      "sal": "지상파 방송사 뉴스프로듀서 초봉은 약 4,200~5,200만 원이며, 재직자 평균 임금은 약 4,500만 원 내외다.[1]"
+    },
+    "overviewProspect": {
+      "main": "OTT 플랫폼 성장과 유튜브 기반 뉴스 콘텐츠 확산으로 영상 뉴스 제작 수요는 꾸준히 증가 추세다. 국내 영상제작업은 2031년까지 연평균 4.6% 성장이 전망된다.[1]"
+    },
+    "trivia": "뉴스 생방송에서는 자막 오타, 화면 오출력, 게스트 자리비움 등 다양한 방송사고가 발생할 수 있으며, 뉴스프로듀서는 수초 내에 대체 화면을 편성하거나 앵커에게 신호를 보내는 즉각 대응 역할을 맡는다. '방송사고 대처 능력'은 현직 PD들이 꼽는 핵심 역량 중 하나다.[1]",
+    "detailWlb": {
+      "wlb": "낮음",
+      "social": "높음",
+      "wlbDetail": "뉴스 생방송 특성상 이른 아침·심야 시간대 근무가 기본이며, 돌발 사건·사고 발생 시 야간·주말에도 긴급 출근이 요구된다. 속보 경쟁과 높은 업무 강도로 워라밸은 방송 직군 중에서도 낮은 편으로 평가된다.[1]",
+      "socialDetail": "뉴스는 시민이 사회 현안을 이해하고 판단하는 데 필수 정보를 제공하며, 뉴스프로듀서는 그 정보의 정확성·공정성·접근성을 결정하는 핵심 역할을 수행한다. 재난·선거·외교 위기 등 국가적 사안에서의 신속한 보도는 사회적 혼란 방지에 직결된다.[1]"
+    },
+    "youtubeLinks": [],
+    "detailReady": {
+      "curriculum": [
+        {"title": "신문방송학과·언론학과", "text": "뉴스 제작·취재·편집 이론과 미디어 산업 전반을 학습하며, 방송사 공채 전형에서 가장 선호하는 전공이다.", "link": null},
+        {"title": "디지털미디어학과·방송영상학과", "text": "뉴미디어 콘텐츠 제작, 영상 편집, 멀티플랫폼 배포 역량을 기르며 OTT·유튜브 기반 뉴스 제작 환경에 적합한 역량을 갖출 수 있다.", "link": null},
+        {"title": "정치학·경제학·사회학", "text": "뉴스 콘텐츠의 배경 이해에 필수적인 시사·사회 지식을 쌓으며 보도 기획 역량을 강화하는 데 도움이 된다.", "link": null},
+        {"title": "한국방송아카데미 PD 과정", "text": "방송사 공채 합격자 상당수가 입직 전 이수하는 실무 교육과정으로, 뉴스 제작·편집·연출 실습을 집중적으로 수행한다.[1]", "link": "https://www.kba.or.kr"}
+      ],
+      "recruit": [
+        {"title": "지상파 방송사 공채 (KBS·MBC·SBS)", "text": "매년 또는 격년으로 공채를 실시하며, 언론 시사 필기·포트폴리오 심사·면접의 단계적 전형을 거친다. 각 방송사 채용 홈페이지에서 공고를 확인해야 한다.", "link": null},
+        {"title": "종합편성채널·케이블 방송사 채용", "text": "JTBC·TV조선·채널A·MBN 등은 경력직 위주로 수시 채용을 진행하며, 잡코리아·사람인 등 포털을 통해 공고를 확인할 수 있다.", "link": null},
+        {"title": "OTT·유튜브 뉴스 제작사 채용", "text": "웨이브·카카오TV·유튜브 기반 뉴스 콘텐츠 제작사가 늘면서 프로듀서 수요가 증가하고 있으며 사람인·링크드인에서 관련 공고를 확인할 수 있다.[1]", "link": "https://www.saramin.co.kr"}
+      ],
+      "training": [
+        {"title": "한국방송아카데미", "text": "방송제작 실무 교육기관으로 PD 실무, 뉴스 제작, 영상 편집 등 방송인 양성 과정을 운영한다.", "link": "https://www.kba.or.kr"},
+        {"title": "MBC아카데미 방송연수원", "text": "방송 기획·연출·취재 직무 관련 교육과정을 운영하며, 방송사 취업 준비생 및 현직자 재교육 과정을 모두 제공한다.[1]", "link": "https://www.mbcacademy.co.kr"}
+      ]
+    },
+    "heroTags": ["방송PD", "뉴스제작", "방송사", "언론", "생방송", "영상뉴스", "저널리즘", "방송연출"],
+    "sidebarJobs": ["교양프로그램프로듀서", "드라마프로듀서", "라디오프로듀서", "방송연출가", "방송책임프로듀서", "시사다큐프로그램프로듀서", "스포츠프로그램프로듀서", "예능프로그램프로듀서"],
+    "sidebarCerts": []
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] PD저널 방송사 PD 공채 전형 안내", "url": "https://www.pdjournal.com"},
+      {"id": 2, "text": "[2] MBC아카데미 방송연수원", "url": "https://www.mbcacademy.co.kr"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 대입정보포털 뉴스프로듀서 직업정보", "url": "https://adiga.kr/PageLinkSvl.do?pageCode=VS_EP_A0100"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국방송통신전파진흥원(KCA) 방송산업 전망", "url": "https://www.kca.kr"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] PD저널 방송사고 현직자 인터뷰", "url": "https://www.pdjournal.com"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] PD저널 방송PD 근무환경", "url": "https://www.pdjournal.com"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국방송통신전파진흥원(KCA)", "url": "https://www.kca.kr"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국방송아카데미 교육과정", "url": "https://www.kba.or.kr"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 사람인 방송프로듀서 채용정보", "url": "https://www.saramin.co.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] MBC아카데미 방송연수원 교육과정", "url": "https://www.mbcacademy.co.kr"}
+    ]
+  },
+  "changeSummary": "way·sal·prospect·trivia·detailWlb·detailReady·heroTags·sidebarJobs·sidebarCerts 신규 보완"
+}

@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "way": "잠수기능사를 취득한 뒤 잠수산업기사로 자격을 높이는 것이 입직의 첫 단계다. 수중·준설공사업 면허를 보유한 전문건설업체에 잠수보조원으로 입사해 교량 기초 세굴 조사, 항만 구조물 수중 거치, 방파제 케이슨 연결 작업 등 현장 경험을 쌓는다. 경력에 따라 잠수사·잠수감독관으로 승급하며, 화약류 취급 면허를 추가로 취득하면 수중 암반 발파 공종에, 수중용접 경력을 쌓으면 해중 구조물 보수 공종에 전문적으로 투입된다. 토목기사 등 토목 관련 자격을 겸비하면 시공 관리 업무로 업무 범위를 넓힐 수 있다.[1]",
+    "trivia": "건설산업기본법상 수중·준설공사업은 수중암석파쇄공사, 수중구조물 설치·해체공사, 계선부표 및 항로표지 설치공사, 수중구조물 방식공사, 해저케이블공사를 포괄하는 전문건설업 면허 종목이며, 수중공사 현장에서 잠수사는 수중 터파기·콘크리트 타설·암반 파쇄를 직접 수행한다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통 이상",
+      "wlbDetail": "교량 기초·항만 구조물·방파제 케이슨 설치 등 수중건설 현장에서 기상·해상 조건에 따라 작업 여부가 결정된다. 잠수 작업은 잠수감독관·잠수사·대기잠수사·보조사로 구성된 팀 단위로 운영되며, 수압·질소 마취·해류 등 위험 요인이 상시 존재한다. 공사 기간 중 해상 현장 상주에 따른 장기 지방 파견이 잦다.[1]",
+      "socialDetail": "교량·항만·방파제 등 국가 기반시설의 수중 기초 공사와 유지보수를 담당하며, 수중구조물 방식 점검과 해저케이블 부설 등 공공 인프라의 안전과 기능을 수중에서 지탱하는 역할을 한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "한국폴리텍대학 산업잠수과(2년) 또는 토목·해양 관련 학과 졸업",
+        "잠수기능사 취득 후 잠수산업기사 자격 취득",
+        "화약류 취급 면허·용접 관련 자격 등 수중공사 추가 자격 취득[1]"
+      ],
+      "recruit": [
+        "수중·준설공사업 전문건설업체 입직(잠수보조원 → 잠수사)",
+        "해양건설사(해저케이블·항만 시공 전문업체) 경력직 지원",
+        "항만공사·토목엔지니어링회사 수중점검 부서 지원[1]"
+      ],
+      "training": [
+        "한국산업잠수기술인협회 단기 잠수 교육과정",
+        "가나해양교육원 등 전문 잠수 교육기관 실기 교육[1]"
+      ]
+    },
+    "heroTags": ["토목잠수사", "수중건설", "수중공사", "항만수중작업", "잠수기능사", "수중암반발파"],
+    "sidebarJobs": ["토목공학기술자", "토목감리원", "해양공학기술자", "산업잠수사(일반)"],
+    "sidebarMajors": ["산업잠수과", "해양공학과", "토목공학과", "해양경찰학과"],
+    "sidebarOrgs": [
+      {"name": "한국산업잠수기술인협회", "url": null},
+      {"name": "한국잠수협회", "url": null}
+    ],
+    "sidebarCerts": [
+      {"name": "잠수기능사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7612"},
+      {"name": "잠수산업기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2521"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=ElYGfhXCCOU", "title": "위험한 현장은 하루 200만원도 벌 수 있는 직업의 정체┃산업 잠수사┃극한직업"}
+    ]
+  },
+  "sources": {
+    "way": [{"id": 1, "text": "[1] 자격증넷 — 잠수산업기사 자격정보", "url": "https://www.janet.co.kr/jnLics/licenseInfo.php?ld_id=1627099934"}],
+    "trivia": [{"id": 1, "text": "[1] 04noti.com — 전문건설업 종류별 업무범위 및 등록기준", "url": "https://04noti.com/%EA%B1%B4%EC%84%A4%EC%97%85%EC%A2%85%ED%95%A9%EA%B3%B5%EC%82%AC-%EC%A0%84%EB%AC%B8%EA%B3%B5%EC%82%AC%EC%9D%98-%EC%A2%85%EB%A5%98%EC%99%80-%EB%93%B1%EB%A1%9D%EA%B8%B0%EC%A4%80-%EB%B0%8F-%EC%97%85/"}],
+    "detailWlb.wlbDetail": [{"id": 1, "text": "[1] 자격증넷 — 잠수산업기사 자격정보", "url": "https://www.janet.co.kr/jnLics/licenseInfo.php?ld_id=1627099934"}],
+    "detailWlb.socialDetail": [{"id": 1, "text": "[1] 자격증넷 — 잠수산업기사 자격정보", "url": "https://www.janet.co.kr/jnLics/licenseInfo.php?ld_id=1627099934"}],
+    "detailReady.curriculum": [{"id": 1, "text": "[1] 자격증넷 — 잠수산업기사 자격정보", "url": "https://www.janet.co.kr/jnLics/licenseInfo.php?ld_id=1627099934"}],
+    "detailReady.recruit": [{"id": 1, "text": "[1] 자격증넷 — 잠수산업기사 자격정보", "url": "https://www.janet.co.kr/jnLics/licenseInfo.php?ld_id=1627099934"}],
+    "detailReady.training": [{"id": 1, "text": "[1] 자격증넷 — 잠수산업기사 자격정보", "url": "https://www.janet.co.kr/jnLics/licenseInfo.php?ld_id=1627099934"}]
+  },
+  "changeSummary": "토목잠수사 Phase C: 산업잠수사 내용 전면 제거, 토목건설(수중·준설공사업) 관점으로 전면 재작성. trivia·way·recruit·heroTags 수정. 출처 2개(janet.co.kr, 04noti.com)."
+}

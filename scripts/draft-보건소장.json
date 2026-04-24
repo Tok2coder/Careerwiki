@@ -1,0 +1,87 @@
+{
+  "fields": {
+    "way": "보건소장은 지역보건법 제15조에 따라 4급 지방공무원으로 임용되며, 의사 면허 소지자를 우선으로 한다. 2024년 7월 시행 개정법에 따라 의사 임용이 어려운 경우 치과의사·한의사·간호사·조산사·약사도 임용 가능해졌으며, 보건 관련 분야 근무·연구 경력 4년 이상(해당 면허 취득 후 2년 이상)을 충족해야 한다.[1] 보건의료인이 아닌 공무원은 보건 분야 경력 1년 이상에 4급 공무원 경력이 있거나, 경력 3년 이상에 5급 공무원 경력이 있으면 4급 보건소장으로 임용될 수 있다.[2]",
+    "trivia": "2021년 상반기 기준 전국 258명 보건소장 가운데 의사 면허 소지자는 106명으로 전체의 41%에 불과했다. 나머지는 임상병리사 등 의료기사(23.6%), 간호사·조산사(17.4%), 약사(1.9%), 보건행정직·일반직 공무원 등으로 구성되어 있어 지역별 편차가 컸다.[1]",
+    "overviewProspect": {
+      "main": "전국 261개 보건소가 운영 중이며 기관 수는 안정적으로 유지되고 있다.[1] 보건소장직은 의사 우선 임용 원칙에도 불구하고 의사 확보 어려움이 계속되어 임용 자격 요건이 지속적으로 완화되는 추세이다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "지방공무원으로서 정규 근무시간에 보건소 행정과 광범위한 보건사업을 총괄하며 상당한 업무량이 요구된다. 감염병 예방·관리, 건강검진, 방문보건의료 등 다양한 법정 업무를 기획·조율하는 기관장으로서 비상상황 발생 시 지역 방역 책임자 역할도 수행한다.[1]",
+      "socialDetail": "지역보건법 제11조에 따라 국민건강증진·감염병 예방 및 관리·모자보건·만성질환 관리·취약계층 건강지원·정신건강증진 등 지역 공중보건 사업 전체를 총괄하며, 지역사회 건강을 지키는 핵심 공직이다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학(의학과)을 졸업하고 의사 국가면허시험에 합격하여 의사 면허를 취득한다.[1]",
+        "간호학과·한의학과·약학과 등을 졸업하고 면허를 취득한 뒤 보건 관련 분야에서 경력 4년 이상을 쌓는다.[2]",
+        "보건행정학과·보건관리학과 등을 졸업하고 9급 보건직 지방공무원 공개채용 시험에 합격한다.[3]",
+        "보건소에서 근무하며 5급 이상 공무원으로 승진하거나 개방형직위 임용시험을 준비한다.[4]",
+        "한국건강증진개발원(KHEPI) 등의 보건 전문교육기관에서 건강증진·보건행정 관련 역량강화 교육을 이수한다.[5]"
+      ],
+      "recruit": [
+        "각 시·군·구의 9급 보건직 지방공무원 공개채용 시험에 응시하여 보건소에 입직한다.[1]",
+        "지방자치단체 보건소장 개방형직위 임용시험 공고에 의사·치과의사·한의사·간호사·약사 자격으로 응시한다.[2]",
+        "보건 분야에서 근무하며 내부승진을 통해 4급 공무원이 되어 보건소장으로 임용된다.[3]"
+      ],
+      "training": [
+        "한국건강증진개발원(KHEPI) 신규 공중보건 담당 공무원 직무교육과정을 이수한다.[1]",
+        "보건복지 배움인(KOHI)에서 지역보건 담당자 대상 보수교육 및 전문 역량강화 과정을 수강한다.[2]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "의사", "url": null},
+      {"name": "간호사", "url": null},
+      {"name": "약사", "url": null},
+      {"name": "한의사", "url": null},
+      {"name": "치과의사", "url": null}
+    ],
+    "sidebarMajors": ["의학과", "간호학과", "보건행정학과", "보건관리학과", "약학과", "보건행정과"],
+    "sidebarOrgs": [
+      {"name": "한국보건행정학회", "url": "http://www.kshpa.org/"},
+      {"name": "한국건강관리협회", "url": "https://www.kahp.or.kr/"},
+      {"name": "보건복지부", "url": "https://www.mohw.go.kr/"}
+    ],
+    "heroTags": ["보건소장", "공중 보건 의료업", "지역보건", "공중보건", "보건행정", "보건직 공무원"],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "탐색어: '보건소장 직업'(0건), '보건소장 인터뷰'(0건), '보건소장 진로'(0건), '보건소장 현직자'(0건), '보건소장 하루'(0건), '공중보건 관리자'(0건) — 현직자·인터뷰 / 직무·실무 / 진로·면접 카테고리 탐색 완료. 한국어 영상 없음 (2026-04-17)",
+    "careerTree": null,
+    "_careerTreeNote": "조사한 후보: 정은경(보건소 사무관 경력이나 보건소장 직함 없음 — 제외), 역대 보건복지부 장관·차관 이력 조사(공공·정부 카테고리), 의협·간호협회 인물 조사(학계·연구 카테고리), 보건진료소장·공중보건의사 출신 인물 조사(의료 카테고리). 보건소장은 지역 단위 직책으로 공인의 공개 이력에 보건소장 직함이 명시된 사례 거의 없음 — 검증 가능한 적합 인물 없음 (2026-04-17)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 뉴스더보이스헬스케어 — 보건소장 임용 자격요건", "url": "https://www.newsthevoice.com/news/articleView.html?idxno=38675"},
+      {"id": 2, "text": "[2] 지역보건법 제15조 — 보건소장 임용 규정", "url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A7%80%EC%97%AD%EB%B3%B4%EA%B1%B4%EB%B2%95/%EC%A0%9C15%EC%A1%B0"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 의협신문 — 의사 보건소장 41% 통계", "url": "https://www.doctorsnews.co.kr/news/articleView.html?idxno=146441"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 보건복지부 — 지역보건의료기관 현황", "url": "https://www.mohw.go.kr/menu.es?mid=a10706010400"},
+      {"id": 2, "text": "[2] 뉴스더보이스헬스케어 — 보건소장 임용 자격요건 완화", "url": "https://www.newsthevoice.com/news/articleView.html?idxno=38675"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 지역보건법 제11조 — 보건소 기능 및 업무", "url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A7%80%EC%97%AD%EB%B3%B4%EA%B1%B4%EB%B2%95/%EC%A0%9C11%EC%A1%B0"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 지역보건법 제11조 — 보건소 기능 및 업무", "url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A7%80%EC%97%AD%EB%B3%B4%EA%B1%B4%EB%B2%95/%EC%A0%9C11%EC%A1%B0"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 뉴스더보이스헬스케어 — 보건소장 임용 자격요건", "url": "https://www.newsthevoice.com/news/articleView.html?idxno=38675"},
+      {"id": 2, "text": "[2] 지역보건법 제15조 — 보건소장 임용 규정", "url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A7%80%EC%97%AD%EB%B3%B4%EA%B1%B4%EB%B2%95/%EC%A0%9C15%EC%A1%B0"},
+      {"id": 3, "text": "[3] 지방자치단체 인터넷원서접수센터", "url": "https://local.gosi.go.kr/"},
+      {"id": 4, "text": "[4] 한의신문 — 보건소장 자격요건 보도", "url": "https://www.akomnews.com/bbs/board.php?bo_table=news&wr_id=50562"},
+      {"id": 5, "text": "[5] 한국건강증진개발원 — KHEPI 교육과정", "url": "https://www.khepi.or.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 지방자치단체 인터넷원서접수센터", "url": "https://local.gosi.go.kr/"},
+      {"id": 2, "text": "[2] 뉴스더보이스헬스케어 — 보건소장 임용 자격요건", "url": "https://www.newsthevoice.com/news/articleView.html?idxno=38675"},
+      {"id": 3, "text": "[3] 지역보건법 제15조 — 보건소장 임용 규정", "url": "https://casenote.kr/%EB%B2%95%EB%A0%B9/%EC%A7%80%EC%97%AD%EB%B3%B4%EA%B1%B4%EB%B2%95/%EC%A0%9C15%EC%A1%B0"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국건강증진개발원 — KHEPI 직무교육", "url": "https://www.khepi.or.kr/"},
+      {"id": 2, "text": "[2] 보건복지 배움인 — KOHI 교육과정", "url": "https://edu.kohi.or.kr/"}
+    ]
+  },
+  "changeSummary": "보건소장 way/trivia/prospect/detailWlb/detailReady/sidebarCerts/sidebarMajors/sidebarOrgs/heroTags 전 필드 신규 작성"
+}

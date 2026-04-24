@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "detailReady": {
+      "curriculum": [
+        "상담학과·심리학과·청소년 관련 학과에서 교직과정을 이수하면 2급 자격 취득이 가능하나, 학과 정원의 5~10%만 선발하므로 최상위권 학점(4.5 만점에 4.1 이상 추천)이 필요하다[1]",
+        "교육대학원 상담교육 전공에 진학하면 2년 과정으로 비교적 안정적으로 2급 자격을 취득할 수 있어 대부분의 임용 준비자가 이 경로를 선택한다",
+        "교육학과·심리학과·사회복지학과 등 관련 학과 졸업 후 교육대학원 진학으로 자격 취득이 가능하다[3]",
+        "현직 교사 경력 3년 이상이면 교육대학원 1급 과정에 지원해 1급 전문상담교사 자격을 취득할 수 있다[4]",
+        "임상심리사 2급·청소년상담사 등 상담 관련 국가자격증을 사전에 취득해두면 임용 면접에서 경쟁력을 높일 수 있다[2]"
+      ],
+      "recruit": [
+        "각 시도교육청 전문상담교사 임용시험 공고를 확인하고 해당 시도 선발 계획이 발표되는 즉시 준비를 시작한다[1]",
+        "교육청 기간제 전문상담교사 채용공고에 지원해 Wee클래스 실무 경험을 쌓으며 정규 임용을 준비한다[2]",
+        "사립학교 전문상담교사 채용 또는 사설 청소년상담기관·Wee센터에 취업해 경력을 축적하며 임용을 재도전하는 경로도 있다[3]"
+      ],
+      "training": [
+        "전국 주요 교육대학원 상담교육 전공 — 2년 과정, 전문상담교사 1급·2급 자격 취득 가능, 교직 이론·실습 이수 포함[1]",
+        "한국상담심리학회(KRCPA) 상담심리사 자격 취득을 위한 수련 및 보수교육 과정, 한국청소년상담원(KYCI) 청소년상담사 자격 연수 과정 운영[2]"
+      ]
+    }
+  },
+  "sources": {
+    "detailReady.curriculum": [
+      {"id": 1, "text": "전문상담교사가 되려면 (brunch 직업 칼럼)", "url": "https://brunch.co.kr/@kyleseling/3"},
+      {"id": 2, "text": "Q-net 전문상담교사 자격 안내", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=0115"},
+      {"id": 3, "text": "연세대학교 교육대학원 전문상담교사 자격증 안내", "url": "https://gse.yonsei.ac.kr/gse/license/t_counselor.do"},
+      {"id": 4, "text": "찾기쉬운 생활법령정보, 전문상담교사 배치 및 전담기구 구성", "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1408&ccfNo=2&cciNo=1&cnpClsNo=1"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "찾기쉬운 생활법령정보, 전문상담교사 배치 및 전담기구 구성", "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1408&ccfNo=2&cciNo=1&cnpClsNo=1"},
+      {"id": 2, "text": "뉴시스, 학교 금쪽이 늘고 상담 대기 반년인데…채용 50%를 줄여?", "url": "https://www.newsis.com/view/NISX20240818_0002853284"},
+      {"id": 3, "text": "전문상담교사가 되려면 (brunch 직업 칼럼)", "url": "https://brunch.co.kr/@kyleseling/3"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "연세대학교 교육대학원 전문상담교사 자격증 안내", "url": "https://gse.yonsei.ac.kr/gse/license/t_counselor.do"},
+      {"id": 2, "text": "한국청소년상담원(KYCI) 청소년상담사 자격연수·보수교육", "url": "https://www.kyci.or.kr/userSite/sub02_7_cont.asp"}
+    ]
+  },
+  "changeSummary": "전문상담교사 curriculum 각주 보강: item1[1]/items2-3블록[3]/item4[4]/item5[2]"
+}

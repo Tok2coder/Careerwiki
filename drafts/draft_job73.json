@@ -1,0 +1,77 @@
+{
+  "fields": {
+    "way": "건설코디네이터가 되려면 건축학, 건축공학, 도시계획 관련 학과를 졸업한 후 건설사 상품개발팀이나 사업관리 부서에서 10년 이상 경력을 쌓는 것이 일반적이다. 설계·시공·분양 등 건설 전 과정을 아우르는 폭넓은 지식이 필요하며, 현장에서는 설계사무소, 시공사, 관청 등 다양한 전문가들과의 소통·조율 능력이 핵심 역량으로 요구된다.[1] 건설기술인협회에 건축 또는 도시계획 분야 중급 이상으로 경력을 등록하고, 대형 건설사 인턴십이나 현장 사무소 근무를 통해 실무 경험을 축적하는 것이 일반적인 진입 경로다.[2]",
+    "overviewSalary": {
+      "sal": "대기업 건설사 기준 신입은 연 6,000만 원대, 대리급은 8,000만 원대, 과장급은 9,000만 원에 가까우며, 차장급 이상이면 1억 원을 넘기도 한다. 임금 수준은 건설업계 내 상위에 속하는 편이다.[1]"
+    },
+    "overviewProspect": {
+      "main": "건설코디네이터는 건설 경기에 직접적인 영향을 받으며, 아파트 및 대형 건설 프로젝트 수주가 많을수록 수요가 증가하는 구조다. 건설 프로젝트가 대형화·복잡화됨에 따라 전문적 조율 역할의 중요성이 커지고 있으나, 건설 경기 침체 시 고용 감소 가능성도 존재한다.[1]"
+    },
+    "trivia": "건설코디네이터는 단순 현장 관리자와 달리 프로젝트 선정 단계부터 입주까지 전 과정에 걸쳐 설계사·시공사·관청·마케팅·분양 등 모든 이해관계자를 조율하는 역할을 담당한다. 실제로 주택 건설 프로젝트에서 코디네이터가 다루는 내부·외부 전문가 집단이 십수 곳에 이르기 때문에, 건축학 지식뿐 아니라 협상력과 의사결정력이 핵심 역량으로 꼽힌다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통 이상",
+      "wlbDetail": "초기 현장 선정 단계에는 현장 출장이 잦지만, 사업이 진행되면 사무실 중심으로 전화·이메일 업무가 주를 이룬다. 분양 시기나 인허가 마감 등 중요 일정이 겹치면 야근이 발생하며, 전반적인 업무 강도는 높은 편이다.[1]",
+      "socialDetail": "대형 주거 단지 및 인프라 개발을 기획·조율함으로써 주거 환경 개선과 도시 발전에 기여한다. 다양한 전문가 집단의 의견을 통합하여 최적의 상품을 개발하는 역할로 건설 프로젝트의 사회적 가치를 높이는 데 기여한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "건축학과 또는 건축공학과, 도시계획학과 전공(학사 이상)",
+        "건설 프로젝트 관리(PM) 방법론 이수",
+        "부동산 개발·분양·인허가 절차 학습",
+        "설계사무소, 건설사 인턴십을 통한 실무 경험 축적",
+        "대형 건설사 사업관리팀 신입 공채 지원 후 현장 경력 개발[1]"
+      ],
+      "recruit": [
+        {"text": "대형 건설사(삼성물산, 현대건설, GS건설 등) 상품개발팀 신입 공채 지원", "url": "https://www.worker.co.kr/job/list.asp"},
+        {"text": "부동산 개발업체(디벨로퍼) 사업기획팀 경력직 이직", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"},
+        "건설 PM 전문회사(CM사) 프로젝트 매니저 채용 지원[1]"
+      ],
+      "training": [
+        "한국PM협회(KPMA) PMP 자격 취득 교육 이수",
+        "대한건설협회 건설 PM 전문교육 과정 이수[1]"
+      ]
+    },
+    "sidebarMajors": ["건축학과", "건축공학과", "도시계획학과", "도시공학과", "부동산학과"],
+    "sidebarOrgs": [
+      {"name": "대한건설협회", "url": "https://www.cak.or.kr"},
+      {"name": "건설워커(건설취업포털)", "url": "https://www.worker.co.kr"}
+    ],
+    "sidebarCerts": [
+      {"name": "건축사", "url": "https://www.kira.or.kr"},
+      {"name": "건설관리사(CM)", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7360"},
+      {"name": "부동산개발전문인력", "url": "https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000026142"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 대한민국 정책브리핑 건설코디네이터 소개", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148737567"},
+      {"id": 2, "text": "[2] 건설워커 건설사 직종 안내", "url": "https://www.worker.co.kr/job/list.asp"}
+    ],
+    "overviewSalary.sal": [
+      {"id": 1, "text": "[1] 대한민국 정책브리핑 건설코디네이터 소개", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148737567"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 대한민국 정책브리핑 건설코디네이터 소개", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148737567"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 대한민국 정책브리핑 건설코디네이터 소개", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148737567"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 대한민국 정책브리핑 건설코디네이터 소개", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148737567"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 건설워커 건설사 직종 안내", "url": "https://www.worker.co.kr/job/list.asp"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 대한민국 정책브리핑 건설코디네이터 소개", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148737567"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 고용24 워크넷 건설 채용정보", "url": "https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한건설협회 교육안내", "url": "https://www.cak.or.kr"}
+    ]
+  },
+  "changeSummary": "Phase 1: 완전 빈 직업 데이터 신규 작성 - way/sal/prospect/trivia/detailWlb/detailReady/sidebarMajors/sidebarOrgs/sidebarCerts"
+}

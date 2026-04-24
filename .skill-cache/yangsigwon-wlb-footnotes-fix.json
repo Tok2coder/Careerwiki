@@ -1,0 +1,22 @@
+{
+  "jobName": "양식원",
+  "jobId": "1765283341492648",
+  "fields": {
+    "detailWlb": {
+      "wlbDetail": "양식 현장은 수질 악화와 질병에 선제적으로 대응해야 하고, 산소 부족·세균 감지 장비와 사료 자동공급 장치 수요가 언급될 만큼 사육환경을 지속적으로 점검하는 일이 중요하다.[1] 질병 진단키트와 치료제 개발 요구가 제기될 정도로 현장 관리 부담이 큰 분야다.[2]"
+    }
+  },
+  "sources": {
+    "detailWlb.wlbDetail": [
+      {
+        "text": "[1] 국립수산과학원 주요 양식품종 가치사슬 분석(흰다리새우)",
+        "url": "https://nifs.go.kr/cmmn/file/valuechain_04.pdf"
+      },
+      {
+        "text": "[2] 해양수산부 해양수산 스마트화 전략",
+        "url": "https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&docSeq=27859&menuSeq=971"
+      }
+    ]
+  },
+  "changeSummary": "양식원 워라밸 각주 위치 조정: 문장별로 [1], [2] 분리"
+}
