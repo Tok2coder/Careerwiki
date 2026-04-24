@@ -1,0 +1,84 @@
+{
+  "fields": {
+    "heroTags": ["임상약사", "전문약사", "Pharmacist", "임상약학", "무균조제", "병원 조제"],
+    "way": "병원약사가 되려면 먼저 약학대학에 입학해야 한다. 현행 약학교육은 2+4제로, 타 학부에서 선수과목(일반화학·유기화학·생물학 등)을 포함한 2년 이상의 학점을 이수한 뒤 약학과에 편입하며, 4년 과정 수료 후 한국보건의료인국가시험원이 주관하는 약사 국가시험에 합격해야 보건복지부 장관의 약사 면허를 받는다.[1] 면허 취득 후 각 병원 약제부에 지원해 취업하며, 임상전공약사(레지던트) 과정을 통해 전문성을 심화하거나 한국병원약사회 주관 전문약사 자격을 취득할 수 있다.[2]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "상급종합병원 약제부는 야간·교대근무와 주말 당직이 있으며, 야간 약사 근무시간은 오후 5시부터 다음날 오전 8시까지다. 중소병원은 주간(09~18시) 위주이지만 월 2~3회 토요일 근무가 있는 경우도 있다. 처방 검토·조제·복약지도 등 집중력이 요구되는 업무가 연속적으로 이어진다.[1]",
+      "socialDetail": "병원약사는 처방 검토를 통해 약물 상호작용과 용량 오류를 사전에 차단하여 환자 안전을 지킨다. 임상약제 서비스와 무균조제를 통해 중증 환자의 치료 결과를 높이고, 의료진에게 최신 의약품 정보를 제공하는 역할을 한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "약학대학 2+4 교육: 학부에서 일반화학·유기화학·생물학 등 선수과목 포함 2년 이수 후 약학과 편입[1]",
+        "약학과 4학년: 병원·약국 등 임상현장 실무실습 1년(외래·병동·약물정보·주사제 파트 순환)[2]",
+        "약사 국가시험 응시·합격: 350문항, 매 과목 40% 이상·전과목 총점 60% 이상 득점 기준 충족[3]",
+        "면허 취득 후 임상전공약사(레지던트) 과정 지원: 병원 내 1~2년 심화 임상 교육 이수[4]",
+        "한국병원약사회 또는 국가 공인 전문약사 자격시험 도전: 종양·감염·소아·노인 등 전문 분야[5]"
+      ],
+      "recruit": [
+        "분당서울대병원·서울성모병원·삼성서울병원 등 상급종합병원 약제부 공개 채용공고에 지원[1]",
+        "삼성서울병원 등 대형병원 임상전공약사(레지던트) 공모 지원으로 경력과 전문성 강화[2]",
+        "팜리쿠르트를 통해 전국 병원약사 채용공고 검색 및 지원[3]"
+      ],
+      "training": [
+        "한국병원약사회 교육센터 직무 보수교육 및 신약 정보 온·오프라인 연수 이수[1]",
+        "전문약사 자격 취득을 위한 200시간 교육과정(공통 60시간 + 전공 140시간) 이수[2]"
+      ]
+    },
+    "trivia": "한국병원약사회는 2010년 처음으로 전문약사 자격시험을 시작해 2022년 제13회까지 총 1,646명의 전문약사를 배출하였다.[1] 2023년 4월부터는 보건복지부 장관이 주관하는 국가 공인 전문약사제도로 법제화되었다.[2]",
+    "overviewProspect": {
+      "main": "한국고용정보원 『한국직업전망』에 따르면 향후 약사의 일자리는 '다소 증가'할 것으로 전망된다. 인구 고령화에 따른 의약품 수요 확대와 건강보험 급여 범위 확대가 주요 성장 요인이며, 병원약사의 경우 임상지원 업무와 중증·특수 환자 복약지도 수요 증가로 고용이 늘어날 것으로 예측된다.[1]"
+    },
+    "sidebarCerts": [
+      {"name": "약사", "url": "https://www.kuksiwon.or.kr/subcnt/c_2009/1/view.do?seq=7&itm_seq=06"},
+      {"name": "전문약사 (한국병원약사회)", "url": "https://www.kshp.or.kr"}
+    ],
+    "sidebarMajors": ["약학과", "약학부", "한약학과", "생화학과"],
+    "sidebarOrgs": [
+      {"name": "한국병원약사회", "url": "https://www.kshp.or.kr"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=s5Ew2JraJJw", "title": "병원약사는 어떤 직업인가요? 병원약사를 만나보았다 1편 | 직업의 모든 것, 슬기로운직업생활"},
+      {"url": "https://www.youtube.com/watch?v=SMqPytOTw9A", "title": "서울대 출신 약사가 말하는 병원약사의 모든것 | #약플릭스"}
+    ],
+    "careerTree": null,
+    "_careerTreeNote": "탐색한 후보: 오유경(현 식약처장, 약학교수/제약연구원 출신-병원약사 경력 없음), 류영진(전 식약처장, 개국약사/약사회 부회장-병원약사 아님), 정경주(한국병원약사회 현 회장-위키백과 미등재), 정세영(경희대 약학교수/대한약학회 회장-병원약사 경력 불명확), 이영희(전 한국병원약사회 회장-위키백과 미등재). 병원약사 분야는 공인 검증 가능 커리어트리 인물 없음."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국보건의료인국가시험원 약사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2009/1/view.do?seq=7&itm_seq=06"},
+      {"id": 2, "text": "[2] 한국병원약사회", "url": "https://www.kshp.or.kr/intro.asp"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 데일리팜 약제부 근무형태", "url": "https://m.dailypharm.com/newsView.html?ID=308839"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 분당서울대병원 약제부", "url": "https://www.snubh.org/dh/ph/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 서울대학교 약학대학", "url": "https://snupharm.snu.ac.kr/"},
+      {"id": 2, "text": "[2] 성균관대 약학대학 실무실습 인터뷰", "url": "https://pharm.skku.edu/bbs/board.php?bo_table=interview&wr_id=13"},
+      {"id": 3, "text": "[3] 한국보건의료인국가시험원 약사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2009/1/view.do?seq=7&itm_seq=06"},
+      {"id": 4, "text": "[4] 분당서울대병원 약제부", "url": "https://www.snubh.org/dh/ph/"},
+      {"id": 5, "text": "[5] 한국병원약사회 전문약사", "url": "https://www.kshp.or.kr/sub/introHP/intro_2_1.asp"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 분당서울대병원 약제부 채용", "url": "https://www.snubh.org/dh/ph/"},
+      {"id": 2, "text": "[2] 서울대학교 약학대학 삼성서울병원 전공약사 채용 안내", "url": "https://snupharm.snu.ac.kr/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/document/7826/"},
+      {"id": 3, "text": "[3] 팜리쿠르트 병원약사 채용", "url": "https://recruit.dailypharm.com/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국병원약사회 교육센터", "url": "https://edu.kshp.or.kr/sub/education/eduInfo_05.asp"},
+      {"id": 2, "text": "[2] 팜뉴스 전문약사 교육과정", "url": "https://www.pharmnews.com/news/articleView.html?idxno=201533"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 한국병원약사회 전문약사", "url": "https://www.kshp.or.kr/sub/introHP/intro_2_1.asp"},
+      {"id": 2, "text": "[2] 팜뉴스 전문약사 법제화", "url": "https://www.pharmnews.com/news/articleView.html?idxno=201533"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 약사공론 한국직업전망 약사 일자리 전망", "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=203466"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 병원약사 17필드 보완 (way·detailWlb·detailReady·trivia·prospect·sidebarCerts·sidebarMajors·sidebarOrgs·heroTags·youtubeLinks)"
+}
