@@ -3,7 +3,7 @@
 각 규칙의 **정규(canonical) 위치**와 반복 참조 위치를 한눈에 보여주는 인덱스.
 규칙 충돌 시 **정규 위치가 우선**한다.
 
-업데이트: 2026-04-17 (룰 D trivia 각주 중간 배치 탐지 추가)
+업데이트: 2026-04-24 (문체 규칙 추가)
 
 ---
 
@@ -447,6 +447,44 @@ Windows 환경에서 `curl -d`로 한글 텍스트를 전송할 때 CP949 인코
 | scripts/selfcheck/rule-regression-tests.cjs — 룰 D fixture | 🔒 코드 | 회귀 테스트 (FAIL 2 + PASS 2) |
 
 **소급 적용**: 전수 스캔 130건 발견 — 신규 저장부터 차단. 기존 데이터는 재enhance 시 점진적 정리.
+
+---
+
+## 문체 규칙 — 2026-04-24 신설
+
+**원칙**: 모든 서술 필드는 **한다/이다체** (평서문 종결)로 작성한다.
+경어체(합니다/입니다/됩니다/있습니다/없습니다/드립니다/됐습니다/였습니다/하였습니다 등) 사용 금지.
+
+### 적용 대상 필드
+
+`way`, `trivia`, `overviewProspect.main`, `detailWlb.wlbDetail`, `detailWlb.socialDetail`,
+`overviewSalary.sal`, `detailReady.curriculum[]`, `detailReady.recruit[]`, `detailReady.training[]`,
+`summary`, `overviewWork.main`, `overviewAbilities.technKnow`, `_careerTreeNote`, `_youtubeSearchNote`
+
+### 예외 (원문 유지)
+
+- `sources[]` 배열 항목의 `text`, `url` — 기관 공식 표현 그대로 유지
+- `youtubeLinks[].title` — 영상 원제 그대로 유지
+- 인용구 (`"..."` 또는 `『...』` 안 텍스트)
+- 기관·단체 고유 슬로건·캐치프레이즈
+
+### OK / NG 예시
+
+| NG (경어체) | OK (한다체) |
+|-------------|-------------|
+| 국가시험에 합격해야 합니다.[1] | 국가시험에 합격해야 한다.[1] |
+| 평균 연봉은 4,200만 원입니다.[1] | 평균 연봉은 4,200만 원이다.[1] |
+| 3교대 근무가 일반적입니다.[1] | 3교대 근무가 일반적이다.[1] |
+| 취업률이 낮은 편에 속합니다.[1] | 취업률이 낮은 편에 속한다.[1] |
+| 대학원 진학이 도움이 됩니다.[1] | 대학원 진학이 도움이 된다.[1] |
+
+### 코드 레벨 검증
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| scripts/full-quality-audit.cjs — `[경어체-WARN]` | 🔒 코드 | WARN (저장 차단 아님) |
+| scripts/tone-normalize.cjs — dry-run/apply | 🔒 코드 | 전역 DB 스윕 유틸리티 |
+| researcher-agent-prompt.md — Gate 2 완성형 판정 | 📎 참조 | WARN 조건 명시 |
 
 ---
 
