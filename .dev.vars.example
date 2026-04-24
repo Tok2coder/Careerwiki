@@ -23,11 +23,16 @@ GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
 # 또는: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 JWT_SECRET=your_random_secret_key_here_minimum_32_characters
 
-# 기존 환경 변수 (필요 시)
-# CAREER_NET_API_KEY=your_career_net_api_key
-# GOYONG24_MAJOR_API_KEY=your_goyong24_major_api_key
-# GOYONG24_JOB_API_KEY=your_goyong24_job_api_key
-# ADMIN_SECRET=your_admin_secret
+# 공공데이터 API 키 — 공공데이터포털 또는 work24.go.kr 개발자 등록에서 발급
+# 형식: UUID 8-4-4-4-12 (예: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+# ⚠️ 한 번 발급된 키는 재발급 불가 영역 있음 — 절대 커밋 금지, 비밀번호 매니저 백업 권장
+# CAREER_NET_API_KEY=공공데이터포털에서_발급받은_값
+# GOYONG24_MAJOR_API_KEY=고용24_학과_API_키
+# GOYONG24_JOB_API_KEY=고용24_직업_API_키
+
+# Admin Secret — 편집 API 인증용
+# 프로덕션 등록: npx wrangler pages secret put ADMIN_SECRET --project-name careerwiki
+# ADMIN_SECRET=임의의_비밀키
 
 # Metrics Secret — /api/admin/metrics/v1 전용, ADMIN_SECRET 과 반드시 분리
 # 프로덕션 등록: npx wrangler pages secret put METRICS_SECRET --project-name careerwiki

@@ -32,10 +32,43 @@ if (!DRY_RUN && !EXECUTE) {
   process.exit(1);
 }
 
-const GOYONG24_JOB_API_KEY = '7635eb78-dc24-4f05-8287-ac391e233b15';
+// API key/secret은 반드시 환경 변수로만 공급. 하드코딩 금지.
+//   export GOYONG24_JOB_API_KEY=xxx
+//   export ADMIN_SECRET=xxx
+// (.dev.vars 파일에서도 자동 로딩)
+const fs = require('fs');
+function loadDevVars() {
+  // worktree, worktree parents, 메인 레포 순으로 탐색
+  const candidates = [
+    require('path').resolve(__dirname, '..', '.dev.vars'),
+    require('path').resolve(__dirname, '..', '..', '.dev.vars'),
+    require('path').resolve(__dirname, '..', '..', '..', '.dev.vars'),
+    require('path').resolve(__dirname, '..', '..', '..', '..', '.dev.vars'),
+  ];
+  for (const p of candidates) {
+    if (!fs.existsSync(p)) continue;
+    for (const line of fs.readFileSync(p, 'utf8').split('\n')) {
+      const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.+?)\s*$/);
+      if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
+    }
+    return;
+  }
+}
+loadDevVars();
+
+const GOYONG24_JOB_API_KEY = process.env.GOYONG24_JOB_API_KEY;
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
+if (!GOYONG24_JOB_API_KEY) {
+  console.error('❌ GOYONG24_JOB_API_KEY 환경 변수가 필요합니다 (.dev.vars 또는 export).');
+  process.exit(2);
+}
+if (!ADMIN_SECRET) {
+  console.error('❌ ADMIN_SECRET 환경 변수가 필요합니다 (.dev.vars 또는 export).');
+  process.exit(2);
+}
+
 const GOYONG24_BASE = 'https://www.work24.go.kr/cm/openApi/call/wk';
 const API_BASE = 'https://careerwiki.org';
-const ADMIN_SECRET = 'careerwiki-admin-2026';
 
 // ---- 유틸 ----------------------------------------------------------------
 
