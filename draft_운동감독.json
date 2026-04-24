@@ -1,0 +1,85 @@
+{
+  "fields": {
+    "way": "운동감독(경기감독)이 되려면 대부분 해당 종목에서 선수로 활동한 경력을 바탕으로 지도자 과정에 진입한다. 체육학과·사회체육학과·스포츠지도학과 등 체육 관련 학과를 졸업하면 이론 기반을 갖추는 데 유리하다. 감독·코치로 활동하기 위해서는 국민체육진흥공단이 시행하는 전문스포츠지도사 자격을 취득하는 것이 중요하며, 특히 국가대표팀 감독·코치가 되려면 이 자격이 필수 요건으로 요구된다. 선수 은퇴 후 모교·유소년 클럽 코치로 현장 경력을 시작하고, 코치→수석코치 단계를 거쳐 능력을 인정받으면 감독으로 승진하는 경로가 일반적이다. 취업 형태는 공개 채용보다 개인 실적을 평가해 스카우트하는 방식이 보편화되어 있으며, 국가대표팀·프로팀·실업팀·학교 운동부 등에서 활동한다.[1]",
+    "trivia": "고용복지플러스센터 직업정보에 따르면 경기감독 및 코치 종사자의 성별 분포는 남성 89.5%, 여성 10.5%로 남성 편중이 뚜렷하며, 월 임금 중위값은 217만 원이다. 프로팀 감독과 학교 운동부 지도자 간 처우 격차가 크고, 직업만족도는 66.7%로 집계됐다.[1]",
+    "detailReady": {
+      "curriculum": [
+        "해당 종목 선수로 초등학교·중학교 운동부 또는 유소년 클럽에 입단하여 선수 경력 시작[1]",
+        "체육고등학교 또는 체육 특기자 전형을 통한 대학 진학[2]",
+        "대학교 체육학과·사회체육학과·스포츠지도학과 등 체육 관련 학과 졸업[3]",
+        "국민체육진흥공단 전문스포츠지도사(1급·2급) 자격 취득 — 필기·실기·구술·연수 과정 이수[4]",
+        "선수 은퇴 후 코치로 입문하여 수석코치 거쳐 감독으로 승진하는 현장 경력 축적[5]"
+      ],
+      "recruit": [
+        "공개 채용 또는 스카우트 제의를 통해 프로팀·실업팀·학교 운동부 지도자로 취업[1]",
+        "대한체육회 산하 경기단체의 국가대표팀 지도자 선발전 지원[2]",
+        "지방자치단체·학교법인·장애인체육센터 운동부 지도자 공개 채용 응시[3]"
+      ],
+      "training": [
+        "국민체육진흥공단 체육지도자 연수과정 이수 — 전문스포츠지도사 자격 취득 전 필수 과정[1]",
+        "대한체육회·종목별 경기단체가 주관하는 지도자 심화 교육 프로그램 참여[2]"
+      ],
+      "certificate": []
+    },
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "시즌 중에는 매일 훈련 지도와 경기 전략 분석이 이어지며, 국내 대회·원정경기로 인한 이동이 잦다. 주말·공휴일에도 경기 일정이 우선되고, 비시즌에도 신규 선수 발굴·전술 연구·지도자 연수 등이 계속된다. 성적에 따라 재계약 여부가 결정되는 구조여서 성과 스트레스가 크다.[1]",
+      "socialDetail": "경기감독은 선수들의 기량을 체계적으로 끌어올려 스포츠 경쟁력을 높이고, 대회 성과를 통해 국민에게 스포츠 감동을 전한다. 학교 운동부와 유소년 클럽의 감독은 청소년의 건강한 성장과 도전 정신 함양에도 기여한다.[1]"
+    },
+    "sidebarCerts": [
+      {"name": "전문스포츠지도사", "url": "https://sqms.kspo.or.kr/info/licenseInfoPsc1.kspo"},
+      {"name": "생활스포츠지도사", "url": "https://sqms.kspo.or.kr/info/licenseInfoLsc2.kspo"},
+      {"name": "건강운동관리사", "url": "https://sqms.kspo.or.kr/info/licenseInfoHexm.kspo"}
+    ],
+    "sidebarMajors": ["사회체육과", "사회체육학과", "체육학과", "체육교육과", "스포츠지도학과", "레저스포츠학과"],
+    "sidebarOrgs": [
+      {"name": "국민체육진흥공단", "url": "https://www.kspo.or.kr/kspo/main/main.do"},
+      {"name": "대한체육회", "url": "https://www.sports.or.kr/sports/main/main.do"}
+    ],
+    "heroTags": ["운동감독(일반)", "스포츠감독", "경기감독", "코치", "국가대표감독", "학교운동부감독"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=KdcKotnhHEk", "title": "이천수가 알려주는 축구감독 자격증 시험썰 ㅋㅋㅋㅋㅋ"},
+      {"url": "https://www.youtube.com/watch?v=3TcLRoVVjew", "title": "체육대학 진로의 모든 것 | 체대취업, 스포츠, 체육, 운동관련 직업"}
+    ],
+    "overviewAbilities": {
+      "technKnow": "운동선수를 지도하려면 해당 종목의 전문 기술과 훈련 이론, 스포츠 의학 지식이 필요하다. 선수의 컨디션과 기량을 정확히 평가하는 모니터링 능력과 경기 전략·전술을 수립하는 분석 능력도 필수다. 다양한 선수를 이끌기 위해 강한 지도력·소통 능력·시간 관리 능력이 요구되며, 경기 영상 분석 도구와 스포츠 과학 시스템 활용 역량도 점점 중요해지고 있다.[1]"
+    },
+    "careerTree": null,
+    "_careerTreeNote": "운동감독 slug 연결 가능한 기존 career_tree 없음. 후보: 홍명보(전 국가대표 수비수→현 국가대표팀 감독, 선수→지도자 전환 대표사례), 차범근(분데스리가 레전드 선수→한국 대표팀 감독), 박항서(전 국가대표 선수→베트남 대표팀 감독 성공), 선동열(KBO 최강 투수→국가대표팀 감독 역임), 황선홍(전 대표 공격수→U-23 대표팀 감독), 최강희(전 대표 선수→K리그 레전드 감독). 모두 DB에 미등록 상태."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 직업백과 경기감독 및 코치", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B2%BD%EA%B8%B0%EA%B0%90%EB%8F%85-%EB%B0%8F-%EC%BD%94%EC%B9%98/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 고용복지플러스센터 스포츠감독 및 코치", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=420&searchCrCd=420101"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 직업백과 경기감독 및 코치 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B2%BD%EA%B8%B0%EA%B0%90%EB%8F%85-%EB%B0%8F-%EC%BD%94%EC%B9%98/"},
+      {"id": 2, "text": "[2] 직업백과 경기감독 및 코치 전망", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%A0%84%EB%A7%9D/%EA%B2%BD%EA%B8%B0%EA%B0%90%EB%8F%85-%EB%B0%8F-%EC%BD%94%EC%B9%98/"},
+      {"id": 3, "text": "[3] 고용복지플러스센터 스포츠감독 및 코치", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=420&searchCrCd=420101"},
+      {"id": 4, "text": "[4] 국민체육진흥공단 전문스포츠지도사", "url": "https://sqms.kspo.or.kr/info/licenseInfoPsc1.kspo"},
+      {"id": 5, "text": "[5] 동아대 진로개발센터 프로감독 및 코치", "url": "https://www.gocareerdonga.kr/110/?bmode=view&idx=11519378"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 고용복지플러스센터 스포츠감독 및 코치", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=420&searchCrCd=420101"},
+      {"id": 2, "text": "[2] 대한체육회", "url": "https://www.sports.or.kr/sports/main/main.do"},
+      {"id": 3, "text": "[3] 직업백과 경기감독 및 코치 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B2%BD%EA%B8%B0%EA%B0%90%EB%8F%85-%EB%B0%8F-%EC%BD%94%EC%B9%98/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 국민체육진흥공단 체육지도자 자격검정", "url": "https://sqms.kspo.or.kr/info/licenseInfoPsc1.kspo"},
+      {"id": 2, "text": "[2] 대한체육회", "url": "https://www.sports.or.kr/sports/main/main.do"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 직업백과 경기감독 및 코치 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B2%BD%EA%B8%B0%EA%B0%90%EB%8F%85-%EB%B0%8F-%EC%BD%94%EC%B9%98/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 직업백과 경기감독 및 코치 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EA%B2%BD%EA%B8%B0%EA%B0%90%EB%8F%85-%EB%B0%8F-%EC%BD%94%EC%B9%98/"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 1, "text": "[1] 고용복지플러스센터 스포츠감독 및 코치", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=420&searchCrCd=420101"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 운동감독 17필드 보완 (way, trivia, detailWlb, detailReady, sidebarCerts, sidebarMajors, sidebarOrgs, heroTags, youtubeLinks)"
+}

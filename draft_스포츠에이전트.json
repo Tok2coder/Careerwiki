@@ -1,0 +1,90 @@
+{
+  "fields": {
+    "way": "스포츠에이전트가 되는 경로는 체육학과·스포츠경영학과·법학과·경영학과 등 다양한 전공에서 출발한다. 한국은 스포츠에이전트 자격증 제도가 체계적으로 발달하지 않아 실무 경험과 네트워크가 중요하며, 각 종목 협회에 등록 대리인 자격을 취득해야 한다. IMG·Octagon·CAA 등 글로벌 스포츠 에이전시나 국내 에이전시(팀엔코·IB스포츠 등)에 입사해 경력을 쌓는 것이 일반적이다.[1] 선수 출신이 은퇴 후 에이전트로 전향하는 경우도 많다. 영어 능력·협상 스킬·스포츠 법률 지식이 필수이며, 미국·유럽 리그 이적 협상에서는 외국어 능력이 특히 중요하다.[2]",
+    "trivia": "직업백과에 따르면 스포츠에이전트의 직업만족도는 71%로 전체 직업 평균보다 높다.[1] 2019년 류현진이 토론토 블루제이스와 체결한 4년 8,000만 달러(약 929억 원) 계약은 국내 에이전트 협상의 대표 사례로 꼽힌다.[2]",
+    "overviewProspect": {
+      "main": "향후 5년간 스포츠에이전트 고용은 다소 증가할 것으로 전망된다. K-스포츠(야구·축구·배구·골프) 선수들의 해외 진출이 지속되면서 글로벌 계약 협상 수요가 확대되고 있으며, 스포츠 산업 성장과 함께 선수 브랜딩·스폰서십·미디어 권리 관리 등 에이전트 역할도 다양화되고 있다. 다만 국내 스포츠 산업 시장 규모가 아직 작아 에이전트 일자리 창출에는 한계가 있을 것으로 평가된다.[1]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "선수 이적 시즌(FA 기간·이적 창구 오픈)에는 24시간 연락 대기가 필요하며, 시차가 다른 해외 구단과의 협상으로 불규칙한 생활 패턴이 생긴다. 평소에는 선수 관리·계약 분석·미디어 대응 등의 업무를 수행한다. 결과에 따른 성과급 구조라 압박감이 크지만 성공 시 보람도 크다.[1]",
+      "socialDetail": "선수의 꿈을 실현시켜 주는 동반자 역할을 하며, 스포츠 팬들에게 큰 기쁨을 주는 이적 성사에 직접 기여한다. 한국 선수의 해외 진출을 돕는 스포츠 외교관 역할도 한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "체육학과·스포츠경영학과·법학과·경영학과 진학 — 스포츠 산업·계약법·협상 기초 이수[1]",
+        "영어·일어·스페인어 등 외국어 능력 강화 — 해외 구단 협상 필수 역량[2]",
+        "스포츠 에이전시 인턴십·자원봉사 — 선수 네트워크·현장 경험 구축[3]"
+      ],
+      "recruit": [
+        "IMG Korea·팀엔코·IB스포츠 등 국내외 스포츠 에이전시 신입 채용[1]",
+        "각 종목 협회(KBO·KBL·K리그) 관련 직군 취업 후 에이전트 자격 취득[2]",
+        "스포츠 마케팅사·스폰서십 전문회사 취업 후 에이전트 경력 전환[3]"
+      ],
+      "training": [
+        "스포츠 법률·계약 전문 지식 습득 — 선수계약서·이적 규정·FA 협상 실무 역량[1]",
+        "선수 개인 브랜딩·SNS 마케팅 역량 — 스폰서십 유치·미디어 관리 능력 개발[2]",
+        "해외 에이전시 인턴십·국제 스포츠 컨퍼런스 참가 — 글로벌 스포츠 네트워크 확장[3]"
+      ]
+    },
+    "overviewAbilities": {
+      "technKnow": "스포츠에이전트는 선수 계약서 작성·검토에 필요한 기본 법률 지식과 강한 협상력이 핵심 역량이다. 선수의 상품 가치를 평가하고 스폰서·마케팅 기회를 연결하려면 스포츠 마케팅 이해와 브랜드 전략 지식이 요구된다. 해외 구단·리그와의 소통을 위한 외국어(영어) 능력과 글로벌 스포츠 산업에 대한 이해도 필수다.[1]"
+    },
+    "sidebarCerts": [
+      {"name": "스포츠경영관리사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9546"},
+      {"name": "사회조사분석사 2급", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9521"}
+    ],
+    "sidebarMajors": ["체육학과", "스포츠마케팅학과", "법학과", "경영학과", "국제학과"],
+    "sidebarOrgs": [
+      {"name": "사단법인 한국스포츠에이전트협회", "url": "https://www.ksaa2016.or.kr/"},
+      {"name": "사단법인 한국e스포츠협회", "url": "https://www.e-sports.or.kr/"}
+    ],
+    "sidebarJobs": ["스포츠마케터", "직업운동선수", "운동선수 매니저", "운동선수스카우터", "스포츠강사", "스포츠트레이너", "스포츠감독 및 코치", "경기심판 및 경기기록원", "레크리에이션전문가"],
+    "heroTags": ["스포츠에이전트취업", "야구에이전트", "축구에이전트", "스포츠산업", "해외이적"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=zmBopdOh_5A", "title": "[보물지도] 10회 Full ver. 스포츠 에이전트가 되는 법 l 스포츠 에이전트 이예랑"},
+      {"url": "https://www.youtube.com/watch?v=4hWJih93WgI", "title": "[신직업 소개] 126억원까지 받는 직업이 있다...? | 스포츠 에이전트"}
+    ],
+    "careerTree": null,
+    "_careerTreeNote": "스포츠에이전트 slug 연결 가능 기존 career_tree 없음. 후보: 이예랑(KBO·KBL·K리그 공인 에이전트, 리코스포츠에이전시 대표 — 현역 에이전트), 이현석(IMG Korea 전 대표, 추신수 등 메이저리거 이적 협상 성사), 이복근(국내 1세대 스포츠에이전트, 스타트업·CxO 카테고리), 박용혁(KBO 공인 에이전트 — 현역 실무자), 최훈(K리그·해외 이적 전문 축구 에이전트). DB 미등록 상태. 카테고리: 현역실무자 / 글로벌에이전시 / 에이전시창업CxO."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 직업백과 스포츠에이전트 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"},
+      {"id": 2, "text": "[2] 직업백과 스포츠에이전트 직무사전", "url": "https://job.asamaru.net/%EC%A7%81%EB%AC%B4/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 직업백과 스포츠에이전트 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"},
+      {"id": 2, "text": "[2] 한국경제 류현진 토론토 계약 기사", "url": "https://www.hankyung.com/sports/article/2019122362157"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 커리어넷 스포츠에이전트", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 직업백과 스포츠에이전트 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 직업백과 스포츠에이전트 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 1, "text": "[1] 직업백과 스포츠에이전트 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 직업백과 스포츠에이전트 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"},
+      {"id": 2, "text": "[2] 한국스포츠에이전트협회", "url": "https://www.ksaa2016.or.kr/"},
+      {"id": 3, "text": "[3] 커리어넷 스포츠에이전트", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 직업백과 스포츠에이전트 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"},
+      {"id": 2, "text": "[2] 직업백과 스포츠에이전트 직무사전", "url": "https://job.asamaru.net/%EC%A7%81%EB%AC%B4/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"},
+      {"id": 3, "text": "[3] 한국스포츠에이전트협회", "url": "https://www.ksaa2016.or.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 직업백과 스포츠에이전트 직업정보", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8/"},
+      {"id": 2, "text": "[2] 한국스포츠에이전트협회", "url": "https://www.ksaa2016.or.kr/"},
+      {"id": 3, "text": "[3] 커리어넷 스포츠에이전트", "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 스포츠에이전트 17필드 보완 (way, trivia, overviewProspect, detailWlb, detailReady, sidebarCerts, sidebarMajors, sidebarOrgs, sidebarJobs, heroTags, youtubeLinks, technKnow)"
+}
