@@ -1,0 +1,85 @@
+{
+  "fields": {
+    "way": "재활의학과전문의사가 되려면 의과대학(6년) 또는 의학전문대학원(4년)을 졸업한 뒤 의사국가고시에 합격하여 의사면허를 취득해야 한다. 면허 취득 후 수련지정병원에서 인턴 1년을 마치고, 재활의학과 수련병원(전국 79개 기관)에서 전공의(레지던트) 4년 과정을 거친다. 전공의 수련에서는 근골격계 의학, 신경재활, 척수손상 재활, 전기진단학(근전도), 소아재활 등 세부 영역을 학습하며 대한재활의학회 학술대회 이수도 필수다.[1] 4년 수련을 마친 후 대한의학회 주관 전문의 자격시험에 합격하면 재활의학과전문의 자격을 얻는다. 초고령사회 진입에 따른 재활·요양병원 수요 확대로 전공의 지원율이 꾸준히 높은 수준을 유지하고 있다.[2]",
+    "trivia": "2024년 상반기 레지던트 1년차 모집에서 재활의학과는 전국 79개 수련병원 정원(92명)을 모두 채웠으며, 가톨릭중앙의료원(2.5대 1)·세브란스병원(1.67대 1) 등 주요 병원에서 치열한 경쟁이 벌어졌다. 전공의 기피 현상이 심한 소아청소년과·산부인과와 달리, 초고령사회를 겨냥한 재활의학과는 전공의들이 선호하는 과로 자리매김했다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "높음",
+      "wlbDetail": "재활의학과전문의는 주로 낮 시간대 외래진료와 병동 회진 중심으로 근무하며 응급수술이 거의 없어 외과계 진료과 대비 야간 당직 빈도가 낮다. 입원환자 관리와 주말 당직은 불가피하나, 봉직의의 경우 비교적 규칙적인 근무 패턴을 유지하는 편이다. 대학병원 전임의는 연구·교육 업무가 병행되어 업무 부담이 더 높다.[1]",
+      "socialDetail": "재활의학과전문의는 뇌졸중·척수손상·암 등으로 기능이 저하된 환자의 사회 복귀를 지원하며, 장애인과 노인의 자립 능력 향상에 직접 기여한다. 국립재활원 등 공공의료기관에서 의료 사각지대 장애인 재활 서비스 제공에도 중요한 역할을 담당한다.[1]"
+    },
+    "overviewProspect": {
+      "main": "초고령사회 진입과 함께 재활·요양병원 수요가 지속적으로 늘고 있어 재활의학과전문의에 대한 수요는 증가 추세다. 배출되는 전문의 수가 한정된 반면 재활병원이 급증하면서 구인난이 이어지고 있으며, 수도권-지방 간 수급 불균형도 지속되고 있다. 다만 대학병원 교수 자리는 여전히 경쟁이 치열한 편이다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "의과대학(6년) 또는 의학전문대학원(4년) 진학 및 졸업[1]",
+        "의사국가고시 합격 및 의사면허 취득(한국보건의료인국가시험원 주관)[2]",
+        "수련지정병원 인턴 1년 수료 후 재활의학과 레지던트 지원[3]",
+        "재활의학과 전공의 4년 수련 — 근골격계 의학, 신경재활, 전기진단학 등 이수[4]",
+        "대한의학회 재활의학과 전문의 자격시험 합격[5]"
+      ],
+      "recruit": [
+        "대학병원 재활의학과 교수·전임의 채용 지원[1]",
+        "재활전문병원 및 요양병원 봉직의 채용[2]",
+        "국립재활원·국립교통재활병원 등 공공기관 채용[3]"
+      ],
+      "training": [
+        "대한재활의학회 춘·추계 학술대회 및 연수강좌 참가(전공의 수련 중 필수)[1]",
+        "전기진단학(근전도) 전문 교육 이수 — 대한재활의학회 교육위원회 주관[2]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "의사면허", "url": "https://www.kuksiwon.or.kr/"},
+      {"name": "재활의학과전문의", "url": "https://www.karm.or.kr/bbs/?code=exam"}
+    ],
+    "sidebarMajors": ["의학과", "물리치료학과", "작업치료학과", "재활학과", "스포츠재활과"],
+    "sidebarOrgs": [
+      {"name": "대한재활의학회", "url": "https://www.karm.or.kr/"},
+      {"name": "국립재활원", "url": "https://www.nrc.go.kr/"}
+    ],
+    "heroTags": ["재활의학과의사", "물리의학", "재활치료", "신경재활", "척수재활", "장애재활"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=D5lc5NLfp6U", "title": "재활의학과 의사입니다. 질문해주세요."},
+      {"url": "https://www.youtube.com/watch?v=4ezhK9bE28U", "title": "재활의학이란?"}
+    ],
+    "careerTree": null,
+    "_youtubeSearchNote": "KEIS '재활의학과전문의사' 검색 0건, '재활의학과 전문의 현직자인터뷰' 검색 → D5lc5NLfp6U(재활의학TV), '재활의학이란 진로' 검색 → 4ezhK9bE28U(근로복지공단), '재활의학과 직무실무' 검색 0건(한국어 진로 영상), '재활의학과 강의교육' 검색 → 채널만 발견(개별영상 미확인), '재활의학과 진로면접' 검색 0건 (2026-04-24)",
+    "_careerTreeNote": "탐색 인물: 이종민(1986, 방송의학/재활의학과, 나무위키·위키백과 등재 — 재활의학과 직접 경력 명확하나 현재 피부미용의원 운영이 주 활동이라 재활의학과 대표 인물로 부적합), 건국대 이종민 교수(교수직이 주 활동, 방송 공인성 낮음), 서울대병원 정선근 교수(재활의학과 전문의, 유명 유튜브 채널 보유, 공인성 높음 — 그러나 위키백과 등재 여부 미확인). 적합한 위키백과·나무위키 등재 공인 인물 부족으로 careerTree null 처리 (2026-04-24)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 대한재활의학회", "url": "https://www.karm.or.kr/"},
+      {"id": 2, "text": "[2] 재활뉴스 — 재활의학과 전공 올해도 좁은 문(2023.12.07)", "url": "https://www.rehabnews.net/news/articleView.html?idxno=15226"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 재활뉴스 — 재활의학과 전공 올해도 좁은 문(2023.12.07)", "url": "https://www.rehabnews.net/news/articleView.html?idxno=15226"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 메디칼타임즈 — 재활의학 전문의 월 2천만원 줘도 못구한다", "url": "https://www.medicaltimes.com/Mobile/News/NewsView.html?ID=81511"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 국립재활원", "url": "https://www.nrc.go.kr/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 메디칼타임즈 — 재활의학 전문의 월 2천만원 줘도 못구한다", "url": "https://www.medicaltimes.com/Mobile/News/NewsView.html?ID=81511"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 대한재활의학회", "url": "https://www.karm.or.kr/"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"},
+      {"id": 3, "text": "[3] 대한재활의학회 수련병원현황", "url": "https://www.karm.or.kr/intro/intro5.php"},
+      {"id": 4, "text": "[4] 대한재활의학회 전공의 학습목표", "url": "https://www.karm.or.kr/bbs/?code=study"},
+      {"id": 5, "text": "[5] 대한재활의학회 전문의 고시", "url": "https://www.karm.or.kr/bbs/?code=exam"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 메디칼타임즈 — 재활의학 전문의 채용 현황", "url": "https://www.medicaltimes.com/Mobile/News/NewsView.html?ID=81511"},
+      {"id": 2, "text": "[2] 재활뉴스 — 재활의학과 전공 올해도 좁은 문", "url": "https://www.rehabnews.net/news/articleView.html?idxno=15226"},
+      {"id": 3, "text": "[3] 국립재활원", "url": "https://www.nrc.go.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한재활의학회 학술행사", "url": "https://www.karm.or.kr/bbs/?code=workshop"},
+      {"id": 2, "text": "[2] 대한재활의학회 전공의 학습목표", "url": "https://www.karm.or.kr/bbs/?code=study"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] way·trivia·detailWlb·overviewProspect·detailReady·사이드바 17필드 보완"
+}
