@@ -1,0 +1,85 @@
+{
+  "fields": {
+    "way": "스포츠마케터가 되려면 경영학·마케팅학·스포츠관련학과를 전공하는 것이 일반적이다. 사회계열·예체능계열 전공자가 주를 이루며, 스포츠경영 복수전공도 유리하다. 입직 시 관련 분야 인턴십 경험이 결정적이며, 인턴 기간에 쌓은 네트워크가 정규직 전환으로 이어지는 경우가 많다. 스포츠마케팅 전문업체·대기업 스포츠마케팅팀·프로스포츠구단·스포츠연맹 등에서 공채 또는 수시채용으로 입직한다. 국가기술자격인 스포츠경영관리사 취득이 취업 경쟁력을 높이는 데 도움이 된다.[1]",
+    "detailReady": {
+      "curriculum": [
+        "경영학과·스포츠마케팅학과·사회체육학과 등에서 마케팅·스포츠경영 관련 과목을 이수한다[1]",
+        "스포츠경영 복수전공 또는 부전공을 통해 전문성을 강화한다[2]",
+        "영어 등 외국어 역량을 갖추고 광고·미디어·통계 관련 과목을 수강한다[3]",
+        "스포츠 관련 동아리·대외활동·인턴십을 통해 현장 감각과 네트워크를 쌓는다[4]",
+        "스포츠경영관리사 국가기술자격 취득을 통해 전문성을 인증받는다[5]"
+      ],
+      "recruit": [
+        "스포츠마케팅 전문업체(세마스포츠마케팅 등)에 신입·경력 공채로 지원한다[1]",
+        "대기업 스폰서십·스포츠마케팅팀(삼성, LG, CJ 등) 공채 및 프로스포츠구단·연맹(K리그, KBL, V리그 등) 마케팅팀에 지원한다[2]",
+        "스포츠 전문 채용 플랫폼(드라프톤 등)을 통해 수시채용 공고에 지원한다[3]"
+      ],
+      "training": [
+        "스포츠마케팅 전문 아카데미 양성 과정(KBS스포츠예술과학원 등)을 이수한다[1]",
+        "스포츠경영관리사 국가기술자격 대비 필기·실기 훈련과정을 수료한다[2]"
+      ]
+    },
+    "trivia": "문화체육관광부 2023년 스포츠산업조사에 따르면 국내 스포츠산업 매출액이 81조원을 돌파하며 역대 최대를 기록했고, 사업체 수는 12만 6,186개, 종사자 수는 45만 8천 명에 달한다.[1]",
+    "overviewProspect": {
+      "main": "향후 스포츠마케터의 고용은 다소 증가할 것으로 전망된다. 전망 설문에서 다소 증가(63%), 현상 유지(25%), 증가(9%)로 긍정적 응답이 우세하다.[1] 국내 스포츠산업 매출액이 2023년 기준 81조원을 돌파한 가운데 정부는 2028년까지 100조원 규모 달성을 목표로 하고 있어 관련 마케팅 인력 수요도 꾸준히 증가할 것으로 예상된다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "보통 이하",
+      "social": "보통 이상",
+      "wlbDetail": "스포츠 이벤트·홈경기 시즌에는 주말 근무와 야근이 빈번하다. 홈경기 운영 시 동시에 30~40개 항목을 관리해야 하는 고강도 업무가 이어진다. 비시즌에는 비교적 여유롭지만 스폰서십 협상·캠페인 기획 마감 시점에는 집중적인 야근이 발생한다.[1]",
+      "socialDetail": "프로스포츠 구단과 협회의 재정 기반을 마련함으로써 스포츠 저변 확대와 선수 육성에 기여한다. 지역 연고 구단의 스폰서십 유치와 지역 밀착 사업을 통해 지역경제 활성화와 일자리 창출에도 이바지한다.[1]"
+    },
+    "heroTags": ["스포츠마케터", "스포츠마케팅", "Sports Marketer", "스포츠브랜딩", "스폰서십관리", "이벤트마케터"],
+    "sidebarJobs": ["스포츠에이전트", "이스포츠마케터", "광고기획자", "광고마케터", "브랜드마케터", "퍼포먼스마케터", "스포츠해설가", "홍보기획원", "스포츠감독 및 코치", "스포츠 애널리스트", "스포츠심리상담사"],
+    "sidebarMajors": ["스포츠마케팅학과", "경영학과", "사회체육학과", "체육학과", "마케팅경영과"],
+    "sidebarCerts": [
+      {"name": "스포츠경영관리사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9546"},
+      {"name": "2급 전문스포츠지도사", "url": "https://sqms.kspo.or.kr/"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한체육회", "url": "https://www.sports.or.kr/"},
+      {"name": "한국프로스포츠협회", "url": "https://www.prosports.or.kr/"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=ZbWkpUpJHjg", "title": "박찬호 선수를 보며 꿈꿔온 일 스포츠 마케팅 하나만 보고 달려온 스포츠 마케터 [ENG SUB / 데상트코리아]"},
+      {"url": "https://www.youtube.com/watch?v=iehC0E3XWS4", "title": "[JOB담] 글로벌 무대를 종횡무진하는 스포츠 마케터의 세계를 소개합니다 (#CJ제일제당 #스포츠마케팅)"}
+    ],
+    "careerTree": null,
+    "_careerTreeNote": "탐색 인물: 이순호(인천유나이티드 마케팅팀장, 공개 프로필 없음), 최진국(광고대행사 마케팅차장, 공인 아님), 한지연(커리어넷 인터뷰, 공인 아님), 김영진(EBS 잡쇼 체험자, 공인 아님), CJ제일제당 스포츠마케팅 현직자(익명). 카테고리: 대기업(삼성스포츠단·CJ제일제당 - 익명), 에이전시(세마스포츠마케팅 직원 - 공인 아님), 공공(한국스포츠산업협회 임원 - 공개 정보 없음). 스포츠마케터 전문직으로 위키백과 등재된 한국인 공인 확인 불가."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 직업백과 스포츠마케터", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EB%A7%88%EC%BC%80%ED%84%B0/"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 직업백과 스포츠마케터", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EB%A7%88%EC%BC%80%ED%84%B0/"},
+      {"id": 2, "text": "[2] 정책브리핑 스포츠산업 81조 돌파", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148938365"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 정책브리핑 스포츠산업 81조 돌파", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148938365"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 한국체육대학보 스포츠마케팅 진로 상담", "url": "https://news.knsu.ac.kr/news/articleView.html?idxno=851"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 직업백과 스포츠마케터", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EB%A7%88%EC%BC%80%ED%84%B0/"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 직업백과 스포츠마케터", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EB%A7%88%EC%BC%80%ED%84%B0/"},
+      {"id": 2, "text": "[2] 에듀진 스포츠마케팅 직업 정보", "url": "http://www.edujin.co.kr/news/articleView.html?idxno=32764"},
+      {"id": 3, "text": "[3] KBSSA 스포츠마케팅 아카데미 과정", "url": "http://www.kbssa.kr/curriculum/curriculum03.php"},
+      {"id": 4, "text": "[4] 한국체육대학보 스포츠마케팅 진로 상담", "url": "https://news.knsu.ac.kr/news/articleView.html?idxno=851"},
+      {"id": 5, "text": "[5] Q-net 스포츠경영관리사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9546"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 직업백과 스포츠마케터", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EB%A7%88%EC%BC%80%ED%84%B0/"},
+      {"id": 2, "text": "[2] 한국체육대학보 스포츠마케팅 진로 상담", "url": "https://news.knsu.ac.kr/news/articleView.html?idxno=851"},
+      {"id": 3, "text": "[3] 드라프톤 스포츠 전문 채용 플랫폼", "url": "https://www.drafton.co.kr/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 직업백과 스포츠마케터", "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EB%A7%88%EC%BC%80%ED%84%B0/"},
+      {"id": 2, "text": "[2] Q-net 스포츠경영관리사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9546"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 스포츠마케터 17필드 보완 (way, detailReady, trivia, prospect, detailWlb, sidebarJobs, sidebarMajors, sidebarCerts, sidebarOrgs, heroTags, youtubeLinks)"
+}

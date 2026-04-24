@@ -1,0 +1,84 @@
+{
+  "fields": {
+    "way": "스포츠심리상담사가 되려면 체육학·스포츠심리학·상담심리학 관련 학과에서 석사 이상의 학위를 취득하는 것이 일반적이다. 한국스포츠심리학회에서 주관하는 급수별 자격연수를 이수하고 시험에 합격해 3급→2급→1급으로 진급하는 구조이며, 실제 현장 상담 활동은 2급 이상 취득자에게만 허용된다. 국가대표 선수촌 밀착지원팀이나 한국스포츠정책과학원(KISS)에 소속되려면 석사 이상의 학위와 현장수련 경력이 요구된다. 프로스포츠구단, 지자체 체육회, 대학교 스포츠심리상담센터, 스포츠심리상담 전문기관 등을 통해 입직한다.[1]",
+    "detailReady": {
+      "curriculum": [
+        "체육학·스포츠심리학·상담심리학 관련 학과에서 석사 이상 학위를 취득하여 2급 이상 자격 응시 요건을 충족한다[1]",
+        "한국스포츠심리학회 정회원으로 가입하고 급수별 자격연수(3~5일, 논술형 시험)를 이수한다[2]",
+        "스포츠심리상담·심리기술훈련(PST) 실습 경험을 쌓고 체육 현장 2년 이상 경력으로 3급 응시 요건을 갖춘다[3]",
+        "2급 취득 후 현장수련(140시간 이상)·슈퍼비전(7회 이상)·학술행사(30시간 이상) 이수를 통해 1급으로 진급한다[4]",
+        "학생선수 심리지원 사업 참여 또는 상담센터 인턴십으로 공공기관·교육기관 취업 경쟁력을 높인다[5]"
+      ],
+      "recruit": [
+        "한국스포츠정책과학원(KISS), 대한체육회 산하 스포츠심리지원팀 정규직 공고에 지원한다[1]",
+        "프로스포츠구단(K리그·KBL·배구·야구 등) 및 체육회 산하 멘탈코칭 포지션 채용공고에 지원한다[2]",
+        "스포츠심리상담 전문기관을 개업하거나 대학·지자체 스포츠심리상담소 계약직으로 경력을 쌓는다[3]"
+      ],
+      "training": [
+        "한국스포츠심리학회 주관 급수별 자격연수(연수비 25~50만원)를 수강하고 논술형 시험에 합격한다[1]",
+        "2급 이상 취득 후 현장수련(140~200시간)·슈퍼비전(7~10회)을 이수하여 실무 역량을 검증받는다[2]"
+      ]
+    },
+    "trivia": "한국스포츠심리학회에 따르면 2004년 자격제도 도입 후 2021년 기준 스포츠심리상담사 자격 취득자는 총 804명(1급 33명·2급 22명·3급 749명)이며, 현장 상담이 가능한 1·2급 취득자 중 비영리기관에서 실제로 근무하는 인원은 약 30명에 불과하다.[1]",
+    "overviewProspect": {
+      "main": "스포츠심리상담사의 고용은 점차 증가할 것으로 기대된다. 프로스포츠에서 선수 멘탈 관리의 중요성에 대한 공감대가 확산되고 있으며, 스포츠심리상담은 미국에서 이미 상용화 단계인 반면 한국은 아직 성장 초기 단계로 전문인력 수요가 꾸준히 증가할 것으로 전망된다.[1] 국가 차원에서 학교운동부 및 학생선수 대상 심리지원 사업이 확대되면서 교육기관 내 스포츠심리상담사 수요도 함께 증가하고 있다.[2]"
+    },
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "높음",
+      "wlbDetail": "선수·팀의 훈련 및 경기 일정에 맞춰 상담 일정을 조율해야 하므로 주말·원정 출장이 발생하는 경우가 있다. 클라이언트의 부정적 에너지를 흡수하는 과정에서 심리적 소모가 크며, 이를 위해 상담사 본인도 정기적으로 자기상담을 받을 필요가 있다.[1]",
+      "socialDetail": "운동선수의 심리적 어려움을 해결하고 경기력 향상을 지원함으로써 스포츠 발전에 이바지한다. 학생선수의 심리 건강과 인권 보호를 지원하며 스포츠 분야의 사회적 안전망을 넓히는 역할을 한다.[1]"
+    },
+    "heroTags": ["스포츠심리상담사", "스포츠심리컨설턴트", "멘탈코치", "SportsPsych", "심리기술훈련", "운동심리상담"],
+    "sidebarJobs": ["스포츠트레이너", "스포츠감독 및 코치", "임상심리사", "청소년상담사", "산업카운슬러", "전문상담교사", "스포츠강사", "스포츠에이전트", "직업상담사"],
+    "sidebarMajors": ["체육학과", "심리학과", "사회체육학과", "스포츠건강관리학과", "스포츠지도학과"],
+    "sidebarCerts": [
+      {"name": "스포츠심리상담사", "url": "https://kssp21.or.kr/homepage/custom/Qualification"},
+      {"name": "2급 전문스포츠지도사", "url": "https://sqms.kspo.or.kr/"}
+    ],
+    "sidebarOrgs": [
+      {"name": "한국스포츠심리학회", "url": "https://kssp21.or.kr/"},
+      {"name": "대한체육회", "url": "https://www.sports.or.kr/"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=lcGTohfSzF4", "title": "[직업 인터뷰] 스포츠심리상담사의 모든 것 #1ㅣ케이스포츠심리상담 대표 김미선 박사"}
+    ],
+    "careerTree": null,
+    "_careerTreeNote": "탐색 인물: 나정은(KISS 소속 스포츠심리상담사 팀장, sportsq.co.kr 인터뷰 - 공인 아님), 김미선(케이스포츠심리상담 대표, YouTube 운영 - 공인 아님), KCI 논문 스포츠심리상담사제도 연구자(공인 아님), 전라남도교육청 학생선수 심리지원 담당 상담사(정책브리핑 - 공인 아님), KSSP 현직 학회장(공개 SNS 프로필 없음). 카테고리: 현장전문가(나정은·김미선), 학술연구자(KCI 논문 저자), 공공기관(교육청·KISS 소속). 스포츠심리상담사 전문직으로 위키백과 등재된 한국인 공인 확인 불가."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 한국스포츠심리학회 자격 안내", "url": "https://kssp21.or.kr/homepage/custom/Qualification"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 스포츠Q 스포츠심리상담사 나정은 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=429047"},
+      {"id": 2, "text": "[2] 정책브리핑 전라남도교육청 학생선수 심리지원", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148917054"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] KCI 한국스포츠심리학회 스포츠심리상담사 제도의 성과와 비전", "url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002995140"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 스포츠Q 스포츠심리상담사 나정은 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=429047"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 정책브리핑 전라남도교육청 학생선수 심리지원", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148917054"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국스포츠심리학회 자격 안내", "url": "https://kssp21.or.kr/homepage/custom/Qualification"},
+      {"id": 2, "text": "[2] 제38차 스포츠심리상담사 자격연수 안내", "url": "https://kssp21.or.kr/board/societyNotice/article/262543"},
+      {"id": 3, "text": "[3] 스포츠Q 스포츠심리상담사 나정은 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=429047"},
+      {"id": 4, "text": "[4] KCI 스포츠심리상담사 제도의 성과와 비전", "url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002995140"},
+      {"id": 5, "text": "[5] 정책브리핑 전라남도교육청 학생선수 심리지원", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148917054"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 스포츠Q 스포츠심리상담사 나정은 인터뷰", "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=429047"},
+      {"id": 2, "text": "[2] KCI 스포츠심리상담사 제도의 성과와 비전", "url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002995140"},
+      {"id": 3, "text": "[3] 한국스포츠심리학회 자격 안내", "url": "https://kssp21.or.kr/homepage/custom/Qualification"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 제38차 스포츠심리상담사 자격연수 안내", "url": "https://kssp21.or.kr/board/societyNotice/article/262543"},
+      {"id": 2, "text": "[2] 한국스포츠심리학회 자격 안내", "url": "https://kssp21.or.kr/homepage/custom/Qualification"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 스포츠심리상담사 17필드 보완 (way, detailReady, trivia, prospect, detailWlb, technKnow, sidebarJobs, sidebarMajors, sidebarCerts, sidebarOrgs, heroTags, youtubeLinks)"
+}
