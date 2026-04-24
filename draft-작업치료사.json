@@ -1,0 +1,83 @@
+{
+  "jobName": "작업치료사",
+  "jobId": "1765283363066288",
+  "slug": "작업치료사",
+  "fields": {
+    "way": "작업치료사가 되려면 작업치료사 국가면허 취득이 필수다. 3년제 또는 4년제 작업치료(학)과 졸업 후 한국보건의료인국가시험원 주관 국가시험에 합격해야 한다. 시험은 필기(기초작업치료학, 작업치료학, 임상관찰, 지역사회작업치료학 등)와 실기로 구성된다. 면허 취득 후 주요 취업처는 종합병원·재활병원 작업치료실, 노인요양시설, 장애인복지관, 발달장애 아동 치료실, 학교(교육지원청), 정신건강복지센터 등이다.[1] 대한작업치료사협회 인증 전문 작업치료사(소아·노인·정신·연하) 자격을 추가 취득하면 특화 분야 전문성을 인정받는다.[2]",
+    "overviewProspect": {
+      "main": "향후 5년간 증가 전망이다. 뇌졸중·치매 등 노인성 질환 증가로 재활 작업치료 수요가 크게 늘고 있다. 발달장애 아동 조기 치료 중요성이 부각되며 소아 작업치료사 수요도 급증하는 추세다. 지역사회 재활 강화 정책과 장기요양보험 확대로 요양 시설·방문 재활 분야에서도 작업치료사 채용이 활발해지고 있다.[1]"
+    },
+    "trivia": "한국의 면허 작업치료사 수는 2024년 기준 약 3만 명이며, 매년 약 2,000명이 새로 배출된다. 세계작업치료사연맹(WFOT)에 따르면 작업치료는 신체·인지·심리 기능을 종합적으로 다루는 재활 전문 직종으로, 선진국에서 물리치료사와 동등한 대우를 받는다. 한국 작업치료의 역사는 1965년 세브란스병원에서 시작되어 60여 년의 역사를 자랑한다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "병원·의료기관 근무 시 주 5일·교대 없는 정규 근무가 일반적으로 워라밸이 양호한 편이다. 발달장애 아동 치료실은 방과 후 시간대에 집중되어 오후 근무가 많다. 환자의 재활 과정을 함께하는 정서적 보람이 크지만, 중증 환자 케어에서 감정 소진(번아웃)이 직업적 위험 요소다.[1]",
+      "socialDetail": "신체·정신·발달 장애를 가진 사람들이 일상생활 활동을 독립적으로 수행할 수 있도록 돕는 핵심 재활 전문가다. 뇌졸중 환자의 가정 복귀, 발달장애 아동의 학교 통합 교육 등 사회 참여 증진에 결정적으로 기여한다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "3~4년제 작업치료(학)과 입학 — 해부학·신경과학·발달심리학·작업치료학 등 핵심 과목 이수[1]",
+        "한국보건의료인국가시험원 주관 작업치료사 국가면허시험 필기·실기 합격[2]",
+        "병원·복지관·치료실 등 임상 실습 이수 — 신경계·소아·노인·정신 등 다양한 환자 케이스 경험[3]",
+        "대한작업치료사협회 인증 전문 작업치료사(소아·노인·정신·연하) 자격 취득으로 특화 전문성 강화[4]",
+        "감각통합치료(SI), 인지재활치료 추가 교육 이수로 임상 역량 차별화[5]"
+      ],
+      "recruit": [
+        "종합병원·대학병원 재활의학과 작업치료실 신규·경력 채용 지원[1]",
+        "발달장애 아동 치료센터·복지관 작업치료사 채용 — 소아 작업치료사 수요 지속 증가[2]",
+        "요양병원·노인 재활 시설 작업치료사 채용 — 고령화로 인한 수요 급증[3]"
+      ],
+      "training": [
+        "한국보건의료인국가시험원 작업치료사 국가면허 취득 — 시험정보 및 응시자격 확인[1]",
+        "대한작업치료사협회 인증 전문 작업치료사 자격 취득 — 소아·노인·정신·연하 분야 특화[2]",
+        "감각통합치료(SI), 인지재활치료 전문 교육 이수로 임상 역량 강화[3]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "작업치료사", "url": "https://www.kuksiwon.or.kr/subcnt/c_2015/1/view.do?seq=7&itm_seq=13"},
+      {"name": "전문작업치료사", "url": "https://www.kaot.org"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한작업치료사협회", "url": "https://www.kaot.org"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr"},
+      {"name": "보건복지부", "url": "https://www.mohw.go.kr"}
+    ],
+    "_careerTreeNote": "기존 커리어트리 확인 완료: 이충휘(id:120, 연세대 작업치료학과 교수→대한작업치료학회 전 회장, stage_index:2). 이충휘 중복 링크(stage_index:3 → 학회 회장직)는 마지막 스테이지에 해당하므로 삭제 처리."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 작업치료사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=401"},
+      {"id": 2, "text": "[2] 대한작업치료사협회 작업치료의 정의", "url": "https://www.kaot.org/pds/definition.jsp"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 작업치료사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=401"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 대한작업치료사협회 작업치료의 정의", "url": "https://www.kaot.org/pds/definition.jsp"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 작업치료사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=401"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 작업치료사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=401"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 커리어넷 직업백과 작업치료사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=401"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원 작업치료사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2015/1/view.do?seq=7&itm_seq=13"},
+      {"id": 3, "text": "[3] 고용24 작업치료사 직업정보", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=301&searchCrCd=306502"},
+      {"id": 4, "text": "[4] 대한작업치료사협회 작업치료의 정의", "url": "https://www.kaot.org/pds/definition.jsp"},
+      {"id": 5, "text": "[5] 대한작업치료사협회", "url": "https://www.kaot.org"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 땡큐오티 작업치료사 채용정보", "url": "https://thankyouot.com/board1"},
+      {"id": 2, "text": "[2] 고용24 작업치료사 직업정보", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=301&searchCrCd=306502"},
+      {"id": 3, "text": "[3] 대한작업치료사협회", "url": "https://www.kaot.org"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국보건의료인국가시험원 작업치료사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2015/1/view.do?seq=7&itm_seq=13"},
+      {"id": 2, "text": "[2] 대한작업치료사협회 작업치료의 정의", "url": "https://www.kaot.org/pds/definition.jsp"},
+      {"id": 3, "text": "[3] 대한작업치료사협회", "url": "https://www.kaot.org"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 작업치료사 17필드 보완 — way 각주 교정, prospect 각주 교정, wlb등급 띄어쓰기 교정, social 등급 추가, wlbDetail/socialDetail 각주 추가, curriculum 5개 각주, recruit/training 각주, sidebarCerts/sidebarOrgs 추가, _careerTreeNote 기재"
+}

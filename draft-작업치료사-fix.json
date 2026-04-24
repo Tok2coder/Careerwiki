@@ -1,0 +1,12 @@
+{
+  "jobName": "작업치료사",
+  "jobId": "1765283363066288",
+  "slug": "작업치료사",
+  "fields": {
+    "detailReady": {
+      "certificate": []
+    }
+  },
+  "sources": {},
+  "changeSummary": "[job-data-enhance] 작업치료사 Phase5 — certificate 미출처 항목 정리"
+}
