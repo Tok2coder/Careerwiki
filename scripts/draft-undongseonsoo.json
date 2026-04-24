@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "heroTags": ["직업운동선수", "프로선수", "국가대표", "체육특기자", "실업선수", "Athlete"],
+    "way": "운동선수가 되려면 대부분 초등학교나 중학교 시절부터 종목을 정해 훈련을 시작합니다. 체육 특기자 전형을 통해 체육고등학교에 진학하거나, 중·고등학교 운동부에서 실력을 쌓은 뒤 대학 체육 관련 학과(체육학과, 사회체육과, 생활체육학과 등)에 체육특기자로 입학하는 경로가 일반적입니다.[1] 프로 팀 입단은 종목에 따라 다르지만, 주로 대회 성적과 개인 기록을 바탕으로 프로 팀이나 실업 팀의 스카우트 제안을 받거나, 감독·코치·학교의 추천 또는 본인 지원으로 입단 테스트를 거칩니다. 프로야구(KBO)는 신인 드래프트, 프로축구(K리그)는 드래프트와 자유 선발, 프로농구(KBL)와 프로배구(V리그)도 신인 드래프트 제도를 운영합니다. 운동선수는 본업 여부에 따라 직업 운동선수(프로선수)와 아마추어 운동선수로 구분됩니다. 프로선수는 구단과 계약하여 경기 출전을 전업으로 하고, 실업선수는 지방자치단체나 기업에 소속되어 사원 자격으로 운동합니다.[2]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "보통 이상",
+      "wlbDetail": "운동선수는 시즌 중 매일 수 시간의 체력·기술 훈련과 경기 일정을 소화해야 하며, 전지훈련이나 원정 경기로 장기 출장이 잦아 일상적인 생활 리듬을 유지하기 어렵습니다.[1] 비시즌에는 상대적으로 여유가 있지만, 부상 관리와 컨디션 유지를 위해 완전한 휴식은 어렵습니다. 종사자의 일과 삶의 균형 만족도는 59.1점으로 보통 수준입니다.[2]",
+      "socialDetail": "운동선수는 국제대회 메달 획득 등을 통해 국위를 선양하고, 청소년에게 꿈과 도전 의식을 심어주는 역할을 합니다.[1] 프로스포츠는 지역 경제 활성화와 문화 콘텐츠 산업 발전에도 기여하고 있습니다. 종사자의 사회공헌 만족도는 69점으로 비교적 높은 수준입니다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "초·중학교 시절 종목을 선택하고 각 종목 협회에 선수로 등록 후 대회 참가 시작[1]",
+        "체육고등학교 또는 학교 운동부에서 전문훈련: 지역·전국 대회 성적으로 기량 검증[2]",
+        "대학 체육학과 체육특기자 입학(선택): 경기 출전을 이어가며 전문성 강화[3]",
+        "프로 구단 신인 드래프트 응시 또는 입단 테스트 참가: KBO·K리그·KBL·V리그 종목별 입단 절차 이행[4]",
+        "실업팀(지방자치단체·기업 소속) 소속 지원: 채용 공고에 선수 이력서 및 성적증명서 제출[5]"
+      ],
+      "recruit": [
+        "KBO·K리그·KBL·V리그 등 프로 리그 신인 드래프트에 참가하거나 구단 입단 테스트 지원[1]",
+        "대한체육회 가맹 경기단체 국가대표 선발 훈련 참가: 국제대회 출전 경력 쌓기[2]",
+        "지방자치단체·기업체 실업팀 채용 공고를 워크넷 등에서 검색하여 지원[3]"
+      ],
+      "training": [
+        "대한체육회 우수선수 육성 프로그램 및 전지훈련 지원 활용: 경기력 향상을 위한 체계적 지원[1]",
+        "한국스포츠정책과학원(KSPO) 스포츠과학 지원 서비스 활용: 체력·기술·심리 분석 및 훈련 처방[2]"
+      ]
+    },
+    "trivia": "매년 약 1만 명의 운동선수가 은퇴하며, 최근 5년간 은퇴 선수 4만 7,046명의 평균 은퇴 나이는 23.6세에 불과하다.[1]",
+    "overviewProspect": {
+      "main": "향후 10년간 직업운동선수의 고용은 현 상태를 유지하는 수준(연평균 증감률 -1%~+1%)이 될 것으로 전망됩니다.[1] 프로스포츠 인기 확대와 해외 진출 증가, 빙상·수영·체조 등 비인기 종목의 부상이 긍정적 요인입니다. 반면, 저출산에 따른 유소년 인구 감소로 학생 선수 수가 줄어들고 있어 전체 등록 선수 수는 감소 추세입니다. 매년 약 1만 명의 선수가 평균 23.6세에 은퇴하며, 은퇴 후 무직 비율이 약 38%에 달해 은퇴 선수 재취업 지원이 주요 과제로 부각되고 있습니다.[2]"
+    },
+    "sidebarJobs": ["직업운동선수", "스포츠감독 및 코치", "스포츠트레이너", "스포츠에이전트", "운동선수 매니저", "운동선수스카우터", "운동선수트레이너", "스포츠심리상담사", "스포츠 애널리스트", "스포츠해설가", "헬스트레이너"],
+    "sidebarMajors": ["체육학과", "체육교육과", "사회체육학과", "사회체육과", "태권도과", "스포츠지도학과", "스포츠지도과", "레저스포츠학과", "스포츠건강관리학과", "특수체육교육과"],
+    "sidebarCerts": [
+      {"name": "전문스포츠지도사", "url": "https://www.q-net.or.kr"},
+      {"name": "생활스포츠지도사", "url": "https://www.q-net.or.kr"},
+      {"name": "건강운동관리사", "url": "https://www.q-net.or.kr"}
+    ],
+    "sidebarOrgs": [
+      {"name": "대한체육회", "url": "https://www.sports.or.kr"}
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=uoakXjL9DUc", "title": "운동 및 스포츠와 관련된 직업들"},
+      {"url": "https://www.youtube.com/watch?v=GaOZy3jrozk", "title": "운동선수 은퇴 후 직업은? / 육상 중장거리 달리기 선수 -트레이너 맥스"}
+    ],
+    "careerTree": null,
+    "_careerTreeNote": "기존 커리어트리: 김연아(career_trees id:32, stage_index=1), 박지성(career_trees id:33, stage_index=1) 이미 job_slug='운동선수'로 연결됨. 추가 탐색 후보: 손흥민(현역 프리미어리그-위키백과 등재, 현역이라 마지막 스테이지 미확정), 류현진(현역 MLB 투수-위키백과 등재, 현역), 박태환(국가대표 수영선수-위키백과 등재, 은퇴 후 코치). 기존 2인 이미 연결, 추가 INSERT 불필요."
+  },
+  "sources": {
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 한국고용정보원 한국직업전망 – 직업운동선수", "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do"},
+      {"id": 2, "text": "[2] 뉴스1 – 매년 운동선수 1만명 은퇴, 대부분 어려운 생활 (2024.10)", "url": "https://www.news1.kr/local/gwangju-jeonnam/4832797"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 3, "text": "[1] 커리어넷 직업백과 – 운동선수 직무 정보", "url": "https://www.career.go.kr/cloud/w/job/view?seq=336"},
+      {"id": 4, "text": "[2] 한국고용정보원 한국직업전망 – 직업운동선수 직업지표", "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 5, "text": "[1] 대한체육회 – 스포츠 가치 확산 사업", "url": "https://www.sports.or.kr/business/main/contents.do?menuNo=700003"},
+      {"id": 6, "text": "[2] 한국고용정보원 한국직업전망 – 직업운동선수 직업지표", "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do"}
+    ],
+    "trivia": [
+      {"id": 7, "text": "[1] 뉴스1 – 국회 문화체육관광위 이개호 의원, 대한체육회 은퇴선수 현황 (2024)", "url": "https://www.news1.kr/local/gwangju-jeonnam/4832797"}
+    ],
+    "way": [
+      {"id": 8, "text": "[1] 체육특기자대입포털 – 체육특기자 제도 안내", "url": "https://info.kusf.or.kr/kusf/portal/univ/univinsttutnguid/linkpage.do"},
+      {"id": 9, "text": "[2] 커리어넷 직업백과 – 운동선수", "url": "https://www.career.go.kr/cloud/w/job/view?seq=336"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 대한체육회", "url": "https://www.sports.or.kr"},
+      {"id": 2, "text": "[2] 체육특기자대입포털", "url": "https://info.kusf.or.kr/kusf/portal/univ/univinsttutnguid/linkpage.do"},
+      {"id": 3, "text": "[3] 커리어넷 직업백과 운동선수", "url": "https://www.career.go.kr/cloud/w/job/view?seq=336"},
+      {"id": 4, "text": "[4] 한국야구위원회(KBO)", "url": "https://www.koreabaseball.com/"},
+      {"id": 5, "text": "[5] 고용24 ADIGA 직업운동선수", "url": "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000000867"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 한국야구위원회(KBO)", "url": "https://www.koreabaseball.com/"},
+      {"id": 2, "text": "[2] 대한체육회", "url": "https://www.sports.or.kr"},
+      {"id": 3, "text": "[3] 워크넷", "url": "https://www.work.go.kr"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한체육회", "url": "https://www.sports.or.kr"},
+      {"id": 2, "text": "[2] 한국스포츠정책과학원(KSPO)", "url": "https://www.kspo.or.kr/"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 운동선수 17필드 보완 (heroTags·detailReady·youtubeLinks·wlb/social등급교정)"
+}
