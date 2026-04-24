@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "way": "조산사가 되려면 먼저 간호사 면허를 취득해야 한다. 간호대학(4년)을 졸업하고 간호사 국가고시에 합격한 뒤, 보건복지부장관이 인정하는 의료기관에서 1년간 조산사 수습과정을 이수해야 한다.[1] 수습 완료 후 한국보건의료인국가시험원이 주관하는 조산사 국가시험에 응시하며, 시험은 조산학·신생아간호학·모자보건학·모자보건법 4과목 165문항으로 구성된다. 총점 60% 이상이며 과목별 40% 이상을 득점하면 합격하고, 합격 후 보건복지부장관에게 조산사 면허를 신청한다.[2]",
+    "trivia": "2020년 기준 조산사 면허 소지자 6,408명 중 54.8%(3,513명)가 비활동 상태로 과반수가 실제로 종사하지 않는다. 활동 조산사의 평균 연령은 54.6세로 10년 전보다 8.9세 높아졌으며, 요양기관에 근무하는 조산사(1,807명)는 전원 여성이다.[1]",
+    "detailWlb": {
+      "wlb": "보통 이상",
+      "social": "높음",
+      "wlbDetail": "조산사는 병원 분만실이나 조산원에서 교대 근무가 일반적으로, 야간·주말 근무가 포함된다. 다만 외과계 의사와 달리 응급수술 직접 집도는 없으며, 조산원 개원 조산사의 경우 비교적 자율적인 근무 일정 조율이 가능하다.[1]",
+      "socialDetail": "조산사는 임신·분만·산후 전 과정에서 산모와 신생아를 돌보며 생명 탄생에 직접 기여한다. 모유수유·가족계획·여성건강 교육을 통해 모자보건 증진과 의료취약지역 분만 서비스 제공에도 중요한 역할을 한다.[1]"
+    },
+    "overviewProspect": {
+      "main": "저출생 심화로 분만 수요가 감소하면서 조산사의 취업 여건도 점차 어려워지고 있다. 2020년 기준 면허 조산사의 54.8%가 비활동 상태이고 활동 인력의 평균 연령도 54.6세로 고령화되고 있어 수급 불균형이 지속될 전망이다. 다만 방문조산 법제화 추진(2025년 국회 발의) 등 조산사 업무 영역 확대 논의가 이어지고 있어 장기적 변화 가능성도 있다.[1]"
+    },
+    "overviewAbilities": {
+      "technKnow": "조산사는 정상 분만 유도·관리, 회음부 절개 및 봉합, 태아심음 감시, 신생아 소생술 등 핵심 분만 기술을 보유해야 한다. 산전·산후 관리, 모유수유 교육·상담, 가족계획 상담 역량도 필요하며, 초음파기기 등 모니터링 장비 활용 능력이 요구된다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "간호대학(4년) 졸업 후 간호사 국가고시에 합격하여 간호사 면허 취득[1]",
+        "보건복지부장관이 인정하는 의료기관에서 1년간 조산사 수습과정 이수[2]",
+        "한국보건의료인국가시험원 주관 조산사 국가시험 응시(조산학·신생아간호학·모자보건학·모자보건법 4과목)[3]",
+        "국가시험 합격(총점 60% 이상, 과목별 40% 이상)[4]",
+        "보건복지부장관에게 조산사 면허 신청 및 면허증 발급[5]"
+      ],
+      "recruit": [
+        "상급종합병원·종합병원·병원 분만실 조산사 채용 지원[1]",
+        "조산원 취업 또는 직접 조산원 개원(의료기관 개설 신고)[2]",
+        "산후조리원·모유수유클리닉·여성건강센터 등 취업[3]"
+      ],
+      "training": [
+        "대한조산협회 주관 조산 실무 교육·연수 및 학술대회 참가[1]",
+        "모자보건·분만 관련 의료인 보수교육 이수(의료법 규정 필수)[2]"
+      ]
+    },
+    "sidebarCerts": [
+      {"name": "조산사", "url": "https://www.kuksiwon.or.kr/subcnt/c_2006/2/view.do?seq=7"},
+      {"name": "간호사", "url": "https://www.kuksiwon.or.kr/"}
+    ],
+    "sidebarMajors": ["간호학과", "간호과", "보건관리학과"],
+    "sidebarOrgs": [
+      {"name": "대한조산협회", "url": "https://www.midwife.or.kr/"},
+      {"name": "한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"}
+    ],
+    "heroTags": ["조산사", "산파", "분만전문가", "모자보건", "신생아간호", "조산원"],
+    "youtubeLinks": [],
+    "careerTree": null,
+    "_youtubeSearchNote": "KEIS '@KEISwork2011 조산사' 검색 0건, '조산사 현직자인터뷰' 검색 0건, '조산사 직무실무' 검색 0건, '조산사 진로강의' 검색 0건, '조산사 교육영상' 검색 0건, YouTube Shorts(IH6p4eD-af4, 인생학습) 발견 — Shorts 제외. 한국어 장편 영상 없음 (2026-04-24)",
+    "_careerTreeNote": "탐색 카테고리: (1)의료계·연구, (2)방송·의료인, (3)공공·정계, (4)헬스케어스타트업, (5)보건행정. 조산사 면허 소지자 중 나무위키·위키백과 등재 공인 인물 없음. 조산사는 간호사 면허 기반 추가 자격으로 조산사 직업 자체로 유명해진 경우 극히 드물며 후보 ≥5명 확인 불가. null 처리. (2026-04-24)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 대한조산협회 — 조산사란?", "url": "https://www.midwife.or.kr/bbs/g_info01.php"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원 — 조산사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2006/2/view.do?seq=7"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] 하스피톡 — 보건의료인력 14편 조산사 알아보기", "url": "https://hospitalk.net/%EB%B3%B4%EA%B1%B4%EC%9D%98%EB%A3%8C%EC%9D%B8%EB%A0%A5-14%ED%8E%B8-%EC%A1%B0%EC%82%B0%EC%82%AC-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0/"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 하스피톡 — 보건의료인력 14편 조산사 알아보기", "url": "https://hospitalk.net/%EB%B3%B4%EA%B1%B4%EC%9D%98%EB%A3%8C%EC%9D%B8%EB%A0%A5-14%ED%8E%B8-%EC%A1%B0%EC%82%B0%EC%82%AC-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0/"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 대한조산협회 — 조산사란?", "url": "https://www.midwife.or.kr/bbs/g_info01.php"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] 하스피톡 — 보건의료인력 14편 조산사 알아보기", "url": "https://hospitalk.net/%EB%B3%B4%EA%B1%B4%EC%9D%98%EB%A3%8C%EC%9D%B8%EB%A0%A5-14%ED%8E%B8-%EC%A1%B0%EC%82%B0%EC%82%AC-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0/"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 1, "text": "[1] 대한조산협회 — 조산사란?", "url": "https://www.midwife.or.kr/bbs/g_info01.php"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 한국보건의료인국가시험원", "url": "https://www.kuksiwon.or.kr/"},
+      {"id": 2, "text": "[2] 대한조산협회 — 조산사란?", "url": "https://www.midwife.or.kr/bbs/g_info01.php"},
+      {"id": 3, "text": "[3] 한국보건의료인국가시험원 — 조산사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2006/2/view.do?seq=7"},
+      {"id": 4, "text": "[4] 한국보건의료인국가시험원 — 직종별 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2028/1/view.do?seq=7&itm_seq=26"},
+      {"id": 5, "text": "[5] 보건복지부 면허민원안내", "url": "https://lic.mohw.go.kr/"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 하스피톡 — 보건의료인력 14편 조산사 알아보기", "url": "https://hospitalk.net/%EB%B3%B4%EA%B1%B4%EC%9D%98%EB%A3%8C%EC%9D%B8%EB%A0%A5-14%ED%8E%B8-%EC%A1%B0%EC%82%B0%EC%82%AC-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0/"},
+      {"id": 2, "text": "[2] 대한조산협회 — 조산사란?", "url": "https://www.midwife.or.kr/bbs/g_info01.php"},
+      {"id": 3, "text": "[3] 데일리메디 — 조산사 면허 응시자격 확대·방문조산 법적 허용", "url": "https://www.dailymedi.com/news/news_view.php?wr_id=925969"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 대한조산협회", "url": "https://www.midwife.or.kr/"},
+      {"id": 2, "text": "[2] 한국보건의료인국가시험원 — 조산사 시험정보", "url": "https://www.kuksiwon.or.kr/subcnt/c_2006/2/view.do?seq=7"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] way·trivia·detailWlb·overviewProspect·technKnow·detailReady·사이드바 보완"
+}
