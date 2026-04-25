@@ -1,0 +1,96 @@
+{
+  "fields": {
+    "way": "인공지능서비스개발자가 되려면 컴퓨터공학·소프트웨어공학 등 이공계 관련 학과에서 학사 학위를 취득하는 것이 일반적인 진입 경로다. Python·TensorFlow·PyTorch 등 AI 프레임워크와 REST API 개발 역량을 함께 갖추고 GitHub에 AI 프로젝트 포트폴리오를 구축하는 것이 입직 준비의 핵심으로 꼽힌다.[1] 삼성청년SW아카데미(SSAFY)·소프트웨어마에스트로 등 정부 지원 교육 과정이나 AI 전문 부트캠프를 통해 실무 역량을 강화한 뒤, 네이버·카카오·삼성SDS·LG CNS 등 대형 IT 기업의 AI 서비스 개발 직군이나 생성AI 스타트업에 지원한다. 정보처리기사·빅데이터분석기사 등 국가기술자격 취득이 경쟁력을 높이는 보조 수단으로 활용된다.[2]",
+    "overviewProspect": {
+      "main": "소프트웨어정책연구소(SPRi)에 따르면 생성AI의 확산으로 단순 반복 코딩 업무를 담당하는 초급 개발자 수요는 감소하는 반면, AI를 활용하여 복잡한 서비스를 설계·구현할 수 있는 고급 AI 서비스 개발자의 수요는 증가할 것으로 전망된다.[1]"
+    },
+    "trivia": "한국소프트웨어산업협회(KOSA)가 발표한 2023년 소프트웨어산업 임금실태조사에 따르면 인공지능개발자(응용SW 직무)의 월평균임금은 712만 원(기본급·제수당·상여금·퇴직급여충당금·사업주 4대보험 포함)으로 집계됐다.[1]",
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통 이상",
+      "wlbDetail": "주로 실내 사무 환경에서 컴퓨터 작업을 수행하며 신체적으로 아주 가벼운 업무가 대부분이다. 대형 IT 기업에서는 주 52시간 근무제를 준수하고 유연 근무를 운영하는 경우가 많지만, AI 서비스 출시 일정·모델 업데이트 마감 시기에는 집중 근무가 불가피하다. 생성AI 시장의 경쟁 심화로 빠른 기능 구현이 요구될 때 실질 업무 강도가 높아지는 경향이 있다.[1]",
+      "socialDetail": "AI 챗봇·추천 시스템·검색 고도화 등 생활 밀착형 AI 서비스 개발을 통해 일상적인 사용자 편의를 직접 향상시킨다. 의료·교육·공공 분야 AI 서비스 개발에 참여할 경우 사회적 가치 창출에도 기여할 수 있다.[1]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "삼성청년SW아카데미(SSAFY) AI 심화 과정(6개월~1년)에서 Python·딥러닝·프로젝트 실습 이수[1]",
+        "소프트웨어마에스트로 연수 과정(과학기술정보통신부 주관, 1년)에서 AI 서비스 개발 역량 집중 훈련[2]",
+        "패스트캠퍼스·제로베이스 등 AI 부트캠프에서 LLM API·RAG·MLOps 실무 과정 수강[3]",
+        "정보통신산업진흥원(NIPA) K-Digital Training 빅데이터·AI 개발자 양성 과정 이수[4]",
+        "네이버 부스트캠프 AI Tech 과정에 참여하여 팀 프로젝트 기반 AI 서비스 개발 역량 강화[5]"
+      ],
+      "recruit": [
+        "네이버 공식 채용 페이지에서 AI 서비스 개발 직군 공고 검색 및 지원[1]",
+        "카카오 공식 채용 페이지에서 AI 플랫폼·서비스 개발 직군 채용공고 지원[2]",
+        "삼성SDS 공식 채용 페이지에서 AI 솔루션·클라우드 개발 직군 지원[3]"
+      ],
+      "training": [
+        "정보처리기사·빅데이터분석기사 취득을 위한 한국산업인력공단 큐넷 시험 응시[1]",
+        "데이터분석전문가(ADP)·데이터아키텍처전문가(DAP) 취득을 위한 한국데이터산업진흥원 과정 이수[2]"
+      ]
+    },
+    "overviewAbilities": {
+      "technKnow": "인공지능서비스개발자는 Python을 기반으로 TensorFlow·PyTorch 등 딥러닝 프레임워크를 활용하여 AI 모델을 개발하고 REST API로 서비스화하는 역량이 필수다. LLM(대형 언어 모델)·RAG(검색 증강 생성) 등 생성AI 기술과 Docker·Kubernetes 기반 MLOps 환경 구성, SQL·NoSQL 데이터베이스 활용 능력도 요구된다.[1]"
+    },
+    "sidebarMajors": ["컴퓨터공학과", "소프트웨어공학과", "컴퓨터과학과", "전기전자공학과", "수학과", "통계학과"],
+    "sidebarCerts": [
+      {"name": "데이터분석전문가", "url": "https://www.dataq.or.kr/www/sub/a_04.do"},
+      {"name": "데이터분석준전문가", "url": "https://www.dataq.or.kr/www/sub/a_03.do"},
+      {"name": "데이터아키텍처전문가", "url": "https://www.dataq.or.kr/www/sub/a_01.do"},
+      {"name": "데이터아키텍처준전문가", "url": "https://www.dataq.or.kr/www/sub/a_02.do"},
+      {"name": "정보관리기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1720"},
+      {"name": "정보처리기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1320"},
+      {"name": "컴퓨터시스템응용기술사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1870"},
+      {"name": "빅데이터분석기사", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=5020"}
+    ],
+    "sidebarOrgs": [
+      {"name": "한국소프트웨어산업협회(KOSA)", "url": "https://www.sw.or.kr/"},
+      {"name": "정보통신산업진흥원(NIPA)", "url": "https://www.nipa.kr/"},
+      {"name": "소프트웨어정책연구소(SPRi)", "url": "https://www.spri.kr/"}
+    ],
+    "heroTags": ["인공지능서비스개발자", "AI 서비스 개발자", "ML 엔지니어", "생성AI 개발자", "LLM 개발자", "AI 앱 개발자", "AI 백엔드 개발자"],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=bySL2wo5_ds", "title": "AI 개발자 되는 법부터 하는 일까지 다 알려드림! 삼성SDS AI 개발자 현실, 업무 💻"},
+      {"url": "https://www.youtube.com/watch?v=KIMS6szTDeo", "title": "\u201cAI 엔지니어가 말하는 개발자의 리얼 현실(feat. 연봉·이직·미래)\u201d_진술한 직업 인터뷰(21)"}
+    ],
+    "_careerTreeNote": "탐색 후보 5명: 남세동(스타트업·CxO, 보이저엑스 AI 서비스 창업자), 조원규(대기업, 카카오엔터프라이즈 전 대표 AI 플랫폼 총괄), 하정우(학계·연구, NAVER AI Lab 소장 HyperCLOVA 총괄 개발), 마광선(스타트업·CxO, 뤼이드 창업자 AI 교육서비스 개발), 이민재(스타트업·CxO, 스캐터랩 이루다 AI 챗봇 개발). 카테고리: 대기업 ✅ 스타트업·CxO ✅ 학계·연구 ✅."
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "[1] 삼성청년SW아카데미(SSAFY)", "url": "https://www.ssafy.com/ksp/jsp/swp/swpMain.jsp"},
+      {"id": 2, "text": "[2] 소프트웨어마에스트로", "url": "https://www.swmaestro.ai/sw/main/main.do"}
+    ],
+    "overviewProspect.main": [
+      {"id": 1, "text": "[1] SPRi SW개발자 채용 변화 전망", "url": "https://www.spri.kr/posts/view/23870?code=data_all"}
+    ],
+    "trivia": [
+      {"id": 1, "text": "[1] KOSA 2023 소프트웨어산업 임금실태조사", "url": "https://www.sw.or.kr/site/sw/ex/board/View.do?cbIdx=304&bcIdx=57938&searchExt1="}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 1, "text": "[1] 워크넷 인공지능서비스개발자 직업정보", "url": "https://www.work.go.kr/empInfo/empInfoSrch/list/dtlEmpSrchList.do"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 1, "text": "[1] 한국소프트웨어산업협회(KOSA)", "url": "https://www.sw.or.kr/"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 1, "text": "[1] 삼성청년SW아카데미(SSAFY) 교육과정", "url": "https://www.ssafy.com/ksp/jsp/swp/swpMain.jsp"}
+    ],
+    "detailReady.curriculum": [
+      {"id": 1, "text": "[1] 삼성청년SW아카데미(SSAFY)", "url": "https://www.ssafy.com/ksp/jsp/swp/swpMain.jsp"},
+      {"id": 2, "text": "[2] 소프트웨어마에스트로", "url": "https://www.swmaestro.ai/sw/main/main.do"},
+      {"id": 3, "text": "[3] 패스트캠퍼스", "url": "https://fastcampus.co.kr/"},
+      {"id": 4, "text": "[4] 정보통신산업진흥원(NIPA)", "url": "https://www.nipa.kr/"},
+      {"id": 5, "text": "[5] 네이버 부스트캠프 AI Tech", "url": "https://boostcamp.connect.or.kr/program_ai.html"}
+    ],
+    "detailReady.recruit": [
+      {"id": 1, "text": "[1] 네이버 채용", "url": "https://recruit.navercorp.com/"},
+      {"id": 2, "text": "[2] 카카오 채용", "url": "https://careers.kakao.com/"},
+      {"id": 3, "text": "[3] 삼성SDS 채용", "url": "https://www.samsungsds.com/kr/recruit/"}
+    ],
+    "detailReady.training": [
+      {"id": 1, "text": "[1] 한국산업인력공단 큐넷", "url": "https://www.q-net.or.kr/"},
+      {"id": 2, "text": "[2] 한국데이터산업진흥원 데이터자격검정", "url": "https://www.dataq.or.kr/"}
+    ]
+  },
+  "changeSummary": "[job-data-enhance] 17필드 보완 (way, prospect, trivia, detailWlb, detailReady, overviewAbilities.technKnow, sidebarMajors, sidebarCerts URL보완, sidebarOrgs, heroTags, youtubeLinks)"
+}
