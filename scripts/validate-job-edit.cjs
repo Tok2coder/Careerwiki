@@ -281,7 +281,7 @@ function validate(data) {
   }
 
   // heroTags 점검
-  const NOUN_EXCEPTIONS = ['강의', '설비', '기여', '처리', '관리', '설계', '분석', '개발', '운의', '합의', '회의', '정의', '위의'];
+  const NOUN_EXCEPTIONS = ['강의', '설비', '기여', '처리', '관리', '설계', '분석', '개발', '운의', '합의', '회의', '정의', '위의', '아나운서', '캐스터', '리포터', '호스트'];
 
   if (fields.heroTags) {
     const tags = Array.isArray(fields.heroTags) ? fields.heroTags : JSON.parse(fields.heroTags);
