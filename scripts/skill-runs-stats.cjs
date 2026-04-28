@@ -18,6 +18,9 @@ const args = process.argv.slice(2).reduce((acc, a) => {
 
 if (!fs.existsSync(LOG)) {
   console.log(`(${LOG} 부재 — 실행 기록 없음)`);
+  console.log(`\n⚠️ 트래킹 데이터 0건 — START_TRACKING/END_TRACKING 실행 누락 가능`);
+  console.log(`   SKILL.md Phase 0-PRE / Phase 5 끝 bash 블록 직접 실행 필수.`);
+  console.log(`   체크: ls .skill-runs/  →  tail -1 data/skill-runs.jsonl`);
   process.exit(0);
 }
 
