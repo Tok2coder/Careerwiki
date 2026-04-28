@@ -135,3 +135,8 @@ scripts/bridge.log
 
 # 자동 생성 백업 파일
 *.backup-*
+
+# skill 실행 트래킹 (START_TRACKING 임시 파일 + 영구 로그)
+.skill-runs/
+data/skill-runs.jsonl
+data/skill-runs/
