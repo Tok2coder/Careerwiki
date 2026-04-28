@@ -872,7 +872,8 @@ function validateImage(buffer) {
     checks.push(`????癲ル슣?? ????????????甕? ${(buffer.length / 1024).toFixed(0)}KB (癲ル슔?됭짆??50KB)`);
   }
 
-  // PNG ??癰궽쇱읇???源딅굇 ?嶺뚮Ĳ?됮?  const isPNG = buffer[0] === 0x89 && buffer[1] === 0x50;
+  // PNG ??癰궽쇱읇???源딅굇 ?嶺뚮Ĳ?됮?
+    const isPNG = buffer[0] === 0x89 && buffer[1] === 0x50;
   const isJPEG = buffer[0] === 0xFF && buffer[1] === 0xD8;
   const isWEBP = buffer.slice(0, 4).toString() === 'RIFF' && buffer.slice(8, 12).toString() === 'WEBP';
 
@@ -1037,7 +1038,8 @@ async function main() {
   }
 
   // ???? Phase 3: Save & Upload ????
-  // ?嶺뚮Ĳ?????濡ろ뜏???  const isPNG = imgBuffer[0] === 0x89 && imgBuffer[1] === 0x50;
+  // ?嶺뚮Ĳ?????濡ろ뜏???
+    const isPNG = imgBuffer[0] === 0x89 && imgBuffer[1] === 0x50;
   const ext = isPNG ? 'png' : 'webp';
   const fileKey = generateFileKey(effectiveType, slug, ext);
   const safeBaseName = `${effectiveType}-${slug.replace(/[/\\]/g, '_')}.${ext}`;
@@ -1061,7 +1063,8 @@ async function main() {
   fs.writeFileSync(tmpPath, imgBuffer);
   log('SAVE', `?棺??짆?쏆춾????? ${tmpPath} (${(imgBuffer.length / 1024).toFixed(0)}KB)`);
 
-  // R2 ????겾??  const uploaded = uploadToR2(tmpPath, fileKey);
+  // R2 ????겾??
+    const uploaded = uploadToR2(tmpPath, fileKey);
   if (!uploaded) {
     warn('MAIN', `R2 ????겾??????됰꽡. ?棺??짆?쏆춾?????癲ル슣?????怨뚮옖??? ${tmpPath}`);
     result.success = false;

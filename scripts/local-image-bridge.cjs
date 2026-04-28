@@ -349,7 +349,7 @@ function loadWorkflowSettings() {
   }
 }
 
-function buildComfyWorkflow(prompt, useLora) {
+function buildComfyWorkflow(prompt, useLora, customNegative = null) {
   const settings = loadWorkflowSettings();
   const workflow = {
     '1': { inputs: { unet_name: settings.unet_name, weight_dtype: settings.weight_dtype }, class_type: 'UNETLoader' },
@@ -386,8 +386,12 @@ function buildComfyWorkflow(prompt, useLora) {
   };
   const positiveId = String(nextId);
   nextId++;
+  // customNegative가 있으면 default와 합쳐 사용 (default는 quality control용 — 항상 유지)
+  const finalNegative = customNegative
+    ? `${settings.negative_prompt}, ${customNegative}`
+    : settings.negative_prompt;
   workflow[String(nextId)] = {
-    inputs: { text: settings.negative_prompt, clip: clipRef },
+    inputs: { text: finalNegative, clip: clipRef },
     class_type: 'CLIPTextEncode',
   };
   const negativeId = String(nextId);
@@ -465,7 +469,7 @@ async function generatePrompt(systemPrompt, _devVars) {
   return { prompt, source: 'ollama' };
 }
 
-async function generateComfyImage(prompt, useLora) {
+async function generateComfyImage(prompt, useLora, customNegative = null) {
   await ensureComfyUiRunning();
   // 유휴 타이머 리셋: 생성 시작 시점을 "마지막 사용"으로 기록
   comfyuiLastUsed = Date.now();
@@ -473,7 +477,7 @@ async function generateComfyImage(prompt, useLora) {
     try {
       const stats = await fetch(`${comfyUrl}/system_stats`);
       if (!stats.ok) continue;
-      const workflow = buildComfyWorkflow(prompt, useLora);
+      const workflow = buildComfyWorkflow(prompt, useLora, customNegative);
       const res = await fetch(`${comfyUrl}/prompt`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -527,12 +531,14 @@ setInterval(() => {
   }
 }, JOB_CLEANUP_INTERVAL_MS).unref();
 
-function createJob(type, slug) {
+function createJob(type, slug, customPrompt = null, customNegativePrompt = null) {
   const id = crypto.randomUUID();
   const job = {
     id,
     type,
     slug,
+    customPrompt: typeof customPrompt === 'string' && customPrompt.trim() ? customPrompt.trim() : null,
+    customNegativePrompt: typeof customNegativePrompt === 'string' && customNegativePrompt.trim() ? customNegativePrompt.trim() : null,
     status: 'queued',
     progress: '대기 중',
     startedAt: Date.now(),
@@ -556,15 +562,22 @@ async function runJob(job) {
     updateJob(job.id, { status: 'running', progress: '프롬프트 템플릿 준비 중' });
     const devVars = loadDevVars();
     const useLora = hasLoraFile();
-    const systemPrompt = job.type === 'majors'
-      ? getMajorPromptTemplate(job.slug, { useLora })
-      : getJobPromptTemplate(job.slug, { useLora });
 
-    updateJob(job.id, { progress: 'Ollama 기동 및 프롬프트 생성 중' });
-    const promptResult = await generatePrompt(systemPrompt, devVars);
+    let promptResult;
+    if (job.customPrompt) {
+      // 호출자가 prompt를 직접 전달 — Ollama 호출 skip (동음이의어 사고 방지 등에 유용)
+      updateJob(job.id, { progress: '커스텀 프롬프트 사용 — 프롬프트 생성 단계 skip' });
+      promptResult = { prompt: job.customPrompt, source: 'custom' };
+    } else {
+      const systemPrompt = job.type === 'majors'
+        ? getMajorPromptTemplate(job.slug, { useLora })
+        : getJobPromptTemplate(job.slug, { useLora });
+      updateJob(job.id, { progress: 'Ollama 기동 및 프롬프트 생성 중' });
+      promptResult = await generatePrompt(systemPrompt, devVars);
+    }
 
     updateJob(job.id, { progress: 'ComfyUI 기동 및 이미지 렌더링 중' });
-    const imageResult = await generateComfyImage(promptResult.prompt, useLora);
+    const imageResult = await generateComfyImage(promptResult.prompt, useLora, job.customNegativePrompt);
     if (!imageResult) {
       throw new Error('ComfyUI image generation returned no image (cold-start failed or LoRA missing)');
     }
@@ -691,13 +704,15 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'POST' && req.url === '/api/generate-image') {
     try {
       const body = await parseBody(req);
-      const { type, slug } = body || {};
+      const { type, slug, prompt: customPrompt, negative: customNegativePrompt } = body || {};
       if (!type || !slug || !['jobs', 'majors'].includes(type)) {
         sendJson(res, 400, { success: false, error: 'type 또는 slug가 유효하지 않습니다.' }, origin);
         return;
       }
       // 즉시 jobId 반환 + 백그라운드 실행. Cloudflare 100s edge timeout 회피.
-      const job = createJob(type, slug);
+      // body.prompt가 있으면 Ollama skip하고 그 prompt로 직접 ComfyUI 호출.
+      // body.negative가 있으면 default negative_prompt에 append (동음이의어 사고 방지 등).
+      const job = createJob(type, slug, customPrompt, customNegativePrompt);
       setImmediate(() => runJob(job));
       sendJson(res, 202, {
         success: true,
