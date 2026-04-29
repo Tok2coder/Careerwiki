@@ -54,8 +54,8 @@ for (const row of rows) {
 
   const { errors, warnings } = validate(draft);
 
-  // 새 룰 관련만 필터링
-  const newRulePatterns = ['selfDomain', 'selfCiteOnly', 'selfCite', 'listPageURL', 'brokenRef', 'orphanSrc'];
+  // 새 룰 관련만 필터링 (2026-04-29 originDomain 격상 반영)
+  const newRulePatterns = ['selfDomain', 'originDomain', 'selfCiteOnly', 'selfCite', 'listPageURL', 'brokenRef', 'orphanSrc'];
   const newErrors = errors.filter(e => newRulePatterns.some(p => e.includes(`[${p}]`)));
   const newWarns = warnings.filter(w => newRulePatterns.some(p => w.includes(`[${p}]`)));
 
