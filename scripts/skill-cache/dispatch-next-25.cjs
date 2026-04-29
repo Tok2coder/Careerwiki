@@ -28,9 +28,11 @@ const args = process.argv.slice(2).reduce((acc, a) => {
 }, {});
 
 const SKIP = parseInt(args.skip || '0');
-const PICK = 25;
+// quality > throughput — 사용자 결정 (2026-04-29 단축 사고 후): 사이클당 15 (3/세션) default
+// 기존 25 유지하려면 --per-session=5 또는 --pick=25
+const PER_SESSION = parseInt(args['per-session'] || '3');
 const SESSIONS = 5;
-const PER_SESSION = 5;
+const PICK = parseInt(args.pick || '') || (PER_SESSION * SESSIONS);
 const STAGGER = parseInt(args.stagger || '30');
 
 // 인기 cohort 우선순위 (10 cohort)

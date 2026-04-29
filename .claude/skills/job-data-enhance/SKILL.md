@@ -1469,6 +1469,36 @@ node scripts/skill-cache/auto-dedup-sweep.cjs --slug={대상_slug} --apply
 
 **효과**: 머지 사이클의 dedup 작업 자동화. 직접 처리한 9건+ (정철·김빛내리·하정우·오준호·손석희·이병헌·외환딜러·연극연출가) 같은 사고 실시간 방지.
 
+### Phase 5-AUDIT. 사후 sources 사고 감사 (Phase 5-DEDUP 직후, END_TRACKING 직전) ⚠️ **신규 룰 (2026-04-29 단축 사고 후 추가)**
+
+각 직업 enhance 사이클 종료 직전, 본 직업의 _sources에 사고 패턴 (mojibake·[N] prefix·raw URL·marker mapping 누락)이 잔존하는지 자동 감사. PASS 받기 전 **종료 금지**.
+
+```bash
+# 본 직업만 audit
+node scripts/skill-cache/audit-sources.cjs --pattern=mojibake --json | grep "{대상_slug}"
+node scripts/skill-cache/audit-sources.cjs --pattern=bracket_prefix --json | grep "{대상_slug}"
+node scripts/skill-cache/audit-sources.cjs --pattern=raw_url --json | grep "{대상_slug}"
+node scripts/skill-cache/audit-sources.cjs --pattern=sources_NULL --json | grep "{대상_slug}"
+```
+
+**판정**:
+- 4 패턴 모두 0건 → PASS (END_TRACKING 진행)
+- 1+ 패턴 본 직업 발견 → **즉시 Phase 1 다시** (단축 처리 절대 금지)
+  - mojibake → UCJ 본문·sources 한글 새로 작성 + Node.js fetch UTF-8
+  - bracket_prefix → text의 `[N] ` prefix 제거 후 재저장
+  - raw_url → text를 기관명으로 변경
+  - sources_NULL → _sources 객체 신규 작성
+
+**🚫 minimal POST 절대 금지** (사용자 신뢰 회복 작업 — 2026-04-29 사고 교훈):
+- 토큰 제약 = 단축 사유 절대 안 됨
+- 1 직업 개별 처리해도 OK, 9 직업 한 번에 못 하면 1개씩 처리 후 다음
+- validate PASS ≠ 작업 끝. **Phase 5-AUDIT도 PASS 받아야 종료 가능**
+- context 부족하면 SKILL.md 다시 read 후 재작성
+
+**🛑 validate-job-edit.cjs `[minimalPOST]` FAIL** (commit 2026-04-29):
+- changeSummary에 [job-data-enhance] 마커만 있고 fields/sources 비어있으면 즉시 FAIL
+- 단축 처리 사고 시 server-side에서 차단됨
+
 ### END_TRACKING (skill 1회 실행 시간·결과 영구 로그) ⚠️ **필수 실행 단계 — bash 명령 직접 실행 (참고 예시 아님)**
 
 Phase 5 수선까지 모두 완료된 직후, 1회 enhance 작업의 결과를 `data/skill-runs.jsonl`에 append하고 임시 start 파일을 정리한다. 실패해도 다음 사이클에 영향 없음 (stale start 파일은 분석기가 무시).

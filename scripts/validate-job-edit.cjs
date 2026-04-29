@@ -55,6 +55,20 @@ function validate(data) {
 
   const { fields = {}, sources = {}, careerTree, changeSummary } = data;
 
+  // ── 0-PRE. Minimal POST 차단 (단축 처리 사고 방지, 2026-04-29) ──
+  // changeSummary에 [job-data-enhance] 마커만 있고 fields가 비어 있거나
+  // 1-2개 trivial 변경만이면 단축 처리로 간주하여 FAIL.
+  const isEnhanceMarker = typeof changeSummary === 'string' && /\[(job|major)-data-enhance\]/.test(changeSummary);
+  if (isEnhanceMarker) {
+    const fieldKeys = Object.keys(fields).filter(k => fields[k] !== null && fields[k] !== undefined && fields[k] !== '');
+    const sourceKeys = Object.keys(sources).filter(k => sources[k] && (Array.isArray(sources[k]) ? sources[k].length > 0 : true));
+    if (fieldKeys.length === 0 && sourceKeys.length === 0) {
+      errors.push(`[minimalPOST] changeSummary에 [job-data-enhance] 마커만 있고 fields/sources 모두 비어있음 — minimal POST는 단축 처리로 간주, 풀 사이클 Phase 0~5 강제`);
+    } else if (fieldKeys.length <= 1 && sourceKeys.length === 0) {
+      warnings.push(`[minimalPOST?] fields ${fieldKeys.length}개 + sources 0개 — trivial 변경 의심. enhance가 풀 사이클이면 17필드 보강이 정상`);
+    }
+  }
+
   // ── 0. Mojibake (인코딩 깨짐) 사전 탐지 ──
   // Windows curl CP949 오류 등으로 한글이 아랍/키릴/라틴확장 문자로 깨진 경우를 즉시 차단.
   // fields 내 모든 문자열 필드 + sources 내 text 값을 검사한다.
