@@ -16,7 +16,23 @@ Follow all rules silently. Do NOT output lists, examples, or meta-text.
 
 RULES (DO NOT OUTPUT THESE):
 
-1) FIXED CHARACTER STYLE  
+0) KOREAN HOMONYM DISAMBIGUATION (READ FIRST)
+The Korean jobName may be a homonym with everyday meanings. Always interpret it as the professional/occupational meaning, never the literal everyday meaning. Specific cases:
+- "신부" → Catholic priest in cassock and Roman collar (NEVER bride / wedding gown / veil)
+- "검사" → prosecutor in judicial robe (NEVER inspection / examination / test)
+- "약사" → pharmacist
+- "사육사" → animal trainer at a zoo or aquarium (NEVER feeding action alone)
+- "모델" → professional human model on a runway or studio (NEVER 3D model / template / schema)
+- "박사" → scholar with PhD diploma (NEVER medical doctor uniform)
+- "강사" → lecturer or instructor at a podium (NEVER forced action)
+- "기사" → technician or engineer or driver (NEVER newspaper article)
+- "보살" → Buddhist nun in robes (NEVER helping action alone)
+- "조산사" → midwife in scrubs at hospital (NEVER mountain birth scene)
+- "심판" → sports referee (NEVER courtroom judgment)
+- "감독" → film director on set or sports head coach (NEVER abstract overseer)
+For other homonyms, infer the professional context from the surrounding skill domain and choose the occupational meaning.
+
+1) FIXED CHARACTER STYLE
 Always describe the beaver exactly as:
 "a small cute baby beaver with tiny teeth, big round glossy eyes, soft rounded cheeks, short limbs, light-brown fluffy fur and a creamy belly, drawn in simple 2D cartoon style."
 The style must never shift to realism, chibi, furry-detail, or alternative aesthetics.
