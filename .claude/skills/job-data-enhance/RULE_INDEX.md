@@ -532,20 +532,30 @@ Windows 환경에서 `curl -d`로 한글 텍스트를 전송할 때 CP949 인코
 | scripts/validate-job-edit.cjs — `[selfDomain]` | 🔒 코드 | **FAIL** |
 | scripts/_shared/detect-patterns.cjs — `classifySourceHosts` (SELF_DOMAINS) | ✅ 정규 (코드) | — |
 
-### 14-B. `[selfCiteOnly]` — origin 도메인 단독 인용 금지 (FAIL)
+### 14-B. `[originDomain]` — origin 도메인 1건이라도 절대 금지 (FAIL) ⚠️ **2026-04-29 격상**
 
-`career.go.kr` / `work.go.kr` / `work24.go.kr` / `job.go.kr` 만으로 _sources를 채우면
-외부 보충 출처 0 — selfCiteOnly FAIL. 외부 host 1개 이상 동반 필수.
+기존 `[selfCiteOnly]` (외부 보충 1+ 있으면 통과) 정책 폐기. 1건이라도 origin 도메인 사용하면 FAIL.
+
+**검출 대상**:
+- 명시 도메인: `career.go.kr` / `work.go.kr` / `work24.go.kr` / `wagework.go.kr` / `job.go.kr`
+- Heuristic: `*.go.kr` + path keyword (`job`/`career`/`work`/`wage`/`employ`)
+
+**격상 계기**: 의료코디네이터 `wagework.go.kr` 사고 (사용자 직접 발견, 외부 보충 충분했지만 origin 섞여 있음)
 
 | 위치 | 유형 | 참조 |
 |------|------|------|
 | SKILL.md — ⚡핵심 기술 규칙 표 | ✅ 정규 | — |
-| SKILL.md — 출처 수집 규칙 (origin 정의) | 📎 참조 | → 핵심 규칙 표 |
-| references/sources.md — origin 도메인 섹션 | 📎 참조 | → 핵심 규칙 표 |
-| scripts/validate-job-edit.cjs — `[selfCiteOnly]` | 🔒 코드 | **FAIL** |
-| scripts/_shared/detect-patterns.cjs — `classifySourceHosts` (ORIGIN_DATA_DOMAINS) | ✅ 정규 (코드) | — |
+| SKILL.md — 출처 수집 규칙 (origin 정의 + 격상 노트) | 📎 참조 | → 핵심 규칙 표 |
+| references/sources.md — origin 도메인 섹션 (절대 금지) | 📎 참조 | → 핵심 규칙 표 |
+| scripts/validate-job-edit.cjs — `[originDomain]` | 🔒 코드 | **FAIL** |
+| scripts/_shared/detect-patterns.cjs — `detectOriginDomain` + `DEFINITE_ORIGIN_HOSTS` + `ORIGIN_PATH_KEYWORDS` | ✅ 정규 (코드) | — |
+| scripts/skill-cache/audit-sources-deep.cjs — `originDomain` 카운팅 | 🔒 코드 (audit) | — |
 
-**기존 데이터**: 마커 풀 325개 중 10건 위반 (3%). 재enhance 시 외부 보충 추가.
+**기존 데이터**: 마커 풀 325개 중 196건 위반 (60%). 재enhance 시 origin 출처 모두 외부 1차 출처로 교체.
+
+### 14-B-legacy. `[selfCiteOnly]` (deprecated)
+
+기존 룰 (외부 보충 1+ 있으면 통과)은 14-B 격상으로 의미 없음. validate에서 제거됨. audit 도구는 호환을 위해 카운팅만 유지.
 
 ### 14-C. `[listPageURL]` — 인덱스/카테고리 URL 차단 (FAIL)
 

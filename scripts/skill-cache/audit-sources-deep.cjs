@@ -11,16 +11,18 @@
 //   node scripts/skill-cache/audit-sources-deep.cjs --max-urls=10         (URL 수 ≤ 10 풀만)
 //   node scripts/skill-cache/audit-sources-deep.cjs --out=data/audit-sources-deep.json
 //
-// 패턴:
+// 패턴 (2026-04-29 originDomain 격상):
 //   1) dup body markers — 한 필드 안에 같은 [N] 2회+
 //   2) orphanSrc        — _sources idx 등록됐는데 본문 [N] 없음
-//   3) selfCite         — _sources URL이 career.go.kr / work.go.kr / careerwiki.org 등 자기 데이터 origin
-//   4) selfCiteOnly     — 외부 출처 0개 (origin/self만 있음)
-//   5) listPage         — _sources URL이 인덱스/카테고리 페이지 (seq/code 없는 인덱스)
-//   6) rawURL           — _sources[i].text가 raw URL로 시작
-//   7) brokenRef        — 본문 [N] 있는데 _sources에 매핑 없음
-//   8) bracketPrefix    — _sources[i].text가 [N] 마커로 시작
-//   9) mojibake         — 깨진 유니코드(아랍·키릴·라틴확장 등)
+//   3) originDomain     — _sources URL이 career.go.kr/work.go.kr/wagework.go.kr/work24.go.kr/job.go.kr
+//                          또는 .go.kr + 직업정보 path keyword (1건이라도 사고)
+//   4) selfCite (legacy)— originDomain의 별칭 — 호환을 위해 카운팅만 유지
+//   5) selfCiteOnly (legacy) — 외부 host 0 + originDomain — 격상 후엔 originDomain≥1로 통합
+//   6) listPage         — _sources URL이 인덱스/카테고리 페이지 (seq/code 없는 인덱스)
+//   7) rawURL           — _sources[i].text가 raw URL로 시작
+//   8) brokenRef        — 본문 [N] 있는데 _sources에 매핑 없음
+//   9) bracketPrefix    — _sources[i].text가 [N] 마커로 시작
+//   10) mojibake        — 깨진 유니코드(아랍·키릴·라틴확장 등)
 
 'use strict';
 
@@ -33,11 +35,12 @@ const {
   detectMojibake,
   detectListPageUrl,
   classifySourceHosts,
+  detectOriginDomain,
   detectOrphanSourceIdx,
   detectBrokenSourceRef,
   detectSourceIdxGap,
   SELF_DOMAINS,
-  ORIGIN_DATA_DOMAINS,
+  DEFINITE_ORIGIN_HOSTS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
 
 const args = process.argv.slice(2).reduce((acc, a) => {
@@ -95,8 +98,9 @@ function analyzeJob(slug, ucjStr) {
     slug,
     dupMarkers: [],       // [{field, marker, count}]
     orphanSrc: [],        // [{field, idx}]
-    selfCite: [],         // [{field, url, host, kind:'origin'|'self'}]
-    selfCiteOnly: false,  // boolean (전체 _sources에 외부 host 0)
+    originDomain: [],     // [{field, url, host}] — 2026-04-29 격상
+    selfCite: [],         // [{field, url, host, kind:'origin'|'self'}] — 호환용 (originDomain과 거의 동일)
+    selfCiteOnly: false,  // boolean — 격상 후엔 originDomain.length>0이면 의미 동일
     listPage: [],         // [{field, url}]
     rawURL: [],           // [{field, idx, text}]
     brokenRef: [],        // [{field, idx}]
@@ -166,13 +170,14 @@ function analyzeJob(slug, ucjStr) {
         findings.listPage.push({ field: fieldKey, url: src.url });
       }
 
-      // selfCite (origin or self host)
+      // originDomain (격상) + selfCite legacy 카운팅
       if (src.url) {
         try {
           const host = new URL(src.url).host.toLowerCase();
           if (SELF_DOMAINS.includes(host)) {
             findings.selfCite.push({ field: fieldKey, url: src.url, host, kind: 'self' });
-          } else if (ORIGIN_DATA_DOMAINS.includes(host)) {
+          } else if (detectOriginDomain(src.url)) {
+            findings.originDomain.push({ field: fieldKey, url: src.url, host });
             findings.selfCite.push({ field: fieldKey, url: src.url, host, kind: 'origin' });
           }
         } catch {}
@@ -228,8 +233,9 @@ function summarize(jobs) {
     total_jobs: jobs.length,
     dupMarkers: 0,
     orphanSrc: 0,
-    selfCite: 0,
-    selfCiteOnly: 0,
+    originDomain: 0,   // 2026-04-29 격상
+    selfCite: 0,        // legacy (originDomain과 거의 동일)
+    selfCiteOnly: 0,    // legacy
     listPage: 0,
     rawURL: 0,
     brokenRef: 0,
@@ -242,6 +248,7 @@ function summarize(jobs) {
   for (const j of jobs) {
     if (j.dupMarkers.length > 0) counts.dupMarkers++;
     if (j.orphanSrc.length > 0) counts.orphanSrc++;
+    if (j.originDomain.length > 0) counts.originDomain++;
     if (j.selfCite.length > 0) counts.selfCite++;
     if (j.selfCiteOnly) counts.selfCiteOnly++;
     if (j.listPage.length > 0) counts.listPage++;
@@ -252,7 +259,8 @@ function summarize(jobs) {
     if (j.sourcesNull) counts.sourcesNull++;
     if (j.idxGap) counts.idxGap++;
 
-    const anyIssue = j.dupMarkers.length > 0 || j.orphanSrc.length > 0 || j.selfCite.length > 0 ||
+    const anyIssue = j.dupMarkers.length > 0 || j.orphanSrc.length > 0 ||
+      j.originDomain.length > 0 || j.selfCite.length > 0 ||
       j.selfCiteOnly || j.listPage.length > 0 || j.rawURL.length > 0 ||
       j.brokenRef.length > 0 || j.bracketPrefix.length > 0 || j.mojibake.length > 0 ||
       j.sourcesNull || j.idxGap;
@@ -322,10 +330,11 @@ function main() {
   console.log(`이슈 없음:     ${summary.clean} (${summary.total_jobs > 0 ? Math.round(summary.clean / summary.total_jobs * 100) : 0}%)\n`);
   console.log(`패턴별 위반 직업 수:`);
   const order = [
+    ['originDomain', '🚨 origin 도메인 1건+ (career/work/wagework/job .go.kr)'],
     ['dupMarkers',   '한 필드 내 같은 [N] 중복'],
     ['orphanSrc',    '_sources idx 등록됐는데 본문 [N] 없음'],
-    ['selfCite',     'career.go.kr / work.go.kr 자기 origin 인용'],
-    ['selfCiteOnly', '외부 출처 0개 (origin/self만)'],
+    ['selfCite',     '(legacy) origin 인용 — originDomain과 거의 동일'],
+    ['selfCiteOnly', '(legacy) 외부 출처 0개'],
     ['listPage',     '인덱스 페이지 URL'],
     ['rawURL',       'sources.text가 raw URL'],
     ['brokenRef',    '본문 [N]에 _sources 매핑 없음'],
