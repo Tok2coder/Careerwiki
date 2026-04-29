@@ -180,26 +180,41 @@ WHERE entity_type='job' AND entity_id=CAST(? AS TEXT)
 - 예: 보건교사 sidebarJobs를 UCJ로만 보면 "누락" 판정. 그러나 merged엔 25개 항목 보유 (api 측 채움). false positive 발생.
 - 페이지 렌더링에 사용되는 실제 데이터는 `merged_profile_json` (api + user + admin 통합본).
 
-**필드 진단 표준 SQL 패턴**:
+**필드 진단 표준 SQL 패턴** ⚠️ **type별 length 기반 검사 필수**:
 ```sql
 SELECT slug,
   json_type(merged_profile_json, '$.{field}') AS field_type,
-  json_array_length(merged_profile_json, '$.{field}') AS field_count
+  json_array_length(merged_profile_json, '$.{field}') AS field_count,
+  length(json_extract(merged_profile_json, '$.{field}')) AS field_text_len
 FROM jobs WHERE slug = ?;
 ```
-- `field_type` = NULL → 진짜 누락 (필드 자체 부재)
-- `field_type` = 'array' AND `field_count` = 0 → 빈 배열 (효과적 누락)
-- `field_type` = 'array' AND `field_count` < 권장치 → 권장 미달
+
+**판정 룰 (type 분기)**:
+- `field_type = NULL` → 진짜 누락 (필드 자체 부재)
+- `field_type = 'array'`:
+  - `field_count = 0` → 빈 배열 (효과적 누락)
+  - `field_count < 권장치` → 권장 미달
+- `field_type = 'text'` (string):
+  - `field_text_len < 권장 길이` → 텍스트 부실
+  - `field_text_len ≥ 권장 길이` → 충실 (보강 불필요)
+- `field_type = 'object'` (예: overviewProspect.main): 하위 키별 별도 진단
+
+⚠️ **text 형식 필드를 `json_array_length`로만 검사하면 항상 0 반환 → false positive 다발**.
+실제 사례 (2026-04-29): trivia가 text 형식인 통역가/호텔지배인/여행안내원이 "trivia=0" 오진단됨. 실제 length 100~250자 충실. **type 검사 + length 분기 필수**.
 
 **필드별 권장 임계치**:
-| 필드 | 권장 ≥ | 비고 |
-|---|---|---|
-| sidebarJobs | 3 | 관련 직업 |
-| sidebarMajors | 2 | 관련 전공 |
-| sidebarCerts | 2 | object 배열 `[{name, url}]` |
-| sidebarOrgs | 3 | object 배열 |
-| heroTags | 4~8 | 직업 키워드 |
-| youtubeLinks | 2 | object 배열 |
+| 필드 | 권장 ≥ | 형식 | 비고 |
+|---|---|---|---|
+| sidebarJobs | 3 | array | 관련 직업 |
+| sidebarMajors | 2 | array | 관련 전공 |
+| sidebarCerts | 2 | array | object 배열 `[{name, url}]` |
+| sidebarOrgs | 3 | array | object 배열 |
+| heroTags | 4~8 | array | 직업 키워드 |
+| youtubeLinks | 2 | array | object 배열 |
+| **trivia** | **80자** | **text** | **string text — array 아님. length 검사** |
+| way | 150자 | text | string text |
+| detailReady | 200자 | text | string text |
+| overviewSalary.sal | 50자 | text | string text |
 
 **URL null 검사** (sidebarCerts/sidebarOrgs object 배열): 항목 중 `url` 미지정/null이면 **데이터 부실** 별도 표기. 권장치 충족이라도 url null이면 보강 대상.
 
