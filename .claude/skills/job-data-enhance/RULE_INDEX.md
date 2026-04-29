@@ -17,6 +17,36 @@
 
 ---
 
+## 0. 진단 정확도 + 작업 모드
+
+### 0-MODE. 부분 보강 모드 (`--field-only=<csv>`)
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| SKILL.md — Phase 0-MODE (L146) | ✅ 정규 | — |
+
+`[job-data-enhance]` 마커 보유 직업에 한해 단일/일부 필드만 보강.
+Phase 0 진단·Phase 1 다른 필드·Phase 3.6 careerTree 생성 SKIP.
+Phase 1 해당 필드 + Phase 2 검증 + Phase 3 저장 + Phase 5 수선 실행.
+
+마커 미보유 직업은 **풀 사이클 강제** (Phase 0~5 전체).
+
+토큰 효율 ~5x (50K → 10K 추정). Preservation Contract + START/END_TRACKING 동일 적용.
+
+### 0-A. `merged_profile_json` 강제 (UCJ 단독 진단 금지)
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| SKILL.md — Phase 0-DIAG (L146) | ✅ 정규 | — |
+| 메모리 — feedback_uses_merged_profile_json | 📎 참조 | → 정규 위치 |
+
+진단·필드 누락 검사·권장치 미달 분석은 **항상 `merged_profile_json` 기준**.
+`user_contributed_json` 단독 진단은 api_data 측 보유 필드를 false positive로 분류 (보건교사·재활의학과·조산사·공예가·게임시나리오작가 등 8회+ 사고 발생). 2026-04-28 도입.
+
+`json_type` + `json_array_length` 사용. 권장 임계치(sj≥3/sm≥2/sc≥2/so≥3/ht 4~8/yt≥2). URL null 검사 별도 표기.
+
+---
+
 ## 1. 필드 타입 규칙
 
 ### 1-A. `way` — 반드시 string (배열 금지)

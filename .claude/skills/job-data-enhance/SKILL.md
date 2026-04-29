@@ -143,6 +143,74 @@ echo "{\"slug\":\"$SLUG\",\"session_id\":\"$SESSION_ID\",\"start_ts\":\"$START_T
 
 > 이 파일은 `.gitignore`로 보호된다. END_TRACKING이 정상 종료되면 자동 삭제. 실패 시에도 다음 사이클의 분석에 영향 없음(stale 파일 무시).
 
+### 0-MODE. 작업 모드 — 풀 사이클 vs 부분 보강
+
+**기본**: 풀 사이클 (Phase 0~5 모두 강제). 첫 enhance 또는 신규 직업.
+
+**부분 보강 모드** (`--field-only=<csv>`): `[job-data-enhance]` 마커 보유 직업에 한해 단일 또는 일부 필드만 추가/갱신. Phase 0 진단·Phase 1 다른 필드 작성·Phase 3.6 careerTree 생성 SKIP. Phase 1 해당 필드 + Phase 2 검증 + Phase 3 저장 + Phase 5 수선만 실행.
+
+**사용 조건** (필수 사전 검증):
+```sql
+-- 마커 사전 체크
+SELECT COUNT(*) FROM page_revisions
+WHERE entity_type='job' AND entity_id=CAST(? AS TEXT)
+  AND change_summary LIKE '%[job-data-enhance]%';
+```
+- 결과 ≥ 1: 부분 보강 모드 사용 가능
+- 결과 = 0: **풀 사이클 강제** (Phase 0~5 전체)
+
+**예시 사용**:
+- `--field-only=sidebarOrgs,sidebarCerts` (이미 enhance된 직업에 sidebar 보강만)
+- `--field-only=youtubeLinks` (YouTube만 추가)
+- `--field-only=careerTree` (이미 enhance된 직업에 careerTree만 추가)
+
+**효과 추정**: 풀 사이클 ~50K 토큰 → 부분 보강 ~10K 토큰 (5x 효율). 단일 필드 추가 시 Phase 1 다른 필드 검증·각주 재계산 등 부담 제거.
+
+**주의**:
+- 0-DIAG 룰은 부분 모드에서도 적용 (`merged_profile_json` 기준 보유 필드 점검 후 누락만 추가)
+- 0-PRE START_TRACKING + Phase 5 END_TRACKING은 부분 모드에서도 필수 실행
+- 보강 대상 외 필드 절대 덮어쓰기 금지 (Preservation Contract 동일 적용)
+
+### 0-DIAG. 진단 정확도 룰 ⚠️ **반드시 `merged_profile_json` 기준** (UCJ 단독 금지)
+
+**원칙**: 진단·필드 누락 검사·권장치 미달 분석은 **항상 `merged_profile_json` 기준**. `user_contributed_json` 단독 사용 절대 금지.
+
+**왜 중요한가** (반복 사고 8회+ 후 도입, 2026-04-28):
+- `user_contributed_json`은 user 측 편집분만 보유. api_data_json(공공 데이터)이 채운 필드는 보이지 않음.
+- 예: 보건교사 sidebarJobs를 UCJ로만 보면 "누락" 판정. 그러나 merged엔 25개 항목 보유 (api 측 채움). false positive 발생.
+- 페이지 렌더링에 사용되는 실제 데이터는 `merged_profile_json` (api + user + admin 통합본).
+
+**필드 진단 표준 SQL 패턴**:
+```sql
+SELECT slug,
+  json_type(merged_profile_json, '$.{field}') AS field_type,
+  json_array_length(merged_profile_json, '$.{field}') AS field_count
+FROM jobs WHERE slug = ?;
+```
+- `field_type` = NULL → 진짜 누락 (필드 자체 부재)
+- `field_type` = 'array' AND `field_count` = 0 → 빈 배열 (효과적 누락)
+- `field_type` = 'array' AND `field_count` < 권장치 → 권장 미달
+
+**필드별 권장 임계치**:
+| 필드 | 권장 ≥ | 비고 |
+|---|---|---|
+| sidebarJobs | 3 | 관련 직업 |
+| sidebarMajors | 2 | 관련 전공 |
+| sidebarCerts | 2 | object 배열 `[{name, url}]` |
+| sidebarOrgs | 3 | object 배열 |
+| heroTags | 4~8 | 직업 키워드 |
+| youtubeLinks | 2 | object 배열 |
+
+**URL null 검사** (sidebarCerts/sidebarOrgs object 배열): 항목 중 `url` 미지정/null이면 **데이터 부실** 별도 표기. 권장치 충족이라도 url null이면 보강 대상.
+
+**skill 룰 차단 필드 명시**:
+- `overviewSalary`(sal/wage/wageSource) 전체: `[sal-수정금지]` 차단 → sal=NULL 직업은 sal 보강 보류, 다른 누락만 작업.
+
+**`user_contributed_json` 단독 사용이 적절한 경우**:
+- 사용자 편집 흔적 추적 (`user_last_updated_at`)
+- skill 자체 작성 history 검증 (`_sources` 확인)
+- 본 skill 외부의 ETL/audit 작업 (api_data 무시 의도)
+
 ### 0-A. 대상 선택
 
 유저가 직업을 지정하면 해당 직업 조회, 아니면 아래 SQL로 선별:
