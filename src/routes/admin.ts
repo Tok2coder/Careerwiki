@@ -1034,7 +1034,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND image_url IS NOT NULL AND image_url != '' AND image_url NOT LIKE '/uploads/%' AND image_url NOT LIKE 'https://%' AND image_url NOT LIKE 'http://%'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$.way') IS NOT NULL AND length(json_extract(user_contributed_json,'$.way')) > 20 AND json_extract(user_contributed_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세]' AND json_extract(user_contributed_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세][[]*[]]'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(user_contributed_json,'$._sources')) > 0 AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND (json_extract(user_contributed_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(user_contributed_json,'$.youtubeLinks')) < 3)`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND (json_extract(user_contributed_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(user_contributed_json,'$.youtubeLinks')) = 0) AND (json_extract(user_contributed_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(user_contributed_json,'$._youtubeSearchNote'))=0)`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(DISTINCT entity_id) as count FROM page_revisions WHERE entity_type = ? AND change_summary LIKE ?`).bind(entityType, skillMarkerLike).first<{ count: number }>(),
     ])
 
@@ -1130,7 +1130,11 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
         srcOrderBad = !firstText.includes('커리어넷') && !firstText.toLowerCase().includes('career')
       }
 
-      const ytLow = youtubeCount < 3
+      // YT 권장치는 SKILL.md L489에 따라 1-3개 (1+가 충분).
+      // 명시적 _youtubeSearchNote가 있으면 yt=0도 의도된 스킵으로 간주.
+      // 따라서 ytLow는 yt=0이면서 note 없는 경우만 (= 진짜 누락).
+      const hasYoutubeSearchNote = typeof parsed._youtubeSearchNote === 'string' && parsed._youtubeSearchNote.length > 0
+      const ytLow = youtubeCount === 0 && !hasYoutubeSearchNote
       const skillLastAppliedAt = skillAppliedMap.get(row.id) ?? null
       const skillApplied = skillLastAppliedAt !== null
 

@@ -63,7 +63,7 @@ export interface JobEqualizeItem {
   imageUrlBad: boolean    // image_url 포맷 오류 (경고)
   wayTrunc: boolean       // way 잘린 텍스트 의심 (주의)
   srcOrderBad: boolean    // _sources 첫 항목이 커리어넷 아님 (주의)
-  ytLow: boolean          // youtubeLinks 3개 미만 (주의)
+  ytLow: boolean          // youtubeLinks 0개 + _youtubeSearchNote 없음 (진짜 누락, 주의)
 }
 
 export interface QualityAlerts {
