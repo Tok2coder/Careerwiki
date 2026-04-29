@@ -302,6 +302,180 @@ function detectTriviaInlineFootnote(trivia) {
   return null;
 }
 
+// ── 룰 E: list-page citation 탐지 (2026-04-29) ─────────────────────────────────
+//
+// _sources URL이 직업 specific 페이지가 아닌 인덱스/카테고리 페이지인지 검사.
+// CareerWiki의 출처는 반드시 해당 직업 고유 식별자(seq/code/id)를 포함한 URL이어야 함.
+// (이미 검색결과 페이지는 SEARCH_RESULT_PATTERNS로 차단되지만, "직업 인덱스 페이지"는 별도)
+//
+// 사례 (사용자 deep audit, 2026-04-29):
+//   - https://www.career.go.kr/cloud/w/job          ← 인덱스 (seq 없음)
+//   - https://www.career.go.kr/cnet/front/base/job/jobList.do  ← 리스트
+//   - https://www.work.go.kr/empInfo/jobInfo/jobList.do        ← 리스트
+//   - https://www.q-net.or.kr/crf005.do (id 없음)
+//
+// @param {string} url - 검사할 URL 문자열
+// @returns {boolean} list-page 의심이면 true (FAIL 신호)
+const LIST_PAGE_PATTERNS = [
+  // 커리어넷 신형/구형 직업/전공 인덱스 (seq/SEQ 파라미터 없음)
+  /^https?:\/\/(www\.)?career\.go\.kr\/cloud\/w\/(job|major)\/?(\?(?!.*\bseq=)[^#]*)?(\#.*)?$/i,
+  /^https?:\/\/(www\.)?career\.go\.kr\/cnet\/front\/base\/(job|major)\/(jobList|majorList|jobView|majorView)\.do(\?(?!.*\bSEQ=)[^#]*)?(\#.*)?$/i,
+  // 워크넷 직업 인덱스 (jobsCd 없음)
+  /^https?:\/\/(www\.)?work\.go\.kr\/empInfo\/jobInfo\/(jobInfoDetailView|jobList)\.do(\?(?!.*\bjobsCd=)[^#]*)?(\#.*)?$/i,
+  // 워크넷/고용24 자격·임금 정보 인덱스 (jobsCd 또는 식별자 없음)
+  /^https?:\/\/(www\.)?work\.go\.kr\/empInfo\/wageJobInfo\/wageJobInfoDetailView\.do(\?(?!.*\bjobsCd=)[^#]*)?(\#.*)?$/i,
+  // 마지막 path 세그먼트가 list/category/index 류 (식별자 없는 인덱스)
+  /^https?:\/\/[^\/]+\/[^?#]*\/(list|listView|category|index|main)\/?(\?[^#]*)?(\#.*)?$/i,
+  // Q-Net 자격증 인덱스 (jmCd 또는 id 없음)
+  /^https?:\/\/(www\.)?q-net\.or\.kr\/crf005\.do(\?(?!.*\b(jmCd|id)=)[^#]*)?(\#.*)?$/i,
+  // 사람인/잡코리아 카테고리 인덱스 (cat_kewd, occupation 등)
+  /^https?:\/\/(www\.)?(saramin|jobkorea)\.co\.kr\/(zf_user\/)?[^?#]*\/(jobs|job-category|recruit-list)(\?[^#]*)?(\#.*)?$/i,
+];
+
+function detectListPageUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  return LIST_PAGE_PATTERNS.some(p => p.test(url));
+}
+
+// ── 룰 F: 자기 인용 (self-cite) 탐지 ───────────────────────────────────────────
+//
+// CareerWiki는 career.go.kr / work.go.kr 등 공공 직업포털 데이터를 원본으로 가져온다.
+// 이 도메인을 출처로 쓰면 "자기 인용"이 되어 정보 가치가 낮아진다.
+// 정책 (2026-04-29):
+//   - careerwiki.org / careerwiki.kr — 자기 도메인 절대 금지 (FAIL)
+//   - career.go.kr / work.go.kr / work24.go.kr / job.go.kr — 허용하되 외부 보충 1개 이상 필수
+//   - 위 도메인만 있고 외부 host 0개 → FAIL (selfCiteOnly)
+//
+// @param {Array<{url:string}>} sourceArr - _sources의 한 필드 또는 평탄화된 전체 source 배열
+// @returns {{selfHostCount:number, originHostCount:number, externalHostCount:number,
+//             externalHosts:string[], hasSelfDomain:boolean, allUrls:string[]}}
+const SELF_DOMAINS = ['careerwiki.org', 'careerwiki.kr', 'www.careerwiki.org', 'www.careerwiki.kr'];
+const ORIGIN_DATA_DOMAINS = [
+  'career.go.kr', 'www.career.go.kr',
+  'work.go.kr', 'www.work.go.kr',
+  'work24.go.kr', 'www.work24.go.kr',
+  'job.go.kr', 'www.job.go.kr',
+];
+
+function classifySourceHosts(sourceArr) {
+  const all = Array.isArray(sourceArr) ? sourceArr : [];
+  const allUrls = [];
+  const hosts = new Set();
+  let selfHostCount = 0;
+  let originHostCount = 0;
+  let externalHostCount = 0;
+  let hasSelfDomain = false;
+  const externalHosts = new Set();
+
+  for (const src of all) {
+    if (!src || typeof src !== 'object' || !src.url) continue;
+    let host = '';
+    try {
+      host = new URL(src.url).host.toLowerCase();
+    } catch {
+      continue;
+    }
+    allUrls.push(src.url);
+    hosts.add(host);
+    if (SELF_DOMAINS.includes(host)) {
+      hasSelfDomain = true;
+      selfHostCount++;
+    } else if (ORIGIN_DATA_DOMAINS.includes(host)) {
+      originHostCount++;
+    } else {
+      externalHostCount++;
+      externalHosts.add(host);
+    }
+  }
+
+  return {
+    selfHostCount,
+    originHostCount,
+    externalHostCount,
+    externalHosts: [...externalHosts],
+    hasSelfDomain,
+    allUrls,
+    uniqueHostCount: hosts.size,
+  };
+}
+
+// ── 룰 G: orphan source idx 탐지 ───────────────────────────────────────────────
+//
+// 본문 [N]은 *field-local* 번호이고 detailTemplateUtils.applyInlineFootnotes에서
+// footnoteMap을 통해 글로벌 번호로 변환된다. 즉 본문 [N] ↔ _sources[fieldKey][N-1].
+// (sources[i].id의 값과 무관하게 배열 위치 기준)
+//
+// orphan: _sources[fieldKey] 배열 길이가 N인데 본문에 [N]으로 등장하지 않는
+// 'i+1' (i.e. 등록만 하고 본문 미사용)이 있으면 orphan으로 간주.
+//
+// @param {string} bodyText - 본문 문자열
+// @param {Array} sourceArr - 해당 필드 _sources 배열
+// @returns {number[]} body에 등장하지 않는 field-local 번호 목록
+function detectOrphanSourceIdx(bodyText, sourceArr) {
+  if (!Array.isArray(sourceArr) || sourceArr.length === 0) return [];
+  const text = typeof bodyText === 'string' ? bodyText : '';
+  const used = new Set();
+  for (const m of text.matchAll(/\[(\d+)\]/g)) {
+    used.add(Number(m[1]));
+  }
+  const orphans = [];
+  for (let i = 0; i < sourceArr.length; i++) {
+    const localNum = i + 1;
+    if (!used.has(localNum)) orphans.push(localNum);
+  }
+  return orphans;
+}
+
+// ── 룰 H: broken source ref 탐지 ───────────────────────────────────────────────
+//
+// 본문에 [N] 마커가 있는데 _sources[fieldKey] 길이가 N보다 작은 경우.
+// (본문 local [N] → _sources[fieldKey][N-1] 매핑 시도, out-of-bounds이면 broken)
+//
+// @param {string} bodyText - 본문 문자열
+// @param {Array} sourceArr - 해당 필드 _sources 배열
+// @returns {number[]} _sources에 매핑이 없는 본문 local 번호 목록
+function detectBrokenSourceRef(bodyText, sourceArr) {
+  if (!bodyText || typeof bodyText !== 'string') return [];
+  const matches = [...bodyText.matchAll(/\[(\d+)\]/g)];
+  if (matches.length === 0) return [];
+  const sourcesLen = Array.isArray(sourceArr) ? sourceArr.length : 0;
+  const broken = new Set();
+  for (const m of matches) {
+    const n = Number(m[1]);
+    if (n < 1 || n > sourcesLen) broken.add(n);
+  }
+  return [...broken];
+}
+
+// ── 룰 I: source idx gap 탐지 (글로벌 id 연속성) ───────────────────────────────
+//
+// _sources의 모든 source 항목을 평탄화한 뒤 glocal id (1부터 연속)을 검사.
+// 사용자 정책: id는 전체 JSON 내 전역 고유 순번으로 1부터 연속이어야 한다.
+//
+// @param {object} sources - _sources 객체 (fieldKey → 배열)
+// @returns {{ok:boolean, expected:number[], actual:Array<number|null>}|null}
+//          정상이면 null, gap이면 expected/actual을 담은 객체
+function detectSourceIdxGap(sources) {
+  if (!sources || typeof sources !== 'object') return null;
+  const flat = [];
+  // sources의 fieldKey 순서대로 평탄화 (객체 enumeration 순서 = 보존순서, ES2015+)
+  for (const fieldKey of Object.keys(sources)) {
+    const arr = sources[fieldKey];
+    if (!Array.isArray(arr)) continue;
+    for (const src of arr) {
+      const id = (src && typeof src === 'object' && typeof src.id === 'number') ? src.id : null;
+      flat.push(id);
+    }
+  }
+  if (flat.length === 0) return null;
+  // id가 모두 누락이면 gap 검사 의미 없음 (구형 구조)
+  if (flat.every(id => id == null)) return null;
+  const expected = flat.map((_, i) => i + 1);
+  const ok = flat.every((id, i) => id === expected[i]);
+  if (ok) return null;
+  return { ok: false, expected, actual: flat };
+}
+
 module.exports = {
   detectMultipleUrlsInSourceText,
   detectMergedOrgLabel,
@@ -320,4 +494,13 @@ module.exports = {
   CAREER_TREE_SEARCH_CATEGORIES,
   // 룰 D
   detectTriviaInlineFootnote,
+  // 룰 E/F/G/H/I (2026-04-29 source-policy 강화)
+  detectListPageUrl,
+  LIST_PAGE_PATTERNS,
+  classifySourceHosts,
+  SELF_DOMAINS,
+  ORIGIN_DATA_DOMAINS,
+  detectOrphanSourceIdx,
+  detectBrokenSourceRef,
+  detectSourceIdxGap,
 };

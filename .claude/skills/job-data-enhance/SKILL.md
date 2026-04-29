@@ -61,6 +61,12 @@ description: >
 | `_careerTreeNote` | careerTree를 `null`로 제출할 때 **필수** — 후보 ≥5명(이름(이유) 형식) OR 카테고리(재벌·대기업/컨설팅/공공·정부/학계·연구/스타트업·CxO) ≥3개 커버. 미달 시 `[CareerTreeNote얕음]` FAIL |
 | **UCJ 배열 각주 필수** | `detailReady.{curriculum,recruit,training}` 각 항목에 `[N]` 필수. 누락 시 `[UCJ각주항목누락]` FAIL. **`detailReady.researchList`는 CareerNet 원본 — 각주 면제** |
 | **한글 인코딩 — Mojibake 금지** | API 전송 시 **Node.js `fetch()` 필수** — Windows `curl -d`로 한글 JSON 전송 시 CP949 인코딩 오류로 한글이 아랍·키릴·라틴확장 문자로 깨짐. validate `[Mojibake]` FAIL, audit `[Gate5/Mojibake]` FAIL. 사고사례: 준법감시인 `overviewAbilities.technKnow` 전체 깨짐 (rev 11598/11599, 2026-04-16) |
+| **🚫 자기 사이트 인용 절대 금지** ⚠️ | `_sources`의 URL host에 `careerwiki.org` / `careerwiki.kr` 포함 금지 — 자기 사이트를 출처로 쓰는 것은 의미 없음. validate `[selfDomain]` FAIL (2026-04-29 deep audit) |
+| **🚫 origin 단독 인용 금지** ⚠️ | `career.go.kr` / `work.go.kr` / `work24.go.kr` / `job.go.kr` 는 CareerWiki가 직접 데이터를 가져오는 **데이터 origin**이다. 한 직업 _sources의 모든 URL이 위 도메인뿐(외부 host 0개)이면 정보 가치 빈약 — validate `[selfCiteOnly]` FAIL. 위 도메인을 쓸 거면 반드시 외부 출처(협회·학회·KOSIS·전문 미디어·학술논문 등) 최소 1개 이상 동반 (deep audit: 196/325 직업 60%가 origin-heavy. 외부 host 1개만 있으면 WARN) |
+| **🚫 list-page URL 출처 금지** ⚠️ | `_sources` URL은 반드시 직업 specific 식별자(`seq=`/`SEQ=`/`jobsCd=`/`jmCd=` 등)를 포함해야 함. 인덱스/카테고리 페이지는 검색결과 URL 차단(work24/worker)에 더해 다음도 추가 차단: `career.go.kr/cloud/w/job`(seq 없음)·`career.go.kr/cnet/.../jobView.do`(SEQ 없음)·`work.go.kr/empInfo/jobInfo/jobInfoDetailView.do`(jobsCd 없음)·`/list`/`/category`/`/index` 끝 path. validate `[listPageURL]` FAIL (2026-04-29 deep audit: 17건) |
+| **본문 [N] = field-local 번호** ⚠️ | 본문 `[N]`은 항상 **필드별 1부터 시작하는 로컬 번호**다. 렌더러가 `_sources[fieldKey][N-1]`로 매핑 후 footnoteMap을 통해 글로벌 번호로 변환. **본문 [N] = _sources[fieldKey] 배열의 (N-1)번째 항목**. 즉 way 본문 [1] → _sources["way"][0], trivia 본문 [1] → _sources["trivia"][0]. _sources의 글로벌 `id` 필드는 페이지 통합 출처 카운트용일 뿐 본문 매핑과 무관 |
+| **brokenRef 금지** | 산문 필드 본문에 `[N]` 마커가 있는데 `_sources[fieldKey]` 길이가 N보다 작으면 매핑 실패. validate `[brokenRef]` FAIL. 본문 마커는 1..N 연속 필수 (deep audit: 31건) |
+| **orphanSrc 자제** | `_sources[fieldKey]`에 등록만 하고 본문에서 `[N]` 마커로 인용하지 않으면 의미 없음 — validate `[orphanSrc]` WARN. 등록한 모든 출처를 본문에서 1회 이상 인용하거나 _sources에서 제거 (deep audit: 23건) |
 
 ---
 
@@ -669,11 +675,19 @@ detailReady.curriculum / detailReady.recruit / detailReady.training / detailRead
 
 **핵심 원칙**: 출처 수가 아니라 **정보 퀄리티(최신성·디테일)**가 목적. 다양한 출처는 다양한 관점의 디테일을 얻기 위한 수단.
 
+> ⚠️ **2026-04-29 정책 강화 (deep audit 발견 사고 차단)**:
+> 마커 보유 직업 325개 중 **196개(60%)** 가 _sources의 모든 URL이 career.go.kr/work.go.kr 등 우리 데이터 origin 도메인뿐인 "origin-heavy" 사고 발견.
+> 60% 직업은 외부 보충 1개 이상 있어 WARN으로 처리되지만, **10건은 외부 host 0개**로 selfCiteOnly FAIL 대상.
+> 이 섹션의 새 정책은 다음 enhance 사이클부터 default 행동을 바꾼다.
+
 **우선순위:**
-1등급: 커리어넷(career.go.kr) · 워크넷(work.go.kr) · 한국고용정보원(keis.or.kr) · KOSIS · Q-net
-2등급: 직업백과(job.asamaru.net) · 협회·학회 공식 사이트 · 대학 학과 소개
+1등급 (origin — 단독 사용 금지): 커리어넷(career.go.kr) · 워크넷(work.go.kr) · 고용24(work24.go.kr) · 직업포털(job.go.kr)
+  → ⚠️ 이 도메인들은 CareerWiki가 직접 데이터를 가져오는 **데이터 origin**이다. 단독으로 쓰면 정보 가치가 없음. **반드시 외부 보충 출처 1개 이상 동반**
+2등급 (외부 핵심): 한국고용정보원(keis.or.kr) · KOSIS · Q-net · 한국산업인력공단 · 직능원 · 협회·학회 공식 사이트 · 대학 학과 소개
 3등급 (적극 활용 권장): 업계 보고서 · 통계청 · 전문 미디어(한경, 매경, IT조선 등) · 학술논문 — 커리어넷/고용24/워크넷은 이미 API로 가져온 데이터와 중복될 수 있으므로, **더 최신이고 고급인 출처를 적극 발굴하여 차별화된 정보를 제공**
-❌ 금지: 블라인드, 디시인사이드, 블로그 단독 출처
+❌ 절대 금지:
+- `careerwiki.org` / `careerwiki.kr` (자기 사이트 인용 — 절대 금지, validate `[selfDomain]` FAIL)
+- 블라인드, 디시인사이드, 블로그 단독 출처
 
 **출처 다양화 원칙**: 커리어넷/고용24/워크넷은 API로 이미 가져온 데이터와 중복될 수 있음. 업계 보고서, 학회 자료, 전문 미디어(신문/뉴스), 통계청, 직업 관련 전문 사이트 등 고급 출처를 적극 활용. 동일 내용이면 더 최신이고 신뢰도 높은 출처 우선 선택.
 
@@ -690,6 +704,11 @@ detailReady.curriculum / detailReady.recruit / detailReady.training / detailRead
 - **없는 내용을 지어내거나 출처를 조작 금지** — 반드시 WebFetch로 해당 URL에서 해당 수치/사실이 실제로 존재하는지 확인 후 사용
 - **같은 URL을 하나의 필드 sources에 2번 이상 등록 금지** — 동일 필드 내 같은 URL 중복은 validate FAIL (네트워크엔지니어 overviewProspect 중복 사례 방지)
 - **sources.text 필드에 URL 포함 금지** — `"[1] 커리어넷"` (O) / `"[1] https://career.go.kr/..."` (X) — text는 기관명만
+- **🚫 careerwiki.org / careerwiki.kr 자기 사이트 인용 금지** — validate `[selfDomain]` FAIL
+- **🚫 origin 단독 인용 금지** — career.go.kr / work.go.kr / work24.go.kr / job.go.kr 만으로 _sources를 채우면 validate `[selfCiteOnly]` FAIL. 이 도메인을 쓸 거면 외부 host 출처 1개 이상 동반
+- **🚫 list-page URL 금지** — 직업 specific 식별자(seq/SEQ/jobsCd/jmCd/code) 없는 인덱스/카테고리 페이지는 validate `[listPageURL]` FAIL. 메인 페이지·검색폼·범주 인덱스는 출처로 부적합
+- **본문 [N] 마커는 field-local 1부터 연속** — 본문 [N]은 `_sources[fieldKey][N-1]`로 매핑됨. 본문 [3]이 있는데 _sources 길이 < 3이면 `[brokenRef]` FAIL. _sources에 등록만 하고 본문에서 안 쓰면 `[orphanSrc]` WARN
+- **외부 출처 다양성 권장** — 한 직업 _sources에 외부 host 1개만 있으면 WARN. 2개 이상 외부 host 권장 (협회·KOSIS·전문 미디어 등 분산)
 
 **커리어넷 URL (신형만 사용):**
 ```
