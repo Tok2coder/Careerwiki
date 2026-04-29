@@ -15,7 +15,7 @@
 //   node scripts/skill-cache/auto-dedup-sweep.cjs --slug=<slug> --apply  (실 DELETE)
 //   node scripts/skill-cache/auto-dedup-sweep.cjs --global-only          (글로벌만 보고)
 
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const path = require('path');
 
 const args = process.argv.slice(2).reduce((acc, a) => {
@@ -24,14 +24,40 @@ const args = process.argv.slice(2).reduce((acc, a) => {
   return acc;
 }, {});
 
+const REPO_ROOT = path.resolve(__dirname, '..', '..');
+
+// Windows 호환:
+//   - 기존 execSync(`npx wrangler ...`)는 child process 비표준 종료 시
+//     libuv handle close assertion으로 fail.
+//   - npx.cmd는 PATH에 직접 없음 (MSYS bash 환경) → shell 경유 필요.
+//   - spawnSync + shell:true는 cmd.exe로 위임하여 .cmd shim 자동 해결.
+//   - args는 cmd.exe 인수 escape 위해 직접 string concat 후 quoted.
 function d1Query(sql) {
-  const out = execSync(
-    `npx wrangler d1 execute careerwiki-kr --remote --json --command ${JSON.stringify(sql)}`,
-    { cwd: path.resolve(__dirname, '..', '..'), encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 }
-  );
-  // wrangler may print log lines before JSON; extract JSON array
-  const m = out.match(/\[\s*\{[\s\S]*\]\s*$/);
-  return JSON.parse(m ? m[0] : out)[0].results || [];
+  // cmd.exe multi-line 함정: \n 포함 SQL을 cmdline에 그대로 넣으면 첫 줄만 실행되고 나머지 무시.
+  // \n을 공백으로 치환 + 큰따옴표 escape.
+  const escaped = sql.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\s+/g, ' ').trim();
+  const cmdline = `npx wrangler d1 execute careerwiki-kr --remote --json --command "${escaped}"`;
+  const r = spawnSync(cmdline, {
+    cwd: REPO_ROOT,
+    encoding: 'utf8',
+    maxBuffer: 50 * 1024 * 1024,
+    shell: true,
+    windowsHide: true,
+  });
+  if (r.status !== 0 && !r.stdout) {
+    const errMsg = (r.stderr || '').slice(0, 500);
+    throw new Error(`wrangler d1 execute failed (status=${r.status}): ${errMsg}`);
+  }
+  const out = (r.stdout || '').trim();
+  // wrangler may print log lines before JSON; find first '[' and parse from there
+  const startIdx = out.indexOf('[');
+  if (startIdx < 0) return [];
+  try {
+    const parsed = JSON.parse(out.slice(startIdx));
+    return parsed?.[0]?.results || [];
+  } catch (e) {
+    return [];
+  }
 }
 
 console.log('=== auto-dedup-sweep ===');
@@ -64,10 +90,13 @@ if (args.slug) {
             SELECT job_slug, career_tree_id FROM career_tree_job_links
             WHERE job_slug='${escSlug}' GROUP BY job_slug, career_tree_id HAVING COUNT(*)>1)
       )`;
-      const out = execSync(
-        `npx wrangler d1 execute careerwiki-kr --remote --json --command ${JSON.stringify(sql)}`,
-        { cwd: path.resolve(__dirname, '..', '..'), encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 }
-      );
+      // d1Query와 동일한 spawnSync+shell:true 패턴 (Windows .cmd shim 호환)
+      const escaped = sql.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, ' ');
+      const cmdline = `npx wrangler d1 execute careerwiki-kr --remote --json --command "${escaped}"`;
+      const r = spawnSync(cmdline, {
+        cwd: REPO_ROOT, encoding: 'utf8', maxBuffer: 50 * 1024 * 1024, shell: true, windowsHide: true,
+      });
+      const out = r.stdout || '';
       const m = out.match(/"changes":\s*(\d+)/);
       console.log(`  changes: ${m ? m[1] : '(unknown)'}`);
     } else {
