@@ -29,11 +29,26 @@ const SECRET_PATTERNS = [
   ['Generic API key assign', /(?:api[_-]?key|apikey|api_secret)\s*[:=]\s*["']?[A-Za-z0-9_/+=-]{16,}/i],
   ['Bearer token',           /Bearer\s+[A-Za-z0-9._~+/-]{20,}/],
   ['Private key header',     /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/],
-  ['Cloudflare API token',   /[A-Za-z0-9_-]{37,40}(?:\s|$)/],   // broad — catches wrangler tokens
+  // Cloudflare token: 37-40자 영숫자, 반드시 알파벳/숫자로 시작 (구분선 같은 순수 `-` 라인 회피)
+  ['Cloudflare API token',   /\b[A-Za-z0-9][A-Za-z0-9_]{20,}[A-Za-z0-9_-]{10,}\b/],
   ['Generic password assign',/password\s*[:=]\s*["'][^"']{8,}/i],
-  ['Admin secret pattern',   /admin[_-]?secret\s*[:=]\s*["']?[A-Za-z0-9_-]{8,}/i],
-  ['JWT secret',             /jwt[_-]?secret\s*[:=]\s*["']?[A-Za-z0-9_-]{16,}/i],
+  ['Admin secret pattern',   /admin[_-]?secret\s*[:=]\s*["'][A-Za-z0-9_-]{8,}/i],
+  ['JWT secret',             /jwt[_-]?secret\s*[:=]\s*["'][A-Za-z0-9_-]{16,}/i],
+  // 한국 공공 API (공공데이터포털/워크넷/커리어넷) — UUID 8-4-4-4-12 포맷
+  ['Korean public API UUID', /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i],
+  // GOYONG24 / Work24 / CareerNet 키 literal string 할당만 차단 (함수 호출 제외)
+  ['GOYONG24 key assign',    /GOYONG24_[A-Z_]*KEY\s*[:=]\s*["'][A-Za-z0-9_/+=.-]{10,}["']/],
+  ['CareerNet key assign',   /CAREER[_-]?NET[_-]?[A-Z_]*KEY\s*[:=]\s*["'][A-Za-z0-9_/+=.-]{10,}["']/i],
+  ['authKey query param',    /[?&]authKey=[A-Za-z0-9_/+=-]{10,}/],
 ];
+
+// Whitelist: specific UUIDs known to be non-secret (D1 database IDs, R2 object keys, etc.)
+// These are referenced in wrangler.jsonc or as public resource IDs and are safe to commit.
+const UUID_WHITELIST = new Set([
+  'edc21e23-c2ac-4693-bb79-389b6914e173',   // D1 database ID (legacy)
+  '1dbc57d6-0ce3-4a7e-8d2e-3159b0df1315',   // D1 database ID (current, in wrangler.jsonc)
+  '37fa15f6-9a2b-4bd6-bae9-687b18dc29f8',   // D1 database ID (new)
+]);
 
 // Files to always skip (binary / generated / documentation)
 const SKIP_EXTENSIONS = new Set([
@@ -44,7 +59,15 @@ const SKIP_EXTENSIONS = new Set([
   '.mp4', '.mp3', '.avi', '.mov',
   '.sqlite', '.db',
   '.md', '.mdx', '.txt', '.rst',  // documentation — may contain example values
+  '.example', '.sample',           // example env files — placeholder values expected
 ]);
+
+// Filename patterns to always skip (placeholders inside)
+const SKIP_BASENAMES = [
+  /\.example$/i,
+  /\.sample$/i,
+  /\.example\./i,       // e.g. .env.example.yaml
+];
 
 function getStagedFiles() {
   try {
@@ -73,6 +96,8 @@ function main() {
 
     // Skip binary/non-text files
     if (SKIP_EXTENSIONS.has(ext)) continue;
+    // Skip *.example / *.sample placeholder files
+    if (SKIP_BASENAMES.some(re => re.test(basename))) continue;
 
     // Read staged content via git show
     let content;
@@ -86,10 +111,15 @@ function main() {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       for (const [label, pattern] of SECRET_PATTERNS) {
-        if (pattern.test(line)) {
-          violations.push({ file: filePath, label, line: i + 1, match: line.trim().slice(0, 80) });
-          break; // one violation per line is enough
+        const m = pattern.exec(line);
+        if (!m) continue;
+        // UUID whitelist: D1 DB IDs / public resource UUIDs are not secrets
+        if (label === 'Korean public API UUID') {
+          const uuid = m[0].toLowerCase();
+          if (UUID_WHITELIST.has(uuid)) break;
         }
+        violations.push({ file: filePath, label, line: i + 1, match: line.trim().slice(0, 80) });
+        break; // one violation per line is enough
       }
     }
   }
