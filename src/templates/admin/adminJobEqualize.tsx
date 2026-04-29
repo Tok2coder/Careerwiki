@@ -55,6 +55,7 @@ export interface JobEqualizeItem {
   jsonSize: number     // bytes
   sourceCount: number  // 출처 총 항목 수
   urlSourceCount: number // URL이 포함된 출처 수
+  uniqueUrlCount: number | null // UCJ._sources 의 unique URL 수 (UCJ._sources 없으면 null)
   youtubeCount: number
   skillApplied: boolean // page_revisions.change_summary에 스킬 마커 존재 여부
   skillLastAppliedAt: string | null // 최근 스킬 적용 시각 ('YYYY-MM-DD HH:MM:SS' or null)
@@ -64,6 +65,9 @@ export interface JobEqualizeItem {
   wayTrunc: boolean       // way 잘린 텍스트 의심 (주의)
   srcOrderBad: boolean    // _sources 첫 항목이 커리어넷 아님 (주의)
   ytLow: boolean          // youtubeLinks 0개 + _youtubeSearchNote 없음 (진짜 누락, 주의)
+  srcRawURL: boolean      // _sources 항목의 text가 raw URL (사고 패턴 1)
+  srcBracket: boolean     // _sources 항목의 text가 '[' 로 시작 (사고 패턴 2)
+  srcMojibake: boolean    // _sources 항목에 깨진 인코딩 문자 (사고 패턴 3)
 }
 
 export interface QualityAlerts {
@@ -101,45 +105,83 @@ export function hasField(json: any, key: string): boolean {
  * 1. Object: {"way":[{"id":1,"text":"...","url":"..."}]} → 모든 섹션 배열 합산
  * 2. Array: ["워크넷", "한국가스공사"] or [{text, url}] → 배열 길이
  * 3. null/undefined → 0
+ *
+ * 추가로 사고 패턴 (rawURL/bracket/mojibake) 검출 + unique URL count 계산.
  */
-export function parseSources(sources: any): { sourceCount: number; urlSourceCount: number } {
-  if (!sources) return { sourceCount: 0, urlSourceCount: 0 }
+export function parseSources(sources: any): {
+  sourceCount: number
+  urlSourceCount: number
+  uniqueUrlCount: number
+  hasRawURL: boolean
+  hasBracket: boolean
+  hasMojibake: boolean
+} {
+  const empty = { sourceCount: 0, urlSourceCount: 0, uniqueUrlCount: 0, hasRawURL: false, hasBracket: false, hasMojibake: false }
+  if (!sources) return empty
 
-  // Case 1: Array (flat list or array of objects)
-  if (Array.isArray(sources)) {
-    const sourceCount = sources.length
-    let urlSourceCount = 0
-    for (const s of sources) {
-      if (typeof s === 'string' && s.startsWith('http')) {
-        urlSourceCount++
-      } else if (typeof s === 'object' && s !== null && typeof s.url === 'string' && s.url.startsWith('http')) {
-        urlSourceCount++
+  const urls = new Set<string>()
+  let sourceCount = 0
+  let urlSourceCount = 0
+  let hasRawURL = false
+  let hasBracket = false
+  let hasMojibake = false
+
+  function isMojibake(t: string): boolean {
+    // U+FFFD (replacement char) 또는 3+ 연속 Latin-1 보충 영역(보통 한국 텍스트엔 없음)
+    for (let i = 0; i < t.length; i++) {
+      if (t.charCodeAt(i) === 0xfffd) return true
+    }
+    let run = 0
+    for (let i = 0; i < t.length; i++) {
+      const c = t.charCodeAt(i)
+      if (c >= 0x0080 && c <= 0x00ff) {
+        run++
+        if (run >= 3) return true
+      } else {
+        run = 0
       }
     }
-    return { sourceCount, urlSourceCount }
+    return false
   }
 
-  // Case 2: Object with section keys (e.g. {"way": [...], "overviewSalary": [...]})
-  if (typeof sources === 'object') {
-    let sourceCount = 0
-    let urlSourceCount = 0
+  function check(s: any) {
+    sourceCount++
+    if (typeof s === 'string') {
+      // raw 문자열: URL이거나 bracket prefix이거나 mojibake
+      if (/^https?:\/\//i.test(s)) {
+        urlSourceCount++
+        urls.add(s)
+        hasRawURL = true  // 객체가 아닌 string-only URL 자체가 raw URL 패턴
+      }
+      if (s.startsWith('[')) hasBracket = true
+      if (isMojibake(s)) hasMojibake = true
+    } else if (typeof s === 'object' && s !== null) {
+      const text: string = typeof s.text === 'string' ? s.text : ''
+      const url: string = typeof s.url === 'string' ? s.url : ''
+      if (url && /^https?:\/\//i.test(url)) {
+        urlSourceCount++
+        urls.add(url)
+      }
+      if (text) {
+        if (/^https?:\/\//i.test(text)) hasRawURL = true
+        if (text.startsWith('[')) hasBracket = true
+        if (isMojibake(text)) hasMojibake = true
+      }
+    }
+  }
+
+  if (Array.isArray(sources)) {
+    for (const s of sources) check(s)
+  } else if (typeof sources === 'object') {
     for (const key of Object.keys(sources)) {
       const arr = sources[key]
-      if (Array.isArray(arr)) {
-        sourceCount += arr.length
-        for (const s of arr) {
-          if (typeof s === 'string' && s.startsWith('http')) {
-            urlSourceCount++
-          } else if (typeof s === 'object' && s !== null && typeof s.url === 'string' && s.url.startsWith('http')) {
-            urlSourceCount++
-          }
-        }
-      }
+      if (Array.isArray(arr)) for (const s of arr) check(s)
     }
-    return { sourceCount, urlSourceCount }
+  } else {
+    return empty
   }
 
-  return { sourceCount: 0, urlSourceCount: 0 }
+  return { sourceCount, urlSourceCount, uniqueUrlCount: urls.size, hasRawURL, hasBracket, hasMojibake }
 }
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
@@ -336,6 +378,25 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
             <option value="ytLow">YT 3개 미만</option>
           </optgroup>
         </select>
+        <!-- URL 갯수 범위 (UCJ._sources unique URL) -->
+        <select id="urlRangeSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50" title="UCJ._sources unique URL 수 기준">
+          <option value="all">URL: 전체</option>
+          <option value="none">URL: 마커 없음</option>
+          <option value="0">URL: 0개</option>
+          <option value="1-3">URL: 1~3개</option>
+          <option value="4-7">URL: 4~7개</option>
+          <option value="8-10">URL: 8~10개</option>
+          <option value="11+">URL: 11개+</option>
+        </select>
+        <!-- 사고 패턴 (merged._sources 검출 기준) -->
+        <select id="srcPatternSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50" title="merged._sources 사고 패턴">
+          <option value="all">사고: 전체</option>
+          <option value="clean">사고: 깨끗</option>
+          <option value="any">사고: 있음(어느것이든)</option>
+          <option value="rawURL">사고: rawURL</option>
+          <option value="bracket">사고: bracket</option>
+          <option value="mojibake">사고: mojibake</option>
+        </select>
         <!-- 정렬 -->
         <select id="sortSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50">
           <option value="skill-desc" selected>스킬 적용순 (최근)</option>
@@ -345,11 +406,24 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           <option value="field-asc">완성도 낮은순</option>
           <option value="size-desc">JSON 큰순</option>
           <option value="size-asc">JSON 작은순</option>
+          <option value="uniqUrl-desc">URL 갯수 ↓</option>
+          <option value="uniqUrl-asc">URL 갯수 ↑</option>
           <option value="yt-asc">YT수 낮은순</option>
         </select>
+        <!-- 페이지 크기 -->
+        <select id="pageSizeSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50">
+          <option value="25">페이지당 25개</option>
+          <option value="50" selected>페이지당 50개</option>
+          <option value="100">페이지당 100개</option>
+          <option value="250">페이지당 250개</option>
+        </select>
       </div>
-      <div class="mt-2 text-xs text-slate-500">
-        <span id="resultCount">${totalJobs.toLocaleString()}</span>개 ${entityLabel} 표시 중
+      <div class="mt-2 text-xs text-slate-500 flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span>총 <span id="resultCount" class="text-slate-300 font-mono">${totalJobs.toLocaleString()}</span>개 ${entityLabel}</span>
+        <span class="text-slate-600">·</span>
+        <span><span id="rangeInfo" class="text-slate-300 font-mono">-</span> 표시 중</span>
+        <span class="text-slate-600">·</span>
+        <span>현재 정렬: <span id="sortInfo" class="text-slate-300">스킬 적용순</span></span>
       </div>
     </div>
 
@@ -359,9 +433,10 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         <table class="w-full text-sm">
           <thead>
             <tr class="text-left border-b border-slate-700/50 bg-slate-800/40">
-              <th class="px-4 py-3 text-xs text-slate-400 font-medium sticky left-0 bg-slate-800/90 z-10 min-w-[140px]" data-tooltip="${entityLabel}명 (클릭하면 프로덕션 페이지로 이동)">${entityLabel}명</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[56px]" data-tooltip="change_summary에 [${skillName}] 마커가 있는지">스킬</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]" data-tooltip="12개 필드 중 채워진 필드 수 (n/12)">완성도</th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" data-tooltip="현재 페이지 행 번호 (필터/정렬 적용 후)">#</th>
+              <th class="px-4 py-3 text-xs text-slate-400 font-medium sticky left-0 bg-slate-800/90 z-10 min-w-[140px] cursor-pointer hover:text-white" data-sort="name" data-tooltip="${entityLabel}명 (클릭하면 정렬, 다시 클릭하면 방향 토글)">${entityLabel}명 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[56px] cursor-pointer hover:text-white" data-sort="skill" data-tooltip="스킬 적용 여부 (클릭=정렬)">스킬 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px] cursor-pointer hover:text-white" data-sort="field" data-tooltip="12개 필드 중 채워진 필드 수 (n/12, 클릭=정렬)">완성도 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="way 필드 — 직업 진입 경로/방법 정보">방법</th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="overviewSalary 필드 — 급여/임금 정보">임금</th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="overviewProspect 필드 — 직업 전망 정보">전망</th>
@@ -374,10 +449,11 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="heroTags 필드 — 직업 태그 배열">태그</th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="youtubeLinks 필드 — YouTube 링크 존재 여부">YT</th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="_sources 필드 — 출처 정보 존재 여부">출처</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px]" data-tooltip="user_contributed_json 총 바이트 수">JSON</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" data-tooltip="출처 항목 수 (Object: 섹션 합산, Array: 배열 길이)">출처수</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" data-tooltip="URL(http)이 포함된 출처 수">URL</th>
-              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" data-tooltip="youtubeLinks 배열 내 YouTube 링크 수">YT수</th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px] cursor-pointer hover:text-white" data-sort="size" data-tooltip="user_contributed_json 총 바이트 수 (클릭=정렬)">JSON <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px] cursor-pointer hover:text-white" data-sort="src" data-tooltip="merged._sources 출처 항목 수 (클릭=정렬)">출처수 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px] cursor-pointer hover:text-white" data-sort="url" data-tooltip="merged._sources 의 URL 수 (중복 포함, 클릭=정렬)">URL <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px] cursor-pointer hover:text-white" data-sort="uniqUrl" data-tooltip="UCJ._sources 의 unique URL 수 (마커 보유 직업 기준, 클릭=정렬)">URL갯수 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
+              <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px] cursor-pointer hover:text-white" data-sort="yt" data-tooltip="youtubeLinks 배열 내 YouTube 링크 수 (클릭=정렬)">YT수 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
             </tr>
           </thead>
           <tbody id="tableBody" class="divide-y divide-slate-700/30">
@@ -385,14 +461,20 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         </table>
       </div>
       <!-- 페이지네이션 -->
-      <div class="flex items-center justify-between px-4 py-3 border-t border-slate-700/50">
-        <span class="text-xs text-slate-500">페이지 <span id="pageInfo">1/1</span></span>
+      <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-slate-700/50">
+        <span class="text-xs text-slate-500">페이지 <span id="pageInfo" class="text-slate-300 font-mono">1/1</span> · <span id="pageRangeInfo" class="text-slate-400 font-mono">-</span></span>
         <div class="flex gap-2">
+          <button id="firstBtn" class="px-2.5 py-1.5 bg-slate-700/50 rounded text-xs text-slate-400 hover:bg-slate-600/50 disabled:opacity-30 disabled:cursor-not-allowed" disabled title="첫 페이지">
+            <i class="fas fa-angles-left"></i>
+          </button>
           <button id="prevBtn" class="px-3 py-1.5 bg-slate-700/50 rounded text-xs text-slate-400 hover:bg-slate-600/50 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
             <i class="fas fa-chevron-left mr-1"></i>이전
           </button>
           <button id="nextBtn" class="px-3 py-1.5 bg-slate-700/50 rounded text-xs text-slate-400 hover:bg-slate-600/50 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
             다음<i class="fas fa-chevron-right ml-1"></i>
+          </button>
+          <button id="lastBtn" class="px-2.5 py-1.5 bg-slate-700/50 rounded text-xs text-slate-400 hover:bg-slate-600/50 disabled:opacity-30 disabled:cursor-not-allowed" disabled title="마지막 페이지">
+            <i class="fas fa-angles-right"></i>
           </button>
         </div>
       </div>
@@ -402,18 +484,26 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
     (function() {
       var ITEMS = ${itemsJson};
       var URL_PREFIX = ${JSON.stringify(entityUrlPrefix)};
-      var PAGE_SIZE = 50;
+      var pageSize = 50;
       var currentPage = 1;
       var filtered = ITEMS;
 
       var searchInput = document.getElementById('searchInput');
       var filterSelect = document.getElementById('filterSelect');
+      var urlRangeSelect = document.getElementById('urlRangeSelect');
+      var srcPatternSelect = document.getElementById('srcPatternSelect');
       var sortSelect = document.getElementById('sortSelect');
+      var pageSizeSelect = document.getElementById('pageSizeSelect');
       var tableBody = document.getElementById('tableBody');
       var resultCount = document.getElementById('resultCount');
+      var rangeInfo = document.getElementById('rangeInfo');
+      var sortInfo = document.getElementById('sortInfo');
       var pageInfo = document.getElementById('pageInfo');
+      var pageRangeInfo = document.getElementById('pageRangeInfo');
+      var firstBtn = document.getElementById('firstBtn');
       var prevBtn = document.getElementById('prevBtn');
       var nextBtn = document.getElementById('nextBtn');
+      var lastBtn = document.getElementById('lastBtn');
 
       function setQualityFilter(key) {
         filterSelect.value = key;
@@ -421,9 +511,34 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       }
       window.setQualityFilter = setQualityFilter;
 
+      function urlInRange(uniq, range) {
+        if (range === 'all') return true;
+        if (range === 'none') return uniq === null || uniq === undefined;
+        if (uniq === null || uniq === undefined) return false; // 마커 없는 경우 'none' 외 모두 제외
+        if (range === '0') return uniq === 0;
+        if (range === '1-3') return uniq >= 1 && uniq <= 3;
+        if (range === '4-7') return uniq >= 4 && uniq <= 7;
+        if (range === '8-10') return uniq >= 8 && uniq <= 10;
+        if (range === '11+') return uniq >= 11;
+        return true;
+      }
+
+      function srcPatternMatches(item, key) {
+        if (key === 'all') return true;
+        var any = item.srcRawURL || item.srcBracket || item.srcMojibake;
+        if (key === 'clean') return !any;
+        if (key === 'any') return any;
+        if (key === 'rawURL') return !!item.srcRawURL;
+        if (key === 'bracket') return !!item.srcBracket;
+        if (key === 'mojibake') return !!item.srcMojibake;
+        return true;
+      }
+
       function applyFilters() {
         var query = searchInput.value.trim().toLowerCase();
         var filter = filterSelect.value;
+        var urlRange = urlRangeSelect.value;
+        var srcPattern = srcPatternSelect.value;
         var sort = sortSelect.value;
 
         filtered = ITEMS.filter(function(item) {
@@ -439,6 +554,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           if (filter === 'wayTrunc' && !item.wayTrunc) return false;
           if (filter === 'srcOrderBad' && !item.srcOrderBad) return false;
           if (filter === 'ytLow' && !item.ytLow) return false;
+          if (!urlInRange(item.uniqueUrlCount, urlRange)) return false;
+          if (!srcPatternMatches(item, srcPattern)) return false;
           return true;
         });
 
@@ -451,7 +568,10 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
             if (a.skillApplied) {
               var at = a.skillLastAppliedAt || '';
               var bt = b.skillLastAppliedAt || '';
-              if (at !== bt) return bt.localeCompare(at); // desc
+              if (at !== bt) {
+                var c = bt.localeCompare(at); // desc by default
+                return dir === 'asc' ? -c : c;
+              }
             }
             return a.name.localeCompare(b.name, 'ko');
           }
@@ -459,7 +579,19 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           if (key === 'name') { va = a.name; vb = b.name; }
           else if (key === 'field') { va = a.fieldCount; vb = b.fieldCount; }
           else if (key === 'size') { va = a.jsonSize; vb = b.jsonSize; }
+          else if (key === 'src') { va = a.sourceCount; vb = b.sourceCount; }
+          else if (key === 'url') { va = a.urlSourceCount; vb = b.urlSourceCount; }
+          else if (key === 'uniqUrl') {
+            // null 은 항상 가장 뒤로
+            var an = a.uniqueUrlCount === null || a.uniqueUrlCount === undefined;
+            var bn = b.uniqueUrlCount === null || b.uniqueUrlCount === undefined;
+            if (an && !bn) return 1;
+            if (!an && bn) return -1;
+            if (an && bn) return a.name.localeCompare(b.name, 'ko');
+            va = a.uniqueUrlCount; vb = b.uniqueUrlCount;
+          }
           else if (key === 'yt') { va = a.youtubeCount; vb = b.youtubeCount; }
+          else { va = 0; vb = 0; }
           if (typeof va === 'string') {
             var cmp = va.localeCompare(vb, 'ko');
             return dir === 'asc' ? cmp : -cmp;
@@ -468,7 +600,29 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         });
 
         currentPage = 1;
+        updateSortIndicators(sort);
         render();
+      }
+
+      function updateSortIndicators(sort) {
+        var parts = sort.split('-');
+        var key = parts[0], dir = parts[1];
+        var heads = document.querySelectorAll('th[data-sort]');
+        for (var i = 0; i < heads.length; i++) {
+          var h = heads[i];
+          var ind = h.querySelector('.sort-ind');
+          if (!ind) continue;
+          if (h.getAttribute('data-sort') === key) {
+            ind.textContent = dir === 'asc' ? '▲' : '▼';
+            ind.className = 'sort-ind ml-0.5 text-[9px] text-blue-400';
+          } else {
+            ind.textContent = '';
+            ind.className = 'sort-ind ml-0.5 text-[9px] text-slate-500';
+          }
+        }
+        // 정렬 라벨 업데이트
+        var label = sortSelect.options[sortSelect.selectedIndex];
+        if (label) sortInfo.textContent = label.text;
       }
 
       function formatSize(bytes) {
@@ -476,20 +630,38 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         return bytes + 'B';
       }
 
-      function render() {
-        var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-        if (currentPage > totalPages) currentPage = totalPages;
-        var start = (currentPage - 1) * PAGE_SIZE;
-        var page = filtered.slice(start, start + PAGE_SIZE);
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, function(ch) {
+          return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+        });
+      }
 
-        resultCount.textContent = filtered.length;
+      function render() {
+        var totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+        var start = (currentPage - 1) * pageSize;
+        var end = Math.min(start + pageSize, filtered.length);
+        var page = filtered.slice(start, end);
+
+        resultCount.textContent = filtered.length.toLocaleString();
+        if (filtered.length === 0) {
+          rangeInfo.textContent = '0~0';
+          pageRangeInfo.textContent = '결과 없음';
+        } else {
+          rangeInfo.textContent = (start + 1).toLocaleString() + '~' + end.toLocaleString();
+          pageRangeInfo.textContent = (start + 1) + '~' + end + ' / ' + filtered.length.toLocaleString() + '개';
+        }
         pageInfo.textContent = currentPage + '/' + totalPages;
+        firstBtn.disabled = currentPage <= 1;
         prevBtn.disabled = currentPage <= 1;
         nextBtn.disabled = currentPage >= totalPages;
+        lastBtn.disabled = currentPage >= totalPages;
 
         var html = '';
         for (var i = 0; i < page.length; i++) {
           var item = page[i];
+          var rowNum = start + i + 1;
           var pct = Math.round((item.fieldCount / 12) * 100);
           var barColor = pct === 100 ? 'bg-green-500' : pct >= 50 ? 'bg-emerald-500' : 'bg-red-500';
           var countColor = item.fieldCount === 12 ? 'text-green-400' : item.fieldCount >= 6 ? 'text-emerald-400' : 'text-red-400';
@@ -497,16 +669,24 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           // 품질 이슈 행 강조
           var hasDanger  = item.wayIsArray;
           var hasWarning = item.imageUrlBad;
-          var hasCaution = item.wayTrunc || item.srcOrderBad || item.ytLow;
+          var hasCaution = item.wayTrunc || item.srcOrderBad || item.ytLow || item.srcRawURL || item.srcBracket || item.srcMojibake;
           var rowBorder  = hasDanger  ? 'border-left:3px solid #ef4444;'
                          : hasWarning ? 'border-left:3px solid #f97316;'
                          : hasCaution ? 'border-left:3px solid #eab308;'
                          : '';
 
           html += '<tr class="hover:bg-slate-700/20 transition-colors" style="' + rowBorder + '">';
+          html += '<td class="px-2 py-2 text-center text-[11px] text-slate-500 font-mono">' + rowNum + '</td>';
           html += '<td class="px-4 py-2 sticky left-0 bg-slate-900/80 z-10">';
-          html += '<a href="https://careerwiki.org' + URL_PREFIX + encodeURIComponent(item.slug) + '" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium text-xs">' + item.name + '</a>';
+          html += '<a href="https://careerwiki.org' + URL_PREFIX + encodeURIComponent(item.slug) + '" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium text-xs">' + escapeHtml(item.name) + '</a>';
           if (item.imageUrlBad) html += '<span class="ml-1 text-orange-400 text-[10px]" title="이미지 URL 포맷 오류">⚠</span>';
+          if (item.srcRawURL || item.srcBracket || item.srcMojibake) {
+            var pat = [];
+            if (item.srcRawURL) pat.push('rawURL');
+            if (item.srcBracket) pat.push('bracket');
+            if (item.srcMojibake) pat.push('mojibake');
+            html += '<span class="ml-1 text-amber-400 text-[10px]" title="_sources 사고 패턴: ' + pat.join(', ') + '">⚠</span>';
+          }
           html += '</td>';
           html += '<td class="px-2 py-2 text-center">';
           if (item.skillApplied) {
@@ -525,14 +705,12 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           for (var f = 0; f < 12; f++) {
             var has = item.fields[f];
             html += '<td class="px-2 py-2 text-center">';
-            // way 필드(f=0): wayIsArray 또는 wayTrunc 경고
             if (f === 0 && has && (item.wayIsArray || item.wayTrunc)) {
               var wayTitle = item.wayIsArray ? 'way가 배열 형식(오류)' : 'way 잘린 텍스트 의심';
               var wayIcon  = item.wayIsArray ? 'text-red-400' : 'text-yellow-400';
               html += '<i class="fas fa-check ' + wayIcon + ' text-[10px]" title="' + wayTitle + '"></i>';
               html += '<span class="' + wayIcon + ' text-[10px]" title="' + wayTitle + '"> ⚠</span>';
             }
-            // _sources 필드(f=11): srcOrderBad 경고
             else if (f === 11 && has && item.srcOrderBad) {
               html += '<i class="fas fa-check text-yellow-400 text-[10px]" title="_sources 첫 항목이 커리어넷이 아님"></i>';
               html += '<span class="text-yellow-400 text-[10px]" title="_sources 순서 오류"> ⚠</span>';
@@ -555,18 +733,77 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
             html += '<span class="text-slate-600">-</span>';
           }
           html += '</td>';
+          // URL갯수 (UCJ unique) — 마커 없으면 '-'
+          html += '<td class="px-3 py-2 text-center text-[11px]">';
+          if (item.uniqueUrlCount === null || item.uniqueUrlCount === undefined) {
+            html += '<span class="text-slate-600" title="UCJ._sources 없음 (마커 없는 직업)">-</span>';
+          } else if (item.uniqueUrlCount === 0) {
+            html += '<span class="text-amber-500" title="UCJ._sources 있으나 URL 0개">0</span>';
+          } else {
+            var color = item.uniqueUrlCount >= 8 ? 'text-emerald-400' : item.uniqueUrlCount >= 4 ? 'text-blue-400' : 'text-slate-400';
+            html += '<span class="' + color + ' font-mono font-medium">' + item.uniqueUrlCount + '</span>';
+          }
+          html += '</td>';
           var ytColor = item.ytLow ? 'text-amber-400' : 'text-slate-400';
           html += '<td class="px-3 py-2 text-center text-[11px] ' + ytColor + '">' + item.youtubeCount + (item.ytLow && item.youtubeCount > 0 ? ' ⚠' : '') + '</td>';
           html += '</tr>';
         }
+        if (page.length === 0) {
+          html = '<tr><td colspan="21" class="px-4 py-12 text-center text-slate-500 text-sm">필터 조건에 해당하는 ' + ${JSON.stringify(entityLabel)} + '이 없습니다.</td></tr>';
+        }
         tableBody.innerHTML = html;
+      }
+
+      // 컬럼 헤더 클릭 → 정렬 토글
+      var sortHeaders = document.querySelectorAll('th[data-sort]');
+      for (var hi = 0; hi < sortHeaders.length; hi++) {
+        sortHeaders[hi].addEventListener('click', function() {
+          var key = this.getAttribute('data-sort');
+          var current = sortSelect.value;
+          var parts = current.split('-');
+          var newDir;
+          if (parts[0] === key) {
+            // 같은 컬럼 → 방향 토글
+            newDir = parts[1] === 'asc' ? 'desc' : 'asc';
+          } else {
+            // 다른 컬럼 → 기본 방향 (숫자=desc, 이름/스킬=asc/desc)
+            newDir = (key === 'name') ? 'asc' : 'desc';
+          }
+          var newVal = key + '-' + newDir;
+          // sortSelect 에 해당 옵션이 없으면 임시로 추가하지 않고 그냥 상태만 갱신
+          var found = false;
+          for (var oi = 0; oi < sortSelect.options.length; oi++) {
+            if (sortSelect.options[oi].value === newVal) { sortSelect.selectedIndex = oi; found = true; break; }
+          }
+          if (!found) {
+            // 옵션 동적 추가
+            var opt = document.createElement('option');
+            opt.value = newVal;
+            opt.text = key + ' ' + (newDir === 'asc' ? '↑' : '↓');
+            sortSelect.appendChild(opt);
+            sortSelect.value = newVal;
+          }
+          applyFilters();
+        });
       }
 
       searchInput.addEventListener('input', applyFilters);
       filterSelect.addEventListener('change', applyFilters);
+      urlRangeSelect.addEventListener('change', applyFilters);
+      srcPatternSelect.addEventListener('change', applyFilters);
       sortSelect.addEventListener('change', applyFilters);
+      pageSizeSelect.addEventListener('change', function() {
+        pageSize = parseInt(pageSizeSelect.value, 10) || 50;
+        currentPage = 1;
+        render();
+      });
+      firstBtn.addEventListener('click', function() { currentPage = 1; render(); });
       prevBtn.addEventListener('click', function() { if (currentPage > 1) { currentPage--; render(); } });
       nextBtn.addEventListener('click', function() { currentPage++; render(); });
+      lastBtn.addEventListener('click', function() {
+        currentPage = Math.max(1, Math.ceil(filtered.length / pageSize));
+        render();
+      });
 
       applyFilters();
     })();

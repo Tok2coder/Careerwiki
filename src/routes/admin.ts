@@ -1084,6 +1084,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       image_url: string | null
       json_size: number
       sources_blob: string | null
+      ucj_sources_blob: string | null  // user_contributed_json._sources (unique URL count 산출용)
       // 12 fields presence (merged 기준)
       f_way: number; f_sal: number; f_pro: number; f_tv: number
       f_wlb: number; f_rdy: number; f_sj: number; f_sm: number
@@ -1103,6 +1104,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
         SELECT id, name, slug, image_url,
           length(user_contributed_json) AS json_size,
           json_extract(merged_profile_json,'$._sources') AS sources_blob,
+          json_extract(user_contributed_json,'$._sources') AS ucj_sources_blob,
           CASE WHEN json_type(merged_profile_json,'$.way') IS NOT NULL AND length(json_extract(merged_profile_json,'$.way'))>0 THEN 1 ELSE 0 END AS f_way,
           CASE WHEN json_type(merged_profile_json,'$.overviewSalary') IN ('object','array') AND length(json_extract(merged_profile_json,'$.overviewSalary'))>2 THEN 1 ELSE 0 END AS f_sal,
           CASE WHEN json_type(merged_profile_json,'$.overviewProspect') IN ('object','array') AND length(json_extract(merged_profile_json,'$.overviewProspect'))>2 THEN 1 ELSE 0 END AS f_pro,
@@ -1157,11 +1159,20 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       const fieldCount = fields.filter(Boolean).length
 
       // 출처 분석 — _sources blob만 parse (작음, 보통 < 5KB)
-      let sources: any = null
+      // merged._sources → 출처수/URL수/사고 패턴 (production 노출 기준)
+      let merged: any = null
       if (row.sources_blob) {
-        try { sources = JSON.parse(row.sources_blob) } catch {}
+        try { merged = JSON.parse(row.sources_blob) } catch {}
       }
-      const { sourceCount, urlSourceCount } = parseSources(sources)
+      const mergedParsed = parseSources(merged)
+
+      // UCJ._sources → unique URL 수 (스킬이 기록한 출처 기준)
+      let ucj: any = null
+      if (row.ucj_sources_blob) {
+        try { ucj = JSON.parse(row.ucj_sources_blob) } catch {}
+      }
+      // UCJ._sources 가 아예 없으면 null (마커 없는 직업) — 화면에서 '-' 표시
+      const uniqueUrlCount = ucj ? parseSources(ucj).uniqueUrlCount : null
 
       const imgUrl = row.image_url || ''
       const imageUrlBad = imgUrl.length > 0 && !imgUrl.startsWith('/uploads/') && !imgUrl.startsWith('https://') && !imgUrl.startsWith('http://')
@@ -1174,7 +1185,9 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
 
       return {
         name: row.name, slug: row.slug, fields, fieldCount, jsonSize,
-        sourceCount, urlSourceCount,
+        sourceCount: mergedParsed.sourceCount,
+        urlSourceCount: mergedParsed.urlSourceCount,
+        uniqueUrlCount,
         youtubeCount: row.yt_count || 0,
         skillApplied, skillLastAppliedAt,
         wayIsArray: !!row.way_is_array,
@@ -1182,6 +1195,9 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
         wayTrunc: !!row.way_trunc,
         srcOrderBad: !!row.src_order_bad,
         ytLow: !!row.yt_low,
+        srcRawURL: mergedParsed.hasRawURL,
+        srcBracket: mergedParsed.hasBracket,
+        srcMojibake: mergedParsed.hasMojibake,
       }
     })
 
