@@ -1073,16 +1073,18 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       }
     }
 
-    // 3. 전체 활성 엔티티 목록 (production-accurate: merged_profile_json 기준) — 배치 조회
-    //    UCJ는 wayIsArray (데이터 무결성) 체크용으로만 추가 fetch
-    type Row = { id: string; name: string; slug: string; merged_profile_json: string | null; user_contributed_json: string | null; image_url: string | null }
+    // 3. 보완된 엔티티 목록 (UCJ 존재) — 배치 조회
+    //    Worker CPU 50ms 한도 회피: 전체 6939 row JSON.parse는 1102 (resource exceeded)
+    //    → UCJ 존재 entity (~1487)만 fetch하고 12 필드 카운팅은 merged 기준 (production-accurate)
+    //    api-only 직업은 admin 표시 제외 (skillAppliedCount는 별도 SQL aggregate로 카운팅)
+    type Row = { id: string; name: string; slug: string; merged_profile_json: string | null; user_contributed_json: string; image_url: string | null }
     const allRows: Row[] = []
     {
       let offset = 0
       while (true) {
         const batch = await db.prepare(
           `SELECT id, name, slug, merged_profile_json, user_contributed_json, image_url FROM ${tableName}
-           WHERE is_active = 1
+           WHERE is_active = 1 AND user_contributed_json IS NOT NULL
            ORDER BY name LIMIT 500 OFFSET ?`
         ).bind(offset).all<Row>()
         const rows = batch.results || []
