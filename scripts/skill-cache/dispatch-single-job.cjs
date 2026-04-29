@@ -35,21 +35,88 @@ if (!fs.existsSync(QUEUE_PATH)) {
 }
 const queue = JSON.parse(fs.readFileSync(QUEUE_PATH, 'utf8'));
 
-// queue 우선순위: retry → master_cohort
+// master-list fallback (queue.master_cohort 비어있을 때)
+//   - data/enhance-master-list.json 사용
+//   - cohort 우선순위: 의료/보건 → IT/SW → 디자인/예술 → 금융 → 학자/연구 → 미디어/방송 → 운송/물류 → 기계/정비 → 법조 → 기타 서비스
+//   - 각 cohort 내 우선순위: A 카테고리(마커 보유 + 부분 보강) → B_light → B_heavy
+//   - 이미 retry queue에 있던 직업은 제외
+const COHORT_PRIORITY = [
+  '의료/보건', 'IT/SW', '디자인/예술', '금융', '학자/연구',
+  '미디어/방송', '운송/물류', '기계/정비', '법조', '기타 서비스',
+];
+
+function loadMasterCohort() {
+  const masterPath = path.join(REPO_ROOT, 'data', 'enhance-master-list.json');
+  if (!fs.existsSync(masterPath)) return [];
+  const master = JSON.parse(fs.readFileSync(masterPath, 'utf8'));
+  // 사용자 KPI = [job-data-enhance] 마커 적용 여부.
+  // A 카테고리는 이미 마커 보유 (사용자 정책: 마커 미적용 직업만 처리).
+  // 기본: B_light + B_heavy + A_marker_pending (마커 부착만 필요한 25)
+  // --include-a 옵션 시 A 포함
+  const includeA = !!args['include-a'];
+  const all = includeA
+    ? [
+        ...((master.category_a_field_only || []).map(j => ({ ...j, _src: 'A' }))),
+        ...((master.category_a_marker_pending || []).map(j => ({ ...j, _src: 'A_marker_pending' }))),
+        ...((master.category_b_light || []).map(j => ({ ...j, _src: 'B_light' }))),
+        ...((master.category_b_heavy || []).map(j => ({ ...j, _src: 'B_heavy' }))),
+      ]
+    : [
+        ...((master.category_a_marker_pending || []).map(j => ({ ...j, _src: 'A_marker_pending' }))),
+        ...((master.category_b_light || []).map(j => ({ ...j, _src: 'B_light' }))),
+        ...((master.category_b_heavy || []).map(j => ({ ...j, _src: 'B_heavy' }))),
+      ];
+  // cohort 우선순위 직업만
+  const filtered = all.filter(j => COHORT_PRIORITY.includes(j.cohort));
+  // retry queue + completed에 이미 있던 직업 제외
+  const exclude = new Set([
+    ...(queue.retry || []).map(j => j.slug),
+    ...(queue.completed || []).map(j => typeof j === 'string' ? j : j.slug),
+  ]);
+  const remaining = filtered.filter(j => !exclude.has(j.slug));
+  // cohort 순서 + 누락 필드 적은 순 정렬
+  // ⚠️ srcOrder.A=0이라 `||` 사용 금지 (0 falsy → 99로 fallback). `??` 필수.
+  remaining.sort((a, b) => {
+    const ca = COHORT_PRIORITY.indexOf(a.cohort);
+    const cb = COHORT_PRIORITY.indexOf(b.cohort);
+    if (ca !== cb) return ca - cb;
+    const srcOrder = { A: 0, A_marker_pending: 1, B_light: 2, B_heavy: 3 };
+    if (a._src !== b._src) return (srcOrder[a._src] ?? 99) - (srcOrder[b._src] ?? 99);
+    return (a.missing_fields?.length ?? 0) - (b.missing_fields?.length ?? 0);
+  });
+  // 통일된 형식으로 변환
+  return remaining.map(j => ({
+    slug: j.slug,
+    id: j.id,
+    cohort: j.cohort,
+    category: j._src,
+    sal_status: j.sal_status,
+    missing_fields: j.missing_fields,
+    issues: [`${j._src} cohort=${j.cohort} sal=${j.sal_status} missing=${(j.missing_fields || []).join(',') || 'none'}`],
+  }));
+}
+
+// queue 우선순위: retry → master_cohort (queue.json) → master-list fallback
 function getPool() {
   if (args.slug) {
-    // 단일 직업 — retry/master_cohort 모두 검색
-    const all = [...(queue.retry || []), ...(queue.master_cohort || [])];
-    const found = all.find(j => j.slug === args.slug);
+    const fromQueue = [...(queue.retry || []), ...(queue.master_cohort || [])];
+    let found = fromQueue.find(j => j.slug === args.slug);
     if (!found) {
-      console.error(`slug '${args.slug}'이 큐에 없음. 가능 slug:`);
-      all.slice(0, 10).forEach(j => console.error(`  ${j.slug}`));
+      const fromMaster = loadMasterCohort();
+      found = fromMaster.find(j => j.slug === args.slug);
+    }
+    if (!found) {
+      console.error(`slug '${args.slug}'이 큐/master-list에 없음`);
       process.exit(2);
     }
     return [found];
   }
   if (QUEUE === 'retry') return queue.retry || [];
-  if (QUEUE === 'master_cohort') return queue.master_cohort || [];
+  if (QUEUE === 'master_cohort' || QUEUE === 'master-cohort') {
+    // queue.master_cohort 비어있으면 master-list로 fallback
+    if ((queue.master_cohort || []).length > 0) return queue.master_cohort;
+    return loadMasterCohort();
+  }
   return [...(queue.retry || []), ...(queue.master_cohort || [])];
 }
 
