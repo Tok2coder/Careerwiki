@@ -68,6 +68,10 @@ const ARRAY_FIELDS = [
   'detailReady.training',
 ];
 
+// d1Query — wrangler d1 execute 출력에서 첫 JSON 배열을 brace-balanced 추출 후 파싱.
+// (2026-04-29 패치: wrangler 버전에 따라 stdout에 trailing 메시지 추가될 때
+//  out.slice(startIdx) 그대로 JSON.parse 시 SyntaxError 발생 — 다른 dispatch
+//  세션 환경에서 line 5 col 6 JSON parse 에러 사고로 격상 패치)
 function d1Query(sql) {
   const escaped = sql.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\s+/g, ' ').trim();
   const cmdline = `npx wrangler d1 execute careerwiki-kr --remote --json --command "${escaped}"`;
@@ -77,9 +81,27 @@ function d1Query(sql) {
   });
   if (r.status !== 0 && !r.stdout) throw new Error(`wrangler failed: ${(r.stderr || '').slice(0, 500)}`);
   const out = (r.stdout || '').trim();
-  const startIdx = out.indexOf('[');
-  if (startIdx < 0) return [];
-  return JSON.parse(out.slice(startIdx))[0]?.results || [];
+  const start = out.indexOf('[');
+  if (start < 0) return [];
+  // brace-balanced 추출 — wrangler가 trailing 텍스트 붙일 수 있음
+  let depth = 0, end = -1, inStr = false, esc = false;
+  for (let i = start; i < out.length; i++) {
+    const c = out[i];
+    if (esc) { esc = false; continue; }
+    if (c === '\\') { esc = true; continue; }
+    if (c === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (c === '[') depth++;
+    else if (c === ']') { depth--; if (depth === 0) { end = i + 1; break; } }
+  }
+  if (end < 0) end = out.length;
+  const json = out.slice(start, end);
+  try {
+    return JSON.parse(json)[0]?.results || [];
+  } catch (e) {
+    const sample = json.slice(0, 200).replace(/\n/g, '\\n');
+    throw new Error(`d1Query JSON parse 실패: ${e.message}\n  stdout sample (200자): ${sample}\n  stderr sample: ${(r.stderr || '').slice(0, 300)}`);
+  }
 }
 
 function getNested(obj, dottedPath) {
