@@ -16,27 +16,65 @@ const OUT = path.join(REPO_ROOT, 'data', 'cycle1-prompts.md');
 
 const data = JSON.parse(fs.readFileSync(MASTER, 'utf8'));
 
-// 패턴 mix + heavy/light balance로 10건 선정
-const CYCLE_1_SLUGS = [
-  '입학사정관',       // 무거움: rawURL×17 단독 (rawURL only 대표)
-  '보험계리사',       // 무거움: mojibake×1 (인코딩 사고 — 가장 시급)
-  '의료코디네이터',     // 무거움: 다중 brokenRef×8/orphan×8/dup×2/selfCite×4
-  '수상운송사무원',     // 무거움: selfCiteOnly + listPage×5 (selfCiteOnly 대표)
-  '드라마작가',       // 중간: brokenRef×6/rawURL×4/selfCite×1 (다중 사고)
-  '사회단체활동가',     // 가벼움: selfCiteOnly + listPage×3
-  '집배원',         // 가벼움: brokenRef×5 단독 (brokenRef only 대표)
-  '마취병리과의사',     // 가벼움: brokenRef×2 + dup×2 (의료/dup mix)
-  '법원공무원',       // 중간: listPage×1 + brokenRef×2 + dup×5 (공직)
-  '네일아티스트',      // 중간: rawURL×4 + orphan×4 + selfCite×5 (외부 host 8 풍부)
+// 5세션 × 4직업 = 20직업 (cycle 1).
+// 각 세션이 무거움 1-2 + 중간 1-2 + 가벼움 1을 균형 있게 받도록 분배.
+// 세션 worktree 매핑은 사용자 5표본 worktree와 일치 (수의사보조원/만화가/사서/경제학연구원/리포터).
+const SESSIONS = [
+  {
+    worktree: '수의사보조원',
+    jobs: [
+      '입학사정관',       // 무거움 — rawURL×17 only (rawURL 대표)
+      '사회단체활동가',    // 가벼움 — selfCiteOnly+listPage×3
+      '마케팅전문가',     // 중간 — brokenRef×6/rawURL×4 (IT 마케팅)
+      '번역가',         // 가벼움 — brokenRef×5/rawURL×3
+    ],
+  },
+  {
+    worktree: '만화가',
+    jobs: [
+      '보험계리사',      // 무거움 — mojibake×1 (인코딩 사고 시급)
+      '집배원',         // 가벼움 — brokenRef×5 only
+      '전문의사',       // 무거움 — rawURL×11
+      '직업상담사',     // 중간 — brokenRef×6/rawURL×3
+    ],
+  },
+  {
+    worktree: '사서',
+    jobs: [
+      '의료코디네이터',    // 무거움 — 다중 brokenRef×8/orphan×8/dup×2/selfCite×4
+      '마취병리과의사',    // 가벼움 — brokenRef×2/dup×2
+      '방송연출가',     // 중간 — brokenRef×5/rawURL×5
+      '화학공학기술자',    // 중간 — brokenRef×6/rawURL×3
+    ],
+  },
+  {
+    worktree: '경제학연구원',
+    jobs: [
+      '수상운송사무원',    // 무거움 — selfCiteOnly+listPage×5
+      '법원공무원',     // 가벼움 — listPage×1+brokenRef×2+dup×5
+      '사회학연구원',    // 중간 — brokenRef×7/rawURL×3
+      '서예가',         // 중간 — brokenRef×7/rawURL×3
+    ],
+  },
+  {
+    worktree: '리포터',
+    jobs: [
+      '드라마작가',     // 무거움 — brokenRef×6/rawURL×4
+      '네일아티스트',    // 중간 — rawURL×4/orphan×4/selfCite×5
+      '역사학연구원',    // 중간 — brokenRef×5/rawURL×5
+      '전화교환원',     // 무거움 — selfCiteOnly+listPage×5
+    ],
+  },
 ];
 
-const picked = CYCLE_1_SLUGS.map(slug => {
+// 모든 직업 평탄화 + master-list에서 정보 lookup
+const picked = SESSIONS.flatMap(s => s.jobs).map(slug => {
   const j = data.jobs.find(x => x.slug === slug);
   if (!j) throw new Error(`slug not found in master-list: ${slug}`);
   return j;
 });
 
-const STANDARD_PROMPT = (j, sessionNum) => {
+const STANDARD_PROMPT = (j, sessionLabel) => {
   const tags = j.tags;
   const sum = j.fixSummary || tags;
   const detailLines = [];
@@ -59,7 +97,7 @@ const STANDARD_PROMPT = (j, sessionNum) => {
     detailLines.push(`  - selfCite hosts: ${j.details.selfCiteHosts.join(', ')}`);
   }
 
-  return `## 세션 ${sessionNum}: ${j.slug}
+  return `### ${sessionLabel}: ${j.slug}
 
 \`\`\`
 /job-data-enhance 직업 1개 풀 사이클 — 단축 절대 금지
@@ -140,38 +178,65 @@ RETRY: ${j.slug} 사유: {validate FAIL 또는 deep-audit pattern={남은 패턴
 `;
 };
 
-// markdown 헤더
+// markdown 헤더 + 세션별 grouping
 const md = [
-  `# Cycle 1 Prompts (10직업 — 5세션 × 2직업)\n`,
+  `# Cycle 1 Prompts (20직업 — 5세션 × 4직업)\n`,
   `**Generated**: ${new Date().toISOString()}`,
   `**Source**: data/master-list-50.json (47건 사고 풀)`,
-  `**기준**: 패턴 다양성 (rawURL only / brokenRef only / selfCiteOnly / mojibake / 다중 mix) + 처리 시간 균형 (heavy 4 + medium 3 + light 3)\n`,
-  `## 선정 결과\n`,
-  `| # | slug | sev | URL | ext | 사고 패턴 | 무게 |`,
-  `|---|------|-----|-----|-----|-----------|------|`,
-  ...picked.map((j, i) => {
-    const weight = j.severity >= 10 ? '무거움' : (j.severity >= 5 ? '중간' : '가벼움');
-    return `| ${i + 1} | ${j.slug} | ${j.severity.toFixed(1)} | ${j.totalUrls} | ${j.externalHostCount} | ${j.tags} | ${weight} |`;
-  }),
-  `\n## 운영 가이드\n`,
-  `- 5세션 × 2직업 = 10직업 (cycle 1)`,
-  `- 각 세션이 첫 직업 DONE 받으면 두 번째 직업 dispatch`,
-  `- DONE 형식: \`DONE: {slug} rev={N} deep-audit=CLEAN externalHosts={N≥3} ...\``,
-  `- RETRY 형식: \`RETRY: {slug} 사유: ...\``,
-  `- cycle 1 모두 DONE 받고 main에서 \`audit-sources-deep.cjs --markers-only\`로 baseline 재측정 → 잔여 37건 cycle 2 dispatch\n`,
-  `## 🆕 Cycle 1 정책 변경 3가지 (이전 5세션 결과 반영)\n`,
-  `1. **detailReady 항목별 [N] 마커 + _sources 등록 필수** — 이전 5세션 일관성 부족`,
-  `2. **외부 host minimum 3+ 권장** — 리포터 외부 2개 통과 사례 빈약 (5+ 이상적)`,
-  `3. **careerTree 이번 사이클 대상 X** — 별도 사이클로 분리, 기존 유지\n`,
-  `---\n`,
-  ...picked.map((j, i) => STANDARD_PROMPT(j, i + 1)),
+  `**운영 룰**: 한 세션 최대 5직업, 한 세션은 동시 1직업 (single-job mode), 5세션 동시 운영`,
+  `**기준**: 패턴 다양성 (rawURL only / brokenRef only / selfCiteOnly / mojibake / 다중 mix) + 처리 시간 균형 (각 세션 무거움 1-2 + 중간 1-2 + 가벼움 1)\n`,
+  `## 세션별 분배 (5세션 × 4직업 = 20직업)\n`,
 ];
+SESSIONS.forEach((s, sIdx) => {
+  md.push(`### 세션 ${sIdx + 1}: ${s.worktree} worktree`);
+  md.push(``);
+  md.push(`| # | slug | sev | URL | ext | 사고 패턴 | 무게 |`);
+  md.push(`|---|------|-----|-----|-----|-----------|------|`);
+  s.jobs.forEach((slug, jIdx) => {
+    const j = data.jobs.find(x => x.slug === slug);
+    const weight = j.severity >= 10 ? '무거움' : (j.severity >= 5 ? '중간' : '가벼움');
+    md.push(`| ${jIdx + 1} | ${j.slug} | ${j.severity.toFixed(1)} | ${j.totalUrls} | ${j.externalHostCount} | ${j.tags} | ${weight} |`);
+  });
+  md.push(``);
+});
+md.push(`## 운영 가이드\n`);
+md.push(`- 각 세션이 직업 1개를 single-job 풀 사이클로 처리 → DONE/RETRY 보고`);
+md.push(`- 오케스트레이터가 DONE 받으면 같은 세션에 다음 직업 send_message`);
+md.push(`- cycle 1 (20건) 끝나고 잔여 27건 → cycle 2 (새 5세션 × 5직업 = 25건)`);
+md.push(`- 마지막 cycle 2 끝나면 master-list-50.json에서 잔여 2건은 별도 처리\n`);
+md.push(`## 🆕 Cycle 1 정책 변경 3가지 (이전 5세션 결과 반영)\n`);
+md.push(`1. **detailReady 항목별 [N] 마커 + _sources 등록 필수** — 이전 5세션 일관성 부족 발견`);
+md.push(`2. **외부 host minimum 3+ 권장** — 리포터 외부 2개 통과 사례 빈약 (5+ 이상적)`);
+md.push(`3. **careerTree 이번 사이클 대상 X** — 별도 사이클로 분리, 기존 유지\n`);
+md.push(`---\n`);
+
+// 세션별 prompt 출력
+SESSIONS.forEach((s, sIdx) => {
+  md.push(`# 세션 ${sIdx + 1} (${s.worktree} worktree) — 4직업\n`);
+  md.push(`> **dispatch 순서**: 4직업을 순차로 send_message. 첫 직업 DONE 받고 다음 직업 send.\n`);
+  s.jobs.forEach((slug, jIdx) => {
+    const j = data.jobs.find(x => x.slug === slug);
+    md.push(STANDARD_PROMPT(j, `세션 ${sIdx + 1} — 직업 ${jIdx + 1}/4`));
+  });
+  md.push(`---\n`);
+});
 
 fs.writeFileSync(OUT, md.join('\n'), 'utf8');
 console.log(`\n=== cycle 1 prompts 작성 완료 ===\n`);
 console.log(`파일: ${OUT}`);
-console.log(`\n선정된 10건:\n`);
-picked.forEach((j, i) => {
-  const weight = j.severity >= 10 ? '무거움' : (j.severity >= 5 ? '중간' : '가벼움');
-  console.log(`  ${String(i + 1).padStart(2)}. ${j.slug.padEnd(15)} sev=${j.severity.toFixed(1).padStart(4)} URL=${String(j.totalUrls).padStart(2)} ext=${String(j.externalHostCount).padStart(2)} [${weight}] ${j.tags}`);
+console.log(`\n5세션 × 4직업 = 20직업 분배:\n`);
+SESSIONS.forEach((s, sIdx) => {
+  console.log(`[세션 ${sIdx + 1}] ${s.worktree} worktree:`);
+  s.jobs.forEach((slug, jIdx) => {
+    const j = data.jobs.find(x => x.slug === slug);
+    const weight = j.severity >= 10 ? '무거움' : (j.severity >= 5 ? '중간' : '가벼움');
+    console.log(`   ${jIdx + 1}/4. ${j.slug.padEnd(15)} sev=${j.severity.toFixed(1).padStart(4)} URL=${String(j.totalUrls).padStart(2)} ext=${String(j.externalHostCount).padStart(2)} [${weight}] ${j.tags}`);
+  });
+  console.log('');
 });
+
+// 사용한 직업 → 잔여 확인
+const usedSlugs = new Set(SESSIONS.flatMap(s => s.jobs));
+const remaining = data.jobs.filter(j => !usedSlugs.has(j.slug));
+console.log(`master-list-50 잔여: ${remaining.length}건 (cycle 2 + 잔여)`);
+console.log(`잔여 직업: ${remaining.map(j => j.slug).join(', ')}`);
