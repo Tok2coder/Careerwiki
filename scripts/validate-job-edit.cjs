@@ -31,6 +31,11 @@ const {
   analyzeYoutubeSearchNote,
   analyzeCareerTreeNote,
   detectTriviaInlineFootnote,
+  // 2026-04-29 source-policy 강화 (deep audit 발견)
+  detectListPageUrl,
+  classifySourceHosts,
+  detectOrphanSourceIdx,
+  detectBrokenSourceRef,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 검증 규칙 ──────────────────────────────────────────
@@ -767,6 +772,104 @@ function validate(data) {
     }
   }
 
+  // ── 10-C. 출처 정책 강화 (2026-04-29, deep audit 발견 사고 차단) ────────────
+  //
+  // sources.cjs의 4 패턴(rawURL/bracketPrefix/mojibake/sourcesNULL) 위에 추가:
+  //   E) listPage URL — 직업 specific 페이지 아닌 인덱스/카테고리 (FAIL)
+  //   F) selfCiteOnly — _sources 전체에 외부 host 0 (FAIL — career.go.kr/work.go.kr만 단독 금지)
+  //   F') self-domain (careerwiki.org/.kr) — 자기 사이트 인용 절대 금지 (FAIL)
+  //   G) selfCite warn — career.go.kr/work.go.kr 등 origin host가 외부 보충 1개 미만이면 WARN
+  //   H) orphanSrc — 산문 필드 _sources 등록 idx N이 본문에 [N] 미사용 (WARN)
+  //   I) brokenRef — 산문 필드 본문 [N]이 _sources[fieldKey] 길이 초과 (FAIL)
+  //
+  // 본문 [N]은 *field-local* 번호이며 detailTemplateUtils.applyInlineFootnotes의
+  // footnoteMap이 글로벌 번호로 변환한다. 검사도 field-local 기준.
+  {
+    // 평탄화된 source 배열 — 전체 host 분류용
+    const flatSources = [];
+    for (const [, srcArr] of Object.entries(sources)) {
+      if (!Array.isArray(srcArr)) continue;
+      for (const src of srcArr) if (src && typeof src === 'object') flatSources.push(src);
+    }
+    const hostInfo = classifySourceHosts(flatSources);
+
+    // F') careerwiki.org / .kr 자기 사이트 인용 — 절대 금지 (FAIL)
+    if (hostInfo.hasSelfDomain) {
+      errors.push(`[selfDomain] _sources에 careerwiki.org/.kr URL 포함 — 자기 사이트 인용은 절대 금지. 외부 출처로 교체 필요`);
+    }
+
+    // F) selfCiteOnly — URL이 1개 이상이고 외부 host 0 (origin/self만)
+    if (hostInfo.allUrls.length > 0 && hostInfo.externalHostCount === 0) {
+      const originHosts = hostInfo.allUrls
+        .map(u => { try { return new URL(u).host.toLowerCase(); } catch { return ''; } })
+        .filter(Boolean);
+      errors.push(
+        `[selfCiteOnly] _sources의 모든 URL이 career.go.kr/work.go.kr/work24.go.kr/job.go.kr 등 ` +
+        `CareerWiki 데이터 origin (${[...new Set(originHosts)].join(', ')}) — ` +
+        `이 도메인들은 우리 데이터의 원본이므로 단독 출처로 부적합. 외부 보충 출처 최소 1개 이상 필수 ` +
+        `(예: 협회·학회·공공통계·전문 미디어·학술논문 등)`
+      );
+    }
+
+    // G) selfCite WARN — origin 호스트가 있으면 외부 보충 출처 ≥1개 권장
+    if (hostInfo.originHostCount > 0 && hostInfo.externalHostCount === 0 && !hostInfo.hasSelfDomain) {
+      // 위 F)에서 이미 ERROR 발행됐으면 중복 회피 (selfCiteOnly가 더 정확)
+      // 외부 보충은 ≥1개. host 다양성 권장 (≥2 unique external).
+    } else if (hostInfo.originHostCount > 0 && hostInfo.externalHostCount === 1) {
+      warnings.push(
+        `[selfCite] _sources에 career.go.kr/work.go.kr 등 origin 호스트 ${hostInfo.originHostCount}개 + 외부 ${hostInfo.externalHostCount}개 — ` +
+        `외부 보충 출처를 2개 이상 확보하면 정보 다양성 향상. 사용 외부 host: ${hostInfo.externalHosts.join(', ')}`
+      );
+    }
+
+    // E·H·I) 필드별 검사
+    const BODY_FIELDS_FOR_FOOTNOTE = [
+      'way', 'trivia', 'overviewProspect.main', 'overviewSalary.sal',
+      'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'overviewAbilities.technKnow',
+      'summary', 'overviewWork.main',
+    ];
+
+    for (const [fieldKey, srcArr] of Object.entries(sources)) {
+      if (!Array.isArray(srcArr)) continue;
+
+      // E) listPage URL 차단
+      for (let i = 0; i < srcArr.length; i++) {
+        const src = srcArr[i];
+        if (src && src.url && detectListPageUrl(src.url)) {
+          errors.push(
+            `[listPageURL] sources["${fieldKey}"][${i}].url 이 인덱스/카테고리 페이지: "${src.url}" — ` +
+            `직업 식별자(seq/code/jobsCd 등)가 포함된 구체적 직업 페이지로 교체 필요. ` +
+            `예: career.go.kr/cloud/w/job → /cloud/w/job/view?seq={SEQ} / work.go.kr → ?jobsCd={code}`
+          );
+        }
+      }
+
+      // H·I) 산문 필드만 — orphan/broken 검사
+      if (BODY_FIELDS_FOR_FOOTNOTE.includes(fieldKey)) {
+        const body = getNestedField(fields, fieldKey);
+        if (typeof body === 'string') {
+          const orphans = detectOrphanSourceIdx(body, srcArr);
+          if (orphans.length > 0) {
+            warnings.push(
+              `[orphanSrc] sources["${fieldKey}"]에 ${srcArr.length}개 등록됐는데 본문에서 ` +
+              `[${orphans.join('], [')}] 마커가 사용되지 않음 — 등록만 하고 본문 미인용. ` +
+              `본문에 해당 출처를 인용하거나 _sources에서 제거 필요. ` +
+              `(field-local 번호 기준: 본문 [N] ↔ _sources["${fieldKey}"][N-1])`
+            );
+          }
+          const broken = detectBrokenSourceRef(body, srcArr);
+          if (broken.length > 0) {
+            errors.push(
+              `[brokenRef] ${fieldKey} 본문에 [${broken.join('], [')}] 마커 있는데 ` +
+              `_sources["${fieldKey}"] 길이 ${srcArr.length}개로 부족 — 본문 마커는 field-local 1..N 연속이어야 함. ` +
+              `_sources에 누락 항목 추가하거나 본문 마커 정리 필요`
+            );
+          }
+        }
+      }
+    }
+  }
+
   // ── 10-B. 인라인 도메인 표기 감지 (서술형 필드) ──
   // 텍스트 본문에 (도메인) 패턴 금지 — 출처는 [N]+_sources로만 표기
   {
@@ -971,4 +1074,6 @@ function main() {
 // Export for programmatic use
 module.exports = { validate };
 
-main();
+if (require.main === module) {
+  main();
+}

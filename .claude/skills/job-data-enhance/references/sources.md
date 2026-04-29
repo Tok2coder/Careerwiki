@@ -1,14 +1,36 @@
 # 출처 품질 기준 및 포맷 규칙
 
+> ⚠️ **2026-04-29 정책 강화**: deep audit에서 마커 보유 직업 325개 중 196개(60%) 가
+> career.go.kr / work.go.kr 등 우리 데이터 origin 도메인만 단독 사용 — selfCite 사고 발견.
+> 아래 정책은 그 후 강화된 것. **origin 단독 인용 금지 + 외부 보충 강제**.
+
 ## 출처 등급 분류
 
-### 1등급 — 공공기관 (최우선)
-신뢰도 최고. 가능하면 1등급 출처 2개 이상 확보할 것.
+### ⚠️ origin 도메인 (CareerWiki 데이터 원본 — 단독 사용 금지)
+
+다음 도메인은 CareerWiki가 직접 데이터를 가져오는 **데이터 원본(origin)**이다.
+이 도메인을 출처로 쓰면 "자기 데이터 인용"이 되어 정보 가치가 빈약하다.
+**반드시 외부 보충 출처 1개 이상 동반** 필수 (validate `[selfCiteOnly]` FAIL).
+
+| 기관명 | 도메인 | 비고 |
+|--------|--------|------|
+| 커리어넷 직업백과 | career.go.kr | API로 자동 수집됨 |
+| 워크넷 직업정보 | work.go.kr | API로 자동 수집됨 |
+| 고용24 | work24.go.kr | 워크넷 후속 |
+| 직업포털 | job.go.kr | 정부 직업포털 |
+
+### 🚫 자기 사이트 (절대 금지)
+
+| 도메인 | 비고 |
+|--------|------|
+| careerwiki.org / .kr | 자기 자신 인용 — validate `[selfDomain]` FAIL |
+
+### 1등급 — 외부 공공·전문 기관 (적극 활용)
+
+신뢰도 최고. 가능하면 외부 1등급 출처 2개 이상 확보.
 
 | 기관명 | 도메인 | 주요 정보 |
 |--------|--------|-----------|
-| 커리어넷 직업백과 | career.go.kr | 직업 개요, 하는 일, 준비 방법 |
-| 워크넷 직업정보 | work.go.kr | 임금·직업 현황, 전망 |
 | 한국고용정보원 | keis.or.kr | 고용 통계, 직업 전망 보고서 |
 | 직업능력개발원 | krivet.re.kr | 훈련·자격 정보 |
 | 국가통계포털 | kosis.kr | 종사자 수, 임금 통계 |
@@ -70,20 +92,48 @@
 ```
 
 ### 필드별 id 매핑 원칙
-- id는 전체 JSON 내 전역 고유 순번 (1부터 연속)
-- 같은 출처를 여러 섹션에서 사용해도 섹션마다 별도 id 부여
-- 본문 `[N]`은 해당 섹션 _sources 배열에서 `"id": N`인 항목을 참조
 
-**올바른 예**:
+> ⚠️ **2026-04-29 정합성 정정** — 실제 렌더링 코드(`src/templates/detailTemplateUtils.ts:applyInlineFootnotes`)와 일치하도록 명세 갱신.
+
+**핵심 정책**:
+- 본문 `[N]`은 **field-local 번호** — 각 필드마다 1부터 시작
+- 본문 `[N]` ↔ `_sources[fieldKey][N-1]` (배열 내 0-based index 매핑)
+- `_sources[fieldKey][i].id`는 **페이지 통합 출처 카운트용 글로벌 번호** — 1부터 연속 권장하지만 본문 매핑과 무관
+- 렌더러가 footnoteMap을 통해 본문 [N] (local) → 글로벌 [M] 으로 변환
+
+**올바른 예** (글로벌 id 1-4 분산):
 ```
-way 텍스트: "간호사가 되려면 간호학과를 졸업해야 한다.[1] 국가면허시험에 합격해야 한다.[2]"
-_sources.way: [{"id":1, ...}, {"id":2, ...}]
+way 본문: "간호학과 졸업.[1] 국가시험 합격.[2]"
+trivia 본문: "급여는 평균 4,200만 원.[1]"
+_sources.way: [
+  {"id":1, "text":"커리어넷", "url":"https://www.career.go.kr/cloud/w/job/view?seq=1"},
+  {"id":2, "text":"한국간호협회", "url":"https://kna.or.kr/..."}
+]
+_sources.trivia: [
+  {"id":3, "text":"KOSIS 임금 통계", "url":"https://kosis.kr/..."}
+]
 ```
 
-**잘못된 예** (id 불일치):
+본문 way [1] ↔ _sources.way[0] (글로벌 [1]), way [2] ↔ _sources.way[1] (글로벌 [2]),
+trivia [1] ↔ _sources.trivia[0] (글로벌 [3]).
+
+**잘못된 예 1** (brokenRef — _sources 길이 < 본문 max [N]):
 ```
-way 텍스트: "간호사가 되려면 간호학과를 졸업해야 한다.[1] 국가면허시험에 합격해야 한다.[3]"
-_sources.way: [{"id":1, ...}, {"id":2, ...}]  // [3]이 없음!
+way 본문: "...졸업.[1] 시험.[2] 취업.[3]"  ← 본문 max=[3]
+_sources.way: [{"id":1, ...}]  ← 길이 1, [2]·[3] 매핑 없음 → validate FAIL
+```
+
+**잘못된 예 2** (orphanSrc — 등록만, 본문 미인용):
+```
+way 본문: "...졸업.[1]"  ← 본문 max=[1]
+_sources.way: [
+  {"id":1, ...}, {"id":2, ...}, {"id":3, ...}, {"id":4, ...}
+]  ← 4개 등록됐지만 [2]·[3]·[4]는 본문 미사용 → validate WARN
+```
+
+**잘못된 예 3** (글로벌 id 불연속 — gap):
+```
+_sources.way: [{"id":1, ...}, {"id":3, ...}]  ← id 2 누락. 글로벌 카운트 깨짐
 ```
 
 ---
@@ -108,7 +158,66 @@ _sources.way: [{"id":1, ...}, {"id":2, ...}]  // [3]이 없음!
 {"id": 1, "text": "커리어넷", "url": "https://www.career.go.kr"}
 
 // 올바름
-{"id": 1, "text": "커리어넷 직업백과 간호사", "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=229"}
+{"id": 1, "text": "커리어넷 직업백과 간호사", "url": "https://www.career.go.kr/cloud/w/job/view?seq=229"}
+```
+
+### 🚫 list-page / 인덱스 URL (validate `[listPageURL]` FAIL)
+
+직업 specific 식별자(seq/SEQ/jobsCd/jmCd/code 등)가 없는 인덱스/카테고리/리스트 페이지는 출처로 부적합.
+
+```json
+// ❌ 금지 — career.go.kr 신형 인덱스 (seq 누락)
+{"id": 1, "url": "https://www.career.go.kr/cloud/w/job"}
+{"id": 2, "url": "https://www.career.go.kr/cloud/w/major"}
+
+// ❌ 금지 — career.go.kr 구형 인덱스 (SEQ 누락)
+{"id": 3, "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do"}
+{"id": 4, "url": "https://www.career.go.kr/cnet/front/base/job/jobList.do"}
+
+// ❌ 금지 — work.go.kr 인덱스 (jobsCd 누락)
+{"id": 5, "url": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do"}
+
+// ❌ 금지 — Q-Net 인덱스 (jmCd 또는 id 누락)
+{"id": 6, "url": "https://www.q-net.or.kr/crf005.do"}
+
+// ❌ 금지 — path가 /list, /listView, /category, /index, /main으로 끝남
+{"id": 7, "url": "https://example.go.kr/board/list"}
+{"id": 8, "url": "https://example.or.kr/info/category"}
+
+// ✅ 올바름 — 직업 specific 식별자 포함
+{"id": 1, "url": "https://www.career.go.kr/cloud/w/job/view?seq=229"}
+{"id": 2, "url": "https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do?jobsCd=1234"}
+{"id": 3, "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=1320"}
+```
+
+### 🚫 자기 사이트 인용 (validate `[selfDomain]` FAIL)
+
+```json
+// ❌ 절대 금지 — careerwiki.org / careerwiki.kr 자기 사이트
+{"id": 1, "url": "https://careerwiki.org/job/X"}
+{"id": 2, "url": "https://www.careerwiki.kr/major/Y"}
+```
+
+### 🚫 origin 단독 인용 (validate `[selfCiteOnly]` FAIL)
+
+career.go.kr / work.go.kr / work24.go.kr / job.go.kr 만으로 _sources를 채우면 FAIL.
+반드시 외부 host(keis.or.kr, kosis.kr, krivet.re.kr, 협회·학회·전문 미디어 등) 1개 이상 동반.
+
+```json
+// ❌ FAIL — 모든 URL이 origin 도메인
+"_sources": {
+  "way": [{"id":1, "url":"https://www.career.go.kr/cloud/w/job/view?seq=1"}],
+  "trivia": [{"id":2, "url":"https://www.work.go.kr/empInfo/jobInfo/jobInfoDetailView.do?jobsCd=2"}]
+}
+
+// ✅ PASS — origin + 외부 보충
+"_sources": {
+  "way": [
+    {"id":1, "url":"https://www.career.go.kr/cloud/w/job/view?seq=1"},
+    {"id":2, "url":"https://www.kna.or.kr/discipline/curriculum"}
+  ],
+  "trivia": [{"id":3, "url":"https://kosis.kr/statHtml/statHtml.do?orgId=124"}]
+}
 ```
 
 ---

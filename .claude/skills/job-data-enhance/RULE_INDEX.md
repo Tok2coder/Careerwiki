@@ -518,6 +518,88 @@ Windows 환경에서 `curl -d`로 한글 텍스트를 전송할 때 CP949 인코
 
 ---
 
+## 14. 출처 정책 강화 — 2026-04-29 (deep audit 발견 사고 차단)
+
+마커 보유 직업 325개 deep audit 결과 출처 정책 사고 발견. 5개 새 룰 추가.
+
+### 14-A. `[selfDomain]` — careerwiki.org/.kr 자기 사이트 인용 절대 금지 (FAIL)
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| SKILL.md — ⚡핵심 기술 규칙 표 | ✅ 정규 | — |
+| SKILL.md — 출처 수집 규칙 (origin 단독 금지) | 📎 참조 | → 핵심 규칙 표 |
+| references/sources.md — 자기 사이트 인용 섹션 | 📎 참조 | → 핵심 규칙 표 |
+| scripts/validate-job-edit.cjs — `[selfDomain]` | 🔒 코드 | **FAIL** |
+| scripts/_shared/detect-patterns.cjs — `classifySourceHosts` (SELF_DOMAINS) | ✅ 정규 (코드) | — |
+
+### 14-B. `[selfCiteOnly]` — origin 도메인 단독 인용 금지 (FAIL)
+
+`career.go.kr` / `work.go.kr` / `work24.go.kr` / `job.go.kr` 만으로 _sources를 채우면
+외부 보충 출처 0 — selfCiteOnly FAIL. 외부 host 1개 이상 동반 필수.
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| SKILL.md — ⚡핵심 기술 규칙 표 | ✅ 정규 | — |
+| SKILL.md — 출처 수집 규칙 (origin 정의) | 📎 참조 | → 핵심 규칙 표 |
+| references/sources.md — origin 도메인 섹션 | 📎 참조 | → 핵심 규칙 표 |
+| scripts/validate-job-edit.cjs — `[selfCiteOnly]` | 🔒 코드 | **FAIL** |
+| scripts/_shared/detect-patterns.cjs — `classifySourceHosts` (ORIGIN_DATA_DOMAINS) | ✅ 정규 (코드) | — |
+
+**기존 데이터**: 마커 풀 325개 중 10건 위반 (3%). 재enhance 시 외부 보충 추가.
+
+### 14-C. `[listPageURL]` — 인덱스/카테고리 URL 차단 (FAIL)
+
+직업 specific 식별자(seq/SEQ/jobsCd/jmCd 등) 없는 인덱스 페이지는 출처 부적합.
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| SKILL.md — ⚡핵심 기술 규칙 표 | ✅ 정규 | — |
+| references/sources.md — list-page URL 섹션 | 📎 참조 | → 핵심 규칙 표 |
+| scripts/validate-job-edit.cjs — `[listPageURL]` | 🔒 코드 | **FAIL** |
+| scripts/_shared/detect-patterns.cjs — `detectListPageUrl` + `LIST_PAGE_PATTERNS` | ✅ 정규 (코드) | 7개 패턴 |
+
+**기존 데이터**: 마커 풀 325개 중 17건 위반 (5%).
+
+### 14-D. `[brokenRef]` — 본문 [N] ↔ _sources 매핑 실패 (FAIL)
+
+본문 [N]은 *field-local* 번호. _sources[fieldKey][N-1] 매핑 시도, 길이 부족이면 broken.
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| SKILL.md — ⚡핵심 기술 규칙 표 (본문 [N] = field-local) | ✅ 정규 | — |
+| references/sources.md — 필드별 id 매핑 원칙 | 📎 참조 | 잘못된 예 1 |
+| scripts/validate-job-edit.cjs — `[brokenRef]` | 🔒 코드 | **FAIL** |
+| scripts/_shared/detect-patterns.cjs — `detectBrokenSourceRef` | ✅ 정규 (코드) | — |
+| src/templates/detailTemplateUtils.ts — `applyInlineFootnotes` | 📎 참조 (렌더러) | footnoteMap 변환 |
+
+**기존 데이터**: 마커 풀 325개 중 31건 위반 (10%).
+
+### 14-E. `[orphanSrc]` — _sources 등록만 본문 미사용 (WARN)
+
+| 위치 | 유형 | 참조 |
+|------|------|------|
+| SKILL.md — ⚡핵심 기술 규칙 표 | ✅ 정규 | — |
+| references/sources.md — 필드별 id 매핑 원칙 | 📎 참조 | 잘못된 예 2 |
+| scripts/validate-job-edit.cjs — `[orphanSrc]` | 🔒 코드 | WARN |
+| scripts/_shared/detect-patterns.cjs — `detectOrphanSourceIdx` | ✅ 정규 (코드) | — |
+
+**기존 데이터**: 마커 풀 325개 중 23건 위반 (7%).
+
+### 14-F. `[selfCite]` — origin host + 외부 1개만이면 다양성 부족 (WARN)
+
+origin 도메인을 쓰는 경우 외부 host 2개 이상 권장.
+
+| 위치 | 유형 |
+|------|------|
+| scripts/validate-job-edit.cjs — `[selfCite]` | 🔒 WARN |
+
+### 14-G. audit 도구
+
+`scripts/skill-cache/audit-sources-deep.cjs` — 9 패턴 정기 sweep (`audit-sources.cjs`의 4 패턴 위에 5 추가).
+사용: `node scripts/skill-cache/audit-sources-deep.cjs --markers-only --out=data/audit-sources-deep.json`
+
+---
+
 ## 유지보수 원칙
 
 1. 규칙이 **정규 위치에서 변경**되면 → 코드(validate/audit)도 함께 업데이트.
