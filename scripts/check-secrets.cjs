@@ -118,6 +118,25 @@ function main() {
           const uuid = m[0].toLowerCase();
           if (UUID_WHITELIST.has(uuid)) break;
         }
+        // Cloudflare token regex는 너무 광범위 — ENV var 이름·주석·식별자 false positive 다수
+        // 실제 토큰만 잡도록 추가 검증:
+        //   1) 매치가 전부 UPPER + 언더스코어면 ENV var 이름 (skip)
+        //   2) 라인이 import/require/주석/식별자 참조 패턴이면 skip
+        //   3) 따옴표·= 등 값 컨텍스트 없으면 skip
+        if (label === 'Cloudflare API token') {
+          const matched = m[0];
+          // ENV var 이름 패턴 (전부 대문자 + 언더스코어 + 숫자만)
+          if (/^[A-Z0-9_]+$/.test(matched)) break;
+          // 메모리 파일명·식별자 (소문자 + 언더스코어, snake_case)
+          if (/^[a-z][a-z0-9_]*$/.test(matched)) break;
+          // 라인이 명백한 비-secret 컨텍스트
+          const lineLower = line.toLowerCase();
+          if (/^\s*(import|from|require|\/\/|\*|#|export\s+(type|interface|const\s+[A-Z]))/.test(line)) break;
+          // 값 할당 컨텍스트 없음 (=, :, " ", ' ')
+          const ctxStart = Math.max(0, m.index - 3);
+          const ctx = line.substring(ctxStart, m.index + matched.length + 3);
+          if (!/["'`=:]/.test(ctx)) break;
+        }
         violations.push({ file: filePath, label, line: i + 1, match: line.trim().slice(0, 80) });
         break; // one violation per line is enough
       }

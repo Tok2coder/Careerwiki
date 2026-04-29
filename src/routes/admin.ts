@@ -1032,7 +1032,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active = 1`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_type(user_contributed_json,'$.way')='array'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND image_url IS NOT NULL AND image_url != '' AND image_url NOT LIKE '/uploads/%' AND image_url NOT LIKE 'https://%' AND image_url NOT LIKE 'http://%'`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$.way') IS NOT NULL AND length(json_extract(user_contributed_json,'$.way')) > 20 AND json_extract(user_contributed_json,'$.way') NOT GLOB '*[.다요죠음임됨니까세]'`).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$.way') IS NOT NULL AND length(json_extract(user_contributed_json,'$.way')) > 20 AND json_extract(user_contributed_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세]' AND json_extract(user_contributed_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세][[]*[]]'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_extract(user_contributed_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(user_contributed_json,'$._sources')) > 0 AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(user_contributed_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND (json_extract(user_contributed_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(user_contributed_json,'$.youtubeLinks')) < 3)`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(DISTINCT entity_id) as count FROM page_revisions WHERE entity_type = ? AND change_summary LIKE ?`).bind(entityType, skillMarkerLike).first<{ count: number }>(),
@@ -1117,8 +1117,11 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       const imageUrlBad = imgUrl.length > 0 && !imgUrl.startsWith('/uploads/') && !imgUrl.startsWith('https://') && !imgUrl.startsWith('http://')
 
       const wayStr = typeof wayVal === 'string' ? wayVal : ''
-      const truncChars = ['.', '다', '요', '죠', '음', '임', '됨', '니', '까', '세']
-      const wayTrunc = wayStr.length > 20 && !truncChars.some(ch => wayStr.endsWith(ch))
+      // 각주 [N], [N,M], [N-M] 등 trailing 패턴 제거 후 종결문자 검사
+      // (way 본문은 "...다.[3]" 형태로 각주가 끝에 붙음 → 각주 무시 필요)
+      const wayStripped = wayStr.replace(/(?:\s*\[[\d,\-\s]+\])+\s*$/u, '').trimEnd()
+      const truncChars = ['.', '다', '요', '죠', '음', '임', '됨', '니', '까', '세', '!', '?']
+      const wayTrunc = wayStripped.length > 20 && !truncChars.some(ch => wayStripped.endsWith(ch))
 
       let srcOrderBad = false
       if (Array.isArray(parsed._sources) && parsed._sources.length > 0) {
