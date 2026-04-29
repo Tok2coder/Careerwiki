@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "generated_at": "2026-04-29T08:30:00Z",
+    "purpose": "디스패처(orchestrator)가 1직업/세션 dispatch + DONE/RETRY 보고 받아 다음 직업 배정. 우선순위: retry → master_cohort.",
+    "queue_order": ["retry", "master_cohort"],
+    "session_capacity": 5,
+    "default_session_ids": [46, 47, 48, 49, 50]
+  },
+  "retry": [
+    {"slug": "조선공학기술자", "id": "1765283373933916", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "증권외환딜러", "id": "176528342701427", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "지리정보시스템전문가", "id": "1765283442364599", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "지적-및-측량기술자", "id": "1765283440207662", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "철도지하철운송사무원", "id": "1765283422140793", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "푸드-브로커", "id": "U_푸드-브로커_mjginndj", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "푸드스타일리스트", "id": "1765283394996325", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "품질관리사무원", "id": "1765283421791357", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "항공기정비원", "id": "1765283398495876", "issues": ["mojibake (세션 50 단축)"]},
+    {"slug": "보건의료관리자", "id": "1765283409595695", "issues": ["detailReady [N] 누락", "way·trivia [1][2] 중복"]},
+    {"slug": "보험상품개발자", "id": "1765283428091237", "issues": ["detailReady [N] 누락"]},
+    {"slug": "보험인수심사원언더라이터", "id": "1765283428493538", "issues": ["detailReady [N] 누락", "way·trivia·prospect [1] 중복"]},
+    {"slug": "분장사", "id": "1765283317844191", "issues": ["detailReady [N] 누락", "way·trivia [1][2] 중복"]},
+    {"slug": "비파괴검사원", "id": "1765283318400738", "issues": ["detailReady [N] 누락"]},
+    {"slug": "비행기조종사", "id": "1765283318940526", "issues": ["detailReady [N] 누락"]},
+    {"slug": "산업안전원-및-위험관리원", "id": "1765283454875164", "issues": ["detailReady [N] 누락", "way·trivia [1][2] 중복"]},
+    {"slug": "상점판매원", "id": "1765283323000982", "issues": ["detailReady [N] 누락", "way·trivia·prospect [N] 중복"]},
+    {"slug": "세라믹소재연구원", "id": "1765283824185438", "issues": ["detailReady [N] 누락"]}
+  ],
+  "completed": [],
+  "failed": []
+}
