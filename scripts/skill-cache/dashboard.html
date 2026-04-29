@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>skill-runs Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 1200px; margin: 24px auto; padding: 0 16px; color: #1f2937; }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  .sub { color: #6b7280; font-size: 13px; margin-bottom: 20px; }
+  .upload { border: 2px dashed #d1d5db; padding: 16px; border-radius: 8px; text-align: center; margin-bottom: 24px; }
+  .upload input[type=file] { margin-right: 12px; }
+  .upload textarea { width: 100%; height: 80px; font-family: monospace; font-size: 11px; margin-top: 8px; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .metric { background: #f9fafb; border: 1px solid #e5e7eb; padding: 12px 14px; border-radius: 6px; }
+  .metric .label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric .value { font-size: 22px; font-weight: 600; color: #111827; margin-top: 2px; }
+  .metric .sub { font-size: 11px; color: #6b7280; margin: 0; }
+  .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .chart-box { background: #fff; border: 1px solid #e5e7eb; padding: 14px; border-radius: 8px; }
+  .chart-box h3 { margin: 0 0 10px; font-size: 14px; color: #374151; }
+  .full-width { grid-column: 1 / -1; }
+  .empty { text-align: center; color: #9ca3af; padding: 40px; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e5e7eb; }
+  th { background: #f9fafb; font-weight: 600; color: #4b5563; }
+</style>
+</head>
+<body>
+  <h1>skill-runs Dashboard</h1>
+  <div class="sub">job-data-enhance 실행 트래킹 시각화 — data/skill-runs.jsonl</div>
+
+  <div class="upload">
+    <strong>JSONL 데이터 입력</strong><br>
+    <input type="file" id="fileInput" accept=".jsonl,.json,.txt">
+    <span style="color:#6b7280;font-size:12px;">파일 선택 또는 아래 paste</span>
+    <textarea id="pasteInput" placeholder='paste jsonl: {"slug":"...","duration_sec":95,...}'></textarea>
+    <button id="loadPaste" style="margin-top:6px;">paste 로드</button>
+  </div>
+
+  <div id="dashboard" style="display:none;">
+    <div class="metrics" id="metrics"></div>
+    <div class="charts">
+      <div class="chart-box"><h3>직업별 실행 시간 (sec)</h3><canvas id="durationChart"></canvas></div>
+      <div class="chart-box"><h3>validate / audit 상태 분포</h3><canvas id="statusChart"></canvas></div>
+      <div class="chart-box full-width"><h3>누적 실행 row (시간순)</h3><canvas id="cumChart"></canvas></div>
+      <div class="chart-box full-width"><h3>fields_modified 빈도 (상위 15)</h3><canvas id="fieldsChart"></canvas></div>
+      <div class="chart-box full-width">
+        <h3>최근 row 목록</h3>
+        <div style="overflow-x:auto;"><table id="rowTable"></table></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="emptyState" class="empty">데이터를 로드하면 시각화가 나타납니다.</div>
+
+<script>
+let charts = {};
+
+function parseJSONL(text) {
+  return text.split('\n').filter(l => l.trim()).map((line, i) => {
+    try { return JSON.parse(line); }
+    catch { console.warn(`L${i+1} parse error`); return null; }
+  }).filter(Boolean);
+}
+
+function percentile(arr, p) {
+  if (arr.length === 0) return 0;
+  const sorted = [...arr].sort((a, b) => a - b);
+  return sorted[Math.min(sorted.length - 1, Math.floor((sorted.length - 1) * p / 100))];
+}
+
+function destroyAllCharts() {
+  for (const c of Object.values(charts)) c?.destroy?.();
+  charts = {};
+}
+
+function render(rows) {
+  if (rows.length === 0) {
+    document.getElementById('emptyState').textContent = '데이터 0건';
+    return;
+  }
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+
+  destroyAllCharts();
+
+  // metrics
+  const durations = rows.map(r => r.duration_sec).filter(d => Number.isFinite(d) && d > 0 && d < 3600);
+  const passCount = rows.filter(r => r.audit_status === 'PASS').length;
+  const validateOk = rows.filter(r => r.validate_status === 'PASS' || r.validate_status === 'WARN').length;
+  const ctChanges = rows.map(r => r.careerTree_changes ?? 0).reduce((a, b) => a + b, 0);
+  const tokensIn = rows.map(r => r.tokens_in).filter(t => Number.isFinite(t) && t > 0);
+  const tokensOut = rows.map(r => r.tokens_out).filter(t => Number.isFinite(t) && t > 0);
+
+  const metrics = [
+    { label: '총 row', value: rows.length },
+    { label: '평균 시간', value: durations.length ? Math.round(durations.reduce((a,b)=>a+b,0) / durations.length) + 's' : '-' },
+    { label: 'p50', value: durations.length ? percentile(durations, 50) + 's' : '-' },
+    { label: 'p90', value: durations.length ? percentile(durations, 90) + 's' : '-' },
+    { label: 'audit PASS', value: `${passCount} / ${rows.length}`, sub: `${(100*passCount/rows.length).toFixed(0)}%` },
+    { label: 'careerTree 추가', value: ctChanges },
+  ];
+  if (tokensIn.length > 0) {
+    const totalIn = tokensIn.reduce((a,b)=>a+b,0);
+    const totalOut = tokensOut.reduce((a,b)=>a+b,0);
+    const cost = (totalIn * 15 + totalOut * 75) / 1e6;
+    metrics.push({ label: '추산 비용 (Opus)', value: `$${cost.toFixed(3)}`, sub: `${totalIn}+${totalOut}t` });
+  }
+
+  document.getElementById('metrics').innerHTML = metrics.map(m =>
+    `<div class="metric"><div class="label">${m.label}</div><div class="value">${m.value}</div>${m.sub ? `<div class="sub">${m.sub}</div>` : ''}</div>`
+  ).join('');
+
+  // duration bar
+  charts.duration = new Chart(document.getElementById('durationChart'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.slug),
+      datasets: [{ label: 'sec', data: rows.map(r => Math.min(r.duration_sec || 0, 1000)), backgroundColor: '#3b82f6' }],
+    },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } },
+  });
+
+  // status pie
+  const validateMap = {};
+  const auditMap = {};
+  for (const r of rows) {
+    validateMap[r.validate_status || 'NULL'] = (validateMap[r.validate_status || 'NULL'] || 0) + 1;
+    auditMap[r.audit_status || 'NULL'] = (auditMap[r.audit_status || 'NULL'] || 0) + 1;
+  }
+  charts.status = new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+      labels: [...Object.keys(validateMap).map(k => 'V:'+k), ...Object.keys(auditMap).map(k => 'A:'+k)],
+      datasets: [{
+        data: [...Object.values(validateMap), ...Object.values(auditMap)],
+        backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6', '#06b6d4'],
+      }],
+    },
+  });
+
+  // cumulative line (sorted by start_ts)
+  const sorted = [...rows].filter(r => r.start_ts).sort((a, b) => a.start_ts.localeCompare(b.start_ts));
+  charts.cum = new Chart(document.getElementById('cumChart'), {
+    type: 'line',
+    data: {
+      labels: sorted.map(r => r.start_ts.slice(0, 16).replace('T', ' ')),
+      datasets: [{ label: '누적 row', data: sorted.map((_, i) => i + 1), borderColor: '#10b981', backgroundColor: '#d1fae5', fill: true, tension: 0.2 }],
+    },
+    options: { plugins: { legend: { display: false } } },
+  });
+
+  // fields freq
+  const fieldFreq = {};
+  for (const r of rows) for (const f of (r.fields_modified || [])) fieldFreq[f] = (fieldFreq[f] || 0) + 1;
+  const sortedFields = Object.entries(fieldFreq).sort((a, b) => b[1] - a[1]).slice(0, 15);
+  charts.fields = new Chart(document.getElementById('fieldsChart'), {
+    type: 'bar',
+    data: {
+      labels: sortedFields.map(([k]) => k),
+      datasets: [{ label: '빈도', data: sortedFields.map(([, v]) => v), backgroundColor: '#8b5cf6' }],
+    },
+    options: { indexAxis: 'y', plugins: { legend: { display: false } } },
+  });
+
+  // table (last 20)
+  const recent = [...rows].slice(-20).reverse();
+  document.getElementById('rowTable').innerHTML = `
+    <thead><tr><th>start_ts</th><th>slug</th><th>sec</th><th>validate</th><th>audit</th><th>fields</th><th>ct</th></tr></thead>
+    <tbody>${recent.map(r => `<tr>
+      <td>${(r.start_ts || '').slice(0, 19).replace('T', ' ')}</td>
+      <td>${r.slug || ''}</td>
+      <td>${r.duration_sec || ''}</td>
+      <td>${r.validate_status || ''}</td>
+      <td>${r.audit_status || ''}</td>
+      <td>${(r.fields_modified || []).length}</td>
+      <td>${r.careerTree_changes || 0}</td>
+    </tr>`).join('')}</tbody>
+  `;
+}
+
+document.getElementById('fileInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = ev => render(parseJSONL(ev.target.result));
+  reader.readAsText(f);
+});
+
+document.getElementById('loadPaste').addEventListener('click', () => {
+  const text = document.getElementById('pasteInput').value;
+  render(parseJSONL(text));
+});
+</script>
+</body>
+</html>
