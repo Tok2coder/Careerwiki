@@ -117,6 +117,19 @@ ${detailLines.join('\n')}
 - minimal POST (마커만 부착) 절대 금지 — server-side \`[minimalPOST]\` FAIL
 - validate FAIL 시 본문 재작성 (단축으로 마커만 부착하지 마)
 
+**🚨 Phase 0-SYNC (2026-04-29 신설 — 사회학연구원 wagework 사고 차단)**:
+\`\`\`bash
+# 작업 시작 전 main 동기화 강제. b044d47 이상 HEAD 확인 필수
+git fetch origin main && git log --oneline origin/main | head -3
+# main HEAD가 b044d47 미만이면 즉시 git pull origin main
+# 룰 13 [originDomain] 필수: wagework.go.kr 포함 origin 도메인 1건이라도 있으면 FAIL
+\`\`\`
+
+**🚨 wagework.go.kr 명시 — 절대 출처로 사용 금지** (사회학연구원 2026-04-29 사고 사례):
+- \`wagework.go.kr\` (한국노동연구원 임금직업정보 / 워크피디아) = career.go.kr/work.go.kr와 동일하게 origin 도메인
+- 외부 host 카운트에 포함 금지
+- Phase 2 validate 실행 시 stdout 직접 첨부해서 [originDomain] 0건 확인 (단축 처리하지 마)
+
 1. **Phase 0-PRE START_TRACKING** bash 직접 실행
 2. **Phase 0-DIAG**: \`merged_profile_json\` 기준 + \`json_type\` 분기
 3. **Phase 1**: 17필드 draft 작성 — 기존 깨진 데이터 덮어쓰기
