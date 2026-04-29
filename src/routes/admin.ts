@@ -1073,20 +1073,66 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       }
     }
 
-    // 3. 보완된 엔티티 목록 (UCJ 존재) — 배치 조회
-    //    Worker CPU 50ms 한도 회피: 전체 6939 row JSON.parse는 1102 (resource exceeded)
-    //    → UCJ 존재 entity (~1487)만 fetch하고 12 필드 카운팅은 merged 기준 (production-accurate)
-    //    api-only 직업은 admin 표시 제외 (skillAppliedCount는 별도 SQL aggregate로 카운팅)
-    type Row = { id: string; name: string; slug: string; merged_profile_json: string | null; user_contributed_json: string; image_url: string | null }
+    // 3. 엔티티 목록 — D1 SQL이 12-field 카운팅·quality flag 모두 계산해 scalar로 반환
+    //    Worker CPU 한도 회피: merged_profile_json bulk JSON.parse 제거.
+    //    parseSources만 _sources 추출분 위에서 JS 실행 (작은 blob).
+    //    필터: is_active=1 AND user_contributed_json IS NOT NULL (UCJ 보유 entity = admin 보완 대상)
+    type Row = {
+      id: string
+      name: string
+      slug: string
+      image_url: string | null
+      json_size: number
+      sources_blob: string | null
+      // 12 fields presence (merged 기준)
+      f_way: number; f_sal: number; f_pro: number; f_tv: number
+      f_wlb: number; f_rdy: number; f_sj: number; f_sm: number
+      f_sc: number; f_ht: number; f_yt: number; f_src: number
+      yt_count: number
+      // quality flags
+      way_is_array: number  // UCJ 데이터 무결성
+      way_trunc: number      // merged.way 잘림 의심
+      src_order_bad: number  // merged._sources 첫 항목
+      yt_low: number         // merged.youtubeLinks 0 + note 없음
+    }
     const allRows: Row[] = []
     {
       let offset = 0
+      // SQL — 모든 무거운 로직을 D1에서 처리
+      const SELECT_SQL = `
+        SELECT id, name, slug, image_url,
+          length(user_contributed_json) AS json_size,
+          json_extract(merged_profile_json,'$._sources') AS sources_blob,
+          CASE WHEN json_type(merged_profile_json,'$.way') IS NOT NULL AND length(json_extract(merged_profile_json,'$.way'))>0 THEN 1 ELSE 0 END AS f_way,
+          CASE WHEN json_type(merged_profile_json,'$.overviewSalary') IN ('object','array') AND length(json_extract(merged_profile_json,'$.overviewSalary'))>2 THEN 1 ELSE 0 END AS f_sal,
+          CASE WHEN json_type(merged_profile_json,'$.overviewProspect') IN ('object','array') AND length(json_extract(merged_profile_json,'$.overviewProspect'))>2 THEN 1 ELSE 0 END AS f_pro,
+          CASE WHEN json_type(merged_profile_json,'$.trivia') IS NOT NULL AND length(json_extract(merged_profile_json,'$.trivia'))>0 THEN 1 ELSE 0 END AS f_tv,
+          CASE WHEN json_type(merged_profile_json,'$.detailWlb') IN ('object','array') AND length(json_extract(merged_profile_json,'$.detailWlb'))>2 THEN 1 ELSE 0 END AS f_wlb,
+          CASE WHEN json_type(merged_profile_json,'$.detailReady') IS NOT NULL AND length(json_extract(merged_profile_json,'$.detailReady'))>0 THEN 1 ELSE 0 END AS f_rdy,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.sidebarJobs'),0)>0 THEN 1 ELSE 0 END AS f_sj,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.sidebarMajors'),0)>0 THEN 1 ELSE 0 END AS f_sm,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.sidebarCerts'),0)>0 THEN 1 ELSE 0 END AS f_sc,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.heroTags'),0)>0 THEN 1 ELSE 0 END AS f_ht,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0)>0 THEN 1 ELSE 0 END AS f_yt,
+          CASE WHEN json_type(merged_profile_json,'$._sources') IN ('object','array') AND length(json_extract(merged_profile_json,'$._sources'))>2 THEN 1 ELSE 0 END AS f_src,
+          COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0) AS yt_count,
+          CASE WHEN json_type(user_contributed_json,'$.way')='array' THEN 1 ELSE 0 END AS way_is_array,
+          CASE WHEN length(json_extract(merged_profile_json,'$.way'))>20
+                AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세]'
+                AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세][[]*[]]'
+               THEN 1 ELSE 0 END AS way_trunc,
+          CASE WHEN json_type(merged_profile_json,'$._sources[0].text')='text'
+                AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%커리어넷%'
+                AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%career%'
+               THEN 1 ELSE 0 END AS src_order_bad,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0)=0
+                AND (json_type(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)
+               THEN 1 ELSE 0 END AS yt_low
+        FROM ${tableName}
+        WHERE is_active = 1 AND user_contributed_json IS NOT NULL
+        ORDER BY name LIMIT 500 OFFSET ?`
       while (true) {
-        const batch = await db.prepare(
-          `SELECT id, name, slug, merged_profile_json, user_contributed_json, image_url FROM ${tableName}
-           WHERE is_active = 1 AND user_contributed_json IS NOT NULL
-           ORDER BY name LIMIT 500 OFFSET ?`
-        ).bind(offset).all<Row>()
+        const batch = await db.prepare(SELECT_SQL).bind(offset).all<Row>()
         const rows = batch.results || []
         allRows.push(...rows)
         if (rows.length < 500) break
@@ -1094,61 +1140,32 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       }
     }
 
-    // 4. 각 엔티티의 필드 완성도 파싱 (merged 기준 — production accurate)
+    // 4. Worker는 scalar만 가공 — JSON.parse는 _sources 전용 (작은 blob)
     let perfectCount = 0
     let poorCount = 0
     let totalJsonSize = 0
-    let contributedCount = 0
 
     const items: JobEqualizeItem[] = allRows.map(row => {
-      // jsonSize는 UCJ 기준 (작성된 분량 추적용)
-      const jsonSize = row.user_contributed_json ? row.user_contributed_json.length : 0
+      const jsonSize = row.json_size || 0
       totalJsonSize += jsonSize
-      if (row.user_contributed_json) contributedCount++
 
-      // merged_profile_json 파싱 — 12 필드 카운팅·품질 검사 기준
-      let merged: any = {}
-      try { if (row.merged_profile_json) merged = JSON.parse(row.merged_profile_json) } catch {}
-
-      // UCJ 별도 파싱 — wayIsArray 무결성 체크 전용
-      let ucj: any = {}
-      try { if (row.user_contributed_json) ucj = JSON.parse(row.user_contributed_json) } catch {}
-
-      const fields = EQUALIZE_FIELDS.map(f => hasField(merged, f))
+      const fields = [
+        !!row.f_way, !!row.f_sal, !!row.f_pro, !!row.f_tv,
+        !!row.f_wlb, !!row.f_rdy, !!row.f_sj, !!row.f_sm,
+        !!row.f_sc, !!row.f_ht, !!row.f_yt, !!row.f_src,
+      ]
       const fieldCount = fields.filter(Boolean).length
 
-      // 출처 분석 (merged 기준)
-      const { sourceCount, urlSourceCount } = parseSources(merged._sources)
-
-      // YouTube 링크 수 (merged 기준)
-      const yt = merged.youtubeLinks
-      const youtubeCount = Array.isArray(yt) ? yt.length : 0
-
-      // 품질 플래그
-      // wayIsArray는 UCJ 데이터 무결성 버그 (UCJ에서 way가 array면 API 500 fail) — UCJ 검사 유지
-      const wayIsArray = Array.isArray(ucj.way)
+      // 출처 분석 — _sources blob만 parse (작음, 보통 < 5KB)
+      let sources: any = null
+      if (row.sources_blob) {
+        try { sources = JSON.parse(row.sources_blob) } catch {}
+      }
+      const { sourceCount, urlSourceCount } = parseSources(sources)
 
       const imgUrl = row.image_url || ''
       const imageUrlBad = imgUrl.length > 0 && !imgUrl.startsWith('/uploads/') && !imgUrl.startsWith('https://') && !imgUrl.startsWith('http://')
 
-      // wayTrunc: production 노출 기준 (merged.way)
-      const mergedWay = merged.way
-      const wayStr = typeof mergedWay === 'string' ? mergedWay : ''
-      const wayStripped = wayStr.replace(/(?:\s*\[[\d,\-\s]+\])+\s*$/u, '').trimEnd()
-      const truncChars = ['.', '다', '요', '죠', '음', '임', '됨', '니', '까', '세', '!', '?']
-      const wayTrunc = wayStripped.length > 20 && !truncChars.some(ch => wayStripped.endsWith(ch))
-
-      // srcOrderBad: merged 기준
-      let srcOrderBad = false
-      if (Array.isArray(merged._sources) && merged._sources.length > 0) {
-        const firstSrc = merged._sources[0]
-        const firstText: string = typeof firstSrc === 'string' ? firstSrc : (firstSrc?.text || '')
-        srcOrderBad = !firstText.includes('커리어넷') && !firstText.toLowerCase().includes('career')
-      }
-
-      // ytLow: merged 기준 + _youtubeSearchNote 있으면 의도된 스킵
-      const hasYoutubeSearchNote = typeof merged._youtubeSearchNote === 'string' && merged._youtubeSearchNote.length > 0
-      const ytLow = youtubeCount === 0 && !hasYoutubeSearchNote
       const skillLastAppliedAt = skillAppliedMap.get(row.id) ?? null
       const skillApplied = skillLastAppliedAt !== null
 
@@ -1157,12 +1174,18 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
 
       return {
         name: row.name, slug: row.slug, fields, fieldCount, jsonSize,
-        sourceCount, urlSourceCount, youtubeCount, skillApplied, skillLastAppliedAt,
-        wayIsArray, imageUrlBad, wayTrunc, srcOrderBad, ytLow,
+        sourceCount, urlSourceCount,
+        youtubeCount: row.yt_count || 0,
+        skillApplied, skillLastAppliedAt,
+        wayIsArray: !!row.way_is_array,
+        imageUrlBad,
+        wayTrunc: !!row.way_trunc,
+        srcOrderBad: !!row.src_order_bad,
+        ytLow: !!row.yt_low,
       }
     })
 
-    // contributedCount = UCJ 존재하는 entity 수 (items.map 내부에서 누적)
+    const contributedCount = items.length
     const avgJsonSize = contributedCount > 0 ? Math.round(totalJsonSize / contributedCount) : 0
 
     return c.html(renderAdminJobEqualize({
