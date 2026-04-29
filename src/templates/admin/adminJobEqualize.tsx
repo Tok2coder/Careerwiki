@@ -144,8 +144,6 @@ export function parseSources(sources: any): { sourceCount: number; urlSourceCoun
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
   const { tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts, skillAppliedCount } = props
-  const uncontributed = totalJobs - contributedCount
-  const progressPct = totalJobs > 0 ? ((contributedCount / totalJobs) * 100).toFixed(1) : '0.0'
   const skillAppliedPct = totalJobs > 0 ? ((skillAppliedCount / totalJobs) * 100).toFixed(1) : '0.0'
 
   const isJob = tab === 'job'
@@ -219,8 +217,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       </a>
     </div>
 
-    <!-- 요약 통계 KPI -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
+    <!-- 요약 통계 KPI — 사용자 KPI = [${skillName}] 마커 적용 여부 -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
       <div class="glass-card rounded-xl p-4 stat-card">
         <div class="flex items-center gap-2 mb-2">
           <div class="w-8 h-8 ${isJob ? 'bg-blue-500/20' : 'bg-purple-500/20'} rounded-lg flex items-center justify-center">
@@ -230,24 +228,25 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         </div>
         <div class="text-xl font-bold text-white">${totalJobs.toLocaleString()}</div>
       </div>
-      <div class="glass-card rounded-xl p-4 stat-card">
+      <div class="glass-card rounded-xl p-4 stat-card" title="change_summary에 [${skillName}] 마커가 있는 ${entityLabel} (스킬 돌린 수)">
         <div class="flex items-center gap-2 mb-2">
-          <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-            <i class="fas fa-check-circle text-emerald-400 text-xs"></i>
+          <div class="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-wand-magic-sparkles text-cyan-400 text-xs"></i>
           </div>
-          <span class="text-[11px] text-slate-400">보완 완료</span>
+          <span class="text-[11px] text-slate-400">스킬 적용</span>
         </div>
-        <div class="text-xl font-bold text-emerald-400">${contributedCount}</div>
-        <div class="text-[10px] text-slate-500">${progressPct}%</div>
+        <div class="text-xl font-bold text-cyan-400">${skillAppliedCount.toLocaleString()}</div>
+        <div class="text-[10px] text-slate-500">${skillAppliedPct}%</div>
       </div>
-      <div class="glass-card rounded-xl p-4 stat-card">
+      <div class="glass-card rounded-xl p-4 stat-card" title="[${skillName}] 마커가 없는 ${entityLabel} (스킬 안 돌린 수)">
         <div class="flex items-center gap-2 mb-2">
-          <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-            <i class="fas fa-star text-green-400 text-xs"></i>
+          <div class="w-8 h-8 bg-slate-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-circle-xmark text-slate-400 text-xs"></i>
           </div>
-          <span class="text-[11px] text-slate-400">완벽 (12/12)</span>
+          <span class="text-[11px] text-slate-400">스킬 미적용</span>
         </div>
-        <div class="text-xl font-bold text-green-400">${perfectCount}</div>
+        <div class="text-xl font-bold text-slate-300">${(totalJobs - skillAppliedCount).toLocaleString()}</div>
+        <div class="text-[10px] text-slate-500">${(100 - parseFloat(skillAppliedPct)).toFixed(1)}%</div>
       </div>
       <div class="glass-card rounded-xl p-4 stat-card">
         <div class="flex items-center gap-2 mb-2">
@@ -260,22 +259,12 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       </div>
       <div class="glass-card rounded-xl p-4 stat-card">
         <div class="flex items-center gap-2 mb-2">
-          <div class="w-8 h-8 bg-slate-500/20 rounded-lg flex items-center justify-center">
-            <i class="fas fa-minus-circle text-slate-400 text-xs"></i>
+          <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-star text-green-400 text-xs"></i>
           </div>
-          <span class="text-[11px] text-slate-400">미보완</span>
+          <span class="text-[11px] text-slate-400">완벽 (12/12)</span>
         </div>
-        <div class="text-xl font-bold text-slate-400">${uncontributed.toLocaleString()}</div>
-      </div>
-      <div class="glass-card rounded-xl p-4 stat-card" title="change_summary에 [${skillName}] 마커가 있는 ${entityLabel}">
-        <div class="flex items-center gap-2 mb-2">
-          <div class="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center">
-            <i class="fas fa-wand-magic-sparkles text-cyan-400 text-xs"></i>
-          </div>
-          <span class="text-[11px] text-slate-400">스킬 적용</span>
-        </div>
-        <div class="text-xl font-bold text-cyan-400">${skillAppliedCount.toLocaleString()}</div>
-        <div class="text-[10px] text-slate-500">${skillAppliedPct}%</div>
+        <div class="text-xl font-bold text-green-400">${perfectCount}</div>
       </div>
       <div class="glass-card rounded-xl p-4 stat-card">
         <div class="flex items-center gap-2 mb-2">
@@ -294,7 +283,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         <div class="flex items-center gap-2">
           <i class="fas fa-wand-magic-sparkles text-cyan-400 text-xs"></i>
           <h3 class="text-sm font-semibold text-white">스킬 적용률</h3>
-          <span class="text-[10px] text-slate-500">[${skillName}] 마커 기준 · 보완율 ${progressPct}% (${contributedCount})</span>
+          <span class="text-[10px] text-slate-500">[${skillName}] 마커 기준 · 사용자 KPI</span>
         </div>
         <span class="text-sm font-bold text-cyan-400">${skillAppliedCount.toLocaleString()} / ${totalJobs.toLocaleString()} · ${skillAppliedPct}%</span>
       </div>
@@ -330,7 +319,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         </div>
         <!-- 필터 -->
         <select id="filterSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50">
-          <option value="all">전체 (${contributedCount})</option>
+          <option value="all">전체 (${totalJobs.toLocaleString()})</option>
           <option value="perfect">완벽 12/12 (${perfectCount})</option>
           <option value="good">양호 6~11 (${contributedCount - perfectCount - poorCount})</option>
           <option value="poor">부실 &lt;6 (${poorCount})</option>
@@ -360,7 +349,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         </select>
       </div>
       <div class="mt-2 text-xs text-slate-500">
-        <span id="resultCount">${contributedCount}</span>개 ${entityLabel} 표시 중
+        <span id="resultCount">${totalJobs.toLocaleString()}</span>개 ${entityLabel} 표시 중
       </div>
     </div>
 
