@@ -337,26 +337,56 @@ function detectListPageUrl(url) {
   return LIST_PAGE_PATTERNS.some(p => p.test(url));
 }
 
-// ── 룰 F: 자기 인용 (self-cite) 탐지 ───────────────────────────────────────────
+// ── 룰 F: origin 도메인 (정부 산하 직업정보 포털) 탐지 ─────────────────────────
 //
 // CareerWiki는 career.go.kr / work.go.kr 등 공공 직업포털 데이터를 원본으로 가져온다.
-// 이 도메인을 출처로 쓰면 "자기 인용"이 되어 정보 가치가 낮아진다.
-// 정책 (2026-04-29):
-//   - careerwiki.org / careerwiki.kr — 자기 도메인 절대 금지 (FAIL)
-//   - career.go.kr / work.go.kr / work24.go.kr / job.go.kr — 허용하되 외부 보충 1개 이상 필수
-//   - 위 도메인만 있고 외부 host 0개 → FAIL (selfCiteOnly)
+// 이 도메인은 우리 데이터의 *origin*이므로 출처로 절대 사용 금지 (1건이라도 있으면 FAIL).
 //
-// @param {Array<{url:string}>} sourceArr - _sources의 한 필드 또는 평탄화된 전체 source 배열
-// @returns {{selfHostCount:number, originHostCount:number, externalHostCount:number,
-//             externalHosts:string[], hasSelfDomain:boolean, allUrls:string[]}}
+// 정책 격상 (2026-04-29 사용자 의도 반영):
+//   - 기존 `selfCiteOnly` (외부 보충 1+ 있으면 통과) → `originDomain` (1건이라도 있으면 FAIL)
+//   - careerwiki.org / careerwiki.kr — 자기 도메인 절대 금지 (FAIL)
+//
+// 검출 방법 (이중):
+//   (a) DEFINITE_ORIGIN_HOSTS — 알려진 직업정보 origin 도메인 명시 리스트
+//   (b) Heuristic — host endsWith '.go.kr' AND path 키워드 (job/career/work/wage/employ) 매칭
+//
+// 사고 사례: 의료코디네이터 _sources에 `wagework.go.kr` 등록 — 사용자 발견
 const SELF_DOMAINS = ['careerwiki.org', 'careerwiki.kr', 'www.careerwiki.org', 'www.careerwiki.kr'];
-const ORIGIN_DATA_DOMAINS = [
+const DEFINITE_ORIGIN_HOSTS = [
+  // 커리어넷 (구버전 + 신버전)
   'career.go.kr', 'www.career.go.kr',
+  // 워크넷 (구)
   'work.go.kr', 'www.work.go.kr',
+  // 고용24 (워크넷 후속)
   'work24.go.kr', 'www.work24.go.kr',
+  // 한국노동연구원 임금직업정보 (워크피디아) — 의료코디네이터 사고 사례
+  'wagework.go.kr', 'www.wagework.go.kr',
+  // 직업포털
   'job.go.kr', 'www.job.go.kr',
 ];
+// .go.kr 도메인에서 path에 직업정보 키워드가 있으면 origin 후보
+const ORIGIN_PATH_KEYWORDS = /(job|career|work|wage|employ)/i;
+// 하위호환 — 기존 코드가 ORIGIN_DATA_DOMAINS 참조 시 그대로 사용 가능
+const ORIGIN_DATA_DOMAINS = DEFINITE_ORIGIN_HOSTS;
 
+// @param {string} url
+// @returns {boolean} origin 도메인이면 true
+function detectOriginDomain(url) {
+  if (!url || typeof url !== 'string') return false;
+  let parsed;
+  try { parsed = new URL(url); } catch { return false; }
+  const host = parsed.host.toLowerCase();
+  if (DEFINITE_ORIGIN_HOSTS.includes(host)) return true;
+  // .go.kr endsWith + path keyword heuristic
+  if (host.endsWith('.go.kr') && ORIGIN_PATH_KEYWORDS.test(parsed.pathname)) {
+    return true;
+  }
+  return false;
+}
+
+// @param {Array<{url:string}>} sourceArr
+// @returns {{selfHostCount, originHostCount, externalHostCount, externalHosts,
+//             hasSelfDomain, allUrls, uniqueHostCount, originUrls}}
 function classifySourceHosts(sourceArr) {
   const all = Array.isArray(sourceArr) ? sourceArr : [];
   const allUrls = [];
@@ -366,6 +396,7 @@ function classifySourceHosts(sourceArr) {
   let externalHostCount = 0;
   let hasSelfDomain = false;
   const externalHosts = new Set();
+  const originUrls = [];
 
   for (const src of all) {
     if (!src || typeof src !== 'object' || !src.url) continue;
@@ -380,8 +411,9 @@ function classifySourceHosts(sourceArr) {
     if (SELF_DOMAINS.includes(host)) {
       hasSelfDomain = true;
       selfHostCount++;
-    } else if (ORIGIN_DATA_DOMAINS.includes(host)) {
+    } else if (detectOriginDomain(src.url)) {
       originHostCount++;
+      originUrls.push(src.url);
     } else {
       externalHostCount++;
       externalHosts.add(host);
@@ -396,6 +428,7 @@ function classifySourceHosts(sourceArr) {
     hasSelfDomain,
     allUrls,
     uniqueHostCount: hosts.size,
+    originUrls,
   };
 }
 
@@ -500,6 +533,10 @@ module.exports = {
   classifySourceHosts,
   SELF_DOMAINS,
   ORIGIN_DATA_DOMAINS,
+  // 룰 F 격상 (2026-04-29 — origin 도메인 1건이라도 FAIL)
+  DEFINITE_ORIGIN_HOSTS,
+  ORIGIN_PATH_KEYWORDS,
+  detectOriginDomain,
   detectOrphanSourceIdx,
   detectBrokenSourceRef,
   detectSourceIdxGap,

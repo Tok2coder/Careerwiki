@@ -6,18 +6,34 @@
 
 ## 출처 등급 분류
 
-### ⚠️ origin 도메인 (CareerWiki 데이터 원본 — 단독 사용 금지)
+### 🚨 origin 도메인 (CareerWiki 데이터 원본 — 절대 사용 금지)
 
-다음 도메인은 CareerWiki가 직접 데이터를 가져오는 **데이터 원본(origin)**이다.
-이 도메인을 출처로 쓰면 "자기 데이터 인용"이 되어 정보 가치가 빈약하다.
-**반드시 외부 보충 출처 1개 이상 동반** 필수 (validate `[selfCiteOnly]` FAIL).
+> 🚨 **2026-04-29 정책 격상 (사용자 의도 반영)**:
+> 기존 "외부 보충 1+ 있으면 통과" 정책 폐기. **_sources에 1건이라도 있으면 즉시 FAIL** (validate `[originDomain]`).
+> 결정적 계기: 의료코디네이터 `wagework.go.kr` (2026-04-29 사용자 발견)
+
+다음 도메인은 CareerWiki가 API로 직접 가져오는 **원본 데이터(origin)**다.
+출처로 쓰면 자기 데이터를 인용하는 것 → 정보 가치 0. **외부 보충 충분해도 1건이라도 섞이면 FAIL.**
 
 | 기관명 | 도메인 | 비고 |
 |--------|--------|------|
-| 커리어넷 직업백과 | career.go.kr | API로 자동 수집됨 |
-| 워크넷 직업정보 | work.go.kr | API로 자동 수집됨 |
+| 커리어넷 직업백과 | career.go.kr | API로 자동 수집됨 (커리어넷 신·구버전) |
+| 워크넷 직업정보 | work.go.kr | API로 자동 수집됨 (구버전) |
 | 고용24 | work24.go.kr | 워크넷 후속 |
+| 한국노동연구원 임금직업정보 (워크피디아) | wagework.go.kr | 의료코디네이터 사고 사례 |
 | 직업포털 | job.go.kr | 정부 직업포털 |
+| **(heuristic)** | `*.go.kr` + path keyword (job/career/work/wage/employ) | 자동 검출 — `moel.go.kr/policy/labor/employment.do` 등도 origin 후보 |
+
+**위 도메인 대신 사용해야 할 외부 1차 출처**:
+- 한국고용정보원 `keis.or.kr` (직업전망보고서)
+- 한국직업능력연구원 `krivet.re.kr` (훈련·자격)
+- KOSIS `kosis.kr` (통계청 통계)
+- Q-Net `q-net.or.kr` (자격증)
+- 한국산업인력공단 `hrdkorea.or.kr`
+- 정부 부처 정책 페이지 (`moel.go.kr/policy/...` 처럼 직업정보 path 아닌 경우)
+- 협회·학회 공식 사이트 (`kna.or.kr`, `koreanbar.or.kr` 등)
+- 전문 미디어 (한경, 매경, IT조선 등)
+- 학술논문 (RISS, KISS, DBpia)
 
 ### 🚫 자기 사이트 (절대 금지)
 

@@ -62,7 +62,7 @@ description: >
 | **UCJ 배열 각주 필수** | `detailReady.{curriculum,recruit,training}` 각 항목에 `[N]` 필수. 누락 시 `[UCJ각주항목누락]` FAIL. **`detailReady.researchList`는 CareerNet 원본 — 각주 면제** |
 | **한글 인코딩 — Mojibake 금지** | API 전송 시 **Node.js `fetch()` 필수** — Windows `curl -d`로 한글 JSON 전송 시 CP949 인코딩 오류로 한글이 아랍·키릴·라틴확장 문자로 깨짐. validate `[Mojibake]` FAIL, audit `[Gate5/Mojibake]` FAIL. 사고사례: 준법감시인 `overviewAbilities.technKnow` 전체 깨짐 (rev 11598/11599, 2026-04-16) |
 | **🚫 자기 사이트 인용 절대 금지** ⚠️ | `_sources`의 URL host에 `careerwiki.org` / `careerwiki.kr` 포함 금지 — 자기 사이트를 출처로 쓰는 것은 의미 없음. validate `[selfDomain]` FAIL (2026-04-29 deep audit) |
-| **🚫 origin 단독 인용 금지** ⚠️ | `career.go.kr` / `work.go.kr` / `work24.go.kr` / `job.go.kr` 는 CareerWiki가 직접 데이터를 가져오는 **데이터 origin**이다. 한 직업 _sources의 모든 URL이 위 도메인뿐(외부 host 0개)이면 정보 가치 빈약 — validate `[selfCiteOnly]` FAIL. 위 도메인을 쓸 거면 반드시 외부 출처(협회·학회·KOSIS·전문 미디어·학술논문 등) 최소 1개 이상 동반 (deep audit: 196/325 직업 60%가 origin-heavy. 외부 host 1개만 있으면 WARN) |
+| **🚫 origin 도메인 절대 금지** ⚠️ **2026-04-29 격상** | `career.go.kr` / `work.go.kr` / `work24.go.kr` / `wagework.go.kr` / `job.go.kr` 및 `.go.kr` + 직업정보 path keyword (job/career/work/wage/employ) 는 CareerWiki가 직접 데이터를 가져오는 **데이터 origin**이다. **_sources에 1건이라도 있으면 즉시 FAIL** (이전 selfCiteOnly: 외부 보충 1+ 통과 정책 폐기). validate `[originDomain]` FAIL. 직업정보 본문은 항상 외부 1차 출처(협회·학회·KOSIS·전문 미디어·학술논문·정부 부처 정책 페이지 등)에서 인용. 사고 사례: 의료코디네이터 `wagework.go.kr` (2026-04-29 사용자 발견) |
 | **🚫 list-page URL 출처 금지** ⚠️ | `_sources` URL은 반드시 직업 specific 식별자(`seq=`/`SEQ=`/`jobsCd=`/`jmCd=` 등)를 포함해야 함. 인덱스/카테고리 페이지는 검색결과 URL 차단(work24/worker)에 더해 다음도 추가 차단: `career.go.kr/cloud/w/job`(seq 없음)·`career.go.kr/cnet/.../jobView.do`(SEQ 없음)·`work.go.kr/empInfo/jobInfo/jobInfoDetailView.do`(jobsCd 없음)·`/list`/`/category`/`/index` 끝 path. validate `[listPageURL]` FAIL (2026-04-29 deep audit: 17건) |
 | **본문 [N] = field-local 번호** ⚠️ | 본문 `[N]`은 항상 **필드별 1부터 시작하는 로컬 번호**다. 렌더러가 `_sources[fieldKey][N-1]`로 매핑 후 footnoteMap을 통해 글로벌 번호로 변환. **본문 [N] = _sources[fieldKey] 배열의 (N-1)번째 항목**. 즉 way 본문 [1] → _sources["way"][0], trivia 본문 [1] → _sources["trivia"][0]. _sources의 글로벌 `id` 필드는 페이지 통합 출처 카운트용일 뿐 본문 매핑과 무관 |
 | **brokenRef 금지** | 산문 필드 본문에 `[N]` 마커가 있는데 `_sources[fieldKey]` 길이가 N보다 작으면 매핑 실패. validate `[brokenRef]` FAIL. 본문 마커는 1..N 연속 필수 (deep audit: 31건) |
@@ -675,18 +675,43 @@ detailReady.curriculum / detailReady.recruit / detailReady.training / detailRead
 
 **핵심 원칙**: 출처 수가 아니라 **정보 퀄리티(최신성·디테일)**가 목적. 다양한 출처는 다양한 관점의 디테일을 얻기 위한 수단.
 
-> ⚠️ **2026-04-29 정책 강화 (deep audit 발견 사고 차단)**:
-> 마커 보유 직업 325개 중 **196개(60%)** 가 _sources의 모든 URL이 career.go.kr/work.go.kr 등 우리 데이터 origin 도메인뿐인 "origin-heavy" 사고 발견.
-> 60% 직업은 외부 보충 1개 이상 있어 WARN으로 처리되지만, **10건은 외부 host 0개**로 selfCiteOnly FAIL 대상.
-> 이 섹션의 새 정책은 다음 enhance 사이클부터 default 행동을 바꾼다.
+> 🚨 **2026-04-29 정책 격상 (사용자 의도 반영)**:
+> origin 도메인은 **단독 금지가 아니라 1건이라도 절대 금지**.
+> 마커 보유 직업 325개 중 **196개(60%)** 가 origin 도메인 사용 중 — 모두 fail 대상.
+> 의료코디네이터 wagework.go.kr 사고가 결정적 계기 (외부 보충 충분했지만 origin이 섞여 있어 사용자가 직접 발견).
 
 **우선순위:**
-1등급 (origin — 단독 사용 금지): 커리어넷(career.go.kr) · 워크넷(work.go.kr) · 고용24(work24.go.kr) · 직업포털(job.go.kr)
-  → ⚠️ 이 도메인들은 CareerWiki가 직접 데이터를 가져오는 **데이터 origin**이다. 단독으로 쓰면 정보 가치가 없음. **반드시 외부 보충 출처 1개 이상 동반**
-2등급 (외부 핵심): 한국고용정보원(keis.or.kr) · KOSIS · Q-net · 한국산업인력공단 · 직능원 · 협회·학회 공식 사이트 · 대학 학과 소개
-3등급 (적극 활용 권장): 업계 보고서 · 통계청 · 전문 미디어(한경, 매경, IT조선 등) · 학술논문 — 커리어넷/고용24/워크넷은 이미 API로 가져온 데이터와 중복될 수 있으므로, **더 최신이고 고급인 출처를 적극 발굴하여 차별화된 정보를 제공**
-❌ 절대 금지:
-- `careerwiki.org` / `careerwiki.kr` (자기 사이트 인용 — 절대 금지, validate `[selfDomain]` FAIL)
+
+🚨 **절대 금지 (origin 도메인 — _sources에 1건이라도 있으면 validate `[originDomain]` FAIL)**:
+- `career.go.kr` (커리어넷)
+- `work.go.kr` (워크넷 구버전)
+- `work24.go.kr` (고용24)
+- `wagework.go.kr` (한국노동연구원 임금직업정보 / 워크피디아)
+- `job.go.kr` (직업포털)
+- 기타 `.go.kr` 도메인 중 path에 `job` / `career` / `work` / `wage` / `employ` 키워드 포함 시 origin 후보로 자동 검출
+- ⚠️ 이 도메인들은 CareerWiki가 API로 직접 가져오는 **원본 데이터(origin)**다. 출처로 쓰면 자기 데이터 인용이 됨. **외부 보충 충분해도 1건이라도 섞이면 FAIL**
+
+❌ **자기 사이트 인용 절대 금지**:
+- `careerwiki.org` / `careerwiki.kr` (validate `[selfDomain]` FAIL)
+
+✅ **1등급 (외부 핵심 — 적극 활용)**:
+- 한국고용정보원 (keis.or.kr) — 직업전망보고서
+- 한국직업능력연구원 (krivet.re.kr) — 훈련·자격
+- KOSIS (kosis.kr) — 통계청 통계
+- Q-Net (q-net.or.kr) — 자격증
+- 한국산업인력공단 (hrdkorea.or.kr)
+- 정부 부처 정책 페이지 (moel.go.kr/policy/..., mohw.go.kr/policy/... 등 직업정보 path 아닌 정책 페이지)
+- 협회·학회 공식 사이트 (한국간호협회 kna.or.kr, 한국변호사협회 koreanbar.or.kr 등)
+- 대학 학과 소개 페이지
+
+✅ **2등급 (적극 활용 권장)**:
+- 업계 보고서, 통계청 별도 페이지, 전문 미디어 (한경 hankyung.com, 매경 mk.co.kr, IT조선 it.chosun.com 등)
+- 학술논문 (RISS, KISS, DBpia)
+- ⚠️ 단, 블라인드 / 디시인사이드 / 개인 블로그 단독 출처 금지
+
+❌ **절대 금지 (반복)**:
+- careerwiki.org / careerwiki.kr (자기 사이트)
+- career.go.kr / work.go.kr / work24.go.kr / wagework.go.kr / job.go.kr (origin)
 - 블라인드, 디시인사이드, 블로그 단독 출처
 
 **출처 다양화 원칙**: 커리어넷/고용24/워크넷은 API로 이미 가져온 데이터와 중복될 수 있음. 업계 보고서, 학회 자료, 전문 미디어(신문/뉴스), 통계청, 직업 관련 전문 사이트 등 고급 출처를 적극 활용. 동일 내용이면 더 최신이고 신뢰도 높은 출처 우선 선택.
@@ -1247,6 +1272,42 @@ node scripts/full-quality-audit.cjs --slug={직업slug}
 - [ ] `**볼드 잔류 없음**` — 서술 필드에 마크다운 `**...**` 텍스트가 남아있지 않은가?
 - [ ] 기존에 있던 데이터가 사라지지 않았는가?
 - [ ] **Gate 6 diff-snapshot 검증** — `node scripts/full-quality-audit.cjs --slug={slug}` 실행 시 Gate 6 결과 확인. `.skill-cache/snapshot-{slug}.json` 이 있으면 저장 전·후 배열 항목 수 및 prospect 방향을 자동 비교함. Phase 0에서 스냅샷이 저장된 경우에만 활성화됨. Gate 6 FAIL 시 → 손실된 배열 항목 복원 또는 prospect 방향 수정.
+
+### 🆕 Phase 4-SRC: 출처 검증 (2026-04-29 강화) ⚠️ **필수 단계**
+
+draft에 등록한 모든 `_sources[fieldKey][i].url`에 대해 다음을 수행:
+
+**1단계: 자동 fetch 검증** (가능한 경우)
+```bash
+# 각 URL HTTP status + 텍스트 페치
+node -e "
+const url = '...';
+fetch(url).then(r => Promise.all([r.status, r.text()])).then(([status, body]) => {
+  console.log(status, body.length, '자']);
+});
+"
+# status === 200 AND body.length > 1000 (최소 콘텐츠 확인)
+# 4xx/5xx → FAIL, body가 비정상이면 FAIL
+```
+
+**2단계: 키워드 매칭 검증** (LLM 자가 검증 필수, 자동화 어려운 SPA/한국 차단 사이트는 LLM이 본인이 본 페이지 내용 기반으로 자가 확인)
+- 본문에서 [N]으로 인용한 핵심 명사 1~2개가 출처 페이지 텍스트에 실제로 등장하는지 확인
+- 예: way 본문에 "한국변호사협회는 ~을 권장한다.[1]" 인용 시 → _sources["way"][0].url 페이지에서 "변호사" 또는 "권장" 단어가 등장해야 함
+- 키워드 mismatch 시 → 출처 교체 또는 본문 수정 필수
+
+**3단계: WebFetch 어려운 경우 (한국 차단 / SPA / robots / 기관 사이트)**
+- LLM 자가 검증 강제: enhance subagent가 _sources 등록 *전*에 "이 URL이 이 내용을 정말 커버하는지" 1줄 명시 (예: "[ ] kna.or.kr/discipline/curriculum 페이지에 '간호학과 4년제 졸업' 키워드 직접 확인됨")
+- 검증 못한 URL은 _sources에 등록 금지 — 출처 조작 절대 금지
+
+**4단계: 자가 검증 보고 (DONE 시 포함)**
+```
+출처 검증: 5/5 URL 200 OK + 키워드 매칭 PASS
+  - way[0] kna.or.kr ✓ "간호학과" 매칭
+  - way[1] kosis.kr ✓ "임금" 통계 매칭
+  ...
+```
+
+> 🚨 출처 조작 (URL fetch 안 하고 추측) 절대 금지. 출처 페이지에 해당 내용이 없으면 본문 수정 또는 URL 교체 — 단축 시 사용자 신뢰 잃음.
 
 ---
 
