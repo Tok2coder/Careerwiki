@@ -907,10 +907,10 @@ export const renderYouTubeSection = (links: YouTubeLink[]): string => {
     return `<div class="space-y-3 md:space-y-0 md:grid md:grid-cols-${gridCols} md:gap-3">${allHtml}</div>`
   }
 
-  // 4개 이상: 모바일은 세로, 데스크톱은 가로 스크롤
+  // 4개 이상: 모바일은 세로, 데스크톱은 가로 스크롤 (다크모드 스크롤바)
   return `
     <div class="space-y-3 md:hidden">${allHtml}</div>
-    <div class="hidden md:flex md:gap-3 md:overflow-x-auto md:pb-2" style="scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;">
+    <div class="hidden md:flex md:gap-3 md:overflow-x-auto md:pb-2 scroll-dark" style="scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;">
       ${validLinks.map(link => `<div class="flex-shrink-0" style="width:calc(33.333% - 8px);scroll-snap-align:start;">${renderCard(link)}</div>`).join('')}
     </div>`
 }

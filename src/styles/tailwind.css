@@ -21,3 +21,28 @@ html {
   .min-h-screen { min-height: 100dvh !important; }
   .h-screen { height: 100dvh !important; }
 }
+
+/* 다크모드 스크롤바 — youtubeLinks 가로 스크롤 등 사이트 컴포넌트용 */
+.scroll-dark {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) rgba(31, 41, 55, 0.3);
+}
+.scroll-dark::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-dark::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.3);
+  border-radius: 4px;
+}
+.scroll-dark::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 4px;
+  border: 1px solid rgba(15, 23, 42, 0.4);
+}
+.scroll-dark::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 168, 83, 0.55);
+}
+.scroll-dark::-webkit-scrollbar-corner {
+  background: transparent;
+}
