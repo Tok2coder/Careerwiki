@@ -424,6 +424,12 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         <span><span id="rangeInfo" class="text-slate-300 font-mono">-</span> 표시 중</span>
         <span class="text-slate-600">·</span>
         <span>현재 정렬: <span id="sortInfo" class="text-slate-300">스킬 적용순</span></span>
+        <span class="text-slate-600">·</span>
+        <span>로드: <span id="loadedAt" class="text-slate-300 font-mono">-</span></span>
+        <button id="refreshBtn" class="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 rounded-lg text-xs text-blue-300 hover:text-blue-200 transition-all" title="페이지 새로고침 — 서버에서 최신 데이터 다시 가져오기">
+          <i id="refreshIcon" class="fas fa-rotate text-[11px]"></i>
+          <span>새로고침</span>
+        </button>
       </div>
     </div>
 
@@ -504,6 +510,16 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       var prevBtn = document.getElementById('prevBtn');
       var nextBtn = document.getElementById('nextBtn');
       var lastBtn = document.getElementById('lastBtn');
+      var refreshBtn = document.getElementById('refreshBtn');
+      var refreshIcon = document.getElementById('refreshIcon');
+      var loadedAt = document.getElementById('loadedAt');
+
+      // 데이터 로드 시각 — script 실행 시점 (= 서버 응답 직후)
+      (function() {
+        var d = new Date();
+        function pad(n) { return n < 10 ? '0' + n : '' + n; }
+        loadedAt.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      })();
 
       function setQualityFilter(key) {
         filterSelect.value = key;
@@ -803,6 +819,15 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       lastBtn.addEventListener('click', function() {
         currentPage = Math.max(1, Math.ceil(filtered.length / pageSize));
         render();
+      });
+      refreshBtn.addEventListener('click', function() {
+        // 회전 아이콘 + 버튼 비활성화 (사용자에게 진행 표시)
+        refreshIcon.classList.add('fa-spin');
+        refreshBtn.disabled = true;
+        refreshBtn.style.opacity = '0.6';
+        // 캐시 우회 reload — 서버에서 최신 데이터 다시 받음
+        // location.reload() 은 일부 브라우저에서 캐시 사용 가능 → href 재할당으로 강제 GET
+        window.location.href = window.location.href;
       });
 
       applyFilters();
