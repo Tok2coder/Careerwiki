@@ -132,9 +132,9 @@ ${detailLines.join('\n')}
 10. **Phase 5 끝 END_TRACKING** + UCJ 17필드 self-report
 11. **[job-data-enhance] 마커 부착**: change_summary에 포함
 
-**🚨 _sources 사고 절대 금지** (validate gate 5룰 — commit a95bd46, 2026-04-29):
+**🚨 _sources 사고 절대 금지** (validate gate — commit 55a6199, 2026-04-29 originDomain 격상):
 12. **\`[selfDomain]\` FAIL**: careerwiki.org / careerwiki.kr 자기 사이트 인용 절대 금지
-13. **\`[selfCiteOnly]\` FAIL**: career.go.kr / work.go.kr / work24.go.kr / job.go.kr 만 단독 사용 금지 — 외부 보충 host 1+ 필수
+13. **\`[originDomain]\` FAIL** ⚠️ **격상**: career.go.kr / work.go.kr / work24.go.kr / **wagework.go.kr** / job.go.kr 및 \`*.go.kr\` + 직업키워드(job/career/work/wage/employ) — **1건이라도 있으면 즉시 FAIL** (이전 selfCiteOnly 정책 폐기). 의료코디네이터 wagework.go.kr 사고로 격상 (사용자 직접 발견)
 14. **\`[listPageURL]\` FAIL**: 직업 식별자(seq/SEQ/jobsCd/jmCd) 없는 인덱스/카테고리 URL 금지
 15. **\`[brokenRef]\` FAIL**: 본문 [N] = field-local. _sources[fieldKey] 길이 ≥ 본문 max [N] 보장 필수. 본문 [N] ↔ _sources[fieldKey][N-1] 매핑
 16. **\`[orphanSrc]\` WARN**: _sources에 등록한 모든 idx는 본문에서 [N]으로 인용되어야 함
@@ -153,13 +153,22 @@ ${detailLines.join('\n')}
 
 21. **외부 host minimum 3+ 권장** ⚠️ (이전 리포터 외부 2개 통과 사례 빈약함 발견):
     - \`externalHostCount ≥ 3\` 권장 (가능하면 5+)
-    - origin (career.go.kr/work.go.kr 등) + 외부 협회·KOSIS·전문 미디어·학술논문 분산
-    - 외부 host 1개만 통과 시 \`[selfCite]\` WARN 발행됨
+    - 외부 1차 출처(협회·KOSIS·전문 미디어·학술논문·정부 부처 정책 페이지 등)로 구성
+    - **origin 도메인은 외부 host 카운트에 포함 안 됨** — origin 자체 사용 금지
 
 22. **careerTree 이번 사이클 대상 X** ⚠️:
     - careerTree는 별도 사이클로 분리. 이번 enhance에서 손대지 않음
     - 기존 careerTree가 있으면 그대로 유지 — draft에 careerTree 필드 포함 금지
     - careerTree=null이면 \`_careerTreeNote\` 짧게 "별도 사이클 처리 예정"으로 채움 (탐색 깊이 검사 회피용)
+
+### 🆕 Phase 4-SRC: 출처 검증 강제 (2026-04-29 신설):
+
+23. **모든 _sources URL 자동 fetch + 키워드 매칭 검증 필수**:
+    - status 200이 아니거나 body 비정상이면 FAIL
+    - 본문 [N]에서 인용한 핵심 명사 1~2개가 출처 페이지에 등장하는지 LLM이 직접 확인
+    - WebFetch 차단(SPA/한국 차단/robots) 시 LLM 자가 검증 강제 — "이 URL이 이 내용을 정말 커버하는지" 1줄 명시
+    - 검증 못한 URL은 _sources에 등록 금지 — **출처 조작 절대 금지**
+    - DONE 보고에 출처 검증 결과 포함 (예: "출처 검증: 5/5 URL 200 OK + 키워드 매칭 PASS")
 
 ### 종료 후 보고 형식
 
