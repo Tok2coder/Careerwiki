@@ -1,0 +1,2721 @@
+{
+  "generated_at": "2026-04-29T13:25:12.040Z",
+  "source": "data/audit-sources-deep.json",
+  "filter": "rawURL≥1 OR brokenRef≥1 OR selfCiteOnly=YES OR mojibake≥1; exclude 5 done",
+  "excluded": [
+    "수의사보조원",
+    "만화가",
+    "사서",
+    "경제학연구원",
+    "리포터"
+  ],
+  "distribution": {
+    "total": 47,
+    "withMojibake": 1,
+    "withSelfCiteOnly": 8,
+    "withListPage": 9,
+    "withBrokenRef": 29,
+    "withRawURL": 27,
+    "withOrphan": 5,
+    "withDup": 8,
+    "withIdxGap": 0
+  },
+  "jobs": [
+    {
+      "slug": "입학사정관",
+      "id": "1765284146444414",
+      "totalUrls": 17,
+      "uniqueHosts": 6,
+      "externalHostCount": 17,
+      "patterns": {
+        "rawURL": 17,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 0,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 17,
+      "tags": "rawURL×17",
+      "fixSummary": "_sources.text가 raw URL 17건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%85%ED%95%99%EC%82%AC%EC%A0%95%"
+          },
+          {
+            "field": "detailWlb.wlbDetail",
+            "idx": 2,
+            "text": "https://www.teamblind.com/kr/post/%ED%98%B9%EC%8B%9C-%EA%B5%90%EC%A7%81%EC%9B%90"
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "idx": 3,
+            "text": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%85%ED%95%99%EC%82%AC%EC%A0%95%"
+          },
+          {
+            "field": "trivia",
+            "idx": 4,
+            "text": "https://www.hankookilbo.com/News/Read/A2021062916470003535"
+          },
+          {
+            "field": "overviewAbilities.technKnow",
+            "idx": 5,
+            "text": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%85%ED%95%99%EC%82%AC%EC%A0%95%"
+          },
+          {
+            "field": "way",
+            "idx": 6,
+            "text": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%85%ED%95%99%EC%82%AC%EC%A0%95%"
+          },
+          {
+            "field": "way",
+            "idx": 7,
+            "text": "https://kauac.kr"
+          },
+          {
+            "field": "detailReady.curriculum",
+            "idx": 8,
+            "text": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%85%ED%95%99%EC%82%AC%EC%A0%95%"
+          },
+          {
+            "field": "detailReady.curriculum",
+            "idx": 9,
+            "text": "https://kauac.kr"
+          },
+          {
+            "field": "detailReady.curriculum",
+            "idx": 10,
+            "text": "https://datascience.re.kr/487"
+          },
+          {
+            "field": "detailReady.recruit",
+            "idx": 11,
+            "text": "https://kauac.kr/gnu/bbs/board.php?bo_table=open_job"
+          },
+          {
+            "field": "detailReady.recruit",
+            "idx": 12,
+            "text": "https://kauac.kr"
+          },
+          {
+            "field": "detailReady.recruit",
+            "idx": 13,
+            "text": "https://datascience.re.kr/487"
+          },
+          {
+            "field": "detailReady.training",
+            "idx": 14,
+            "text": "https://kauac.kr"
+          },
+          {
+            "field": "detailReady.training",
+            "idx": 15,
+            "text": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EC%9E%85%ED%95%99%EC%82%AC%EC%A0%95%"
+          },
+          {
+            "field": "sidebarCerts",
+            "idx": 16,
+            "text": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9521"
+          },
+          {
+            "field": "sidebarCerts",
+            "idx": 17,
+            "text": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9511"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": []
+      }
+    },
+    {
+      "slug": "의료코디네이터",
+      "id": "1765283423024989",
+      "totalUrls": 10,
+      "uniqueHosts": 4,
+      "externalHostCount": 6,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 8,
+        "orphanSrc": 8,
+        "selfCite": 4,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 2,
+        "idxGap": false
+      },
+      "severity": 12,
+      "tags": "brokenRef×8 / orphan×8 / dup×2 / selfCite×4",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 8건; _sources 등록만 본문 미사용 8건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 5
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 6
+          },
+          {
+            "field": "detailWlb.wlbDetail",
+            "idx": 9
+          },
+          {
+            "field": "detailWlb.wlbDetail",
+            "idx": 10
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "idx": 11
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "idx": 12
+          },
+          {
+            "field": "trivia",
+            "idx": 7
+          },
+          {
+            "field": "trivia",
+            "idx": 8
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "detailWlb.wlbDetail",
+            "idx": 1
+          },
+          {
+            "field": "detailWlb.wlbDetail",
+            "idx": 2
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "idx": 1
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "idx": 2
+          },
+          {
+            "field": "trivia",
+            "idx": 1
+          },
+          {
+            "field": "trivia",
+            "idx": 2
+          }
+        ],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "전문의사",
+      "id": "1765283366442139",
+      "totalUrls": 11,
+      "uniqueHosts": 10,
+      "externalHostCount": 11,
+      "patterns": {
+        "rawURL": 11,
+        "brokenRef": 1,
+        "orphanSrc": 0,
+        "selfCite": 0,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 12,
+      "tags": "brokenRef×1 / rawURL×11",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 1건; _sources.text가 raw URL 11건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.korea.kr/news/policyNewsView.do?newsId=148925630"
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 2,
+            "text": "https://www.khan.co.kr/article/202512302121001"
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3,
+            "text": "https://www.doctorsnews.co.kr/news/articleView.html?idxno=160194"
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 4,
+            "text": "https://www.medicaltimes.com/Mobile/News/NewsView.html?ID=1156670"
+          },
+          {
+            "field": "trivia",
+            "idx": 5,
+            "text": "https://www.snuh.org/board/B001/view.do?bbs_no=53"
+          },
+          {
+            "field": "trivia",
+            "idx": 6,
+            "text": "https://www.ibric.org/myboard/read.php?Board=isori&id=115838"
+          },
+          {
+            "field": "trivia",
+            "idx": 7,
+            "text": "https://opendata.hira.or.kr/op/opc/olapHumanResourceStatInfoTab3.do"
+          },
+          {
+            "field": "way",
+            "idx": 8,
+            "text": "https://www.kamc.kr/main/index.php?m_cd=52"
+          },
+          {
+            "field": "way",
+            "idx": 9,
+            "text": "https://namu.wiki/w/%EC%A0%84%EA%B3%B5%EC%9D%98"
+          },
+          {
+            "field": "way",
+            "idx": 10,
+            "text": "https://www.eduyonhap.com/m/page/view.php?no=64990"
+          },
+          {
+            "field": "way",
+            "idx": 11,
+            "text": "https://namu.wiki/w/%EC%A0%84%EB%AC%B8%EC%9D%98"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "trivia",
+            "idx": 4
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": []
+      }
+    },
+    {
+      "slug": "드라마작가",
+      "id": "1765283301376889",
+      "totalUrls": 6,
+      "uniqueHosts": 6,
+      "externalHostCount": 5,
+      "patterns": {
+        "rawURL": 4,
+        "brokenRef": 6,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "brokenRef×6 / rawURL×4 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 6건; _sources.text가 raw URL 4건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=266"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://ko.wikipedia.org/wiki/%EA%B9%80%EC%9D%80%EC%88%99_(%EC%9E%91%EA%B0%80)"
+          },
+          {
+            "field": "trivia",
+            "idx": 3,
+            "text": "https://www.ktrwa.or.kr"
+          },
+          {
+            "field": "way",
+            "idx": 6,
+            "text": "https://www.ktrwa.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "마케팅전문가",
+      "id": "176528330314020",
+      "totalUrls": 6,
+      "uniqueHosts": 5,
+      "externalHostCount": 4,
+      "patterns": {
+        "rawURL": 4,
+        "brokenRef": 6,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "brokenRef×6 / rawURL×4 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 6건; _sources.text가 raw URL 4건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=1068"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.yes24.com"
+          },
+          {
+            "field": "way",
+            "idx": 5,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=1068"
+          },
+          {
+            "field": "way",
+            "idx": 6,
+            "text": "https://www.kma.re.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "trivia",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "방송연출가",
+      "id": "1765283311944704",
+      "totalUrls": 5,
+      "uniqueHosts": 4,
+      "externalHostCount": 3,
+      "patterns": {
+        "rawURL": 5,
+        "brokenRef": 5,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "brokenRef×5 / rawURL×5 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 5건; _sources.text가 raw URL 5건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=301"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://ko.wikipedia.org/wiki/%EB%82%98%EC%98%81%EC%84%9D"
+          },
+          {
+            "field": "trivia",
+            "idx": 3,
+            "text": "https://www.hankyung.com"
+          },
+          {
+            "field": "way",
+            "idx": 4,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=301"
+          },
+          {
+            "field": "way",
+            "idx": 5,
+            "text": "https://www.kba.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "보험계리사",
+      "id": "1765284083754370",
+      "totalUrls": 28,
+      "uniqueHosts": 12,
+      "externalHostCount": 27,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 1,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "mojibake×1 / selfCite×1",
+      "fixSummary": "인코딩 깨짐 1건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [
+          {
+            "location": "user_contributed_json (raw)",
+            "sample": "\":{\"sal\":\"�ӱ� ����(25%) 499����, ���(50%"
+          }
+        ],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "사회학연구원",
+      "id": "1765283321689634",
+      "totalUrls": 3,
+      "uniqueHosts": 3,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 7,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "brokenRef×7 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 7건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=933"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.nl.go.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.ksa21.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "trivia",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "서예가",
+      "id": "1765283324729983",
+      "totalUrls": 5,
+      "uniqueHosts": 5,
+      "externalHostCount": 4,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 7,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "brokenRef×7 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 7건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=1109"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.museum.go.kr"
+          },
+          {
+            "field": "way",
+            "idx": 5,
+            "text": "https://www.kcaa.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "trivia",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "수상운송사무원",
+      "id": "176528342030072",
+      "totalUrls": 5,
+      "uniqueHosts": 1,
+      "externalHostCount": 0,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 5,
+        "selfCiteOnly": true,
+        "listPage": 5,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "selfCiteOnly / listPage×5 / selfCite×5",
+      "fixSummary": "외부 host 0개 — origin(career.go.kr/work.go.kr) 단독; 인덱스 URL 5건 (직업 specific URL로 교체)",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [
+          {
+            "field": "overviewProspect.main",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "detailWlb.wlbDetail",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "trivia",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "way",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "역사학연구원",
+      "id": "17652833431652",
+      "totalUrls": 5,
+      "uniqueHosts": 3,
+      "externalHostCount": 3,
+      "patterns": {
+        "rawURL": 5,
+        "brokenRef": 5,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "brokenRef×5 / rawURL×5 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 5건; _sources.text가 raw URL 5건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=273"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.sogang.ac.kr"
+          },
+          {
+            "field": "trivia",
+            "idx": 3,
+            "text": "https://www.history.go.kr"
+          },
+          {
+            "field": "way",
+            "idx": 4,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=273"
+          },
+          {
+            "field": "way",
+            "idx": 5,
+            "text": "https://www.history.go.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "재료공학기술자",
+      "id": "1765283364145434",
+      "totalUrls": 3,
+      "uniqueHosts": 3,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 7,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "brokenRef×7 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 7건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=112"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.kbia.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.mrs.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "trivia",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "전화교환원",
+      "id": "1765283368847566",
+      "totalUrls": 5,
+      "uniqueHosts": 1,
+      "externalHostCount": 0,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 5,
+        "selfCiteOnly": true,
+        "listPage": 5,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 10,
+      "tags": "selfCiteOnly / listPage×5 / selfCite×5",
+      "fixSummary": "외부 host 0개 — origin(career.go.kr/work.go.kr) 단독; 인덱스 URL 5건 (직업 specific URL로 교체)",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [
+          {
+            "field": "overviewProspect.main",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "detailWlb.wlbDetail",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "trivia",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "way",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "자동차공학기술자",
+      "id": "1765283360062685",
+      "totalUrls": 4,
+      "uniqueHosts": 2,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 4,
+        "brokenRef": 5,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 9,
+      "tags": "brokenRef×5 / rawURL×4 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 5건; _sources.text가 raw URL 4건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=1076"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.kama.or.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=1076"
+          },
+          {
+            "field": "way",
+            "idx": 4,
+            "text": "https://www.kama.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "전자공학기술자",
+      "id": "1765283367205194",
+      "totalUrls": 6,
+      "uniqueHosts": 4,
+      "externalHostCount": 4,
+      "patterns": {
+        "rawURL": 4,
+        "brokenRef": 5,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 9,
+      "tags": "brokenRef×5 / rawURL×4 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 5건; _sources.text가 raw URL 4건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=119"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.bell-labs.com"
+          },
+          {
+            "field": "way",
+            "idx": 5,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=119"
+          },
+          {
+            "field": "way",
+            "idx": 6,
+            "text": "https://www.ksia.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "직업상담사",
+      "id": "1765283460443102",
+      "totalUrls": 3,
+      "uniqueHosts": 3,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 6,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 9,
+      "tags": "brokenRef×6 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 6건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=408"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.keis.or.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.q-net.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "화학공학기술자",
+      "id": "1765283402753351",
+      "totalUrls": 3,
+      "uniqueHosts": 3,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 6,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 9,
+      "tags": "brokenRef×6 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 6건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=952"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.krict.re.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.kpia.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "번역가",
+      "id": "176528331355150",
+      "totalUrls": 3,
+      "uniqueHosts": 3,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 5,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 8,
+      "tags": "brokenRef×5 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 5건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=267"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.wycliffe.org"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.kotia.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "사회단체활동가",
+      "id": "1765283321094381",
+      "totalUrls": 3,
+      "uniqueHosts": 1,
+      "externalHostCount": 0,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 3,
+        "selfCiteOnly": true,
+        "listPage": 3,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 8,
+      "tags": "selfCiteOnly / listPage×3 / selfCite×3",
+      "fixSummary": "외부 host 0개 — origin(career.go.kr/work.go.kr) 단독; 인덱스 URL 3건 (직업 specific URL로 교체)",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [
+          {
+            "field": "overviewProspect.main",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "trivia",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "way",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "섬유제조기계조작원",
+      "id": "1765283519225217",
+      "totalUrls": 3,
+      "uniqueHosts": 1,
+      "externalHostCount": 0,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 3,
+        "selfCiteOnly": true,
+        "listPage": 3,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 8,
+      "tags": "selfCiteOnly / listPage×3 / selfCite×3",
+      "fixSummary": "외부 host 0개 — origin(career.go.kr/work.go.kr) 단독; 인덱스 URL 3건 (직업 specific URL로 교체)",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [
+          {
+            "field": "overviewProspect.main",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "trivia",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "way",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "성직자",
+      "id": "1765283328409182",
+      "totalUrls": 3,
+      "uniqueHosts": 1,
+      "externalHostCount": 0,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 3,
+        "selfCiteOnly": true,
+        "listPage": 3,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 8,
+      "tags": "selfCiteOnly / listPage×3 / selfCite×3",
+      "fixSummary": "외부 host 0개 — origin(career.go.kr/work.go.kr) 단독; 인덱스 URL 3건 (직업 specific URL로 교체)",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [
+          {
+            "field": "overviewProspect.main",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "trivia",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "way",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "유치원-원장-및-원감",
+      "id": "1765283410710701",
+      "totalUrls": 3,
+      "uniqueHosts": 1,
+      "externalHostCount": 0,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 3,
+        "selfCiteOnly": true,
+        "listPage": 3,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 8,
+      "tags": "selfCiteOnly / listPage×3 / selfCite×3",
+      "fixSummary": "외부 host 0개 — origin(career.go.kr/work.go.kr) 단독; 인덱스 URL 3건 (직업 specific URL로 교체)",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [
+          {
+            "field": "overviewProspect.main",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "trivia",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "way",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "전기가스수도관리자",
+      "id": "1765283412976396",
+      "totalUrls": 3,
+      "uniqueHosts": 1,
+      "externalHostCount": 0,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 3,
+        "selfCiteOnly": true,
+        "listPage": 3,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 8,
+      "tags": "selfCiteOnly / listPage×3 / selfCite×3",
+      "fixSummary": "외부 host 0개 — origin(career.go.kr/work.go.kr) 단독; 인덱스 URL 3건 (직업 specific URL로 교체)",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [
+          {
+            "field": "overviewProspect.main",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "trivia",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "way",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "조사전문가",
+      "id": "1765283414891152",
+      "totalUrls": 3,
+      "uniqueHosts": 1,
+      "externalHostCount": 0,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 3,
+        "selfCiteOnly": true,
+        "listPage": 3,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 8,
+      "tags": "selfCiteOnly / listPage×3 / selfCite×3",
+      "fixSummary": "외부 host 0개 — origin(career.go.kr/work.go.kr) 단독; 인덱스 URL 3건 (직업 specific URL로 교체)",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [],
+        "listPage": [
+          {
+            "field": "overviewProspect.main",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "trivia",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          },
+          {
+            "field": "way",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "피부관리사",
+      "id": "1765283396344506",
+      "totalUrls": 6,
+      "uniqueHosts": 4,
+      "externalHostCount": 4,
+      "patterns": {
+        "rawURL": 4,
+        "brokenRef": 4,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 8,
+      "tags": "brokenRef×4 / rawURL×4 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 4건; _sources.text가 raw URL 4건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=416"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.q-net.or.kr"
+          },
+          {
+            "field": "way",
+            "idx": 5,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=416"
+          },
+          {
+            "field": "way",
+            "idx": 6,
+            "text": "https://www.q-net.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 4
+          },
+          {
+            "field": "way",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "네일아티스트",
+      "id": "1765283295005846",
+      "totalUrls": 13,
+      "uniqueHosts": 4,
+      "externalHostCount": 8,
+      "patterns": {
+        "rawURL": 4,
+        "brokenRef": 0,
+        "orphanSrc": 4,
+        "selfCite": 5,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 6,
+      "tags": "rawURL×4 / orphan×4 / selfCite×5",
+      "fixSummary": "_sources.text가 raw URL 4건 (기관명 교체); _sources 등록만 본문 미사용 4건",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=288"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.koreananail.co.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.q-net.or.kr/crf021.do?id=crf02101&gSite=Q&gId="
+          },
+          {
+            "field": "way",
+            "idx": 4,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=288"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1
+          },
+          {
+            "field": "trivia",
+            "idx": 1
+          },
+          {
+            "field": "way",
+            "idx": 1
+          },
+          {
+            "field": "way",
+            "idx": 2
+          }
+        ],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "집배원",
+      "id": "1765283493607565",
+      "totalUrls": 3,
+      "uniqueHosts": 2,
+      "externalHostCount": 3,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 5,
+        "orphanSrc": 0,
+        "selfCite": 0,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 5,
+      "tags": "brokenRef×5",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 5건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "trivia",
+            "idx": 2
+          },
+          {
+            "field": "trivia",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": []
+      }
+    },
+    {
+      "slug": "바리스타",
+      "id": "1765283309704378",
+      "totalUrls": 3,
+      "uniqueHosts": 2,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 1,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "brokenRef×1 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 1건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=180"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.kca.or.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.kca.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "way",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "방사선과의사",
+      "id": "1765283464036549",
+      "totalUrls": 3,
+      "uniqueHosts": 3,
+      "externalHostCount": 3,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 4,
+        "orphanSrc": 0,
+        "selfCite": 0,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 2,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "brokenRef×4 / dup×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 4건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "trivia",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": []
+      }
+    },
+    {
+      "slug": "방송작가",
+      "id": "176528346734240",
+      "totalUrls": 3,
+      "uniqueHosts": 2,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 1,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "brokenRef×1 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 1건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=1441"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.ktrwa.or.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.ktrwa.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "way",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "선박기관사",
+      "id": "1765283493883814",
+      "totalUrls": 2,
+      "uniqueHosts": 2,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 4,
+        "orphanSrc": 0,
+        "selfCite": 0,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "brokenRef×4",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 4건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "trivia",
+            "idx": 2
+          },
+          {
+            "field": "trivia",
+            "idx": 3
+          },
+          {
+            "field": "way",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 3
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": []
+      }
+    },
+    {
+      "slug": "소믈리에",
+      "id": "1765283329218353",
+      "totalUrls": 3,
+      "uniqueHosts": 3,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 1,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "brokenRef×1 / rawURL×3 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 1건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=167"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.customs.go.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.sommelierkorea.or.kr"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "way",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "외교관",
+      "id": "1765283346646731",
+      "totalUrls": 14,
+      "uniqueHosts": 4,
+      "externalHostCount": 10,
+      "patterns": {
+        "rawURL": 4,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 4,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "rawURL×4 / selfCite×4",
+      "fixSummary": "_sources.text가 raw URL 4건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=233"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.mofa.go.kr"
+          },
+          {
+            "field": "way",
+            "idx": 4,
+            "text": "https://www.mofa.go.kr"
+          },
+          {
+            "field": "way",
+            "idx": 5,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=233"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "일반의사",
+      "id": "1765283358528451",
+      "totalUrls": 3,
+      "uniqueHosts": 2,
+      "externalHostCount": 1,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 1,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "brokenRef×1 / rawURL×3 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 1건; _sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=1440"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.mohw.go.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=1440"
+          }
+        ],
+        "brokenRef": [
+          {
+            "field": "way",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "전기공학기술자",
+      "id": "1765283365417879",
+      "totalUrls": 6,
+      "uniqueHosts": 5,
+      "externalHostCount": 4,
+      "patterns": {
+        "rawURL": 4,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "rawURL×4 / selfCite×2",
+      "fixSummary": "_sources.text가 raw URL 4건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=114"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.kepco.co.kr"
+          },
+          {
+            "field": "way",
+            "idx": 5,
+            "text": "https://www.q-net.or.kr/crf021.do?id=crf02101&gSite=Q&gId="
+          },
+          {
+            "field": "way",
+            "idx": 6,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=114"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "행사기획자",
+      "id": "1765283400318551",
+      "totalUrls": 20,
+      "uniqueHosts": 6,
+      "externalHostCount": 19,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 4,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 4,
+      "tags": "brokenRef×4 / selfCite×1",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 4건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "overviewProspect.main",
+            "idx": 3
+          },
+          {
+            "field": "detailWlb.wlbDetail",
+            "idx": 2
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "법원공무원",
+      "id": "1765283415778123",
+      "totalUrls": 8,
+      "uniqueHosts": 6,
+      "externalHostCount": 7,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 2,
+        "orphanSrc": 0,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 1,
+        "mojibake": 0,
+        "dupMarkers": 5,
+        "idxGap": false
+      },
+      "severity": 3,
+      "tags": "listPage×1 / brokenRef×2 / dup×5 / selfCite×1",
+      "fixSummary": "인덱스 URL 1건 (직업 specific URL로 교체); 본문 [N] vs _sources 길이 mismatch 2건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "detailWlb.wlbDetail",
+            "idx": 2
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "idx": 2
+          }
+        ],
+        "listPage": [
+          {
+            "field": "detailWlb.wlbDetail",
+            "url": "https://www.career.go.kr/cloud/w/job/list"
+          }
+        ],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "토목감리기술자",
+      "id": "1765283442674847",
+      "totalUrls": 4,
+      "uniqueHosts": 3,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 2,
+        "orphanSrc": 2,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 4,
+        "idxGap": false
+      },
+      "severity": 3,
+      "tags": "brokenRef×2 / orphan×2 / dup×4 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 2건; _sources 등록만 본문 미사용 2건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 4
+          },
+          {
+            "field": "trivia",
+            "idx": 5
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1
+          },
+          {
+            "field": "trivia",
+            "idx": 1
+          }
+        ],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "패션모델",
+      "id": "1765284154102933",
+      "totalUrls": 12,
+      "uniqueHosts": 4,
+      "externalHostCount": 8,
+      "patterns": {
+        "rawURL": 3,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 4,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 3,
+      "tags": "rawURL×3 / selfCite×4",
+      "fixSummary": "_sources.text가 raw URL 3건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=294"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.kofoti.or.kr"
+          },
+          {
+            "field": "way",
+            "idx": 3,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=294"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "마취병리과의사",
+      "id": "1765283464572237",
+      "totalUrls": 2,
+      "uniqueHosts": 2,
+      "externalHostCount": 2,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 2,
+        "orphanSrc": 0,
+        "selfCite": 0,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 2,
+        "idxGap": false
+      },
+      "severity": 2,
+      "tags": "brokenRef×2 / dup×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 2건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          },
+          {
+            "field": "way",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": []
+      }
+    },
+    {
+      "slug": "영화시나리오작가",
+      "id": "1765283346355412",
+      "totalUrls": 8,
+      "uniqueHosts": 4,
+      "externalHostCount": 6,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 2,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 4,
+        "idxGap": false
+      },
+      "severity": 2,
+      "tags": "brokenRef×2 / dup×4 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 2건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "detailWlb.wlbDetail",
+            "idx": 2
+          },
+          {
+            "field": "detailWlb.socialDetail",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "항공기조종사",
+      "id": "1765283491867444",
+      "totalUrls": 13,
+      "uniqueHosts": 8,
+      "externalHostCount": 9,
+      "patterns": {
+        "rawURL": 2,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 4,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 2,
+      "tags": "rawURL×2 / selfCite×4",
+      "fixSummary": "_sources.text가 raw URL 2건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=150"
+          },
+          {
+            "field": "trivia",
+            "idx": 2,
+            "text": "https://www.molit.go.kr"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "교도관",
+      "id": "1765283288900613",
+      "totalUrls": 16,
+      "uniqueHosts": 6,
+      "externalHostCount": 15,
+      "patterns": {
+        "rawURL": 1,
+        "brokenRef": 0,
+        "orphanSrc": 1,
+        "selfCite": 1,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 1.5,
+      "tags": "rawURL×1 / orphan×1 / selfCite×1",
+      "fixSummary": "_sources.text가 raw URL 1건 (기관명 교체); _sources 등록만 본문 미사용 1건",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=363"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1
+          }
+        ],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "기상연구원",
+      "id": "1765283293608896",
+      "totalUrls": 15,
+      "uniqueHosts": 6,
+      "externalHostCount": 12,
+      "patterns": {
+        "rawURL": 1,
+        "brokenRef": 0,
+        "orphanSrc": 1,
+        "selfCite": 3,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 1.5,
+      "tags": "rawURL×1 / orphan×1 / selfCite×3",
+      "fixSummary": "_sources.text가 raw URL 1건 (기관명 교체); _sources 등록만 본문 미사용 1건",
+      "details": {
+        "rawURL": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1,
+            "text": "https://www.career.go.kr/cloud/w/job/view?seq=6"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 1
+          }
+        ],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "섬유공학기술자",
+      "id": "1765283327188975",
+      "totalUrls": 5,
+      "uniqueHosts": 4,
+      "externalHostCount": 3,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 1,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 4,
+        "idxGap": false
+      },
+      "severity": 1,
+      "tags": "brokenRef×1 / dup×4 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 1건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "trivia",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "토목공학기술자",
+      "id": "1765283388857592",
+      "totalUrls": 19,
+      "uniqueHosts": 6,
+      "externalHostCount": 15,
+      "patterns": {
+        "rawURL": 1,
+        "brokenRef": 0,
+        "orphanSrc": 0,
+        "selfCite": 4,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 0,
+        "idxGap": false
+      },
+      "severity": 1,
+      "tags": "rawURL×1 / selfCite×4",
+      "fixSummary": "_sources.text가 raw URL 1건 (기관명 교체)",
+      "details": {
+        "rawURL": [
+          {
+            "field": "trivia",
+            "idx": 4,
+            "text": "https://whc.unesco.org/en/list/438"
+          }
+        ],
+        "brokenRef": [],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    },
+    {
+      "slug": "항공공학기술자",
+      "id": "1765283444621492",
+      "totalUrls": 5,
+      "uniqueHosts": 3,
+      "externalHostCount": 3,
+      "patterns": {
+        "rawURL": 0,
+        "brokenRef": 1,
+        "orphanSrc": 0,
+        "selfCite": 2,
+        "selfCiteOnly": false,
+        "listPage": 0,
+        "mojibake": 0,
+        "dupMarkers": 4,
+        "idxGap": false
+      },
+      "severity": 1,
+      "tags": "brokenRef×1 / dup×4 / selfCite×2",
+      "fixSummary": "본문 [N] vs _sources 길이 mismatch 1건",
+      "details": {
+        "rawURL": [],
+        "brokenRef": [
+          {
+            "field": "overviewProspect.main",
+            "idx": 2
+          }
+        ],
+        "listPage": [],
+        "mojibake": [],
+        "orphanSrc": [],
+        "selfCiteHosts": [
+          "www.career.go.kr"
+        ]
+      }
+    }
+  ]
+}
