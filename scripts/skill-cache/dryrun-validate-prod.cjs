@@ -14,6 +14,7 @@ const { validate } = require(path.join(__dirname, '..', 'validate-job-edit.cjs')
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 
+// d1Query — brace-balanced 추출 (2026-04-29 패치, audit-sources-deep와 동일 형식)
 function d1Query(sql) {
   const escaped = sql.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\s+/g, ' ').trim();
   const r = spawnSync(`npx wrangler d1 execute careerwiki-kr --remote --json --command "${escaped}"`, {
@@ -21,9 +22,26 @@ function d1Query(sql) {
     shell: true, windowsHide: true,
   });
   const out = (r.stdout || '').trim();
-  const startIdx = out.indexOf('[');
-  if (startIdx < 0) return [];
-  return JSON.parse(out.slice(startIdx))[0]?.results || [];
+  const start = out.indexOf('[');
+  if (start < 0) return [];
+  let depth = 0, end = -1, inStr = false, esc = false;
+  for (let i = start; i < out.length; i++) {
+    const c = out[i];
+    if (esc) { esc = false; continue; }
+    if (c === '\\') { esc = true; continue; }
+    if (c === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (c === '[') depth++;
+    else if (c === ']') { depth--; if (depth === 0) { end = i + 1; break; } }
+  }
+  if (end < 0) end = out.length;
+  const json = out.slice(start, end);
+  try {
+    return JSON.parse(json)[0]?.results || [];
+  } catch (e) {
+    const sample = json.slice(0, 200).replace(/\n/g, '\\n');
+    throw new Error(`d1Query JSON parse 실패: ${e.message}\n  stdout sample (200자): ${sample}\n  stderr sample: ${(r.stderr || '').slice(0, 300)}`);
+  }
 }
 
 const slugs = process.argv.slice(2);
