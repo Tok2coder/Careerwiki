@@ -133,6 +133,11 @@ const MOJI_RANGES = [
 
 function detectMojibake(text) {
   if (!text || typeof text !== 'string') return false;
+
+  // U+FFFD replacement char — UTF-8 디코딩 실패의 명시적 표지. 1개라도 있으면 즉시 mojibake.
+  // 사례: 수의사보조원 sources 'text': '�ѱ����ǻ�ȸ' (한국수의사회가 CP949→UTF-8 변환 실패)
+  if (text.includes('�')) return true;
+
   const chars = [...text];
   if (chars.length < 8) return false;
 

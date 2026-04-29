@@ -129,6 +129,8 @@ function main() {
           if (/^[A-Z0-9_]+$/.test(matched)) break;
           // 메모리 파일명·식별자 (소문자 + 언더스코어, snake_case)
           if (/^[a-z][a-z0-9_]*$/.test(matched)) break;
+          // camelCase 함수·변수명 (소문자 시작 + 대소문자 혼용, _·- 없음)
+          if (/^[a-z][a-zA-Z0-9]+$/.test(matched)) break;
           // 라인이 명백한 비-secret 컨텍스트
           const lineLower = line.toLowerCase();
           if (/^\s*(import|from|require|\/\/|\*|#|export\s+(type|interface|const\s+[A-Z]))/.test(line)) break;

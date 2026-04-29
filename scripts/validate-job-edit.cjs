@@ -364,6 +364,11 @@ function validate(data) {
           if (typeof src === 'object' && src.text && /^https?:\/\//.test(src.text.replace(/^\[\d+\]\s*/, ''))) {
             errors.push(`[출처형식] sources["${sourceKey}"]의 text가 URL로 시작 — "[N] 기관명" 형식 사용 필요`);
           }
+          // text가 [N] 마커로 시작하면 FAIL (마커는 본문에만 — sources.text는 기관명만)
+          // 사례 (피부관리사): {"text":"[1] (사)한국피부미용사회중앙회"} — [1] prefix는 본문 marker로만 사용
+          if (typeof src === 'object' && src.text && /^\[\d+\]/.test(src.text)) {
+            errors.push(`[출처마커prefix] sources["${sourceKey}"]의 text가 [N] 마커로 시작 — text에는 기관명만, [N] 마커는 본문에만 사용: "${src.text.substring(0, 80)}..."`);
+          }
         }
       }
     }

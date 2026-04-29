@@ -41,6 +41,9 @@ description: >
 | 인라인 URL·도메인 표기 금지 | 모든 텍스트 필드(way, trivia, wlbDetail 등)와 배열 항목에서 URL/도메인을 문자열에 직접 삽입 금지. `"(worker.co.kr)"`, `"(work24.go.kr)"` 등 괄호 안 도메인 표기 포함 금지. 모든 외부 출처는 반드시 각주 [N] + `_sources`로만 표기. **사이트명 자체는 허용** — `"건설워커를 통해 검색"` ✅, `"건설워커(worker.co.kr)를 통해 검색"` ❌ |
 | 검색결과 페이지 URL 금지 | `_sources` URL로 동적 검색결과 페이지(예: `work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do`, `worker.co.kr/job/list.asp`) 사용 금지 — 검색 조건에 따라 결과가 달라지는 페이지는 출처로 부적합. **고정된 상세 페이지 URL만 사용** |
 | `sidebarCerts` 텍스트 내 [N] 금지 | sidebarCerts 항목(자격증명)은 텍스트에 `[1]` 등 인라인 각주 마커를 **절대 넣지 않음**. 출처가 필요하면 `_sources.sidebarCerts`에만 등록. 텍스트에 마커 넣으면 자격증 이름에 `[숫자]`가 그대로 노출됨 |
+| **`_sources[*].text` 필드 형식** ⚠️ | **반드시 기관명만**. raw URL 절대 금지·`[N]` 마커 prefix 절대 금지. 사고 사례 (2026-04-29 사용자 발견): ❌ `{"text":"https://www.career.go.kr/..."}` (raw URL) ❌ `{"text":"[1] (사)한국피부미용사회중앙회"}` ([N] prefix). 정답: `{"text":"한국직업능력연구원","url":"https://www.krivet.re.kr"}`. validate-job-edit.cjs가 [출처형식]·[출처마커prefix]로 차단 |
+| **`_sources` mojibake 금지** ⚠️ | `text`/`url`/본문 어디든 `�` (U+FFFD replacement char) 또는 CP949 깨짐 패턴 금지. 사고 사례: 수의사보조원 `text="�ѱ����ǻ�ȸ"` (한국수의사회). 원인: Windows curl POST body 인코딩 사고. **반드시 Node.js fetch + UTF-8 JSON.stringify로 전송**. validate-job-edit.cjs `[Mojibake]`로 차단 |
+| **본문 [N] 마커 ↔ _sources 매핑 필수** ⚠️ | way/trivia/prospect/detailReady 등 본문에 `[1][2]` 마커가 있으면 반드시 동일 필드의 `_sources[fieldKey]` 배열에 같은 개수의 entry 존재. 사고 사례: 리포터·통신장비기사 본문 [1] 있는데 `_sources` 객체 자체가 NULL. validate `[출처]` 룰로 차단되지만 Phase 2 단축 시 우회됨 → **Phase 2 validate 호출 필수** |
 | `detailReady.researchList` 수정 금지 | CareerNet 원본 데이터 필드. **스킬이 추가/수정/삭제 금지**. 출처 각주도 달지 않음. 해당 필드가 draft에 포함되면 validate-job-edit.cjs가 **FAIL** 처리 |
 | `detailReady.certificate` 본문 추천 자격증 금지 | job-data-enhance 스킬은 **본문 추천 자격증을 추가/수정하지 않음**. 추천 자격증 보강은 `sidebarCerts`에서만 수행. 기존 본문 certificate에 출처가 없으면 cleanup 대상으로 보고 제거 검토 |
 | 출처 배지 카운트 | 배지 숫자 = API 출처(커리어넷 1개) + 사용자 추가 출처. 스킬은 배지 카운트에 신경 쓸 필요 없음 (렌더러가 자동 계산) |
