@@ -31,6 +31,7 @@ import type { FootnoteMap } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
 import { renderSafetyBannersForText, isAdultOnlyJob, renderAdultGateHtml, detectSensitiveForMinors, renderSensitiveContentGate } from '../utils/safety'
+import { renderTrustBox, renderDataSplitBadge } from '../utils/trust'
 
 export interface UnifiedJobDetailTemplateParams {
   profile: UnifiedJobDetail
@@ -5127,10 +5128,50 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     ? renderSensitiveContentGate('이 직업 페이지에는 직장 내 갈등·갑질·괴롭힘 등의 후기가 포함되어 있습니다.')
     : ''
 
+  // C1 신뢰 박스 (정책 source-tier, wiki/job §8): 출처 등급 평균·검수일·AI 비율
+  // 데이터는 profile에서 가능한 만큼 추출. 미상이면 그래도 박스를 노출해 사용자에게 정책 링크 제공.
+  const sourcesArray = userSourcesFlat || []
+  const sourceTierAvg = (() => {
+    if (!sourcesArray.length) return null
+    // 출처 텍스트에서 [N순위] 추출 시도
+    const tiers: number[] = []
+    for (const s of sourcesArray) {
+      const m = /(\d)\s*순위/.exec(s.text || '')
+      if (m) tiers.push(parseInt(m[1], 10))
+    }
+    if (!tiers.length) return null
+    return tiers.reduce((a, b) => a + b, 0) / tiers.length
+  })()
+  const adminDataJson = (profile as any).admin_data_json
+  const userContributedJson = (profile as any).user_contributed_json
+  const adminFieldCount = adminDataJson && typeof adminDataJson === 'object' ? Object.keys(adminDataJson).length : 0
+  const userFieldCount = userContributedJson && typeof userContributedJson === 'object' ? Object.keys(userContributedJson).length : 0
+  const aiFieldCount = (profile as any)._aiGenerated ? Object.keys((profile as any)._aiGenerated || {}).length : 0
+  const totalFieldCount = adminFieldCount + userFieldCount + aiFieldCount
+  const aiRatio = totalFieldCount > 0 ? aiFieldCount / totalFieldCount : null
+
+  const trustBoxBlock = renderTrustBox({
+    sourceTierAvg,
+    sourceCount: sourcesArray.length,
+    lastReviewedAt: (profile as any).user_last_updated_at || (profile as any).last_modified || null,
+    aiGeneratedRatio: aiRatio,
+    pageType: 'job',
+    entityId: profile.id
+  })
+
+  // C7 데이터 분리 시각화 (사이드 영역에 작은 배지)
+  const dataSplitBadgeBlock = renderDataSplitBadge({
+    adminFields: adminFieldCount,
+    userFields: userFieldCount,
+    aiFields: aiFieldCount
+  })
+
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
       ${safetyBannersBlock}
       ${sensitiveBannerBlock}
+      ${trustBoxBlock}
+      ${dataSplitBadgeBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">

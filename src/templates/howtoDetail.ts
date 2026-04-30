@@ -2,6 +2,7 @@ import type { HowtoGuideDetail } from '../types/howto'
 import type { CommentPolicyAttributes } from './detailTemplateUtils'
 import { renderCommentsPlaceholder, resolveCommentPolicy, renderAdSlot, sanitizeJson } from './detailTemplateUtils'
 import { renderSafetyBannersForText, renderAdDisclosureBanner, autoAffiliateRel } from '../utils/safety'
+import { renderAiLevelBanner, annotateAiImages, type AiContentLevel, renderTrustBox } from '../utils/trust'
 
 // 본문 HTML에서 h2를 파싱하여 id를 부여하고 TOC를 생성 (H2만 표시)
 function generateTocFromHtml(html: string): { processedHtml: string; tocHtml: string } {
@@ -567,8 +568,27 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
   const disclosureDetail = (guide as any).adDisclosure?.detail as (string | undefined)
   const adDisclosureBlock = disclosureType ? renderAdDisclosureBanner(disclosureType, disclosureDetail) : ''
 
+  // ── AI 라벨 박스 (C2/C3 - 정책 howto §3): guide.aiLevel 또는 자동 추론
+  const aiLevel: AiContentLevel = ((guide as any).aiLevel as AiContentLevel) || 'human'
+  const aiLevelBannerBlock = renderAiLevelBanner(aiLevel, {
+    editorName: (guide as any).editorName,
+    lastReviewedAt: (guide as any).lastReviewedAt
+  })
+
+  // ── 신뢰 박스 (C1)
+  const trustBoxBlockHowto = renderTrustBox({
+    sourceCount: Array.isArray((guide as any).sources) ? (guide as any).sources.length : 0,
+    lastReviewedAt: (guide as any).lastReviewedAt || (guide as any).updatedAt || null,
+    aiGeneratedRatio: aiLevel === 'ai-generated' ? 0.95 : aiLevel === 'ai-draft-human-edited' ? 0.7 : aiLevel === 'ai-assisted' ? 0.3 : 0,
+    pageType: 'howto'
+  })
+
   // ── affiliate 링크 자동 sponsored nofollow 부여 (정책 howto §4-D)
-  const processedRawHtml = guide.rawHtml ? autoAffiliateRel(guide.rawHtml, 'careerwiki.org') : guide.rawHtml
+  // ── AI 이미지 자동 caption 표기 (C5)
+  let processedRawHtml = guide.rawHtml ? autoAffiliateRel(guide.rawHtml, 'careerwiki.org') : guide.rawHtml
+  if (processedRawHtml) {
+    processedRawHtml = annotateAiImages(processedRawHtml)
+  }
 
   // 블로그 형태: 모든 내용을 하나의 글로 쭉쭉 나열
   const blogContent = `
@@ -576,8 +596,14 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
       <!-- 광고/협찬 표시 박스 (있는 경우 — 공정위 의무) -->
       ${adDisclosureBlock}
 
+      <!-- AI 라벨 박스 (정책 howto §3) -->
+      ${aiLevelBannerBlock}
+
       <!-- 안전 배너 (자살자해·학교폭력 신호 검출 시) -->
       ${safetyBannersBlock}
+
+      <!-- 신뢰 박스 (출처·검수일·AI 비율) -->
+      ${trustBoxBlockHowto}
 
       <!-- 샘플 노트 (있는 경우) -->
       ${guide.sampleNote ? `
