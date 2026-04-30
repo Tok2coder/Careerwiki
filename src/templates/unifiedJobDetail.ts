@@ -30,7 +30,7 @@ import {
 import type { FootnoteMap } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
-import { renderSafetyBannersForText } from '../utils/safety'
+import { renderSafetyBannersForText, isAdultOnlyJob, renderAdultGateHtml, detectSensitiveForMinors, renderSensitiveContentGate } from '../utils/safety'
 
 export interface UnifiedJobDetailTemplateParams {
   profile: UnifiedJobDetail
@@ -3356,7 +3356,15 @@ const renderKecoCodeList = (profile: UnifiedJobDetail): string => {
 export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJobSlugs, relatedHowtos, classificationData, careerTrees }: UnifiedJobDetailTemplateParams): string => {
   // profile은 merged_profile_json에서 파싱된 데이터 (평탄한 구조 + 계층적 구조 병행)
   // ETL에서 기본 필드들을 모두 포함하고 있음
-  
+
+  // ── B10 성인 직업 미성년 차단 (정책 community §7-B)
+  // 직업명·슬러그가 성인 키워드 매칭 시 게이트 페이지로 대체
+  // (현재는 미성년 식별 시스템이 정착되기 전이라, 성인 직업 자체에 대한 안내만 우선 노출)
+  const adultJobMatch = isAdultOnlyJob(profile.name) || isAdultOnlyJob((profile as any).slug)
+  if (adultJobMatch) {
+    return renderAdultGateHtml(profile.name)
+  }
+
   const telemetryVariant = resolveJobTelemetryVariant(profile)
   const telemetryVariantAttr = telemetryVariant ? ` data-cw-telemetry-variant="${escapeHtml(telemetryVariant)}"` : ''
   // Quick Stats removed from hero section
@@ -5113,9 +5121,16 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   })
   const safetyBannersBlock = renderSafetyBannersForText(safetyScanText)
 
+  // B9 미성년 민감 콘텐츠 게이트 (정책 community §7-B):
+  // 본문에 갑질·성희롱·괴롭힘 키워드가 있으면 본문 위에 "민감한 내용 안내" 게이트
+  const sensitiveBannerBlock = detectSensitiveForMinors(safetyScanText)
+    ? renderSensitiveContentGate('이 직업 페이지에는 직장 내 갈등·갑질·괴롭힘 등의 후기가 포함되어 있습니다.')
+    : ''
+
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
       ${safetyBannersBlock}
+      ${sensitiveBannerBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">

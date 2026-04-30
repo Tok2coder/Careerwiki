@@ -115,6 +115,23 @@ export interface ReportPayload {
   reporterId: string
   reporterIpHash?: string | null
   reason?: string | null
+  /** 정책 enforcement §2: 신고 사유 6종 (혐오/욕설/허위/개인정보/스팸/기타) */
+  reasonType?: 'hate' | 'abuse' | 'misinfo' | 'privacy' | 'spam' | 'other' | null
+  /** 신고자 가입 시점 (B8: 24시간 내 가입자 신고권 제한 검사용) */
+  reporterJoinedAt?: string | null
+}
+
+/** 정책 enforcement §2-A: 신고 사유 6종 */
+export const COMMENT_REPORT_REASON_TYPES = ['hate', 'abuse', 'misinfo', 'privacy', 'spam', 'other'] as const
+export type CommentReportReasonType = typeof COMMENT_REPORT_REASON_TYPES[number]
+
+export const COMMENT_REPORT_REASON_LABELS: Record<CommentReportReasonType, string> = {
+  hate: '혐오·차별',
+  abuse: '욕설·인신공격',
+  misinfo: '허위 사실·명예훼손',
+  privacy: '개인정보 노출',
+  spam: '스팸·광고·도배',
+  other: '기타'
 }
 
 export interface IpBlockRecord {
@@ -335,14 +352,30 @@ const recalcCommentReports = async (db: D1Database, commentId: number): Promise<
   let status: CommentStatus | null = null
 
   if (reportCount >= REPORT_BLIND_THRESHOLD) {
-    status = 'blinded'
+    // 정책 community §5-E (B1): 신고 N개 자동 누적 → 자동 블라인드 시
+    // 자살·자해 SOS 신호가 포함된 댓글은 보호한다 (에브리타임 사고 교훈).
+    // 운영자가 직접 검토하기 전까지는 가시 상태 유지하고 flagged만 켜서 큐에 올린다.
+    let preserveSosGlobally = false
+    try {
+      const { detectSelfHarmSignal } = await import('../utils/safety')
+      const target = await db
+        .prepare('SELECT content FROM comments WHERE id = ? LIMIT 1')
+        .bind(commentId)
+        .first<{ content: string }>()
+      if (target?.content && detectSelfHarmSignal(target.content)) {
+        preserveSosGlobally = true
+      }
+    } catch (err) {
+      console.error('[recalcCommentReports] sos-detect failed:', err)
+    }
+    status = preserveSosGlobally ? null : 'blinded'
   }
 
-  const queryParts = ['UPDATE comments SET report_count = ?']
-  const bindings: Array<number | string> = [reportCount]
+  const queryParts = ['UPDATE comments SET report_count = ?, flagged = ?']
+  const bindings: Array<number | string> = [reportCount, reportCount >= REPORT_BLIND_THRESHOLD ? 1 : 0]
 
   if (status) {
-    queryParts.push(", status = ?, flagged = 1")
+    queryParts.push(', status = ?')
     bindings.push(status)
   }
 
@@ -868,6 +901,47 @@ export const reportComment = async (db: D1Database, payload: ReportPayload): Pro
     throw new Error('REPORTER_REQUIRED')
   }
 
+  // 정책 enforcement §2-A (B7): 신고 사유 6종 검증 + "기타" 시 20자 이상 강제
+  if (payload.reasonType !== undefined && payload.reasonType !== null) {
+    const validTypes: CommentReportReasonType[] = [...COMMENT_REPORT_REASON_TYPES]
+    if (!validTypes.includes(payload.reasonType)) {
+      throw new Error('INVALID_REASON_TYPE')
+    }
+    if (payload.reasonType === 'other') {
+      const txt = (payload.reason || '').trim()
+      if (txt.length < 20) {
+        throw new Error('OTHER_REASON_TOO_SHORT')
+      }
+    }
+  }
+
+  // 정책 enforcement §2-B (B8): 신규 가입 24시간 이내 신고권 제한 (Reddit 모델)
+  if (payload.reporterJoinedAt) {
+    const joinedMs = Date.parse(payload.reporterJoinedAt)
+    if (Number.isFinite(joinedMs) && Date.now() - joinedMs < 24 * 60 * 60 * 1000) {
+      throw new Error('REPORTER_TOO_NEW')
+    }
+  }
+
+  // 정책 enforcement §2-B (B8): 허위 신고 누적 3회 시 신고권 박탈
+  // — 본인이 한 신고 중 dismissed 처리된 건수가 3회 이상이면 차단
+  try {
+    const dismissedRow = await db
+      .prepare(
+        `SELECT COUNT(*) AS dismissed FROM comment_reports
+         WHERE reporter_id = ? AND reason LIKE '%[DISMISSED]%'`
+      )
+      .bind(payload.reporterId)
+      .first<{ dismissed: number }>()
+    const dismissedCount = Number(dismissedRow?.dismissed ?? 0)
+    if (dismissedCount >= 3) {
+      throw new Error('REPORTER_BANNED_FALSE_REPORTS')
+    }
+  } catch (err) {
+    // 카운트 검사 실패는 무시(신고는 진행) — 단, 명시적 BANNED는 throw
+    if ((err as Error)?.message === 'REPORTER_BANNED_FALSE_REPORTS') throw err
+  }
+
   const target = await db
     .prepare('SELECT id, status FROM comments WHERE id = ? LIMIT 1')
     .bind(payload.commentId)
@@ -897,9 +971,10 @@ export const reportComment = async (db: D1Database, payload: ReportPayload): Pro
   await recalcCommentReports(db, payload.commentId)
 
   // 자살·자해/긴급 신고 우선순위 태그 (정책 community §5, enforcement SLA 2시간)
-  // - 신고 사유 또는 댓글 본문에 자살자해 신호가 있으면 우선순위 'urgent'로 마킹
+  // 동시에 운영자 검토 큐에 자동 등록 (B2) + 즉시 영구 사유 자동 검출 (B5)
   try {
     const { detectSelfHarmSignal, detectSelfHarmMethod } = await import('../utils/safety')
+    const { enqueueModeration, detectImmediatePermanent } = await import('./enforcementService')
     const reasonText = (payload.reason || '').toString()
     const commentRow = await db
       .prepare('SELECT content FROM comments WHERE id = ? LIMIT 1')
@@ -912,20 +987,42 @@ export const reportComment = async (db: D1Database, payload: ReportPayload): Pro
       detectSelfHarmMethod(commentText) ||
       /(\[긴급\]|아동성착취|살해\s?협박|자해|자살)/i.test(reasonText)
 
-    if (isUrgent) {
-      // 운영자 대시보드용 - 신고 status를 우선순위 표시 (sanitize된 reason 끝에 [URGENT] 태그)
+    // B5: 즉시 영구 사유 자동 검출
+    const immediate = detectImmediatePermanent(commentText)
+
+    if (isUrgent || immediate.hit) {
       await db
         .prepare(
           `UPDATE comment_reports
-           SET reason = COALESCE(reason, '') || ' [URGENT-2H-SLA]'
+           SET reason = COALESCE(reason, '') || ?
            WHERE comment_id = ? AND reporter_id = ?`
         )
-        .bind(payload.commentId, payload.reporterId)
+        .bind(
+          immediate.hit ? ` [IMMEDIATE-PERMANENT:${immediate.category}]` : ' [URGENT-2H-SLA]',
+          payload.commentId,
+          payload.reporterId
+        )
         .run()
     }
+
+    // B2: 운영자 검토 큐 자동 등록 (모든 신고)
+    const reportRow = await db
+      .prepare('SELECT id FROM comment_reports WHERE comment_id = ? AND reporter_id = ? ORDER BY id DESC LIMIT 1')
+      .bind(payload.commentId, payload.reporterId)
+      .first<{ id: number }>()
+    if (reportRow?.id) {
+      await enqueueModeration(db, {
+        targetType: 'comment',
+        targetId: payload.commentId,
+        sourceReportId: reportRow.id,
+        sourceReportType: 'comment_report',
+        priority: immediate.hit ? 'urgent' : isUrgent ? 'urgent' : 'normal',
+        autoFlagged: false
+      })
+    }
   } catch (err) {
-    // 안전: 우선순위 태그 실패해도 신고 자체는 성공시킨다
-    console.error('[reportComment] urgent-tag failed:', err)
+    // 안전: 우선순위 태그·큐 등록 실패해도 신고 자체는 성공시킨다
+    console.error('[reportComment] urgent-tag/queue failed:', err)
   }
 
   const row = await db

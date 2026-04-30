@@ -213,6 +213,116 @@ export function renderSafetyBannersForText(
 }
 
 // ============================================================================
+// 미성년자 보호 (정책 community §7-B)
+// ============================================================================
+
+/**
+ * 만 14~18세 미성년자에게 노출 시 "한 번 더 클릭" 게이트가 필요한 민감 콘텐츠 키워드.
+ * - 회사 갑질·성희롱·갑질 후기 등 (커뮤니티 §7-B 민감 콘텐츠 필터)
+ */
+const SENSITIVE_FOR_MINORS_PATTERNS: RegExp[] = [
+  /(갑질|성희롱|성추행)/,
+  /(직장\s?내\s?괴롭힘|직장\s?폭력)/,
+  /(성\s?상납|회식\s?강요)/,
+  /(왕따|이지메|왕따당)/,
+]
+
+/**
+ * 미성년 사용자에게 차단되어야 하는 성인 전용 직업 슬러그·이름 키워드.
+ * - 정책 community §7-B: 유흥·성인용품 등.
+ * - 직업 페이지 슬러그/이름에 매칭되면 미성년에게는 안내 페이지로 리다이렉트하거나 차단
+ */
+const ADULT_ONLY_JOB_PATTERNS: RegExp[] = [
+  /유흥/,
+  /(성인용품|섹스토이)/,
+  /(룸살롱|호스트바|호빠|단란주점)/,
+  /(에스코트|콜걸|성매매)/,
+  /(스트립퍼|스트립댄서)/,
+  /(어덜트.*콘텐츠|성인.*콘텐츠.*제작)/,
+]
+
+/**
+ * 본문에 미성년 민감 키워드가 있으면 true (B9: 추가 클릭 게이트 노출용)
+ */
+export function detectSensitiveForMinors(text: string | null | undefined): boolean {
+  if (!text) return false
+  return SENSITIVE_FOR_MINORS_PATTERNS.some(re => re.test(text))
+}
+
+/**
+ * 직업이 성인 전용인지 검사 (B10: 미성년 차단)
+ */
+export function isAdultOnlyJob(jobNameOrSlug: string | null | undefined): boolean {
+  if (!jobNameOrSlug) return false
+  return ADULT_ONLY_JOB_PATTERNS.some(re => re.test(jobNameOrSlug))
+}
+
+/**
+ * 성인 전용 직업 페이지에서 미성년에게 보여줄 안내 화면 HTML
+ */
+export function renderAdultGateHtml(jobName: string): string {
+  return `
+    <div class="cw-adult-gate" role="alert"
+         style="max-width: 640px; margin: 80px auto; padding: 32px;
+                border-radius: 16px; border: 2px solid rgba(248,113,113,0.5);
+                background: rgba(248,113,113,0.07); text-align: center;">
+      <h1 style="font-size: 1.6rem; color: #fecaca; margin: 0 0 14px 0;">성인 인증이 필요합니다</h1>
+      <p style="color: #fecaca; opacity: 0.9; line-height: 1.6;">
+        <strong>${escapeHtml(jobName)}</strong> 직업 페이지는 만 19세 이상에게만 표시됩니다.
+        <br>청소년 보호법에 따라 미성년 사용자에게는 노출되지 않습니다.
+      </p>
+      <p style="color: #fca5a5; opacity: 0.8; font-size: 0.85rem; margin-top: 18px;">
+        본인이 만 19세 이상인 경우 운영자에게 문의해 주세요.
+      </p>
+      <div style="margin-top: 22px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <a href="/job" style="padding: 10px 20px; border-radius: 10px; background: rgba(99,102,241,0.15); color: #c7d2fe; text-decoration: none;">직업 목록으로</a>
+        <a href="/help" style="padding: 10px 20px; border-radius: 10px; border: 1px solid rgba(148,163,184,0.3); color: #cbd5e1; text-decoration: none;">도움말</a>
+      </div>
+    </div>
+  `
+}
+
+/**
+ * 미성년 민감 콘텐츠 게이트 박스 HTML (B9: 본문 위에 클릭 1회 더 요구)
+ * - JS로 클릭 시 본문 표시
+ */
+export function renderSensitiveContentGate(reason?: string): string {
+  return `
+    <div class="cw-sensitive-gate" data-cw-sensitive-gate
+         style="margin: 16px 0; padding: 18px 22px; border-radius: 14px;
+                border: 1px solid rgba(251,146,60,0.45); background: rgba(251,146,60,0.08);">
+      <p style="color: #fed7aa; font-size: 0.95rem; line-height: 1.55; margin: 0 0 10px 0;">
+        ⚠️ <strong>민감한 내용 안내</strong> — ${escapeHtml(reason || '이 페이지에는 직장 내 갈등·괴롭힘 등 청소년에게 부담될 수 있는 내용이 포함되어 있습니다.')}
+      </p>
+      <button type="button" data-cw-sensitive-gate-confirm
+        style="padding: 8px 18px; border-radius: 10px; border: none; cursor: pointer;
+               background: rgba(251,146,60,0.22); color: #fed7aa; font-weight: 600;">
+        그래도 보기
+      </button>
+    </div>
+    <script>
+      (function(){
+        document.querySelectorAll('[data-cw-sensitive-gate]').forEach(function(gate){
+          var btn = gate.querySelector('[data-cw-sensitive-gate-confirm]');
+          if (!btn) return;
+          btn.addEventListener('click', function(){
+            // 게이트가 감추고 있던 다음 형제 요소들의 'cw-gated' 클래스를 해제
+            var next = gate.nextElementSibling;
+            while (next) {
+              if (next.classList && next.classList.contains('cw-gated')) {
+                next.classList.remove('cw-gated');
+              }
+              next = next.nextElementSibling;
+            }
+            gate.style.display = 'none';
+          });
+        });
+      })();
+    </script>
+  `
+}
+
+// ============================================================================
 // 광고·제휴 표시 (HowTo §4 — 공정거래위원회 추천보증 심사지침 2024.12.1)
 // ============================================================================
 

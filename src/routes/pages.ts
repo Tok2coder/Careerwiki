@@ -12,6 +12,8 @@ import { renderOnboardingPage } from '../templates/onboarding'
 import { renderTermsPage } from '../templates/legal/terms'
 import { renderPrivacyPage } from '../templates/legal/privacy'
 import { renderNoticePage } from '../templates/legal/notice'
+import { renderAppealFormPage } from '../templates/user/appealForm'
+import { submitAppeal, listUserAppeals } from '../services/enforcementService'
 import { renderHelpPage } from '../templates/help'
 import { renderAboutPage } from '../templates/about'
 import { renderPolicyIndexPage } from '../templates/policy/index'
@@ -274,6 +276,59 @@ pagesRoutes.get('/policy/transparency', async (c) => {
 
 pagesRoutes.get('/help/glossary', async (c) => {
   return c.html(renderGlossaryPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+// === 이의제기·소명 (정책 enforcement §5/§7, B3·B6) ===
+pagesRoutes.get('/user/appeal', requireAuth, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/login?redirect=/user/appeal')
+  const userMenuHtml = buildUserMenu(c)
+  const myAppeals = await listUserAppeals(c.env.DB, user.id, { limit: 30 })
+  const targetType = c.req.query('target_type') || undefined
+  const targetIdRaw = c.req.query('target_id')
+  const targetId = targetIdRaw ? parseInt(targetIdRaw, 10) : undefined
+  const flashType = c.req.query('flash')
+  const flash = flashType === 'success'
+    ? { type: 'success' as const, message: '이의제기가 접수되었습니다. 30일 임시조치 상태로 진입했습니다.' }
+    : flashType === 'blocked'
+    ? { type: 'error' as const, message: '동일 사안 재소명이 30일간 제한되어 있습니다.' }
+    : undefined
+  return c.html(renderAppealFormPage({
+    userMenuHtml,
+    myAppeals: myAppeals as any,
+    prefilled: targetType && targetId ? { target_type: targetType, target_id: targetId } : undefined,
+    flash
+  }))
+})
+
+pagesRoutes.post('/user/appeal', requireAuth, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/login?redirect=/user/appeal')
+  const form = await c.req.formData()
+  const targetType = String(form.get('target_type') || '')
+  const targetIdRaw = String(form.get('target_id') || '0')
+  const reason = String(form.get('reason') || '').trim()
+  const evidence = String(form.get('evidence') || '').trim() || undefined
+  const targetId = parseInt(targetIdRaw, 10)
+  if (!['comment_takedown', 'sanction', 'content_removal'].includes(targetType) ||
+      !Number.isFinite(targetId) || reason.length < 20) {
+    return c.redirect('/user/appeal?flash=error')
+  }
+  try {
+    await submitAppeal(c.env.DB, {
+      userId: user.id,
+      targetType: targetType as any,
+      targetId,
+      reason,
+      evidence
+    })
+    return c.redirect('/user/appeal?flash=success')
+  } catch (e: any) {
+    if (e?.message === 'APPEAL_RESUBMIT_BLOCKED') {
+      return c.redirect('/user/appeal?flash=blocked')
+    }
+    return c.redirect('/user/appeal?flash=error')
+  }
 })
 
 // 릴리즈 노트 (사용자 대상 — feat/fix만 필터링)

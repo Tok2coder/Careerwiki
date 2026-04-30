@@ -14,6 +14,9 @@ import { renderAdminFeedbackDetail } from '../templates/admin/adminFeedbackDetai
 import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
+import { renderModerationQueuePage } from '../templates/admin/moderationQueue'
+import { listPendingModerationQueue, applyModerationDecision } from '../services/enforcementService'
+import { renderUserMenu } from '../utils/shared-helpers'
 import { renderAdminStats } from '../templates/admin/adminStats'
 import { renderAdminJobEqualize, hasField, parseSources, EQUALIZE_FIELDS, type JobEqualizeItem, type EqualizeTab } from '../templates/admin/adminJobEqualize'
 import { getUsers, updateUserRole, banUser, unbanUser, getRevisions, restoreRevision as restoreRevisionAdmin, getStats, getAnalyticsStats, getAiConversionStats, getSearchStats, getDashboardChartData, getUserAttributionStats, getContentViewStats, getUniqueVisitorStats, getVisitorList, getRevisionsByEditor, getVisitorPageViews, getRefererDistribution, getAiUsageDistribution, banIp, unbanIp } from '../services/adminService'
@@ -1244,6 +1247,29 @@ adminRoutes.post('/admin/api/update-related-jobs', async (c) => {
   } catch (error: any) {
     return c.json({ success: false, error: error.message }, 500)
   }
+})
+
+// === 신고 검토 큐 (정책 enforcement §4 Phase 3, B2) ===
+adminRoutes.get('/admin/moderation', requireAdmin, async (c) => {
+  const user = c.get('user')
+  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
+  const userMenuHtml = renderUserMenu(userData)
+  const items = await listPendingModerationQueue(c.env.DB, { limit: 100 })
+  return c.html(renderModerationQueuePage({ userMenuHtml, items }))
+})
+
+adminRoutes.post('/admin/moderation/:id/decide', requireAdmin, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/admin/moderation')
+  const queueId = parseInt(c.req.param('id'), 10)
+  if (!Number.isFinite(queueId)) return c.redirect('/admin/moderation')
+  const form = await c.req.formData()
+  const decision = String(form.get('decision') || '') as any
+  const note = String(form.get('note') || '') || undefined
+  const valid = ['keep', 'delete', 'warn_keep', 'request_revision']
+  if (!valid.includes(decision)) return c.redirect('/admin/moderation')
+  await applyModerationDecision(c.env.DB, { queueId, decision, decidedBy: user.id, note })
+  return c.redirect('/admin/moderation')
 })
 
 export { adminRoutes }
