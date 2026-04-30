@@ -355,8 +355,8 @@ const SELF_DOMAINS = ['careerwiki.org', 'careerwiki.kr', 'www.careerwiki.org', '
 const DEFINITE_ORIGIN_HOSTS = [
   // 커리어넷 (구버전 + 신버전)
   'career.go.kr', 'www.career.go.kr',
-  // 워크넷 (구)
-  'work.go.kr', 'www.work.go.kr',
+  // 워크넷 (구) + 모바일
+  'work.go.kr', 'www.work.go.kr', 'm.work.go.kr',
   // 고용24 (워크넷 후속)
   'work24.go.kr', 'www.work24.go.kr',
   // 한국노동연구원 임금직업정보 (워크피디아) — 의료코디네이터 사고 사례
@@ -364,8 +364,35 @@ const DEFINITE_ORIGIN_HOSTS = [
   // 직업포털
   'job.go.kr', 'www.job.go.kr',
 ];
-// .go.kr 도메인에서 path에 직업정보 키워드가 있으면 origin 후보
-const ORIGIN_PATH_KEYWORDS = /(job|career|work|wage|employ)/i;
+
+// 정부 부처·기관 ALLOWLIST — heuristic이 잡아도 origin 아닌 정상 1차 출처
+// 사고 사례 (2026-04-30): 법원공무원/판사 _sources에 scourt.go.kr URL이 path에 ASP/JSP 확장자 ".work"
+// 포함 (예: NewsListAction.work) → 기존 heuristic의 substring 매칭으로 false positive
+const ORIGIN_HOST_ALLOWLIST = [
+  // 사법부
+  'scourt.go.kr', 'www.scourt.go.kr',     // 대법원
+  'ccourt.go.kr', 'www.ccourt.go.kr',     // 헌법재판소
+  // 행정부 부처 (정책 페이지 — 직업정보 origin 아님)
+  'moel.go.kr', 'www.moel.go.kr',         // 고용노동부
+  'mohw.go.kr', 'www.mohw.go.kr',         // 보건복지부
+  'moe.go.kr', 'www.moe.go.kr',           // 교육부
+  'moef.go.kr', 'www.moef.go.kr',         // 기획재정부
+  'mof.go.kr', 'www.mof.go.kr',           // 해양수산부
+  'mofa.go.kr', 'www.mofa.go.kr',         // 외교부
+  'mois.go.kr', 'www.mois.go.kr',         // 행정안전부
+  'molit.go.kr', 'www.molit.go.kr',       // 국토교통부
+  'mafra.go.kr', 'www.mafra.go.kr',       // 농림축산식품부
+  'msit.go.kr', 'www.msit.go.kr',         // 과학기술정보통신부
+  'mcst.go.kr', 'www.mcst.go.kr',         // 문화체육관광부
+  'mss.go.kr', 'www.mss.go.kr',           // 중소벤처기업부
+  'me.go.kr', 'www.me.go.kr',             // 환경부
+  'unikorea.go.kr', 'www.unikorea.go.kr', // 통일부
+];
+
+// .go.kr 도메인에서 path에 직업정보 키워드가 path segment로 들어 있으면 origin 후보.
+// 정규식 boundary 강화 (2026-04-30): path 끝의 ASP/JSP `.work` 확장자처럼 substring 매칭
+// false positive를 차단. slash/end/?/.with-non-letter boundary로 keyword 단독 segment 매칭.
+const ORIGIN_PATH_KEYWORDS = /\/(job|jobs|career|careers|work|works|wage|wages|employ|employment)(\/|$|\?|#)/i;
 // 하위호환 — 기존 코드가 ORIGIN_DATA_DOMAINS 참조 시 그대로 사용 가능
 const ORIGIN_DATA_DOMAINS = DEFINITE_ORIGIN_HOSTS;
 
@@ -376,8 +403,11 @@ function detectOriginDomain(url) {
   let parsed;
   try { parsed = new URL(url); } catch { return false; }
   const host = parsed.host.toLowerCase();
+  // 1) 명시 origin 리스트 — 우선
   if (DEFINITE_ORIGIN_HOSTS.includes(host)) return true;
-  // .go.kr endsWith + path keyword heuristic
+  // 2) ALLOWLIST — origin 아님 (heuristic 적용 안 함)
+  if (ORIGIN_HOST_ALLOWLIST.includes(host)) return false;
+  // 3) heuristic — .go.kr endsWith + path keyword (path segment 기반)
   if (host.endsWith('.go.kr') && ORIGIN_PATH_KEYWORDS.test(parsed.pathname)) {
     return true;
   }
@@ -535,6 +565,7 @@ module.exports = {
   ORIGIN_DATA_DOMAINS,
   // 룰 F 격상 (2026-04-29 — origin 도메인 1건이라도 FAIL)
   DEFINITE_ORIGIN_HOSTS,
+  ORIGIN_HOST_ALLOWLIST,
   ORIGIN_PATH_KEYWORDS,
   detectOriginDomain,
   detectOrphanSourceIdx,
