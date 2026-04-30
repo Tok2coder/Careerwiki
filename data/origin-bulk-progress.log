@@ -1,0 +1,49 @@
+=== Origin Bulk Fix — Progress Log ===
+
+Last update: 2026-04-30 (사용자 토큰 제한으로 batch 1 후 stop)
+
+== Status ==
+- 처리 완료: 7 / 154 (4.5%)
+  - dry-run 2건: 개인브랜드매니저 (rev=13485), 청원경찰 (rev=13486)
+  - batch 1 완료 5건: 검사 (rev=13487), 게임-그래픽-디자이너 (rev=13488),
+                     게임개발프로듀서 (rev=13489), 경리사무원 (rev=13490),
+                     경비원 (rev=13491)
+- originDomain 누적 제거: 16건 (개인브랜드 1 + 청원경찰 10 + batch1 5)
+- 잔여: 147 / 152 (배치 list 기준 미처리)
+- 실패/RETRY: 0
+- in-scope CLEAN: 7/7 (100%)
+- out-of-scope 누적 (별도 fix 대상): 4건
+  - 청원경찰 dupMarkers=1
+  - 검사 orphanSrc=1
+  - 경리사무원 orphanSrc=1
+  - 경비원 orphanSrc=1
+
+== Token Usage (추정) ==
+- dry-run + batch 1: ~600K 토큰 (Agent 7회 + 메인 세션 처리)
+- 잔여 152 처리 추정: ~7.0M 토큰 (Agent 152회 + 메인 세션)
+- 합계 추정: ~7.6M
+
+== Resume Point — 다음 시작 시 ==
+1. data/origin-bulk-batch-list.json — 152건 sort된 list (가벼운 순)
+2. 다음 시작 index: 6번 (다음 5건):
+   - 계산 (origin=1)
+   - 공기-누설-검사원 (origin=1)
+   - 공작기계조작원 (origin=1)
+   - 광부 (origin=1)
+   - 광학기술자 (origin=1)
+3. 처리한 list update 필요: data/origin-bulk-result.json에 batch1 5건 append
+
+== Next Session Resume Steps ==
+1. node scripts/skill-cache/audit-sources-deep.cjs --markers-only --out=data/audit-sources-deep.json
+   (현재 상태 갱신, 처리 7건 originDomain=0 검증)
+2. data/origin-bulk-batch-list.json 6번째부터 batch (5직업/배치)
+3. 패턴: prepare-context (5) → Agent 5병렬 → replacements json → origin-bulk-fix
+4. progress.log 매 배치 끝나면 append
+
+== Tools (main HEAD: 3ab3099, 변경 없음) ==
+- scripts/skill-cache/prepare-origin-bulk.cjs --slug=X
+- scripts/skill-cache/origin-bulk-fix.cjs --slug=X --replacements=...
+- scripts/skill-cache/audit-sources-deep.cjs --slug=X 또는 --markers-only
+
+== STOP REASON ==
+사용자 토큰 제한 임박 — batch resume 가능 상태로 stop. 다음 GO 시 이어서.
