@@ -705,6 +705,45 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
     throw new Error('EMPTY_CONTENT')
   }
 
+  // G1 댓글 도배 rate limit (정책 community §9): 1분당 5개 초과 차단
+  // - 같은 IP 또는 같은 사용자가 1분 안에 5개 이상 댓글 생성하면 throw
+  if (payload.ipHash || payload.authorId) {
+    try {
+      const rateRow = await db.prepare(
+        `SELECT COUNT(*) AS cnt FROM comments
+         WHERE ${payload.ipHash ? 'display_ip = ? OR ' : ''}${payload.authorId ? 'author_id = ?' : ''}
+           AND created_at > datetime('now', '-60 seconds')`.replace(/OR\s+$/, '')
+      ).bind(...[payload.ipHash, payload.authorId].filter(Boolean) as any[])
+        .first<{ cnt: number }>()
+      const recentCount = Number(rateRow?.cnt ?? 0)
+      if (recentCount >= 5) {
+        throw new Error('RATE_LIMITED')
+      }
+    } catch (err: any) {
+      if (err?.message === 'RATE_LIMITED') throw err
+      // 쿼리 실패는 무시
+    }
+  }
+
+  // G2 5분 내 동일 단어 반복 도배 검사 (정책 community §9)
+  if (payload.authorId || payload.ipHash) {
+    try {
+      const recentRow = await db.prepare(
+        `SELECT content FROM comments
+         WHERE ${payload.authorId ? 'author_id = ?' : 'display_ip = ?'}
+           AND created_at > datetime('now', '-300 seconds')
+         ORDER BY created_at DESC LIMIT 5`
+      ).bind(payload.authorId || payload.ipHash).all<{ content: string }>()
+      const recentTexts = (recentRow.results || []).map((r: any) => String(r.content || ''))
+      const { detectKeywordSpam } = await import('../utils/trust')
+      if (detectKeywordSpam(trimmedContent, recentTexts)) {
+        throw new Error('KEYWORD_SPAM')
+      }
+    } catch (err: any) {
+      if (err?.message === 'KEYWORD_SPAM') throw err
+    }
+  }
+
   // 욕설 필터 적용
   const profanityResult = await filterProfanity(db, trimmedContent)
   const finalContent = profanityResult.output

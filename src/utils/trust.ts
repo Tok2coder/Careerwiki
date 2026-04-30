@@ -289,6 +289,174 @@ export function renderDataSplitBadge(opts: {
 }
 
 // ============================================================================
+// E2 [개인 의견] 라벨 자동 인식 (정책 charter §3, source-tier §3)
+// ============================================================================
+
+/**
+ * 텍스트에 "[개인 의견]" 또는 "현직자 본인" 같은 자기 라벨이 있는지 검사.
+ * - 출처 등급 룰 적용에서 제외할지 결정용
+ */
+const PERSONAL_OPINION_PATTERNS: RegExp[] = [
+  /\[개인\s*의견\]/,
+  /현직자\s*본인의\s*견해/,
+  /개인적인\s*경험/,
+  /제\s*경험상/,
+  /저는\s*\S+\s*\d+년차/,
+  /저는\s*현직/,
+]
+
+export function hasPersonalOpinionLabel(text: string | null | undefined): boolean {
+  if (!text) return false
+  return PERSONAL_OPINION_PATTERNS.some(re => re.test(text))
+}
+
+// ============================================================================
+// E3 안티패턴 검출 (정책 wiki/job §12)
+// ============================================================================
+
+/**
+ * "추가 바람", "수정 바람" 같은 안티패턴 검출 — 위키 본문에서 차단
+ */
+const ANTI_PATTERN_REGEX: RegExp[] = [
+  /\b추가\s*바람\b/,
+  /\b수정\s*바람\b/,
+  /\b보충\s*바람\b/,
+  /\b채워\s*주세요\b/,
+]
+
+export function detectAntiPatterns(text: string | null | undefined): string[] {
+  if (!text) return []
+  const hits: string[] = []
+  for (const re of ANTI_PATTERN_REGEX) {
+    const m = re.exec(text)
+    if (m) hits.push(m[0])
+  }
+  return hits
+}
+
+// ============================================================================
+// E1 편집 요약 검증 (정책 wiki/job §9-B)
+// ============================================================================
+
+/**
+ * 편집 요약(reason)이 5자 이상이고 비하·반말·비아냥이 없는지 검사
+ */
+const EDIT_REASON_BAD_PATTERNS: RegExp[] = [
+  /\b씨발\b/,
+  /\b개새/,
+  /\b좆\w*/,
+  /\b미친놈\b/,
+  /\b닥쳐\b/,
+]
+
+export type EditReasonValidation = {
+  valid: boolean
+  reason?: string
+}
+
+export function validateEditReason(reason: string | null | undefined): EditReasonValidation {
+  const text = (reason || '').trim()
+  if (text.length < 5) {
+    return { valid: false, reason: '편집 요약은 5자 이상 입력해주세요.' }
+  }
+  for (const re of EDIT_REASON_BAD_PATTERNS) {
+    if (re.test(text)) {
+      return { valid: false, reason: '편집 요약에 비하·욕설 표현은 사용할 수 없습니다.' }
+    }
+  }
+  return { valid: true }
+}
+
+// ============================================================================
+// E5/D4 신규/기존 서술 7일 기준선 (정책 wiki/job §9-C)
+// ============================================================================
+
+/**
+ * 편집된 시점 기준 7일 미만이면 '신규 서술' — 입증 책임이 추가자에게.
+ */
+export function classifyEditAge(editedAt: string | Date | null | undefined): 'new' | 'established' | 'unknown' {
+  if (!editedAt) return 'unknown'
+  const editedMs = typeof editedAt === 'string' ? Date.parse(editedAt) : editedAt.getTime()
+  if (!Number.isFinite(editedMs)) return 'unknown'
+  const ageMs = Date.now() - editedMs
+  return ageMs < 7 * 24 * 3600_000 ? 'new' : 'established'
+}
+
+// ============================================================================
+// G 그룹 - 어뷰징 방어 (정책 community §9, howto §6)
+// ============================================================================
+
+const RECENT_COMMENT_WINDOW_MS = 60_000  // 1분
+const RECENT_COMMENT_LIMIT = 5
+
+/**
+ * G1 댓글 도배 rate limit — 1분당 5개 초과 차단
+ * (호출 측에서 최근 1분간 같은 IP 댓글 수를 세어 호출)
+ */
+export function isRateLimited(recentCount: number, windowMs: number = RECENT_COMMENT_WINDOW_MS): boolean {
+  return recentCount > RECENT_COMMENT_LIMIT
+}
+
+/**
+ * G2 5분 내 동일 단어 60% 이상 반복 검사 (도배 의심)
+ */
+export function detectKeywordSpam(currentText: string, recentTexts: string[]): boolean {
+  if (recentTexts.length < 2) return false
+  const tokenize = (s: string) => s.split(/\s+/).filter(t => t.length >= 2)
+  const currentTokens = new Set(tokenize(currentText))
+  if (currentTokens.size === 0) return false
+  let totalShared = 0
+  for (const recent of recentTexts) {
+    const recentTokens = tokenize(recent)
+    if (recentTokens.length === 0) continue
+    const shared = recentTokens.filter(t => currentTokens.has(t)).length
+    const ratio = shared / recentTokens.length
+    if (ratio >= 0.6) totalShared++
+  }
+  return totalShared >= Math.ceil(recentTexts.length * 0.5)
+}
+
+/**
+ * G4 HowTo 키워드 도배 검사 — 메인 키워드가 본문 단어수의 3% 초과인지
+ */
+export function detectKeywordStuffing(body: string, mainKeyword: string): {
+  ratio: number
+  stuffing: boolean
+} {
+  if (!body || !mainKeyword) return { ratio: 0, stuffing: false }
+  const bodyTokens = body.split(/\s+/).filter(t => t.length >= 1)
+  const totalCount = bodyTokens.length
+  if (totalCount === 0) return { ratio: 0, stuffing: false }
+  const re = new RegExp(escapeRegex(mainKeyword), 'gi')
+  const matches = body.match(re) || []
+  const ratio = matches.length / totalCount
+  return { ratio, stuffing: ratio > 0.03 }
+}
+
+/**
+ * G5 HowTo 중복 콘텐츠 검사 — 두 본문이 80% 이상 동일한지 (단순 토큰 자카드)
+ */
+export function detectDuplicateContent(a: string, b: string): {
+  similarity: number
+  duplicate: boolean
+} {
+  if (!a || !b) return { similarity: 0, duplicate: false }
+  const tokenize = (s: string) => new Set(s.toLowerCase().split(/\s+/).filter(t => t.length >= 2))
+  const ta = tokenize(a)
+  const tb = tokenize(b)
+  if (ta.size === 0 || tb.size === 0) return { similarity: 0, duplicate: false }
+  let intersect = 0
+  for (const t of ta) if (tb.has(t)) intersect++
+  const union = ta.size + tb.size - intersect
+  const similarity = union > 0 ? intersect / union : 0
+  return { similarity, duplicate: similarity >= 0.8 }
+}
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+// ============================================================================
 // 유틸
 // ============================================================================
 
