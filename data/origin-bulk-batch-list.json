@@ -1,0 +1,938 @@
+[
+  {
+    "slug": "조각가",
+    "originCount": 1,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "중식조리사",
+    "originCount": 1,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "직업군인",
+    "originCount": 1,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "직업운동선수",
+    "originCount": 1,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "클라우드-시스템-엔지니어",
+    "originCount": 1,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "통신장비기사",
+    "originCount": 1,
+    "originHosts": [
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "특수교육교사",
+    "originCount": 1,
+    "originHosts": [
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "헬스트레이너",
+    "originCount": 1,
+    "originHosts": [
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "가정의학과의사",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "국악인",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "금융관리자",
+    "originCount": 2,
+    "originHosts": [
+      "www.wagework.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "데이터-엔지니어",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "드론-개발자",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "디지털크리에이터",
+    "originCount": 2,
+    "originHosts": [
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "상품기획자",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "인포그래픽-디자이너",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "제품광고영업원",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "조경기술자",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "지질학연구원",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "지휘자",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "청소년지도사",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr"
+    ]
+  },
+  {
+    "slug": "최고마케팅책임자",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "카피라이터",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "푸드스타일리스트",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "필라테스강사",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "한식조리사",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "화가",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "화학연구원",
+    "originCount": 2,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "드라마프로듀서",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "방송기자",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "보건의료정보관리사",
+    "originCount": 3,
+    "originHosts": [
+      "www.wagework.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "성악가",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "스포츠에이전트",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "외과의사",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "이용사",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "일반공무원",
+    "originCount": 3,
+    "originHosts": [
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "조선공학기술자",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "지적-및-측량기술자",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "철도지하철운송사무원",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "총무사무원",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "판사",
+    "originCount": 3,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "ux-디자인-컨설턴트",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "김치밑반찬-제조종사원",
+    "originCount": 4,
+    "originHosts": [
+      "www.wagework.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "노무사",
+    "originCount": 4,
+    "originHosts": [
+      "www.work.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "데이터베이스-관리자",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "비파괴검사원",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "사진기자",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "세라믹소재연구원",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "시인",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "연구관리자",
+    "originCount": 4,
+    "originHosts": [
+      "www.wagework.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "외환딜러",
+    "originCount": 4,
+    "originHosts": [
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "의료정보시스템개발자",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "정치학연구원",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr"
+    ]
+  },
+  {
+    "slug": "조경원",
+    "originCount": 4,
+    "originHosts": [
+      "www.work.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "조명기사",
+    "originCount": 4,
+    "originHosts": [
+      "www.work.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "출판편집자",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "항공기객실승무원",
+    "originCount": 4,
+    "originHosts": [
+      "www.wagework.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "항공기정비원",
+    "originCount": 4,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "네트워크-관리자",
+    "originCount": 5,
+    "originHosts": [
+      "www.work24.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "로봇공학기술자",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "보건의료관리자",
+    "originCount": 5,
+    "originHosts": [
+      "www.wagework.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "보육교사",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "보험설계사",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "블록체인-개발자",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "상점판매원",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "손해사정사",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "여행안내원",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "웹-기획자",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "웹툰작가",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "유리부착원",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "응용-소프트웨어-개발자",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "의료-기기-개발-전문가",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "작업치료사",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "잡지기자",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr"
+    ]
+  },
+  {
+    "slug": "증권외환딜러",
+    "originCount": 5,
+    "originHosts": [
+      "www.work24.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "통역가",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr"
+    ]
+  },
+  {
+    "slug": "항공교통관제사",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "호텔지배인",
+    "originCount": 5,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "it-컨설턴트",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "관세사",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "내과의사",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr"
+    ]
+  },
+  {
+    "slug": "대학교수",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "동물조련사",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "물류관리사",
+    "originCount": 6,
+    "originHosts": [
+      "m.work.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "물리치료사",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "반도체공학기술자-및-연구원",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "배우",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "법무사-및-집행관",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "분장사",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "시스템-소프트웨어-개발자",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "심리상담전문가",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr"
+    ]
+  },
+  {
+    "slug": "애니메이션작가",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "언어치료사",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "영화배우-및-탤런트",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "웹-개발자",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "초등학교교사",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "택배원",
+    "originCount": 6,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr"
+    ]
+  },
+  {
+    "slug": "3d-프린팅-전문가",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "간호사",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "간호조무사",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "검침원",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "데이터분석가빅데이터분석가",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "변리사",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "병원코디네이터",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "영양사",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "운동선수",
+    "originCount": 7,
+    "originHosts": [
+      "www.wagework.go.kr",
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "임상병리사",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "자동차정비원",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr"
+    ]
+  },
+  {
+    "slug": "치과기공사",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "치과위생사",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "치과의사",
+    "originCount": 7,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "행정사",
+    "originCount": 7,
+    "originHosts": [
+      "m.work.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "gis전문가",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "게임-기획자",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "대중가수",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "보험인수심사원언더라이터",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.wagework.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "스포츠강사",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "스포츠트레이너",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "웨딩플래너",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "유치원교사",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "응급구조사",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "중고등학교교사",
+    "originCount": 8,
+    "originHosts": [
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "it기술지원전문가",
+    "originCount": 9,
+    "originHosts": [
+      "www.work.go.kr",
+      "www.career.go.kr"
+    ]
+  },
+  {
+    "slug": "방사선사",
+    "originCount": 9,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "안경사",
+    "originCount": 9,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work.go.kr"
+    ]
+  },
+  {
+    "slug": "가상현실전문가",
+    "originCount": 10,
+    "originHosts": [
+      "www.career.go.kr",
+      "www.work24.go.kr"
+    ]
+  },
+  {
+    "slug": "캐디",
+    "originCount": 17,
+    "originHosts": [
+      "www.work.go.kr",
+      "www.career.go.kr"
+    ]
+  }
+]
