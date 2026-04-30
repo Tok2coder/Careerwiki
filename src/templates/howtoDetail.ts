@@ -2,7 +2,8 @@ import type { HowtoGuideDetail } from '../types/howto'
 import type { CommentPolicyAttributes } from './detailTemplateUtils'
 import { renderCommentsPlaceholder, resolveCommentPolicy, renderAdSlot, sanitizeJson } from './detailTemplateUtils'
 import { renderSafetyBannersForText, renderAdDisclosureBanner, autoAffiliateRel } from '../utils/safety'
-import { renderAiLevelBanner, annotateAiImages, type AiContentLevel, renderTrustBox } from '../utils/trust'
+import { renderAiLevelBanner, annotateAiImages, type AiContentLevel, renderTrustBox, type TrustBoxData } from '../utils/trust'
+import { renderEntityActionGroup } from './partials/actionMenu'
 
 // 본문 HTML에서 h2를 파싱하여 id를 부여하고 TOC를 생성 (H2만 표시)
 function generateTocFromHtml(html: string): { processedHtml: string; tocHtml: string } {
@@ -575,13 +576,10 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
     lastReviewedAt: (guide as any).lastReviewedAt
   })
 
-  // ── 신뢰 박스 (C1)
-  const trustBoxBlockHowto = renderTrustBox({
-    sourceCount: Array.isArray((guide as any).sources) ? (guide as any).sources.length : 0,
-    lastReviewedAt: (guide as any).lastReviewedAt || (guide as any).updatedAt || null,
-    aiGeneratedRatio: aiLevel === 'ai-generated' ? 0.95 : aiLevel === 'ai-draft-human-edited' ? 0.7 : aiLevel === 'ai-assisted' ? 0.3 : 0,
-    pageType: 'howto'
-  })
+  // ── 신뢰 박스는 케밥 옆 ? hover popup에 통합되어 본문 상단 노출은 제거
+  const trustBoxBlockHowto = ''
+  // unused-but-kept import 회피용
+  void renderTrustBox
 
   // ── affiliate 링크 자동 sponsored nofollow 부여 (정책 howto §4-D)
   // ── AI 이미지 자동 caption 표기 (C5)
@@ -929,48 +927,43 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
                 <i class="fas fa-globe mr-1 sm:mr-1.5"></i><span class="hidden sm:inline">발행</span>
               </button>
             ` : ''}
-            <!-- 편집 버튼 (작성자/관리자만) -->
-            ${canEdit ? `
-              <a href="/howto/${escapeHtml(guide.slug)}/edit" 
-                 class="px-3 sm:px-4 py-2 min-h-[40px] inline-flex items-center justify-center gap-1 bg-wiki-card border border-wiki-border/60 text-wiki-text rounded-lg text-xs sm:text-sm hover:text-wiki-primary hover:border-wiki-primary/50 transition"
-                 aria-label="편집"
-                 title="편집하기">
-                <i class="fas fa-edit"></i>
-                <span class="hidden sm:inline">편집</span>
-              </a>
-            ` : ''}
-            <!-- 공유 버튼 -->
-            <div class="relative" data-share-root data-cw-telemetry-scope="howto-hero-actions">
-              <button type="button" class="px-3 sm:px-4 py-2 min-h-[40px] bg-violet-500 text-white rounded-lg text-xs sm:text-sm hover:bg-violet-600 transition inline-flex items-center gap-1.5" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-share-og-image="${guide.thumbnailUrl ? escapeHtml(guide.thumbnailUrl) : '/images/og-default.png'}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open">
-                <i class="fas fa-share-nodes text-xs sm:text-sm" aria-hidden="true"></i>
-                <span class="sr-only">공유</span>
-              </button>
-            </div>
-            
-            <!-- 신고 버튼 -->
-            <button type="button" 
-                    class="p-2 sm:p-2.5 min-h-[40px] min-w-[40px] inline-flex items-center justify-center bg-wiki-card border border-wiki-border/60 text-wiki-text rounded-lg text-xs sm:text-sm hover:text-red-400 hover:border-red-400/50 transition"
-                    data-report-trigger
-                    data-howto-slug="${escapeHtml(guide.slug)}"
-                    aria-label="신고"
-                    title="신고하기">
-              <i class="fas fa-flag text-xs sm:text-sm"></i>
-            </button>
-            
-            <!-- 저장 버튼 (저장 횟수 포함) -->
-            <button 
-              type="button" 
-              class="px-2.5 sm:px-3 py-2 min-h-[40px] inline-flex items-center gap-1 sm:gap-1.5 bg-wiki-card border border-wiki-border/60 text-wiki-text rounded-lg text-xs sm:text-sm hover:text-amber-400 hover:border-amber-400/50 transition"
-              data-bookmark-btn
-              data-bookmark-type="howto"
-              data-bookmark-slug="${escapeHtml(guide.slug)}"
-              data-bookmark-title="${escapeHtml(guide.title)}"
-              aria-label="저장"
-              title="저장함에 추가"
-            >
-              <span class="text-xs sm:text-sm" data-bookmark-count>${guide.bookmarkCount || 0}</span>
-              <i class="fas fa-bookmark text-xs sm:text-sm"></i>
-            </button>
+            <!-- HowTo: 편집(작성자만) / 역사 / 토론 → 케밥, 공유·신고·저장은 외부 유지 -->
+            ${renderEntityActionGroup(
+              {
+                entityType: 'howto',
+                entityId: pageId ?? guide.slug,
+                entitySlug: guide.slug,
+                canEdit,
+                disputeTargetId: guide.slug,
+                trustData: {
+                  sourceCount: Array.isArray((guide as any).sources) ? (guide as any).sources.length : 0,
+                  lastReviewedAt: (guide as any).lastReviewedAt || (guide as any).updatedAt || null,
+                  aiGeneratedRatio: aiLevel === 'ai-generated' ? 0.95 : aiLevel === 'ai-draft-human-edited' ? 0.7 : aiLevel === 'ai-assisted' ? 0.3 : 0,
+                  pageType: 'howto'
+                } as TrustBoxData
+              },
+              `<div class="relative" data-share-root data-cw-telemetry-scope="howto-hero-actions">
+                <button type="button" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-share-og-image="${guide.thumbnailUrl ? escapeHtml(guide.thumbnailUrl) : '/images/og-default.png'}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open" aria-label="공유" title="공유"
+                  style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(167,139,250,0.12); border:1px solid rgba(167,139,250,0.3); color:#c4b5fd; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                  <i class="fas fa-share-nodes"></i>
+                </button>
+              </div>` +
+              `<button type="button" data-report-trigger data-howto-slug="${escapeHtml(guide.slug)}" aria-label="신고" title="신고하기"
+                style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.28); color:#fca5a5; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                <i class="fas fa-flag"></i>
+              </button>`,
+              `<button type="button"
+                data-bookmark-btn
+                data-bookmark-type="howto"
+                data-bookmark-slug="${escapeHtml(guide.slug)}"
+                data-bookmark-title="${escapeHtml(guide.title)}"
+                aria-label="저장"
+                title="저장함에 추가"
+                style="min-width:38px; height:38px; min-height:38px; padding: 0 10px; border-radius:8px; background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.28); color:#fbbf24; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:0.78rem; transition: all 0.15s ease;">
+                <span data-bookmark-count>${guide.bookmarkCount || 0}</span>
+                <i class="fas fa-bookmark"></i>
+              </button>`
+            )}
           </div>
         </div>
         

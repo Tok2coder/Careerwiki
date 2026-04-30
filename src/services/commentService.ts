@@ -705,6 +705,23 @@ export const createComment = async (db: D1Database, payload: CreateCommentPayloa
     throw new Error('EMPTY_CONTENT')
   }
 
+  // 정책 enforcement §6 (B4): 활성 제재(정지/영구) 중인 사용자 차단
+  if (payload.authorId) {
+    try {
+      const userIdNum = parseInt(payload.authorId, 10)
+      if (Number.isFinite(userIdNum)) {
+        const { isUserSuspended } = await import('./enforcementService')
+        const result = await isUserSuspended(db, userIdNum)
+        if (result.suspended) {
+          throw new Error(`USER_SUSPENDED:${result.stage}:${result.endsAt || 'permanent'}`)
+        }
+      }
+    } catch (err: any) {
+      if (err?.message?.startsWith('USER_SUSPENDED:')) throw err
+      // 검사 실패 자체는 무시 — 댓글 진행
+    }
+  }
+
   // G1 댓글 도배 rate limit (정책 community §9): 1분당 5개 초과 차단
   // - 같은 IP 또는 같은 사용자가 1분 안에 5개 이상 댓글 생성하면 throw
   if (payload.ipHash || payload.authorId) {

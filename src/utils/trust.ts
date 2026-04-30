@@ -227,6 +227,40 @@ export function renderTrustBox(data: TrustBoxData): string {
   `
 }
 
+/**
+ * 신뢰 박스 컴팩트 버전 — 케밥 메뉴 안의 ? hover popup 용
+ */
+export function renderTrustBoxCompact(data: TrustBoxData): string {
+  const tierAvg = data.sourceTierAvg
+  const tierLabel = tierAvg == null ? '데이터 없음'
+    : tierAvg <= 2.5 ? '우수 (1~2순위)'
+    : tierAvg <= 4.5 ? '양호 (학술·공공)'
+    : tierAvg <= 6.5 ? '보통 (협회·언론)'
+    : '주의 (개인 진술)'
+  const aiPct = data.aiGeneratedRatio == null ? null : Math.round(data.aiGeneratedRatio * 100)
+  const aiLabel = aiPct == null ? '미상'
+    : aiPct === 0 ? '0%'
+    : `${aiPct}%`
+
+  return `
+    <div style="font-size:0.78rem; color:#cbd5e1; min-width:240px;">
+      <div style="font-weight:700; color:#e2e8f0; margin-bottom:6px; padding-bottom:6px; border-bottom: 1px solid rgba(148,163,184,0.18);">
+        <i class="fas fa-shield-halved" style="color:#a78bfa; margin-right:6px;"></i>이 페이지의 신뢰성
+      </div>
+      <ul style="list-style:none; padding:0; margin:0; display:grid; gap:4px;">
+        <li style="display:flex; justify-content:space-between; gap:12px;"><span style="color:#94a3b8;">출처 등급 평균</span><span>${tierAvg == null ? '—' : tierAvg.toFixed(1)} <span style="opacity:0.7;">(${escapeHtml(tierLabel)})</span></span></li>
+        <li style="display:flex; justify-content:space-between; gap:12px;"><span style="color:#94a3b8;">출처 개수</span><span>${data.sourceCount ?? 0}건</span></li>
+        <li style="display:flex; justify-content:space-between; gap:12px;"><span style="color:#94a3b8;">마지막 검수</span><span>${escapeHtml(formatDateLabel(data.lastReviewedAt))}</span></li>
+        <li style="display:flex; justify-content:space-between; gap:12px;"><span style="color:#94a3b8;">AI 생성 비율</span><span>${escapeHtml(aiLabel)}</span></li>
+        <li style="display:flex; justify-content:space-between; gap:12px;"><span style="color:#94a3b8;">분쟁 이력</span><span>${data.disputeCount ?? 0}건</span></li>
+      </ul>
+      <div style="margin-top:8px; padding-top:6px; border-top: 1px solid rgba(148,163,184,0.18); font-size:0.72rem; color:#94a3b8;">
+        <a href="/policy/source-tier" style="color:#93c5fd;">출처 등급 정책</a> · <a href="/policy/wiki/${data.pageType === 'major' ? 'major' : data.pageType === 'howto' ? 'job' : 'job'}" style="color:#93c5fd;">편집지침</a>
+      </div>
+    </div>
+  `
+}
+
 // ============================================================================
 // 위키↔HowTo 모순 비교 박스 (C6)
 // ============================================================================

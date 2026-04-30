@@ -22,6 +22,8 @@ import { composeDetailSlug } from '../utils/slug'
 import { renderKoreaMap, normalizeRegionName, type RegionData } from '../components/koreaMap'
 import { inferRegionFromUniversityName } from '../utils/universityRegionMapper'
 import { renderSafetyBannersForText } from '../utils/safety'
+import { type TrustBoxData } from '../utils/trust'
+import { renderEntityActionGroup } from './partials/actionMenu'
 
 export interface RelatedMajorItem {
   id: string
@@ -2765,49 +2767,38 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
           <div class="flex flex-wrap items-start justify-between gap-4">
             <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(profile.name)}</h1>
             <div class="flex items-center gap-2 shrink-0">
-              <button 
-                type="button" 
-                class="px-4 py-2 bg-wiki-secondary text-white rounded-lg text-sm hover:bg-purple-600 transition inline-flex items-center gap-2" 
-                data-edit-mode-trigger
-                data-entity-type="major"
-                data-entity-id="${escapeHtml(profile.id)}"
-                aria-label="편집 모드"
-                title="이 페이지 편집하기"
-              >
-                <i class="fas fa-edit" aria-hidden="true"></i>
-                편집
-              </button>
-              <button 
-                type="button" 
-                class="px-4 py-2 bg-wiki-bg/60 border border-wiki-border/60 text-white rounded-lg text-sm hover:bg-wiki-bg/80 hover:border-wiki-primary/60 transition inline-flex items-center gap-2" 
-                data-history-trigger
-                data-entity-type="major"
-                data-entity-id="${escapeHtml(profile.id)}"
-                aria-label="역사"
-                title="이 페이지의 편집 이력 보기"
-              >
-                <i class="fas fa-history" aria-hidden="true"></i>
-                역사
-              </button>
-              <div class="relative" data-share-root>
-                <button type="button" class="px-4 py-2 bg-wiki-primary text-white rounded-lg text-sm hover:brightness-110 transition inline-flex items-center gap-2" data-share-trigger data-share-path="/major/${escapeHtml(profile.id)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}">
-                  <i class="fas fa-share-nodes" aria-hidden="true"></i>
-                  공유
-                </button>
-              </div>
-              <!-- 저장 버튼 -->
-              <button 
-                type="button" 
-                class="p-2.5 bg-wiki-card border border-wiki-border/60 text-wiki-text rounded-lg text-sm hover:border-amber-400/50 hover:text-amber-400 transition"
-                data-bookmark-btn
-                data-bookmark-type="major"
-                data-bookmark-slug="${escapeHtml(profile.id)}"
-                data-bookmark-title="${escapeHtml(profile.name)}"
-                aria-label="저장"
-                title="저장함에 추가"
-              >
-                <i class="fas fa-bookmark" aria-hidden="true"></i>
-              </button>
+              ${renderEntityActionGroup(
+                {
+                  entityType: 'major',
+                  entityId: profile.id,
+                  entitySlug: profile.id,
+                  canEdit: true,
+                  disputeTargetId: String(profile.id),
+                  trustData: {
+                    sourceCount: Array.isArray((profile as any).sources) ? (profile as any).sources.length : 0,
+                    lastReviewedAt: (profile as any).user_last_updated_at || (profile as any).last_modified || null,
+                    aiGeneratedRatio: null,
+                    pageType: 'major',
+                    entityId: profile.id
+                  } as TrustBoxData
+                },
+                `<div class="relative" data-share-root>
+                  <button type="button" data-share-trigger data-share-path="/major/${escapeHtml(profile.id)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}" aria-label="공유" title="공유"
+                    style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(67,97,238,0.12); border:1px solid rgba(67,97,238,0.3); color:#93c5fd; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                    <i class="fas fa-share-nodes"></i>
+                  </button>
+                </div>`,
+                `<button type="button"
+                  data-bookmark-btn
+                  data-bookmark-type="major"
+                  data-bookmark-slug="${escapeHtml(profile.id)}"
+                  data-bookmark-title="${escapeHtml(profile.name)}"
+                  aria-label="저장"
+                  title="저장함에 추가"
+                  style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.28); color:#fbbf24; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                  <i class="fas fa-bookmark"></i>
+                </button>`
+              )}
             </div>
           </div>
           ${heroDescription ? `<p class="text-[16px] sm:text-[18px] text-wiki-muted leading-relaxed">${escapeHtml(heroDescription)}</p>` : ''}

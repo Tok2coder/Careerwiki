@@ -30,8 +30,9 @@ import {
 import type { FootnoteMap } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
-import { renderSafetyBannersForText, isAdultOnlyJob, renderAdultGateHtml, detectSensitiveForMinors, renderSensitiveContentGate } from '../utils/safety'
-import { renderTrustBox, renderDataSplitBadge } from '../utils/trust'
+import { renderSafetyBannersForText, detectSensitiveForMinors, renderSensitiveContentGate } from '../utils/safety'
+import { renderDataSplitBadge, type TrustBoxData } from '../utils/trust'
+import { renderEntityActionGroup } from './partials/actionMenu'
 
 export interface UnifiedJobDetailTemplateParams {
   profile: UnifiedJobDetail
@@ -3358,14 +3359,6 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   // profile은 merged_profile_json에서 파싱된 데이터 (평탄한 구조 + 계층적 구조 병행)
   // ETL에서 기본 필드들을 모두 포함하고 있음
 
-  // ── B10 성인 직업 미성년 차단 (정책 community §7-B)
-  // 직업명·슬러그가 성인 키워드 매칭 시 게이트 페이지로 대체
-  // (현재는 미성년 식별 시스템이 정착되기 전이라, 성인 직업 자체에 대한 안내만 우선 노출)
-  const adultJobMatch = isAdultOnlyJob(profile.name) || isAdultOnlyJob((profile as any).slug)
-  if (adultJobMatch) {
-    return renderAdultGateHtml(profile.name)
-  }
-
   const telemetryVariant = resolveJobTelemetryVariant(profile)
   const telemetryVariantAttr = telemetryVariant ? ` data-cw-telemetry-variant="${escapeHtml(telemetryVariant)}"` : ''
   // Quick Stats removed from hero section
@@ -5150,14 +5143,15 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const totalFieldCount = adminFieldCount + userFieldCount + aiFieldCount
   const aiRatio = totalFieldCount > 0 ? aiFieldCount / totalFieldCount : null
 
-  const trustBoxBlock = renderTrustBox({
+  // 신뢰성 데이터 — 페이지 상단에는 노출하지 않고, 케밥 옆 ? 아이콘에 hover popup으로 사용
+  const trustData: TrustBoxData = {
     sourceTierAvg,
     sourceCount: sourcesArray.length,
     lastReviewedAt: (profile as any).user_last_updated_at || (profile as any).last_modified || null,
     aiGeneratedRatio: aiRatio,
     pageType: 'job',
     entityId: profile.id
-  })
+  }
 
   // C7 데이터 분리 시각화 (사이드 영역에 작은 배지)
   const dataSplitBadgeBlock = renderDataSplitBadge({
@@ -5166,24 +5160,10 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     aiFields: aiFieldCount
   })
 
-  // D1 토론 버튼 — 분쟁 페이지로 진입 (직업 슬러그를 target_id로)
-  const disputeOpenButtonBlock = `
-    <div class="flex justify-end mb-2">
-      <a href="/dispute/open?target_type=job&target_id=${encodeURIComponent((profile as any).slug || profile.id)}"
-         class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-         style="background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.3); color:#c4b5fd;"
-         title="이 페이지의 분쟁 발제 — 토론·합의 절차서 §1">
-        <i class="fas fa-comments"></i> 토론 열기
-      </a>
-    </div>`
-
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
       ${safetyBannersBlock}
       ${sensitiveBannerBlock}
-      ${trustBoxBlock}
-      ${dataSplitBadgeBlock}
-      ${disputeOpenButtonBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">
@@ -5191,55 +5171,33 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
             <div class="flex flex-wrap items-start justify-between gap-4">
               <h1 class="text-[32px] md:text-[34px] lg:text-4xl font-bold text-white leading-tight">${escapeHtml(heroTitle)}</h1>
             <div class="flex items-center gap-2 shrink-0">
-              <button 
-                type="button" 
-                class="px-4 py-2 min-h-[44px] bg-wiki-secondary text-white rounded-lg text-sm hover:bg-purple-600 transition inline-flex items-center gap-2"
-                data-edit-mode-trigger
-                data-entity-type="job"
-                data-entity-id="${escapeHtml(profile.id)}"
-                data-cw-telemetry-component="job-edit-trigger"
-                data-cw-telemetry-action="edit-open"
-                aria-label="편집 모드"
-                title="이 페이지 편집하기"
-                ${telemetryVariantAttr}
-              >
-                <i class="fas fa-edit" aria-hidden="true"></i>
-                편집
-              </button>
-              <button 
-                type="button" 
-                class="px-4 py-2 min-h-[44px] bg-wiki-bg/60 border border-wiki-border/60 text-white rounded-lg text-sm hover:bg-wiki-bg/80 hover:border-wiki-primary/60 transition inline-flex items-center gap-2"
-                data-history-trigger
-                data-entity-type="job"
-                data-entity-id="${escapeHtml(profile.id)}"
-                data-cw-telemetry-component="job-history-trigger"
-                data-cw-telemetry-action="history-open"
-                aria-label="역사"
-                title="이 페이지의 편집 이력 보기"
-                ${telemetryVariantAttr}
-              >
-                <i class="fas fa-history" aria-hidden="true"></i>
-                역사
-              </button>
-              <div class="relative" data-share-root data-cw-telemetry-scope="job-hero-actions">
-                <button type="button" class="px-4 py-2 min-h-[44px] bg-wiki-primary text-white rounded-lg text-sm hover:bg-blue-600 transition inline-flex items-center gap-2" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open"${telemetryVariantAttr}>
-                  <i class="fas fa-share-nodes" aria-hidden="true"></i>
-                  공유
-                </button>
-              </div>
-              <!-- 저장 버튼 -->
-              <button 
-                type="button" 
-                class="p-2.5 bg-wiki-card border border-wiki-border/60 text-wiki-text rounded-lg text-sm hover:border-amber-400/50 hover:text-amber-400 transition"
-                data-bookmark-btn
-                data-bookmark-type="job"
-                data-bookmark-slug="${escapeHtml(entitySlug)}"
-                data-bookmark-title="${escapeHtml(profile.name)}"
-                aria-label="저장"
-                title="저장함에 추가"
-              >
-                <i class="fas fa-bookmark" aria-hidden="true"></i>
-              </button>
+              ${renderEntityActionGroup(
+                {
+                  entityType: 'job',
+                  entityId: profile.id,
+                  entitySlug,
+                  canEdit: true,
+                  disputeTargetId: (profile as any).slug || String(profile.id),
+                  trustData,
+                  telemetryVariantAttr
+                },
+                `<div class="relative" data-share-root data-cw-telemetry-scope="job-hero-actions">
+                  <button type="button" class="cw-share-btn" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open" aria-label="공유" title="공유"${telemetryVariantAttr}
+                    style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(67,97,238,0.12); border:1px solid rgba(67,97,238,0.3); color:#93c5fd; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                    <i class="fas fa-share-nodes"></i>
+                  </button>
+                </div>`,
+                `<button type="button"
+                  data-bookmark-btn
+                  data-bookmark-type="job"
+                  data-bookmark-slug="${escapeHtml(entitySlug)}"
+                  data-bookmark-title="${escapeHtml(profile.name)}"
+                  aria-label="저장"
+                  title="저장함에 추가"
+                  style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.28); color:#fbbf24; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                  <i class="fas fa-bookmark"></i>
+                </button>`
+              )}
             </div>
             </div>
           </div>

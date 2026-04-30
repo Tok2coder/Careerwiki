@@ -15,7 +15,8 @@ import { renderAdminUsers } from '../templates/admin/adminUsers'
 import { renderAdminUserDetail } from '../templates/admin/adminUserDetail'
 import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderModerationQueuePage } from '../templates/admin/moderationQueue'
-import { listPendingModerationQueue, applyModerationDecision } from '../services/enforcementService'
+import { listPendingModerationQueue, applyModerationDecision, issueSanction, reviewAppeal, type SanctionStage, type SanctionReasonCategory } from '../services/enforcementService'
+import { renderSanctionsAdminPage, renderAppealsAdminPage, renderCompanyRepliesAdminPage } from '../templates/admin/enforcementOps'
 import { renderUserMenu } from '../utils/shared-helpers'
 import { renderAdminStats } from '../templates/admin/adminStats'
 import { renderAdminJobEqualize, hasField, parseSources, EQUALIZE_FIELDS, type JobEqualizeItem, type EqualizeTab } from '../templates/admin/adminJobEqualize'
@@ -1249,13 +1250,16 @@ adminRoutes.post('/admin/api/update-related-jobs', async (c) => {
   }
 })
 
-// === 신고 검토 큐 (정책 enforcement §4 Phase 3, B2) ===
-adminRoutes.get('/admin/moderation', requireAdmin, async (c) => {
+const buildAdminUserMenu = (c: any) => {
   const user = c.get('user')
   const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
-  const userMenuHtml = renderUserMenu(userData)
+  return renderUserMenu(userData)
+}
+
+// === 신고 검토 큐 (정책 enforcement §4 Phase 3, B2) ===
+adminRoutes.get('/admin/moderation', requireAdmin, async (c) => {
   const items = await listPendingModerationQueue(c.env.DB, { limit: 100 })
-  return c.html(renderModerationQueuePage({ userMenuHtml, items }))
+  return c.html(renderModerationQueuePage({ userMenuHtml: buildAdminUserMenu(c), items }))
 })
 
 adminRoutes.post('/admin/moderation/:id/decide', requireAdmin, async (c) => {
@@ -1268,8 +1272,186 @@ adminRoutes.post('/admin/moderation/:id/decide', requireAdmin, async (c) => {
   const note = String(form.get('note') || '') || undefined
   const valid = ['keep', 'delete', 'warn_keep', 'request_revision']
   if (!valid.includes(decision)) return c.redirect('/admin/moderation')
+
+  // 1) 결정 기록
   await applyModerationDecision(c.env.DB, { queueId, decision, decidedBy: user.id, note })
+
+  // 2) 후속 처리 (큐 결정에 따라 실제 콘텐츠 상태 변경)
+  try {
+    const queueRow = await c.env.DB.prepare(
+      `SELECT target_type, target_id FROM moderation_decisions WHERE id = ? LIMIT 1`
+    ).bind(queueId).first<{ target_type: string; target_id: number }>()
+    if (queueRow) {
+      if (decision === 'delete' && queueRow.target_type === 'comment') {
+        // 댓글 status를 deleted로
+        await c.env.DB.prepare(
+          `UPDATE comments SET status = 'deleted' WHERE id = ?`
+        ).bind(queueRow.target_id).run()
+      } else if (decision === 'keep' && queueRow.target_type === 'comment') {
+        // 자동 블라인드된 댓글 복구
+        await c.env.DB.prepare(
+          `UPDATE comments SET status = 'visible', flagged = 0 WHERE id = ? AND status = 'blinded'`
+        ).bind(queueRow.target_id).run()
+      } else if (decision === 'warn_keep' && queueRow.target_type === 'comment') {
+        // 작성자에게 1차 경고 부과 (단계제 진입)
+        const commentRow = await c.env.DB.prepare(
+          `SELECT author_id FROM comments WHERE id = ? LIMIT 1`
+        ).bind(queueRow.target_id).first<{ author_id: string | null }>()
+        const authorIdNum = commentRow?.author_id ? parseInt(commentRow.author_id, 10) : null
+        if (authorIdNum && Number.isFinite(authorIdNum)) {
+          await issueSanction(c.env.DB, {
+            userId: authorIdNum,
+            stage: 'warn',
+            reasonCategory: 'other' as SanctionReasonCategory,
+            reasonDetail: '운영자 큐 결정: warn_keep' + (note ? ' / ' + note : ''),
+            sourceDecisionId: queueId,
+            issuedBy: user.id
+          })
+        }
+      } else if (decision === 'request_revision' && queueRow.target_type === 'comment') {
+        // 작성자에게 수정 요청 — moderation_decisions.decision_reason에 이미 기록됨
+        // (사용자는 마이페이지에서 본인 결정 이력 확인 가능)
+      }
+    }
+  } catch (err: any) {
+    console.error('[moderation/decide] follow-up failed:', err)
+  }
+
   return c.redirect('/admin/moderation')
+})
+
+// === 제재 부과·관리 (B4 단계제 + B5 즉시 영구) ===
+adminRoutes.get('/admin/sanctions', requireAdmin, async (c) => {
+  const result = await c.env.DB.prepare(
+    `SELECT id, user_id, stage, reason_category, reason_detail, started_at, ends_at, status, issued_by
+     FROM user_sanctions ORDER BY started_at DESC LIMIT 50`
+  ).all<any>()
+  const flashType = c.req.query('flash')
+  const flash = flashType === 'success'
+    ? { type: 'success' as const, message: '제재가 부과되었습니다.' }
+    : flashType === 'lifted'
+    ? { type: 'success' as const, message: '제재가 해제되었습니다.' }
+    : flashType === 'error'
+    ? { type: 'error' as const, message: '처리에 실패했습니다.' }
+    : undefined
+  return c.html(renderSanctionsAdminPage({
+    userMenuHtml: buildAdminUserMenu(c),
+    recentSanctions: (result.results as any[]) || [],
+    flash
+  }))
+})
+
+adminRoutes.post('/admin/sanctions', requireAdmin, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/admin/sanctions?flash=error')
+  const form = await c.req.formData()
+  const userId = parseInt(String(form.get('user_id') || '0'), 10)
+  const stageRaw = String(form.get('stage') || '').trim() as SanctionStage | ''
+  const reasonCategory = String(form.get('reason_category') || '') as SanctionReasonCategory
+  const reasonDetail = String(form.get('reason_detail') || '').trim() || undefined
+  const isImmediate = String(form.get('is_immediate') || '') === '1'
+  if (!Number.isFinite(userId) || userId <= 0 || !reasonCategory) {
+    return c.redirect('/admin/sanctions?flash=error')
+  }
+  try {
+    await issueSanction(c.env.DB, {
+      userId,
+      stage: stageRaw || undefined as any,
+      isImmediate,
+      reasonCategory,
+      reasonDetail,
+      issuedBy: user.id
+    })
+    return c.redirect('/admin/sanctions?flash=success')
+  } catch (e: any) {
+    console.error('[admin/sanctions] failed:', e)
+    return c.redirect('/admin/sanctions?flash=error')
+  }
+})
+
+adminRoutes.post('/admin/sanctions/:id/lift', requireAdmin, async (c) => {
+  const id = parseInt(c.req.param('id'), 10)
+  if (!Number.isFinite(id)) return c.redirect('/admin/sanctions?flash=error')
+  await c.env.DB.prepare(`UPDATE user_sanctions SET status = 'lifted' WHERE id = ?`).bind(id).run()
+  return c.redirect('/admin/sanctions?flash=lifted')
+})
+
+// === 이의제기 검토 (B3 / 정책 enforcement §5) ===
+adminRoutes.get('/admin/appeals', requireAdmin, async (c) => {
+  const result = await c.env.DB.prepare(
+    `SELECT id, user_id, target_type, target_id, reason, evidence, status, created_at, temp_action_ends_at, review_note
+     FROM user_appeals ORDER BY created_at DESC LIMIT 100`
+  ).all<any>()
+  const flashType = c.req.query('flash')
+  const flash = flashType === 'decided'
+    ? { type: 'success' as const, message: '결정이 기록되었습니다.' }
+    : flashType === 'error'
+    ? { type: 'error' as const, message: '처리에 실패했습니다.' }
+    : flashType === 'same_decider'
+    ? { type: 'error' as const, message: '본인이 1차 결정한 사안은 본인이 검토할 수 없습니다 (이해충돌 회피).' }
+    : undefined
+  return c.html(renderAppealsAdminPage({
+    userMenuHtml: buildAdminUserMenu(c),
+    appeals: (result.results as any[]) || [],
+    flash
+  }))
+})
+
+adminRoutes.post('/admin/appeals/:id/decide', requireAdmin, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/admin/appeals?flash=error')
+  const id = parseInt(c.req.param('id'), 10)
+  if (!Number.isFinite(id)) return c.redirect('/admin/appeals?flash=error')
+  const form = await c.req.formData()
+  const status = String(form.get('status') || '') as any
+  const note = String(form.get('note') || '') || undefined
+  if (!['accepted', 'rejected', 'partially_accepted'].includes(status)) {
+    return c.redirect('/admin/appeals?flash=error')
+  }
+  try {
+    await reviewAppeal(c.env.DB, { appealId: id, reviewedBy: user.id, status, note })
+    return c.redirect('/admin/appeals?flash=decided')
+  } catch (e: any) {
+    if (e?.message === 'APPEAL_SAME_DECIDER') {
+      return c.redirect('/admin/appeals?flash=same_decider')
+    }
+    return c.redirect('/admin/appeals?flash=error')
+  }
+})
+
+// === 회사 답글 승인 (D7 / Glassdoor 모델) ===
+adminRoutes.get('/admin/company-replies', requireAdmin, async (c) => {
+  const result = await c.env.DB.prepare(
+    `SELECT id, comment_id, company_name, responder_name, reply_content, status, created_at
+     FROM company_replies ORDER BY created_at DESC LIMIT 100`
+  ).all<any>()
+  const flashType = c.req.query('flash')
+  const flash = flashType === 'decided'
+    ? { type: 'success' as const, message: '결정이 기록되었습니다.' }
+    : flashType === 'error'
+    ? { type: 'error' as const, message: '처리에 실패했습니다.' }
+    : undefined
+  return c.html(renderCompanyRepliesAdminPage({
+    userMenuHtml: buildAdminUserMenu(c),
+    replies: (result.results as any[]) || [],
+    flash
+  }))
+})
+
+adminRoutes.post('/admin/company-replies/:id/decide', requireAdmin, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/admin/company-replies?flash=error')
+  const id = parseInt(c.req.param('id'), 10)
+  if (!Number.isFinite(id)) return c.redirect('/admin/company-replies?flash=error')
+  const form = await c.req.formData()
+  const status = String(form.get('status') || '') as any
+  if (!['approved', 'rejected'].includes(status)) {
+    return c.redirect('/admin/company-replies?flash=error')
+  }
+  await c.env.DB.prepare(
+    `UPDATE company_replies SET status = ?, approved_by = ?, approved_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?`
+  ).bind(status, user.id, id).run()
+  return c.redirect('/admin/company-replies?flash=decided')
 })
 
 export { adminRoutes }

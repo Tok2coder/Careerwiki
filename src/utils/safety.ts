@@ -14,18 +14,13 @@
 
 /**
  * 자살·자해 의도 신호 키워드.
- * - 단독 검출이 아니라 "표시 트리거"로만 사용 (배너 노출).
+ * - 명백한 SOS 신호만 (false positive 최소화 — "죽겠다" 같은 일상 강조 표현 제외).
  * - 보건복지부 자살보도 권고기준 5원칙에 따라 구체적 도구·장소·방법은
  *   본문에 등장하지 않도록 별도 검사 (detectSelfHarmMethod).
  */
 const SELF_HARM_SIGNAL_PATTERNS: RegExp[] = [
-  /죽고\s?싶/,
   /자살/,
   /자해/,
-  /끝내고\s?싶/,
-  /사라지고\s?싶/,
-  /살기\s?싫/,
-  /(목숨|생명).{0,4}(끊|버리)/,
   /\b1393\b/,
   /\b109\b/,
   /\b1577-?0199\b/, // 정신건강위기상담
@@ -34,6 +29,7 @@ const SELF_HARM_SIGNAL_PATTERNS: RegExp[] = [
 /**
  * 구체적 자살 방법·도구·장소 표현 — 검출 시 운영자 검토 우선순위 ↑
  * (자살예방법 + 보건복지부 자살보도 권고기준)
+ * 운영자 큐 우선순위 알림에만 사용. 일반 사용자에게는 노출하지 않음.
  */
 const SELF_HARM_METHOD_PATTERNS: RegExp[] = [
   /번개탄/,
@@ -41,19 +37,6 @@ const SELF_HARM_METHOD_PATTERNS: RegExp[] = [
   /목\s?매/,
   /수면제\s?(과량|많이)/,
   /투신/,
-]
-
-/**
- * 학교폭력·청소년 위기 신호 키워드 (정책 community §7-C)
- */
-const YOUTH_CRISIS_SIGNAL_PATTERNS: RegExp[] = [
-  /학교폭력/,
-  /왕따/,
-  /(따돌림|따돌)/,
-  /학폭/,
-  /폭력\s?(피해|당했)/,
-  /성희롱.{0,4}(교사|선생|교수)/,
-  /성추행.{0,4}(교사|선생|교수)/,
 ]
 
 /**
@@ -75,11 +58,11 @@ export function detectSelfHarmMethod(text: string | null | undefined): boolean {
 }
 
 /**
- * 학교폭력·청소년 위기 신호 검출 (117/1388 안내용)
+ * @deprecated 진로 사이트 도메인에 부적합하여 제거됨 (2026-04-30 사용자 결정)
+ * 학교폭력 관련 키워드 검출은 더 이상 지원하지 않습니다.
  */
-export function detectYouthCrisisSignal(text: string | null | undefined): boolean {
-  if (!text) return false
-  return YOUTH_CRISIS_SIGNAL_PATTERNS.some(re => re.test(text))
+export function detectYouthCrisisSignal(_text: string | null | undefined): boolean {
+  return false
 }
 
 // ============================================================================
@@ -148,54 +131,15 @@ export function renderSelfHarmHelpBanner(opts?: { compact?: boolean }): string {
 }
 
 /**
- * 117·1388 학교폭력·청소년 위기 안내 배너 (정책 community §7-C)
+ * @deprecated 진로 사이트 도메인에 부적합하여 제거됨 (2026-04-30 사용자 결정)
  */
-export function renderYouthCrisisBanner(opts?: { compact?: boolean }): string {
-  const compact = opts?.compact ?? false
-
-  if (compact) {
-    return `
-      <div class="cw-safety-banner cw-safety-banner--youth" role="alert" aria-live="polite" style="margin: 12px 0; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(251, 191, 36, 0.45); background: rgba(251, 191, 36, 0.08); color: #fde68a; font-size: 0.9rem;">
-        <div style="display:flex; align-items:flex-start; gap:10px;">
-          <span style="font-size:1.1rem; line-height:1;">📞</span>
-          <div style="flex:1; min-width:0;">
-            <strong style="color:#fde68a;">학교폭력·청소년 고민 신고:</strong>
-            <span style="color:#fde68a; opacity:0.92;">
-              <strong>117</strong> 학교폭력 신고 · <strong>1388</strong> 청소년상담 · 카카오톡 <strong>#1388</strong>
-            </span>
-          </div>
-        </div>
-      </div>
-    `
-  }
-
-  return `
-    <aside class="cw-safety-banner cw-safety-banner--youth" role="note"
-           style="margin: 16px 0; padding: 16px 18px; border-radius: 14px;
-                  border: 1px solid rgba(251, 191, 36, 0.45); background: rgba(251, 191, 36, 0.07);">
-      <header style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-        <span style="font-size:1.4rem;">📞</span>
-        <strong style="color:#fde68a; font-size:0.95rem;">학교폭력·청소년 고민이 있다면 혼자 두지 마세요</strong>
-      </header>
-      <ul style="list-style:none; padding:0; margin:0; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:8px;">
-        <li style="background:rgba(15,23,42,0.35); padding:8px 12px; border-radius:10px; color:#fde68a;">
-          <strong>117</strong> · 학교폭력 신고센터
-        </li>
-        <li style="background:rgba(15,23,42,0.35); padding:8px 12px; border-radius:10px; color:#fde68a;">
-          <strong>1388</strong> · 청소년사이버상담
-        </li>
-        <li style="background:rgba(15,23,42,0.35); padding:8px 12px; border-radius:10px; color:#fde68a;">
-          카톡 <strong>#1388</strong> · 채팅 상담
-        </li>
-      </ul>
-    </aside>
-  `
+export function renderYouthCrisisBanner(_opts?: { compact?: boolean }): string {
+  return ''
 }
 
 /**
  * 텍스트를 검사하여 필요한 안전 배너들의 HTML을 합쳐서 반환.
  * - 자살·자해 신호 → 109/1393 배너
- * - 청소년 위기 신호 → 117/1388 배너
  * - 둘 다 없으면 빈 문자열
  */
 export function renderSafetyBannersForText(
@@ -205,9 +149,6 @@ export function renderSafetyBannersForText(
   const banners: string[] = []
   if (detectSelfHarmSignal(text)) {
     banners.push(renderSelfHarmHelpBanner(opts))
-  }
-  if (detectYouthCrisisSignal(text)) {
-    banners.push(renderYouthCrisisBanner(opts))
   }
   return banners.join('')
 }
@@ -228,18 +169,9 @@ const SENSITIVE_FOR_MINORS_PATTERNS: RegExp[] = [
 ]
 
 /**
- * 미성년 사용자에게 차단되어야 하는 성인 전용 직업 슬러그·이름 키워드.
- * - 정책 community §7-B: 유흥·성인용품 등.
- * - 직업 페이지 슬러그/이름에 매칭되면 미성년에게는 안내 페이지로 리다이렉트하거나 차단
+ * @deprecated 한국직업사전·NCS에 등재되지 않는 직업이라 자동 차단 불필요 (2026-04-30 사용자 결정)
  */
-const ADULT_ONLY_JOB_PATTERNS: RegExp[] = [
-  /유흥/,
-  /(성인용품|섹스토이)/,
-  /(룸살롱|호스트바|호빠|단란주점)/,
-  /(에스코트|콜걸|성매매)/,
-  /(스트립퍼|스트립댄서)/,
-  /(어덜트.*콘텐츠|성인.*콘텐츠.*제작)/,
-]
+const ADULT_ONLY_JOB_PATTERNS: RegExp[] = []
 
 /**
  * 본문에 미성년 민감 키워드가 있으면 true (B9: 추가 클릭 게이트 노출용)
@@ -250,11 +182,10 @@ export function detectSensitiveForMinors(text: string | null | undefined): boole
 }
 
 /**
- * 직업이 성인 전용인지 검사 (B10: 미성년 차단)
+ * @deprecated 자동 차단 정책 제거 (2026-04-30) — 항상 false 반환
  */
-export function isAdultOnlyJob(jobNameOrSlug: string | null | undefined): boolean {
-  if (!jobNameOrSlug) return false
-  return ADULT_ONLY_JOB_PATTERNS.some(re => re.test(jobNameOrSlug))
+export function isAdultOnlyJob(_jobNameOrSlug: string | null | undefined): boolean {
+  return false
 }
 
 /**
