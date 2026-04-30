@@ -16,7 +16,13 @@ const navItems = [
   { path: '/admin/stats', label: '통계', icon: 'fa-chart-bar' },
   { path: '/admin/ai-analyzer', label: 'AI 추천', icon: 'fa-robot' },
   { path: '/admin/job-equalize', label: '데이터 보완', icon: 'fa-database' },
-]
+  // 운영 (정책 enforcement / dispute / community)
+  { path: '/admin/moderation', label: '신고 검토 큐', icon: 'fa-gavel', section: 'ops' },
+  { path: '/admin/sanctions', label: '제재 부과·관리', icon: 'fa-ban', section: 'ops' },
+  { path: '/admin/appeals', label: '이의제기 검토', icon: 'fa-scale-balanced', section: 'ops' },
+  { path: '/admin/admin-replies', label: '관리자 답글 승인', icon: 'fa-user-shield', section: 'ops' },
+  { path: '/admin/todo', label: '잔여 작업·미구현', icon: 'fa-list-check', section: 'ops' },
+] as Array<{ path: string; label: string; icon: string; section?: string }>
 
 export function renderAdminLayout({ title, currentPath, children }: AdminLayoutProps): string {
   return `<!DOCTYPE html>
@@ -99,14 +105,24 @@ export function renderAdminLayout({ title, currentPath, children }: AdminLayoutP
     </div>
     
     <!-- 네비게이션 -->
-    <nav class="flex-1 p-4 space-y-1">
-      ${navItems.map(item => `
-        <a href="${item.path}" 
+    <nav class="flex-1 p-4 space-y-1 overflow-y-auto admin-mini-scroll">
+      ${navItems.filter(i => !i.section).map(item => `
+        <a href="${item.path}"
            class="sidebar-link flex items-center gap-3 px-4 py-3 min-h-[48px] rounded-lg text-sm ${currentPath === item.path ? 'active text-white' : 'text-slate-400 hover:text-white'}">
           <i class="fas ${item.icon} w-5 text-center"></i>
           <span>${item.label}</span>
         </a>
       `).join('')}
+      <div class="pt-4 mt-2 border-t border-slate-700/40">
+        <p class="px-4 pb-2 text-[11px] uppercase tracking-wider text-slate-500 font-semibold">운영 (정책)</p>
+        ${navItems.filter(i => i.section === 'ops').map(item => `
+          <a href="${item.path}"
+             class="sidebar-link flex items-center gap-3 px-4 py-3 min-h-[48px] rounded-lg text-sm ${currentPath === item.path ? 'active text-white' : 'text-slate-400 hover:text-white'}">
+            <i class="fas ${item.icon} w-5 text-center"></i>
+            <span>${item.label}</span>
+          </a>
+        `).join('')}
+      </div>
     </nav>
     
     <!-- 하단 링크 -->

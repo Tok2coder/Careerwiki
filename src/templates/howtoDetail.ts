@@ -943,23 +943,21 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
                 } as TrustBoxData
               },
               `<div class="relative" data-share-root data-cw-telemetry-scope="howto-hero-actions">
-                <button type="button" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-share-og-image="${guide.thumbnailUrl ? escapeHtml(guide.thumbnailUrl) : '/images/og-default.png'}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open" aria-label="공유" title="공유"
-                  style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(167,139,250,0.12); border:1px solid rgba(167,139,250,0.3); color:#c4b5fd; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                <button type="button" class="cw-icon-btn cw-icon-btn--share" data-share-trigger data-share-path="${escapeHtml(canonicalPath)}" data-share-title="${escapeHtml(guide.title)}" data-share-og-image="${guide.thumbnailUrl ? escapeHtml(guide.thumbnailUrl) : '/images/og-default.png'}" data-cw-telemetry-component="howto-share-trigger" data-cw-telemetry-action="share-open" aria-label="공유" title="공유">
                   <i class="fas fa-share-nodes"></i>
                 </button>
               </div>` +
-              `<button type="button" data-report-trigger data-howto-slug="${escapeHtml(guide.slug)}" aria-label="신고" title="신고하기"
-                style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.28); color:#fca5a5; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+              `<button type="button" class="cw-icon-btn cw-icon-btn--report" data-report-trigger data-howto-slug="${escapeHtml(guide.slug)}" aria-label="신고" title="신고하기">
                 <i class="fas fa-flag"></i>
               </button>`,
               `<button type="button"
+                class="cw-icon-btn--bookmark-counted"
                 data-bookmark-btn
                 data-bookmark-type="howto"
                 data-bookmark-slug="${escapeHtml(guide.slug)}"
                 data-bookmark-title="${escapeHtml(guide.title)}"
                 aria-label="저장"
-                title="저장함에 추가"
-                style="min-width:38px; height:38px; min-height:38px; padding: 0 10px; border-radius:8px; background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.28); color:#fbbf24; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:0.78rem; transition: all 0.15s ease;">
+                title="저장함에 추가">
                 <span data-bookmark-count>${guide.bookmarkCount || 0}</span>
                 <i class="fas fa-bookmark"></i>
               </button>`

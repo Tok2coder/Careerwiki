@@ -5182,19 +5182,18 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
                   telemetryVariantAttr
                 },
                 `<div class="relative" data-share-root data-cw-telemetry-scope="job-hero-actions">
-                  <button type="button" class="cw-share-btn" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open" aria-label="공유" title="공유"${telemetryVariantAttr}
-                    style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(67,97,238,0.12); border:1px solid rgba(67,97,238,0.3); color:#93c5fd; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                  <button type="button" class="cw-icon-btn cw-icon-btn--share" data-share-trigger data-share-path="${escapeHtml(detailPath)}" data-share-title="${escapeHtml(profile.name)}" data-share-og-image="${heroImageUrl ? escapeHtml(heroImageUrl) : '/images/og-default.png'}" data-cw-telemetry-component="job-share-trigger" data-cw-telemetry-action="share-open" aria-label="공유" title="공유"${telemetryVariantAttr}>
                     <i class="fas fa-share-nodes"></i>
                   </button>
                 </div>`,
                 `<button type="button"
+                  class="cw-icon-btn cw-icon-btn--bookmark"
                   data-bookmark-btn
                   data-bookmark-type="job"
                   data-bookmark-slug="${escapeHtml(entitySlug)}"
                   data-bookmark-title="${escapeHtml(profile.name)}"
                   aria-label="저장"
-                  title="저장함에 추가"
-                  style="width:38px; height:38px; min-height:38px; border-radius:8px; background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.28); color:#fbbf24; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.15s ease;">
+                  title="저장함에 추가">
                   <i class="fas fa-bookmark"></i>
                 </button>`
               )}

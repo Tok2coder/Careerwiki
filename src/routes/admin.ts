@@ -17,6 +17,7 @@ import { renderAdminContent } from '../templates/admin/adminContent'
 import { renderModerationQueuePage } from '../templates/admin/moderationQueue'
 import { listPendingModerationQueue, applyModerationDecision, issueSanction, reviewAppeal, type SanctionStage, type SanctionReasonCategory } from '../services/enforcementService'
 import { renderSanctionsAdminPage, renderAppealsAdminPage, renderCompanyRepliesAdminPage } from '../templates/admin/enforcementOps'
+import { renderAdminTodoPage } from '../templates/admin/todoPage'
 import { renderUserMenu } from '../utils/shared-helpers'
 import { renderAdminStats } from '../templates/admin/adminStats'
 import { renderAdminJobEqualize, hasField, parseSources, EQUALIZE_FIELDS, type JobEqualizeItem, type EqualizeTab } from '../templates/admin/adminJobEqualize'
@@ -1419,12 +1420,13 @@ adminRoutes.post('/admin/appeals/:id/decide', requireAdmin, async (c) => {
   }
 })
 
-// === 회사 답글 승인 (D7 / Glassdoor 모델) ===
-adminRoutes.get('/admin/company-replies', requireAdmin, async (c) => {
+// === 관리자 답글 승인 (D7 / Glassdoor 모델) ===
+// /admin/admin-replies가 표준 URL. /admin/company-replies는 호환성 redirect.
+const adminRepliesHandler = async (c: any) => {
   const result = await c.env.DB.prepare(
     `SELECT id, comment_id, company_name, responder_name, reply_content, status, created_at
      FROM company_replies ORDER BY created_at DESC LIMIT 100`
-  ).all<any>()
+  ).all()
   const flashType = c.req.query('flash')
   const flash = flashType === 'decided'
     ? { type: 'success' as const, message: '결정이 기록되었습니다.' }
@@ -1436,22 +1438,31 @@ adminRoutes.get('/admin/company-replies', requireAdmin, async (c) => {
     replies: (result.results as any[]) || [],
     flash
   }))
-})
+}
+adminRoutes.get('/admin/admin-replies', requireAdmin, adminRepliesHandler)
+adminRoutes.get('/admin/company-replies', requireAdmin, async (c) => c.redirect('/admin/admin-replies', 301))
 
-adminRoutes.post('/admin/company-replies/:id/decide', requireAdmin, async (c) => {
+const adminRepliesDecideHandler = async (c: any) => {
   const user = c.get('user')
-  if (!user) return c.redirect('/admin/company-replies?flash=error')
+  if (!user) return c.redirect('/admin/admin-replies?flash=error')
   const id = parseInt(c.req.param('id'), 10)
-  if (!Number.isFinite(id)) return c.redirect('/admin/company-replies?flash=error')
+  if (!Number.isFinite(id)) return c.redirect('/admin/admin-replies?flash=error')
   const form = await c.req.formData()
   const status = String(form.get('status') || '') as any
   if (!['approved', 'rejected'].includes(status)) {
-    return c.redirect('/admin/company-replies?flash=error')
+    return c.redirect('/admin/admin-replies?flash=error')
   }
   await c.env.DB.prepare(
     `UPDATE company_replies SET status = ?, approved_by = ?, approved_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?`
   ).bind(status, user.id, id).run()
-  return c.redirect('/admin/company-replies?flash=decided')
+  return c.redirect('/admin/admin-replies?flash=decided')
+}
+adminRoutes.post('/admin/admin-replies/:id/decide', requireAdmin, adminRepliesDecideHandler)
+adminRoutes.post('/admin/company-replies/:id/decide', requireAdmin, adminRepliesDecideHandler)
+
+// === 잔여 작업·미구현 항목 ===
+adminRoutes.get('/admin/todo', requireAdmin, async (c) => {
+  return c.html(renderAdminTodoPage())
 })
 
 export { adminRoutes }

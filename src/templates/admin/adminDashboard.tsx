@@ -136,6 +136,71 @@ export function renderAdminDashboard(props: AdminDashboardProps): string {
       </a>
     </div>
 
+    <!-- 운영 페이지 허브 (정책 enforcement·dispute·community) -->
+    <div class="glass-card rounded-xl p-4 sm:p-5 mb-6 sm:mb-8">
+      <h3 class="text-lg font-semibold flex items-center gap-2 mb-4">
+        <i class="fas fa-shield-halved text-blue-400"></i>
+        운영 (정책)
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <a href="/admin/moderation" class="stat-card glass-card rounded-xl p-4 block hover:border-rose-400/40 transition" style="border:1px solid rgba(148,163,184,0.15);">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-rose-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <i class="fas fa-gavel text-rose-400"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-white">신고 검토 큐</p>
+              <p class="text-xs text-slate-400">유지·삭제·경고·수정요청</p>
+            </div>
+          </div>
+        </a>
+        <a href="/admin/sanctions" class="stat-card glass-card rounded-xl p-4 block hover:border-red-400/40 transition" style="border:1px solid rgba(148,163,184,0.15);">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <i class="fas fa-ban text-red-400"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-white">제재 부과·관리</p>
+              <p class="text-xs text-slate-400">단계제 + 즉시 영구</p>
+            </div>
+          </div>
+        </a>
+        <a href="/admin/appeals" class="stat-card glass-card rounded-xl p-4 block hover:border-blue-400/40 transition" style="border:1px solid rgba(148,163,184,0.15);">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <i class="fas fa-scale-balanced text-blue-400"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-white">이의제기 검토</p>
+              <p class="text-xs text-slate-400">소명·30일 임시조치</p>
+            </div>
+          </div>
+        </a>
+        <a href="/admin/admin-replies" class="stat-card glass-card rounded-xl p-4 block hover:border-emerald-400/40 transition" style="border:1px solid rgba(148,163,184,0.15);">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <i class="fas fa-user-shield text-emerald-400"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-white">관리자 답글 승인</p>
+              <p class="text-xs text-slate-400">댓글 답글 신원 검증</p>
+            </div>
+          </div>
+        </a>
+        <a href="/admin/todo" class="stat-card glass-card rounded-xl p-4 block hover:border-amber-400/40 transition" style="border:1px solid rgba(148,163,184,0.15);">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <i class="fas fa-list-check text-amber-400"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-white">잔여 작업·미구현</p>
+              <p class="text-xs text-slate-400">다음 뭐 해야 되지?</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
     <!-- 순방문자 (UV) -->
     ${uvStats ? `
     <div class="glass-card rounded-xl p-4 sm:p-5 mb-6 sm:mb-8">

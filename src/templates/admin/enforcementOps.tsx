@@ -2,7 +2,7 @@
  * 운영자 enforcement 작업 페이지 (단일 파일에 3개 페이지 통합)
  * - /admin/sanctions      : 제재 부과 + 사용자 활성 제재 조회
  * - /admin/appeals        : 이의제기·소명 검토
- * - /admin/company-replies: 회사 답글 승인
+ * - /admin/company-replies: 관리자 답글 승인
  */
 
 import { renderNav, renderNavStyles, renderNavScripts } from '../partials/nav'
@@ -264,7 +264,7 @@ export function renderCompanyRepliesAdminPage(props: CompanyRepliesPageProps): s
   return `<!DOCTYPE html>
 <html lang="ko"><head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>회사 답글 승인 | Careerwiki Admin</title>
+  <title>관리자 답글 승인 | Careerwiki Admin</title>
   ${SHARED_HEAD}
   ${renderNavStyles()}
 </head>
@@ -273,7 +273,7 @@ export function renderCompanyRepliesAdminPage(props: CompanyRepliesPageProps): s
   <main class="max-w-[1400px] mx-auto px-3 md:px-4 pt-20 pb-10 sm:pt-12">
     <header class="mb-6">
       <p class="text-xs text-emerald-300 font-semibold uppercase tracking-[0.2em]">관리자 — 회사 답글</p>
-      <h1 class="text-3xl font-bold text-white mt-2">회사 답글 승인</h1>
+      <h1 class="text-3xl font-bold text-white mt-2">관리자 답글 승인</h1>
       <p class="text-wiki-muted mt-2 text-sm">Glassdoor 모델 — 정책 <a href="/policy/community#company-review" class="text-blue-300 hover:underline">community §6-B</a>. 댓글당 1회 답글 가능, 운영자 신원 검증 후 승인.</p>
     </header>
     ${flashHtml(props.flash)}

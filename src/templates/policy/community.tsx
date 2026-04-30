@@ -95,7 +95,7 @@ export function renderCommunityPolicyPage(options?: PolicyPageOptions): string {
         </ol>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">D. 회색지대 (검토 → 양측 의견 병기 가능)</h3>
         <ol class="list-decimal list-inside space-y-1">
-          <li>부정적 회사 후기 — 사실 기반 + 인신공격 없으면 <strong>유지 원칙</strong> (Glassdoor 모델). 회사 반론권 1회 부여.</li>
+          <li>부정적 회사 후기 — 사실 기반 + 인신공격 없으면 <strong>유지 원칙</strong> (Glassdoor 모델). 회사 측이 반론하려면 운영팀에 신원 확인 후 관리자 답글로 1회 등록 가능.</li>
           <li>교수·강사 평가 — 강의 내용·진행 평가는 OK, 외모·사생활 언급 NG (에브리타임 강의평 모델).</li>
           <li>익명 폭로성 글 — "있었던 일" 진술은 OK, 단 특정 가능한 정보 동반 시 A·B 적용.</li>
         </ol>
@@ -167,7 +167,7 @@ export function renderCommunityPolicyPage(options?: PolicyPageOptions): string {
     },
     {
       id: 'company-review',
-      title: '제6조 회사·학교 비방 후기 처리',
+      title: '제6조 회사·학교 부정 후기 처리 + 관리자 답글',
       content: `
         <p><strong>원칙</strong>: 사실 기반 부정 후기는 <strong>유지</strong>, 인신공격·허위·기밀은 <strong>삭제</strong>.</p>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">A. 구체 룰</h3>
@@ -183,9 +183,10 @@ export function renderCommunityPolicyPage(options?: PolicyPageOptions): string {
             <tr><td>"○○대 △△교수가 [사생활 추정]"</td><td>❌ 삭제 (사생활)</td></tr>
           </tbody>
         </table>
-        <h3 class="text-base font-semibold text-white mt-4 mb-2">B. 회사 반론권 (Glassdoor 모델)</h3>
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">B. 회사·학교 측 반론권 (Glassdoor 모델 변형)</h3>
         <ul class="list-disc list-inside space-y-1">
-          <li>회사가 자사 페이지의 부정 후기에 <strong>1회 답글 가능</strong> (운영팀이 회사 측 신원·소속 확인 후).</li>
+          <li>회사·학교가 자사 페이지의 부정 후기에 반론하고자 하면 <code>contact@careerwiki.org</code>로 신청.</li>
+          <li>운영팀이 신원·소속을 확인한 뒤 <strong>관리자 답글</strong>로 1회 등록합니다(같은 댓글에 답글 1회 한정).</li>
           <li>답글도 모더레이션 대상 (작성자 협박·법적 위협 금지).</li>
           <li>분쟁 미해결 시 "양측 의견 병기" 라벨로 처리.</li>
         </ul>

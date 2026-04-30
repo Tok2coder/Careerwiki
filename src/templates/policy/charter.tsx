@@ -180,46 +180,51 @@ export function renderCharterPage(options?: PolicyPageOptions): string {
     },
     {
       id: 'license',
-      title: '제6장 라이선스 (잠정)',
+      title: '제6장 라이선스 — 가능한 한 자유롭게',
       content: `
-        <p>Careerwiki의 콘텐츠는 영역별로 라이선스가 다릅니다.</p>
+        <p>Careerwiki는 진로 정보가 가능한 한 많은 사람에게 닿기를 원합니다. 그래서 다음과 같은 가벼운 라이선스를 채택합니다.</p>
         <table>
           <thead>
-            <tr><th>콘텐츠</th><th>라이선스 (잠정)</th><th>이용 조건</th></tr>
+            <tr><th>콘텐츠</th><th>라이선스</th><th>이용 조건</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td>위키 본문 (직업·전공 페이지)</td>
-              <td>CC BY 4.0 검토 중</td>
-              <td>출처 표기 시 자유 인용·재배포 가능</td>
+              <td><strong>위키 본문 (직업·전공 페이지)</strong></td>
+              <td><strong>CC BY 4.0</strong></td>
+              <td>출처 표기만 하면 누구나 자유롭게 인용·재배포·가공·상업적 이용 가능. AI 학습·추천·분석 활용 명시 허용.</td>
             </tr>
             <tr>
               <td>HowTo 가이드 본문</td>
-              <td>작성자 보유</td>
-              <td>Careerwiki에 비독점·국내외 무기한 사용권 부여</td>
+              <td>작성자 보유 (default)</td>
+              <td>Careerwiki에 비독점·전 세계·무기한 사용권 부여. 작성자가 원하면 발행 시 CC BY 4.0 옵션 선택 가능.</td>
             </tr>
             <tr>
-              <td>댓글</td>
+              <td>댓글·후기</td>
               <td>작성자 보유</td>
-              <td>Careerwiki에 비독점·국내외 무기한 사용권 부여</td>
+              <td>Careerwiki에 비독점·무기한 사용권 부여 (서비스 운영·표시·검색 노출 목적).</td>
             </tr>
             <tr>
               <td>이미지 (R2 업로드)</td>
               <td>업로드자 책임</td>
-              <td>저작권 침해 발견 시 즉시 삭제</td>
+              <td>저작권 침해 발견 시 즉시 삭제. 본인 촬영·CC 라이선스·공공저작물만 업로드 권장.</td>
             </tr>
             <tr>
               <td>공공데이터 (커리어넷·고용24 등)</td>
               <td>원 제공기관 귀속</td>
-              <td>Careerwiki는 가공·재구성하여 제공</td>
+              <td>Careerwiki는 가공·재구성하여 제공. 원 출처 표기.</td>
             </tr>
           </tbody>
         </table>
-        <div class="callout-warn callout">
-          <strong>잠정 표기 이유:</strong> CC BY 4.0 적용 여부는
-          외부 인용 활용도, 광고·후원 결합 가능성, 사용자 의견을 종합하여 정식 결정합니다.
-          그 전까지는 "타인의 콘텐츠를 무단 가져가지 않기 + 출처 표기"라는 기본 원칙을 따라주세요.
+        <div class="callout-good callout">
+          <strong>왜 CC BY 4.0인가</strong>
+          <ul class="list-disc list-inside mt-2 space-y-1">
+            <li>출처만 적으면 누구나 자유롭게 사용 — 진로 정보 확산이 우선이라고 봅니다.</li>
+            <li>유료 AI 추천·광고·검색 통합 등 상업적 이용도 자유 (출처 표기 의무만).</li>
+            <li>다른 위키 (위키백과 CC BY-SA 등) 와의 호환성도 우수.</li>
+            <li>AI 학습·임베딩·재가공 활용 명시 허용 (Careerwiki도 OpenAI 같은 외부 AI를 사용하므로 양방향 OK).</li>
+          </ul>
         </div>
+        <p class="mt-3 text-sm text-slate-400">출처 표기 형식 예시: <em>"본 글은 Careerwiki(careerwiki.org)에서 인용. CC BY 4.0"</em></p>
       `
     },
     {
