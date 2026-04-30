@@ -21,6 +21,7 @@ import {
 import { composeDetailSlug } from '../utils/slug'
 import { renderKoreaMap, normalizeRegionName, type RegionData } from '../components/koreaMap'
 import { inferRegionFromUniversityName } from '../utils/universityRegionMapper'
+import { renderSafetyBannersForText } from '../utils/safety'
 
 export interface RelatedMajorItem {
   id: string
@@ -2740,8 +2741,20 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       `
     : `<div class="space-y-6" data-major-layout>${tabLayout}</div>`
 
+  // 안전 배너: 본문에 자살·자해/학교폭력 신호가 있으면 페이지 상단에 109/1393·117/1388 안내
+  // (정책 wiki/major §7, community §5/§7-C)
+  const safetyScanText = JSON.stringify({
+    name: profile.name,
+    summary: (profile as any).summary,
+    overview: (profile as any).overview,
+    curriculum: (profile as any).curriculum,
+    career: (profile as any).career,
+  })
+  const safetyBannersBlock = renderSafetyBannersForText(safetyScanText)
+
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-major-id="${escapeHtml(profile.id)}">
+      ${safetyBannersBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
           ${classificationData?.large_category

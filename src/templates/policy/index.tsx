@@ -134,6 +134,14 @@ const CARDS: PolicyCard[] = [
     color: 'from-neutral-500/20 to-stone-500/20 border-neutral-400/30 text-neutral-200',
     title: '개인정보처리방침',
     desc: '수집 항목, 처리 위탁, 보유 기간, 쿠키, 이용자 권리.'
+  },
+  {
+    group: 'help',
+    href: '/legal/notice',
+    icon: 'fa-bullhorn',
+    color: 'from-rose-500/20 to-pink-500/20 border-rose-400/30 text-rose-200',
+    title: '권리침해 신고 안내',
+    desc: '저작권·명예훼손·개인정보 침해 신고 절차. 정보통신망법 30일 임시조치.'
   }
 ]
 

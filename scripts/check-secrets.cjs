@@ -135,7 +135,7 @@ function main() {
           if (/Kakao\.init\(/.test(line)) break;
           // 라인이 명백한 비-secret 컨텍스트
           const lineLower = line.toLowerCase();
-          if (/^\s*(import|from|require|\/\/|\*|#|export\s+(type|interface|const\s+[A-Z]))/.test(line)) break;
+          if (/^\s*(import\b|from\b|require\b|\/\/|\*|#|export\s+(type|interface|const|function|class|enum|default|async)\b|const\s+|let\s+|var\s+|function\s+|interface\s+|type\s+|class\s+|enum\s+|namespace\s+|module\s+|declare\s+)/.test(line)) break;
           // 값 할당 컨텍스트 없음 (=, :, " ", ' ')
           const ctxStart = Math.max(0, m.index - 3);
           const ctx = line.substring(ctxStart, m.index + matched.length + 3);

@@ -896,6 +896,38 @@ export const reportComment = async (db: D1Database, payload: ReportPayload): Pro
 
   await recalcCommentReports(db, payload.commentId)
 
+  // 자살·자해/긴급 신고 우선순위 태그 (정책 community §5, enforcement SLA 2시간)
+  // - 신고 사유 또는 댓글 본문에 자살자해 신호가 있으면 우선순위 'urgent'로 마킹
+  try {
+    const { detectSelfHarmSignal, detectSelfHarmMethod } = await import('../utils/safety')
+    const reasonText = (payload.reason || '').toString()
+    const commentRow = await db
+      .prepare('SELECT content FROM comments WHERE id = ? LIMIT 1')
+      .bind(payload.commentId)
+      .first<{ content: string }>()
+    const commentText = commentRow?.content || ''
+    const isUrgent =
+      detectSelfHarmSignal(reasonText) ||
+      detectSelfHarmSignal(commentText) ||
+      detectSelfHarmMethod(commentText) ||
+      /(\[긴급\]|아동성착취|살해\s?협박|자해|자살)/i.test(reasonText)
+
+    if (isUrgent) {
+      // 운영자 대시보드용 - 신고 status를 우선순위 표시 (sanitize된 reason 끝에 [URGENT] 태그)
+      await db
+        .prepare(
+          `UPDATE comment_reports
+           SET reason = COALESCE(reason, '') || ' [URGENT-2H-SLA]'
+           WHERE comment_id = ? AND reporter_id = ?`
+        )
+        .bind(payload.commentId, payload.reporterId)
+        .run()
+    }
+  } catch (err) {
+    // 안전: 우선순위 태그 실패해도 신고 자체는 성공시킨다
+    console.error('[reportComment] urgent-tag failed:', err)
+  }
+
   const row = await db
     .prepare(
       `SELECT id, page_id, parent_id, author_id, nickname, content, likes, dislike_count, report_count,

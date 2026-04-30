@@ -1008,6 +1008,17 @@ export const renderCommentsPlaceholder = ({
 
   const composerBlock = composerEnabled
     ? `
+    <details class="cw-safety-summary" style="margin-bottom: 12px;">
+      <summary style="cursor:pointer; font-size:0.8rem; color:#94a3b8; padding: 8px 12px; background: rgba(148,163,184,0.06); border: 1px solid rgba(148,163,184,0.16); border-radius: 10px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-life-ring" style="color:#fbbf24;"></i>
+        <span>혼자 감당하기 힘든 일이라면 — 무료 상담 안내 보기</span>
+      </summary>
+      <div style="margin-top:8px; padding: 12px 14px; border-radius:10px; border:1px solid rgba(248,113,113,0.35); background:rgba(248,113,113,0.06); color:#fecaca; font-size:0.82rem; line-height:1.55;">
+        <strong>자살예방상담 109</strong> · <strong>정신건강 위기상담 1577-0199</strong> · <strong>청소년상담 1388</strong> (카톡 #1388) — 24시간 무료입니다. 학교폭력은 <strong>117</strong>.
+        <span style="display:block; opacity:0.78; margin-top:4px;">진로 고민도 함께 들어드립니다. 혼자 두지 마세요.</span>
+      </div>
+    </details>
+    <div data-cw-selfharm-banner-slot></div>
     <form class="space-y-1.5" data-cw-comment-form data-cw-telemetry-scope="comment-form" data-cw-telemetry-component="comment-form" novalidate aria-describedby="${statusMessageId}">
       <div class="flex flex-col sm:flex-row sm:items-start sm:gap-3">
         <div class="flex-1 space-y-3">

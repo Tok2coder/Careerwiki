@@ -11,6 +11,7 @@ import {
 import { renderOnboardingPage } from '../templates/onboarding'
 import { renderTermsPage } from '../templates/legal/terms'
 import { renderPrivacyPage } from '../templates/legal/privacy'
+import { renderNoticePage } from '../templates/legal/notice'
 import { renderHelpPage } from '../templates/help'
 import { renderAboutPage } from '../templates/about'
 import { renderPolicyIndexPage } from '../templates/policy/index'
@@ -193,6 +194,14 @@ pagesRoutes.get('/legal/privacy', async (c) => {
   const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
   const userMenuHtml = renderUserMenu(userData)
   return c.html(renderPrivacyPage({ userMenuHtml }))
+})
+
+// 권리침해 신고 안내 페이지 (정보통신망법 임시조치)
+pagesRoutes.get('/legal/notice', async (c) => {
+  const user = c.get('user')
+  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
+  const userMenuHtml = renderUserMenu(userData)
+  return c.html(renderNoticePage({ userMenuHtml }))
 })
 
 pagesRoutes.get('/help', async (c) => {

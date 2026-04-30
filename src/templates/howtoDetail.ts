@@ -1,6 +1,7 @@
 import type { HowtoGuideDetail } from '../types/howto'
 import type { CommentPolicyAttributes } from './detailTemplateUtils'
 import { renderCommentsPlaceholder, resolveCommentPolicy, renderAdSlot, sanitizeJson } from './detailTemplateUtils'
+import { renderSafetyBannersForText, renderAdDisclosureBanner, autoAffiliateRel } from '../utils/safety'
 
 // 본문 HTML에서 h2를 파싱하여 id를 부여하고 TOC를 생성 (H2만 표시)
 function generateTocFromHtml(html: string): { processedHtml: string; tocHtml: string } {
@@ -549,9 +550,35 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
   // 각주 섹션 렌더링 (sourcesCollapsible에서 통합 렌더링하므로 본문 내 섹션은 제거)
   const footnotesSection = ''
 
+  // ── 안전 배너 (정책 community §5, wiki §7): 본문 자살자해/학교폭력 신호 자동 감지
+  const safetyScanText = JSON.stringify({
+    title: guide.title,
+    summary: guide.summary,
+    sampleNote: guide.sampleNote,
+    rawHtml: guide.rawHtml,
+    steps: guide.steps,
+    prerequisites: guide.prerequisites,
+    checkpoints: guide.checkpoints,
+  })
+  const safetyBannersBlock = renderSafetyBannersForText(safetyScanText)
+
+  // ── 광고/협찬/제휴 표시 박스 (정책 howto §4 — 공정거래위원회 추천보증 심사지침 강행 규정)
+  const disclosureType = (guide as any).adDisclosure?.type as ('ad' | 'sponsored' | 'paid' | 'affiliate' | 'received' | undefined)
+  const disclosureDetail = (guide as any).adDisclosure?.detail as (string | undefined)
+  const adDisclosureBlock = disclosureType ? renderAdDisclosureBanner(disclosureType, disclosureDetail) : ''
+
+  // ── affiliate 링크 자동 sponsored nofollow 부여 (정책 howto §4-D)
+  const processedRawHtml = guide.rawHtml ? autoAffiliateRel(guide.rawHtml, 'careerwiki.org') : guide.rawHtml
+
   // 블로그 형태: 모든 내용을 하나의 글로 쭉쭉 나열
   const blogContent = `
     <article class="prose prose-invert max-w-none space-y-10 overflow-x-hidden" data-cw-telemetry-component="howto-blog-content" style="min-width: 0; overflow-x: hidden; word-break: break-word;">
+      <!-- 광고/협찬 표시 박스 (있는 경우 — 공정위 의무) -->
+      ${adDisclosureBlock}
+
+      <!-- 안전 배너 (자살자해·학교폭력 신호 검출 시) -->
+      ${safetyBannersBlock}
+
       <!-- 샘플 노트 (있는 경우) -->
       ${guide.sampleNote ? `
         <section class="space-y-4">
@@ -566,8 +593,8 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
       ${checkpoints}
 
       <!-- 본문: 자유 형식 HTML 또는 단계별 가이드 -->
-      ${guide.rawHtml ? (() => {
-        const { processedHtml, tocHtml } = generateTocFromHtml(guide.rawHtml)
+      ${processedRawHtml ? (() => {
+        const { processedHtml, tocHtml } = generateTocFromHtml(processedRawHtml)
         return tocHtml + `
         <section class="howto-user-content" data-cw-telemetry-component="howto-rawhtml">
           ${processedHtml}

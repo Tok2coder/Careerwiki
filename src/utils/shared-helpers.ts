@@ -120,6 +120,8 @@ export const renderFooter = (): string => `
           <a href="/legal/terms" class="hover:text-wiki-muted transition-colors">이용약관</a>
           <span class="text-wiki-muted/30">|</span>
           <a href="/legal/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
+          <span class="text-wiki-muted/30">|</span>
+          <a href="/legal/notice" class="hover:text-wiki-muted transition-colors">권리침해 신고</a>
         </div>
         <span class="text-wiki-text font-semibold" style="font-size: 15px;">© 2026 Careerwiki</span>
       </div>

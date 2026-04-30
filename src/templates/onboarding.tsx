@@ -269,7 +269,7 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
           </label>
           
           <!-- 개인정보처리방침 -->
-          <label class="checkbox-card border border-slate-600 rounded-lg p-4 flex items-start gap-3 mb-6 cursor-pointer" id="privacy-card">
+          <label class="checkbox-card border border-slate-600 rounded-lg p-4 flex items-start gap-3 mb-3 cursor-pointer" id="privacy-card">
             <input type="checkbox" id="privacy-check" class="w-5 h-5 accent-green-500 bg-slate-800 border border-slate-500 rounded mt-0.5 flex-shrink-0">
             <div class="flex-1">
               <div class="flex items-center justify-between">
@@ -279,7 +279,17 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
               <p class="text-xs text-slate-500 mt-1">버전: ${CONSENT_VERSIONS.privacy}</p>
             </div>
           </label>
-          
+
+          <!-- 만 14세 이상 확인 (정보통신망법 제31조) -->
+          <label class="checkbox-card border border-slate-600 rounded-lg p-4 flex items-start gap-3 mb-3 cursor-pointer" id="age-card">
+            <input type="checkbox" id="age-check" class="w-5 h-5 accent-green-500 bg-slate-800 border border-slate-500 rounded mt-0.5 flex-shrink-0">
+            <div class="flex-1">
+              <span class="font-medium">[필수] 만 14세 이상이거나 법정대리인 동의를 받았습니다</span>
+              <p class="text-xs text-slate-500 mt-1">정보통신망법 제31조에 따라, 만 14세 미만은 법정대리인의 동의가 필요합니다. 만 14세 미만이 본 서비스를 이용하시려면 보호자의 동의 후 가입해 주세요.</p>
+              <p class="text-xs text-amber-300/80 mt-1">자세한 절차는 <a href="mailto:contact@careerwiki.org?subject=%5B%EB%AF%B8%EC%84%B1%EB%85%84%EC%9E%90%5D%20%EB%B2%95%EC%A0%95%EB%8C%80%EB%A6%AC%EC%9D%B8%20%EB%8F%99%EC%9D%98" class="text-amber-300 hover:underline">contact@careerwiki.org</a>로 문의해 주세요.</p>
+            </div>
+          </label>
+
           <div class="flex gap-3">
             <button
               id="btn-step3-back"
@@ -318,7 +328,8 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
         interestState: '',
         careerState: '',
         termsAgreed: false,
-        privacyAgreed: false
+        privacyAgreed: false,
+        ageAgreed: false
       };
 
       const returnUrl = ${JSON.stringify(returnUrl)};
@@ -519,6 +530,16 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
         updateButtons();
       }
 
+      const $ageCheck = document.getElementById('age-check');
+      const $ageCard = document.getElementById('age-card');
+
+      function syncAge(checked) {
+        state.ageAgreed = checked;
+        if ($ageCheck) $ageCheck.checked = checked;
+        if ($ageCard) $ageCard.classList.toggle('checked', checked);
+        updateButtons();
+      }
+
       $termsCheck.addEventListener('change', (e) => {
         syncTerms(e.target.checked);
       });
@@ -526,6 +547,12 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
       $privacyCheck.addEventListener('change', (e) => {
         syncPrivacy(e.target.checked);
       });
+
+      if ($ageCheck) {
+        $ageCheck.addEventListener('change', (e) => {
+          syncAge(e.target.checked);
+        });
+      }
 
       $termsCard.addEventListener('click', (e) => {
         if (e.target.tagName === 'A' || e.target === $termsCheck) return;
@@ -537,14 +564,21 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
         syncPrivacy(!$privacyCheck.checked);
       });
 
+      if ($ageCard) {
+        $ageCard.addEventListener('click', (e) => {
+          if (e.target.tagName === 'A' || e.target === $ageCheck) return;
+          syncAge(!$ageCheck.checked);
+        });
+      }
+
       // 버튼 상태 업데이트
       function updateButtons() {
         $btnStep1Next.disabled = !state.nicknameOk;
-        
+
         const channelValid = state.channel && (state.channel !== 'other' || state.channelOther.length >= 1);
         $btnStep2Next.disabled = !channelValid;
-        
-        $btnSubmit.disabled = !(state.termsAgreed && state.privacyAgreed);
+
+        $btnSubmit.disabled = !(state.termsAgreed && state.privacyAgreed && state.ageAgreed);
       }
 
       // 네비게이션
@@ -568,7 +602,8 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
           career_state: state.careerState || undefined,
           consents: [
             { type: 'terms', version: consentVersions.terms },
-            { type: 'privacy', version: consentVersions.privacy }
+            { type: 'privacy', version: consentVersions.privacy },
+            { type: 'age14', version: '1.0' }
           ]
         };
         

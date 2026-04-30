@@ -30,6 +30,7 @@ import {
 import type { FootnoteMap } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
+import { renderSafetyBannersForText } from '../utils/safety'
 
 export interface UnifiedJobDetailTemplateParams {
   profile: UnifiedJobDetail
@@ -5097,8 +5098,24 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const adSlotBlock = renderAdSlot({ entityType: 'job' })
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
+  // 안전 배너: 본문에 자살·자해/학교폭력 신호가 있으면 페이지 상단에 109/1393·117/1388 안내
+  // (정책 wiki/job §7, community §5)
+  const safetyScanText = JSON.stringify({
+    title: profile.heroTitle || profile.name,
+    summary: profile.summary,
+    heroIntro: profile.heroIntro,
+    work: profile.work,
+    detailWlb: profile.detailWlb,
+    trivia: profile.trivia,
+    cons: (profile as any).cons,
+    pros: (profile as any).pros,
+    way: profile.way,
+  })
+  const safetyBannersBlock = renderSafetyBannersForText(safetyScanText)
+
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
+      ${safetyBannersBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">
