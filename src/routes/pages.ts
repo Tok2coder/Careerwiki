@@ -13,6 +13,17 @@ import { renderTermsPage } from '../templates/legal/terms'
 import { renderPrivacyPage } from '../templates/legal/privacy'
 import { renderHelpPage } from '../templates/help'
 import { renderAboutPage } from '../templates/about'
+import { renderPolicyIndexPage } from '../templates/policy/index'
+import { renderCharterPage } from '../templates/policy/charter'
+import { renderSourceTierPage } from '../templates/policy/sourceTier'
+import { renderWikiJobPage } from '../templates/policy/wikiJob'
+import { renderWikiMajorPage } from '../templates/policy/wikiMajor'
+import { renderHowtoPolicyPage } from '../templates/policy/howto'
+import { renderCommunityPolicyPage } from '../templates/policy/community'
+import { renderDisputePage } from '../templates/policy/dispute'
+import { renderEnforcementPage } from '../templates/policy/enforcement'
+import { renderTransparencyPage } from '../templates/policy/transparency'
+import { renderGlossaryPage } from '../templates/policy/glossary'
 import { renderNav, renderNavStyles, renderNavScripts } from '../templates/partials/nav'
 import {
   getOnboardingStatus,
@@ -197,6 +208,63 @@ pagesRoutes.get('/about', async (c) => {
   const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
   const userMenuHtml = renderUserMenu(userData)
   return c.html(renderAboutPage({ userMenuHtml }))
+})
+
+// === 정책 페이지 (Policy Hub) ===
+// 사용자 메뉴 HTML을 생성하는 헬퍼
+const buildUserMenu = (c: any) => {
+  const user = c.get('user')
+  const userData = user ? { id: user.id, name: user.name, email: user.email, role: user.role, picture_url: user.picture_url, custom_picture_url: user.custom_picture_url, username: user.username } : null
+  return renderUserMenu(userData)
+}
+
+pagesRoutes.get('/policy', async (c) => {
+  return c.html(renderPolicyIndexPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/policy/charter', async (c) => {
+  return c.html(renderCharterPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/policy/source-tier', async (c) => {
+  return c.html(renderSourceTierPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/policy/wiki/job', async (c) => {
+  return c.html(renderWikiJobPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/policy/wiki/major', async (c) => {
+  return c.html(renderWikiMajorPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/policy/howto', async (c) => {
+  return c.html(renderHowtoPolicyPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/policy/community', async (c) => {
+  return c.html(renderCommunityPolicyPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+// 기존 /help/community-guidelines 링크 호환성 — 새 정책 페이지로 리다이렉트
+pagesRoutes.get('/help/community-guidelines', async (c) => {
+  return c.redirect('/policy/community', 301)
+})
+
+pagesRoutes.get('/policy/dispute', async (c) => {
+  return c.html(renderDisputePage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/policy/enforcement', async (c) => {
+  return c.html(renderEnforcementPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/policy/transparency', async (c) => {
+  return c.html(renderTransparencyPage({ userMenuHtml: buildUserMenu(c) }))
+})
+
+pagesRoutes.get('/help/glossary', async (c) => {
+  return c.html(renderGlossaryPage({ userMenuHtml: buildUserMenu(c) }))
 })
 
 // 릴리즈 노트 (사용자 대상 — feat/fix만 필터링)

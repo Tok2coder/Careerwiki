@@ -118,6 +118,30 @@ const SECTIONS: HelpSection[] = [
     ]
   },
   {
+    id: 'policy',
+    title: '운영 정책',
+    desc: '편집·커뮤니티 정책 한눈에',
+    items: [
+      { title: '정책 인덱스 (/policy)', body: '헌장, 위키 편집지침, HowTo 발행지침, 커뮤니티 운영지침, 토론·합의 절차서, 신고·이의·제재 절차서를 한 페이지에서 둘러볼 수 있습니다.' },
+      { title: '기본방침 (헌장)', body: 'Careerwiki의 가치, 5대 영역의 정체성, 이용자 권리·의무, 라이선스, 규정 개정 절차를 담은 최상위 문서입니다. /policy/charter' },
+      { title: '출처 신뢰성 등급표', body: '직업·전공 데이터 출처를 1~8순위로 분류한 핵심 기준. 모든 위키 편집·분쟁 처리의 결정 룰입니다. /policy/source-tier' },
+      { title: '편집 분쟁이 났을 때', body: '발제 → 합의안 → 이의 제기 기간 → 종결까지의 토론 절차를 따라가시면 됩니다. /policy/dispute' },
+      { title: '신고·이의·제재', body: '신고 5단계 처리 흐름, 단계제 제재(경고→7일→30일→영구), 소명 절차를 안내합니다. /policy/enforcement' },
+      { title: '용어 사전', body: '발제, 합의, 존치측, 신뢰성 등급, 임시조치 등 정책에 등장하는 용어 풀이입니다. /help/glossary' }
+    ]
+  },
+  {
+    id: 'edit',
+    title: '편집 시작하기',
+    desc: '직업·전공 페이지 편집',
+    items: [
+      { title: '누가 편집할 수 있나요?', body: '가입 후 1일 이상 경과한 회원이라면 누구나 직업·전공 페이지를 편집할 수 있습니다. 가입 7일 + 편집 5건 이상이 되면 보호된 페이지도 편집 가능합니다.' },
+      { title: '개인 의견도 쓸 수 있나요?', body: '쓸 수 있습니다. 다만 본문에 [개인 의견] 라벨을 붙여주세요. 출처 등급 룰을 적용받지 않는 대신 라벨 의무가 있습니다.' },
+      { title: '출처는 어떻게 다나요?', body: '본문 [N] 각주 + 페이지 하단 references 목록입니다. 통계는 KOSIS·워크넷 같은 2순위 이상 직접 인용을 권장합니다. 자세한 등급은 /policy/source-tier 참조.' },
+      { title: '편집 분쟁이 나면?', body: '서로 다른 의견이 있을 때 토론을 열어 해결합니다. 페이지 옆 "토론" 버튼 → 발제 → 합의안 제시 → 이의 제기 기간 → 종결. 자세히는 /policy/dispute.' }
+    ]
+  },
+  {
     id: 'legal',
     title: '약관/정책',
     desc: '법적 고지 문서',
@@ -191,8 +215,10 @@ export function renderHelpPage(options?: HelpPageOptions): string {
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <h1 class="text-3xl md:text-4xl font-bold text-white">무엇을 도와드릴까요?</h1>
         <div class="flex gap-2 flex-wrap">
+          <a href="/policy" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-indigo-400/60 text-sm text-indigo-200 hover:bg-indigo-500/10">정책 인덱스</a>
+          <a href="/help/glossary" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-slate-200 hover:border-blue-500">용어 사전</a>
           <a href="/feedback" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-blue-300 hover:border-blue-500">피드백</a>
-          <a href="/help/community-guidelines" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-emerald-200 hover:border-emerald-400">커뮤니티 정책</a>
+          <a href="/policy/community" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-emerald-200 hover:border-emerald-400">커뮤니티 정책</a>
           <a href="/releases" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-slate-200 hover:border-blue-500">릴리즈 노트</a>
           <a href="/about" class="px-4 py-2.5 min-h-[44px] flex items-center rounded-lg border border-slate-700 text-sm text-amber-200 hover:border-amber-400">소개</a>
         </div>

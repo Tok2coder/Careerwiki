@@ -112,7 +112,11 @@ export const renderFooter = (): string => `
         </nav>
       </div>
       <div class="flex md:hidden flex-col items-center gap-3 pt-6 border-t border-wiki-border/20">
-        <div class="flex items-center gap-4 text-wiki-muted/60" style="font-size: 14px;">
+        <div class="flex items-center gap-3 flex-wrap justify-center text-wiki-muted/60" style="font-size: 14px;">
+          <a href="/policy" class="hover:text-wiki-muted transition-colors">정책</a>
+          <span class="text-wiki-muted/30">|</span>
+          <a href="/help" class="hover:text-wiki-muted transition-colors">도움말</a>
+          <span class="text-wiki-muted/30">|</span>
           <a href="/legal/terms" class="hover:text-wiki-muted transition-colors">이용약관</a>
           <span class="text-wiki-muted/30">|</span>
           <a href="/legal/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>
@@ -130,7 +134,11 @@ export const renderFooter = (): string => `
           <a href="/howto" class="footer-nav-link">HowTo</a>
         </nav>
         <div class="flex flex-col items-end gap-2">
-          <div class="flex items-center gap-4 text-wiki-muted/60" style="font-size: 14px;">
+          <div class="flex items-center gap-3 flex-wrap text-wiki-muted/60" style="font-size: 14px;">
+            <a href="/policy" class="hover:text-wiki-muted transition-colors">정책</a>
+            <span class="text-wiki-muted/30">|</span>
+            <a href="/help" class="hover:text-wiki-muted transition-colors">도움말</a>
+            <span class="text-wiki-muted/30">|</span>
             <a href="/legal/terms" class="hover:text-wiki-muted transition-colors">이용약관</a>
             <span class="text-wiki-muted/30">|</span>
             <a href="/legal/privacy" class="hover:text-wiki-muted transition-colors">개인정보처리방침</a>

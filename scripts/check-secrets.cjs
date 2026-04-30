@@ -131,6 +131,8 @@ function main() {
           if (/^[a-z][a-z0-9_]*$/.test(matched)) break;
           // camelCase 함수·변수명 (소문자 시작 + 대소문자 혼용, _·- 없음)
           if (/^[a-z][a-zA-Z0-9]+$/.test(matched)) break;
+          // Kakao JavaScript SDK 공개 App Key — 클라이언트에서 노출이 정상
+          if (/Kakao\.init\(/.test(line)) break;
           // 라인이 명백한 비-secret 컨텍스트
           const lineLower = line.toLowerCase();
           if (/^\s*(import|from|require|\/\/|\*|#|export\s+(type|interface|const\s+[A-Z]))/.test(line)) break;
