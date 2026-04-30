@@ -1290,24 +1290,33 @@ fetch(url).then(r => Promise.all([r.status, r.text()])).then(([status, body]) =>
 # 4xx/5xx → FAIL, body가 비정상이면 FAIL
 ```
 
-**2단계: 키워드 매칭 검증** (LLM 자가 검증 필수, 자동화 어려운 SPA/한국 차단 사이트는 LLM이 본인이 본 페이지 내용 기반으로 자가 확인)
-- 본문에서 [N]으로 인용한 핵심 명사 1~2개가 출처 페이지 텍스트에 실제로 등장하는지 확인
+**2단계: 키워드 매칭 검증 (WebFetch 강제)**
+- WebFetch 후 응답 본문에서 직업명/핵심 키워드 1~2개가 실제 등장하는지 확인
 - 예: way 본문에 "한국변호사협회는 ~을 권장한다.[1]" 인용 시 → _sources["way"][0].url 페이지에서 "변호사" 또는 "권장" 단어가 등장해야 함
 - 키워드 mismatch 시 → 출처 교체 또는 본문 수정 필수
 
-**3단계: WebFetch 어려운 경우 (한국 차단 / SPA / robots / 기관 사이트)**
-- LLM 자가 검증 강제: enhance subagent가 _sources 등록 *전*에 "이 URL이 이 내용을 정말 커버하는지" 1줄 명시 (예: "[ ] kna.or.kr/discipline/curriculum 페이지에 '간호학과 4년제 졸업' 키워드 직접 확인됨")
-- 검증 못한 URL은 _sources에 등록 금지 — 출처 조작 절대 금지
+**3단계: WebFetch 차단/실패 시** 🚨 **2026-04-30 사고 후 강화**
+- ❌ **"LLM 자가 검증 1줄" 도피 조항 폐기.** WebFetch 못 한 URL은 _sources 등록 절대 금지 — LLM training-knowledge 기반 URL 추정은 hallucination을 유발하므로 100% 차단.
+- 차단된 한국 공공기관 URL은 다음 순서로 재시도:
+  1. **Jina Reader 경유**: `https://r.jina.ai/https://TARGET_URL` (WebFetch 통과율 높음)
+  2. **Wayback Machine**: `https://web.archive.org/web/2025/URL`
+  3. **WebSearch로 같은 내용의 다른 1차 출처** 찾기 (협회/통계청/언론기사)
+- 모두 실패 시 → 그 entry 추천 자체 X. _sources 카운트가 줄어드는 게 fabricated URL을 등록하는 것보다 낫다.
+- 정 없으면 외부 host minimum 3+ 미달로 별도 list 보고 → 사용자 결정 받음.
 
-**4단계: 자가 검증 보고 (DONE 시 포함)**
+**4단계: 자가 검증 보고 (DONE 시 필수)**
 ```
-출처 검증: 5/5 URL 200 OK + 키워드 매칭 PASS
-  - way[0] kna.or.kr ✓ "간호학과" 매칭
-  - way[1] kosis.kr ✓ "임금" 통계 매칭
+출처 검증: 5/5 URL 200 OK + 키워드 매칭 PASS (WebFetch tool_uses=15)
+  - way[0] kna.or.kr ✓ "간호학과" 매칭 (WebFetch confirmed)
+  - way[1] kosis.kr ✓ "임금" 통계 매칭 (Jina Reader 경유)
   ...
 ```
+**보고 형식 필수 항목**:
+- WebFetch tool_uses 횟수 (≥ URL 개수여야 함)
+- 각 URL의 매칭 키워드 명시
+- 검증 실패한 URL은 추천 X (등록 금지)
 
-> 🚨 출처 조작 (URL fetch 안 하고 추측) 절대 금지. 출처 페이지에 해당 내용이 없으면 본문 수정 또는 URL 교체 — 단축 시 사용자 신뢰 잃음.
+> 🚨 **2026-04-30 사고 사례**: subagent가 tool_uses=0 (WebFetch 미사용)으로 URL 추정 → 캐디·동물조련사 등 50+ 직업에 hallucinated URL 등록 → 사용자 spot-check에서 "잘못된 접근입니다" / "ERR_CERT_COMMON_NAME_INVALID" / 404 다수 발생. 검증 결과 BROKEN 392개 + redirect 89개 자동 제거 + SUSPECT 1657개 잔존. 이후 모든 enhance subagent는 **WebFetch tool_uses ≥ URL 개수** 강제 — 그렇지 않으면 추천 거부.
 
 ---
 

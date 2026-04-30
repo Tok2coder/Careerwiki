@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T12:15:28.617Z",
+  "generated_at": "2026-04-30T12:55:38.409Z",
   "filter": {
     "slug": null,
     "markersOnly": true,
@@ -36,9 +36,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 27,
+      "totalUrls": 23,
       "uniqueHosts": 4,
-      "externalHostCount": 27
+      "externalHostCount": 23
     },
     {
       "slug": "esg-경영-컨설턴트",
@@ -72,9 +72,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 22,
-      "uniqueHosts": 6,
-      "externalHostCount": 22
+      "totalUrls": 17,
+      "uniqueHosts": 5,
+      "externalHostCount": 17
     },
     {
       "slug": "iot-보안-전문가",
@@ -108,9 +108,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 9,
-      "externalHostCount": 16
+      "totalUrls": 12,
+      "uniqueHosts": 8,
+      "externalHostCount": 12
     },
     {
       "slug": "it기술지원전문가",
@@ -126,9 +126,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 23,
-      "uniqueHosts": 5,
-      "externalHostCount": 23
+      "totalUrls": 0,
+      "uniqueHosts": 0,
+      "externalHostCount": 0
     },
     {
       "slug": "rpa개발자",
@@ -162,9 +162,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 24,
+      "totalUrls": 23,
       "uniqueHosts": 5,
-      "externalHostCount": 24
+      "externalHostCount": 23
     },
     {
       "slug": "가상현실전문가",
@@ -180,9 +180,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 8,
-      "externalHostCount": 17
+      "totalUrls": 0,
+      "uniqueHosts": 0,
+      "externalHostCount": 0
     },
     {
       "slug": "가정의학과의사",
@@ -198,9 +198,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 22,
-      "uniqueHosts": 10,
-      "externalHostCount": 22
+      "totalUrls": 18,
+      "uniqueHosts": 9,
+      "externalHostCount": 18
     },
     {
       "slug": "간호부장",
@@ -234,9 +234,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 22,
+      "totalUrls": 18,
       "uniqueHosts": 5,
-      "externalHostCount": 22
+      "externalHostCount": 18
     },
     {
       "slug": "간호조무사",
@@ -252,9 +252,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 3,
-      "externalHostCount": 16
+      "totalUrls": 0,
+      "uniqueHosts": 0,
+      "externalHostCount": 0
     },
     {
       "slug": "개인브랜드매니저",
@@ -270,9 +270,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 6,
-      "externalHostCount": 10
+      "totalUrls": 7,
+      "uniqueHosts": 4,
+      "externalHostCount": 7
     },
     {
       "slug": "검사",
@@ -288,9 +288,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 12,
-      "uniqueHosts": 7,
-      "externalHostCount": 12
+      "totalUrls": 10,
+      "uniqueHosts": 5,
+      "externalHostCount": 10
     },
     {
       "slug": "검침원",
@@ -306,9 +306,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 15,
+      "totalUrls": 11,
       "uniqueHosts": 4,
-      "externalHostCount": 15
+      "externalHostCount": 11
     },
     {
       "slug": "게임-그래픽-디자이너",
@@ -324,9 +324,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 5,
-      "externalHostCount": 17
+      "totalUrls": 14,
+      "uniqueHosts": 3,
+      "externalHostCount": 14
     },
     {
       "slug": "게임-기획자",
@@ -342,9 +342,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 23,
-      "uniqueHosts": 12,
-      "externalHostCount": 23
+      "totalUrls": 14,
+      "uniqueHosts": 7,
+      "externalHostCount": 14
     },
     {
       "slug": "게임-콘셉트-디자이너",
@@ -414,9 +414,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 15,
-      "uniqueHosts": 10,
-      "externalHostCount": 15
+      "totalUrls": 14,
+      "uniqueHosts": 9,
+      "externalHostCount": 14
     },
     {
       "slug": "경리사무원",
@@ -432,9 +432,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 5,
-      "externalHostCount": 10
+      "totalUrls": 7,
+      "uniqueHosts": 4,
+      "externalHostCount": 7
     },
     {
       "slug": "경마검량원",
@@ -468,9 +468,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 5,
-      "externalHostCount": 16
+      "totalUrls": 9,
+      "uniqueHosts": 3,
+      "externalHostCount": 9
     },
     {
       "slug": "경제학연구원",
@@ -540,9 +540,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
-      "uniqueHosts": 7,
-      "externalHostCount": 21
+      "totalUrls": 18,
+      "uniqueHosts": 6,
+      "externalHostCount": 18
     },
     {
       "slug": "공예가",
@@ -612,9 +612,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 5,
-      "externalHostCount": 16
+      "totalUrls": 0,
+      "uniqueHosts": 0,
+      "externalHostCount": 0
     },
     {
       "slug": "광고모델",
@@ -684,9 +684,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
+      "totalUrls": 13,
       "uniqueHosts": 7,
-      "externalHostCount": 21
+      "externalHostCount": 13
     },
     {
       "slug": "국악인",
@@ -702,9 +702,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 3,
-      "uniqueHosts": 2,
-      "externalHostCount": 3
+      "totalUrls": 1,
+      "uniqueHosts": 1,
+      "externalHostCount": 1
     },
     {
       "slug": "국제투자기획원",
@@ -828,9 +828,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 13,
-      "uniqueHosts": 5,
-      "externalHostCount": 13
+      "totalUrls": 7,
+      "uniqueHosts": 4,
+      "externalHostCount": 7
     },
     {
       "slug": "내과의사",
@@ -846,9 +846,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 20,
+      "totalUrls": 14,
       "uniqueHosts": 5,
-      "externalHostCount": 20
+      "externalHostCount": 14
     },
     {
       "slug": "내과전문의사",
@@ -900,9 +900,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 11,
-      "externalHostCount": 17
+      "totalUrls": 16,
+      "uniqueHosts": 10,
+      "externalHostCount": 16
     },
     {
       "slug": "노무사",
@@ -918,9 +918,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 7,
-      "externalHostCount": 16
+      "totalUrls": 15,
+      "uniqueHosts": 6,
+      "externalHostCount": 15
     },
     {
       "slug": "대중가수",
@@ -936,9 +936,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 14,
-      "uniqueHosts": 5,
-      "externalHostCount": 14
+      "totalUrls": 9,
+      "uniqueHosts": 3,
+      "externalHostCount": 9
     },
     {
       "slug": "대학교수",
@@ -954,9 +954,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 5,
-      "externalHostCount": 16
+      "totalUrls": 14,
+      "uniqueHosts": 4,
+      "externalHostCount": 14
     },
     {
       "slug": "데이터-엔지니어",
@@ -972,9 +972,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
-      "uniqueHosts": 11,
-      "externalHostCount": 18
+      "totalUrls": 15,
+      "uniqueHosts": 8,
+      "externalHostCount": 15
     },
     {
       "slug": "데이터베이스-관리자",
@@ -990,9 +990,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 32,
-      "uniqueHosts": 13,
-      "externalHostCount": 32
+      "totalUrls": 31,
+      "uniqueHosts": 12,
+      "externalHostCount": 31
     },
     {
       "slug": "데이터분석가빅데이터분석가",
@@ -1008,9 +1008,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
-      "uniqueHosts": 8,
-      "externalHostCount": 18
+      "totalUrls": 15,
+      "uniqueHosts": 7,
+      "externalHostCount": 15
     },
     {
       "slug": "동물조련사",
@@ -1026,9 +1026,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 23,
-      "uniqueHosts": 5,
-      "externalHostCount": 23
+      "totalUrls": 0,
+      "uniqueHosts": 0,
+      "externalHostCount": 0
     },
     {
       "slug": "드라마작가",
@@ -1062,9 +1062,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 8,
-      "externalHostCount": 19
+      "totalUrls": 17,
+      "uniqueHosts": 7,
+      "externalHostCount": 17
     },
     {
       "slug": "드론-개발자",
@@ -1080,9 +1080,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
+      "totalUrls": 20,
       "uniqueHosts": 7,
-      "externalHostCount": 21
+      "externalHostCount": 20
     },
     {
       "slug": "드론조종사",
@@ -1098,9 +1098,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 27,
-      "uniqueHosts": 15,
-      "externalHostCount": 27
+      "totalUrls": 23,
+      "uniqueHosts": 13,
+      "externalHostCount": 23
     },
     {
       "slug": "디지털크리에이터",
@@ -1296,9 +1296,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 12,
-      "externalHostCount": 17
+      "totalUrls": 16,
+      "uniqueHosts": 11,
+      "externalHostCount": 16
     },
     {
       "slug": "목사",
@@ -1332,9 +1332,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 5,
-      "externalHostCount": 19
+      "totalUrls": 11,
+      "uniqueHosts": 4,
+      "externalHostCount": 11
     },
     {
       "slug": "물리치료사",
@@ -1350,9 +1350,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 4,
-      "externalHostCount": 16
+      "totalUrls": 5,
+      "uniqueHosts": 3,
+      "externalHostCount": 5
     },
     {
       "slug": "미디어콘텐츠창작자크리에이터",
@@ -1422,9 +1422,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
+      "totalUrls": 12,
       "uniqueHosts": 5,
-      "externalHostCount": 16
+      "externalHostCount": 12
     },
     {
       "slug": "반려동물미용사",
@@ -1494,9 +1494,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 22,
-      "uniqueHosts": 7,
-      "externalHostCount": 22
+      "totalUrls": 1,
+      "uniqueHosts": 1,
+      "externalHostCount": 1
     },
     {
       "slug": "방송기자",
@@ -1584,9 +1584,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 6,
-      "externalHostCount": 17
+      "totalUrls": 15,
+      "uniqueHosts": 5,
+      "externalHostCount": 15
     },
     {
       "slug": "버스운전기사",
@@ -1656,9 +1656,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
-      "uniqueHosts": 5,
-      "externalHostCount": 18
+      "totalUrls": 11,
+      "uniqueHosts": 4,
+      "externalHostCount": 11
     },
     {
       "slug": "법원공무원",
@@ -1710,9 +1710,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
+      "totalUrls": 13,
       "uniqueHosts": 4,
-      "externalHostCount": 18
+      "externalHostCount": 13
     },
     {
       "slug": "병원관리자",
@@ -1728,9 +1728,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 7,
-      "externalHostCount": 16
+      "totalUrls": 15,
+      "uniqueHosts": 6,
+      "externalHostCount": 15
     },
     {
       "slug": "병원약사",
@@ -1764,9 +1764,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 5,
-      "externalHostCount": 16
+      "totalUrls": 9,
+      "uniqueHosts": 3,
+      "externalHostCount": 9
     },
     {
       "slug": "보건교사",
@@ -1836,9 +1836,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 8,
-      "externalHostCount": 19
+      "totalUrls": 10,
+      "uniqueHosts": 5,
+      "externalHostCount": 10
     },
     {
       "slug": "보건의료정보관리사",
@@ -1854,9 +1854,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 22,
-      "uniqueHosts": 5,
-      "externalHostCount": 22
+      "totalUrls": 19,
+      "uniqueHosts": 4,
+      "externalHostCount": 19
     },
     {
       "slug": "보육교사",
@@ -1872,9 +1872,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 5,
-      "externalHostCount": 17
+      "totalUrls": 13,
+      "uniqueHosts": 4,
+      "externalHostCount": 13
     },
     {
       "slug": "보험계리사",
@@ -1944,9 +1944,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
-      "uniqueHosts": 7,
-      "externalHostCount": 18
+      "totalUrls": 12,
+      "uniqueHosts": 5,
+      "externalHostCount": 12
     },
     {
       "slug": "부사관",
@@ -1980,9 +1980,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
+      "totalUrls": 14,
       "uniqueHosts": 6,
-      "externalHostCount": 18
+      "externalHostCount": 14
     },
     {
       "slug": "블록체인-개발자",
@@ -2034,9 +2034,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
+      "totalUrls": 19,
       "uniqueHosts": 8,
-      "externalHostCount": 21
+      "externalHostCount": 19
     },
     {
       "slug": "비행기조종사",
@@ -2052,9 +2052,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 20,
-      "uniqueHosts": 12,
-      "externalHostCount": 20
+      "totalUrls": 7,
+      "uniqueHosts": 3,
+      "externalHostCount": 7
     },
     {
       "slug": "빅데이터전문가",
@@ -2178,9 +2178,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
-      "uniqueHosts": 11,
-      "externalHostCount": 21
+      "totalUrls": 15,
+      "uniqueHosts": 10,
+      "externalHostCount": 15
     },
     {
       "slug": "산업공학기술자",
@@ -2214,9 +2214,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 20,
-      "uniqueHosts": 6,
-      "externalHostCount": 20
+      "totalUrls": 13,
+      "uniqueHosts": 4,
+      "externalHostCount": 13
     },
     {
       "slug": "산업용기계설계기술자",
@@ -2268,9 +2268,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 20,
-      "uniqueHosts": 10,
-      "externalHostCount": 20
+      "totalUrls": 16,
+      "uniqueHosts": 8,
+      "externalHostCount": 16
     },
     {
       "slug": "상품기획자",
@@ -2286,9 +2286,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 9,
-      "uniqueHosts": 5,
-      "externalHostCount": 9
+      "totalUrls": 7,
+      "uniqueHosts": 4,
+      "externalHostCount": 7
     },
     {
       "slug": "서예가",
@@ -2394,9 +2394,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 7,
-      "externalHostCount": 10
+      "totalUrls": 8,
+      "uniqueHosts": 5,
+      "externalHostCount": 8
     },
     {
       "slug": "성직자",
@@ -2628,9 +2628,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 3,
-      "externalHostCount": 17
+      "totalUrls": 12,
+      "uniqueHosts": 2,
+      "externalHostCount": 12
     },
     {
       "slug": "스포츠마케터",
@@ -2700,9 +2700,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 5,
-      "externalHostCount": 17
+      "totalUrls": 8,
+      "uniqueHosts": 3,
+      "externalHostCount": 8
     },
     {
       "slug": "승려",
@@ -2736,9 +2736,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
-      "uniqueHosts": 9,
-      "externalHostCount": 21
+      "totalUrls": 15,
+      "uniqueHosts": 7,
+      "externalHostCount": 15
     },
     {
       "slug": "시인",
@@ -2808,9 +2808,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
-      "uniqueHosts": 10,
-      "externalHostCount": 18
+      "totalUrls": 17,
+      "uniqueHosts": 9,
+      "externalHostCount": 17
     },
     {
       "slug": "심리상담전문가",
@@ -2826,9 +2826,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 20,
+      "totalUrls": 17,
       "uniqueHosts": 4,
-      "externalHostCount": 20
+      "externalHostCount": 17
     },
     {
       "slug": "심판",
@@ -2862,9 +2862,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
-      "uniqueHosts": 3,
-      "externalHostCount": 18
+      "totalUrls": 5,
+      "uniqueHosts": 1,
+      "externalHostCount": 5
     },
     {
       "slug": "애널리스트",
@@ -2898,9 +2898,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 7,
-      "uniqueHosts": 3,
-      "externalHostCount": 7
+      "totalUrls": 6,
+      "uniqueHosts": 2,
+      "externalHostCount": 6
     },
     {
       "slug": "약국약사",
@@ -2916,9 +2916,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
+      "totalUrls": 15,
       "uniqueHosts": 9,
-      "externalHostCount": 16
+      "externalHostCount": 15
     },
     {
       "slug": "약사-및-한약사",
@@ -2970,9 +2970,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 6,
-      "externalHostCount": 10
+      "totalUrls": 7,
+      "uniqueHosts": 5,
+      "externalHostCount": 7
     },
     {
       "slug": "언어치료사",
@@ -2988,9 +2988,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
+      "totalUrls": 12,
       "uniqueHosts": 4,
-      "externalHostCount": 17
+      "externalHostCount": 12
     },
     {
       "slug": "여행안내원",
@@ -3006,9 +3006,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 24,
-      "uniqueHosts": 6,
-      "externalHostCount": 24
+      "totalUrls": 21,
+      "uniqueHosts": 5,
+      "externalHostCount": 21
     },
     {
       "slug": "역사학연구원",
@@ -3042,9 +3042,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 7,
-      "uniqueHosts": 6,
-      "externalHostCount": 7
+      "totalUrls": 5,
+      "uniqueHosts": 5,
+      "externalHostCount": 5
     },
     {
       "slug": "연극연출가",
@@ -3114,9 +3114,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
+      "totalUrls": 14,
       "uniqueHosts": 3,
-      "externalHostCount": 16
+      "externalHostCount": 14
     },
     {
       "slug": "영화감독",
@@ -3132,9 +3132,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 12,
-      "uniqueHosts": 9,
-      "externalHostCount": 12
+      "totalUrls": 9,
+      "uniqueHosts": 6,
+      "externalHostCount": 9
     },
     {
       "slug": "영화배우-및-탤런트",
@@ -3150,9 +3150,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
+      "totalUrls": 16,
       "uniqueHosts": 6,
-      "externalHostCount": 19
+      "externalHostCount": 16
     },
     {
       "slug": "영화시나리오작가",
@@ -3204,9 +3204,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 20,
-      "uniqueHosts": 5,
-      "externalHostCount": 20
+      "totalUrls": 0,
+      "uniqueHosts": 0,
+      "externalHostCount": 0
     },
     {
       "slug": "외교관",
@@ -3258,9 +3258,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 15,
-      "uniqueHosts": 7,
-      "externalHostCount": 15
+      "totalUrls": 12,
+      "uniqueHosts": 5,
+      "externalHostCount": 12
     },
     {
       "slug": "우편물집배원",
@@ -3312,9 +3312,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
+      "totalUrls": 15,
       "uniqueHosts": 6,
-      "externalHostCount": 19
+      "externalHostCount": 15
     },
     {
       "slug": "운동처방사",
@@ -3348,9 +3348,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 4,
-      "externalHostCount": 19
+      "totalUrls": 5,
+      "uniqueHosts": 1,
+      "externalHostCount": 5
     },
     {
       "slug": "웹-개발자",
@@ -3366,9 +3366,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 7,
-      "externalHostCount": 16
+      "totalUrls": 14,
+      "uniqueHosts": 6,
+      "externalHostCount": 14
     },
     {
       "slug": "웹-기획자",
@@ -3456,9 +3456,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 9,
-      "uniqueHosts": 4,
-      "externalHostCount": 9
+      "totalUrls": 5,
+      "uniqueHosts": 3,
+      "externalHostCount": 5
     },
     {
       "slug": "위관급-장교",
@@ -3492,9 +3492,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 7,
-      "uniqueHosts": 7,
-      "externalHostCount": 7
+      "totalUrls": 5,
+      "uniqueHosts": 5,
+      "externalHostCount": 5
     },
     {
       "slug": "유전공학연구원",
@@ -3546,9 +3546,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 6,
-      "externalHostCount": 17
+      "totalUrls": 0,
+      "uniqueHosts": 0,
+      "externalHostCount": 0
     },
     {
       "slug": "은행개인금융상담역",
@@ -3618,9 +3618,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 4,
-      "externalHostCount": 17
+      "totalUrls": 6,
+      "uniqueHosts": 2,
+      "externalHostCount": 6
     },
     {
       "slug": "응급의학과전문의사",
@@ -3654,9 +3654,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
+      "totalUrls": 16,
       "uniqueHosts": 8,
-      "externalHostCount": 18
+      "externalHostCount": 16
     },
     {
       "slug": "의료-기기-개발-전문가",
@@ -3672,9 +3672,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
+      "totalUrls": 15,
       "uniqueHosts": 5,
-      "externalHostCount": 17
+      "externalHostCount": 15
     },
     {
       "slug": "의료장비기사",
@@ -3708,9 +3708,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 15,
-      "uniqueHosts": 6,
-      "externalHostCount": 15
+      "totalUrls": 9,
+      "uniqueHosts": 5,
+      "externalHostCount": 9
     },
     {
       "slug": "의료코디네이터",
@@ -3744,9 +3744,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 9,
-      "uniqueHosts": 7,
-      "externalHostCount": 9
+      "totalUrls": 7,
+      "uniqueHosts": 5,
+      "externalHostCount": 7
     },
     {
       "slug": "이비인후과의사",
@@ -3780,9 +3780,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
-      "uniqueHosts": 10,
-      "externalHostCount": 21
+      "totalUrls": 20,
+      "uniqueHosts": 9,
+      "externalHostCount": 20
     },
     {
       "slug": "인공지능모델개발자",
@@ -3816,9 +3816,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 13,
-      "externalHostCount": 17
+      "totalUrls": 14,
+      "uniqueHosts": 12,
+      "externalHostCount": 14
     },
     {
       "slug": "인공지능서비스기획자",
@@ -3888,9 +3888,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 5,
-      "externalHostCount": 17
+      "totalUrls": 15,
+      "uniqueHosts": 4,
+      "externalHostCount": 15
     },
     {
       "slug": "일반의사",
@@ -3924,9 +3924,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 5,
-      "externalHostCount": 10
+      "totalUrls": 8,
+      "uniqueHosts": 4,
+      "externalHostCount": 8
     },
     {
       "slug": "임상-데이터-매니저",
@@ -3960,9 +3960,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
+      "totalUrls": 11,
       "uniqueHosts": 5,
-      "externalHostCount": 17
+      "externalHostCount": 11
     },
     {
       "slug": "임상시험모니터요원",
@@ -4068,9 +4068,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 12,
-      "uniqueHosts": 9,
-      "externalHostCount": 12
+      "totalUrls": 9,
+      "uniqueHosts": 7,
+      "externalHostCount": 9
     },
     {
       "slug": "작사가",
@@ -4104,9 +4104,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
+      "totalUrls": 13,
       "uniqueHosts": 4,
-      "externalHostCount": 17
+      "externalHostCount": 13
     },
     {
       "slug": "잡지기자",
@@ -4122,9 +4122,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 15,
-      "uniqueHosts": 6,
-      "externalHostCount": 15
+      "totalUrls": 11,
+      "uniqueHosts": 5,
+      "externalHostCount": 11
     },
     {
       "slug": "재료공학기술자",
@@ -4338,9 +4338,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 5,
-      "uniqueHosts": 2,
-      "externalHostCount": 5
+      "totalUrls": 4,
+      "uniqueHosts": 1,
+      "externalHostCount": 4
     },
     {
       "slug": "제품광고영업원",
@@ -4356,9 +4356,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 4,
-      "uniqueHosts": 3,
-      "externalHostCount": 4
+      "totalUrls": 3,
+      "uniqueHosts": 2,
+      "externalHostCount": 3
     },
     {
       "slug": "제화원",
@@ -4392,9 +4392,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 9,
-      "uniqueHosts": 6,
-      "externalHostCount": 9
+      "totalUrls": 6,
+      "uniqueHosts": 4,
+      "externalHostCount": 6
     },
     {
       "slug": "조경기술자",
@@ -4410,9 +4410,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 4,
-      "uniqueHosts": 3,
-      "externalHostCount": 4
+      "totalUrls": 3,
+      "uniqueHosts": 2,
+      "externalHostCount": 3
     },
     {
       "slug": "조경설계사",
@@ -4590,9 +4590,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 16,
-      "uniqueHosts": 6,
-      "externalHostCount": 16
+      "totalUrls": 0,
+      "uniqueHosts": 0,
+      "externalHostCount": 0
     },
     {
       "slug": "중식조리사",
@@ -4608,9 +4608,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 5,
-      "externalHostCount": 10
+      "totalUrls": 8,
+      "uniqueHosts": 4,
+      "externalHostCount": 8
     },
     {
       "slug": "증권외환딜러",
@@ -4626,9 +4626,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
-      "uniqueHosts": 14,
-      "externalHostCount": 21
+      "totalUrls": 18,
+      "uniqueHosts": 11,
+      "externalHostCount": 18
     },
     {
       "slug": "지리정보시스템전문가",
@@ -4662,9 +4662,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
+      "totalUrls": 20,
       "uniqueHosts": 11,
-      "externalHostCount": 21
+      "externalHostCount": 20
     },
     {
       "slug": "지질학연구원",
@@ -4680,9 +4680,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 13,
-      "uniqueHosts": 6,
-      "externalHostCount": 13
+      "totalUrls": 12,
+      "uniqueHosts": 5,
+      "externalHostCount": 12
     },
     {
       "slug": "지휘자",
@@ -4698,9 +4698,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 9,
-      "externalHostCount": 10
+      "totalUrls": 9,
+      "uniqueHosts": 8,
+      "externalHostCount": 9
     },
     {
       "slug": "직업군인",
@@ -4860,9 +4860,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 24,
+      "totalUrls": 20,
       "uniqueHosts": 5,
-      "externalHostCount": 24
+      "externalHostCount": 20
     },
     {
       "slug": "청원경찰",
@@ -4896,9 +4896,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
+      "totalUrls": 17,
       "uniqueHosts": 5,
-      "externalHostCount": 19
+      "externalHostCount": 17
     },
     {
       "slug": "총무사무원",
@@ -4914,9 +4914,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 4,
-      "externalHostCount": 19
+      "totalUrls": 15,
+      "uniqueHosts": 3,
+      "externalHostCount": 15
     },
     {
       "slug": "총무인사관리자",
@@ -4968,9 +4968,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 5,
-      "externalHostCount": 17
+      "totalUrls": 13,
+      "uniqueHosts": 4,
+      "externalHostCount": 13
     },
     {
       "slug": "최고재무책임자",
@@ -5022,9 +5022,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
+      "totalUrls": 13,
       "uniqueHosts": 4,
-      "externalHostCount": 18
+      "externalHostCount": 13
     },
     {
       "slug": "치과위생사",
@@ -5040,9 +5040,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
+      "totalUrls": 13,
       "uniqueHosts": 6,
-      "externalHostCount": 18
+      "externalHostCount": 13
     },
     {
       "slug": "치과의사",
@@ -5058,9 +5058,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
+      "totalUrls": 15,
       "uniqueHosts": 6,
-      "externalHostCount": 18
+      "externalHostCount": 15
     },
     {
       "slug": "카피라이터",
@@ -5076,9 +5076,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 12,
-      "uniqueHosts": 11,
-      "externalHostCount": 12
+      "totalUrls": 11,
+      "uniqueHosts": 10,
+      "externalHostCount": 11
     },
     {
       "slug": "캐디",
@@ -5094,9 +5094,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 29,
-      "uniqueHosts": 10,
-      "externalHostCount": 29
+      "totalUrls": 1,
+      "uniqueHosts": 1,
+      "externalHostCount": 1
     },
     {
       "slug": "컴퓨터애니메이션감독",
@@ -5184,9 +5184,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 6,
-      "uniqueHosts": 6,
-      "externalHostCount": 6
+      "totalUrls": 2,
+      "uniqueHosts": 2,
+      "externalHostCount": 2
     },
     {
       "slug": "택시운전기사",
@@ -5274,9 +5274,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 8,
-      "externalHostCount": 19
+      "totalUrls": 12,
+      "uniqueHosts": 6,
+      "externalHostCount": 12
     },
     {
       "slug": "특수교육교사",
@@ -5292,9 +5292,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 7,
-      "externalHostCount": 19
+      "totalUrls": 12,
+      "uniqueHosts": 5,
+      "externalHostCount": 12
     },
     {
       "slug": "특수학교교사",
@@ -5328,9 +5328,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
-      "uniqueHosts": 8,
-      "externalHostCount": 17
+      "totalUrls": 16,
+      "uniqueHosts": 7,
+      "externalHostCount": 16
     },
     {
       "slug": "패션모델",
@@ -5472,9 +5472,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
-      "uniqueHosts": 8,
-      "externalHostCount": 18
+      "totalUrls": 10,
+      "uniqueHosts": 4,
+      "externalHostCount": 10
     },
     {
       "slug": "품질관리사무원",
@@ -5562,9 +5562,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 7,
-      "externalHostCount": 10
+      "totalUrls": 7,
+      "uniqueHosts": 5,
+      "externalHostCount": 7
     },
     {
       "slug": "한약사",
@@ -5616,9 +5616,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 21,
+      "totalUrls": 18,
       "uniqueHosts": 6,
-      "externalHostCount": 21
+      "externalHostCount": 18
     },
     {
       "slug": "항공기객실승무원",
@@ -5634,9 +5634,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 23,
-      "uniqueHosts": 6,
-      "externalHostCount": 23
+      "totalUrls": 13,
+      "uniqueHosts": 4,
+      "externalHostCount": 13
     },
     {
       "slug": "항공기정비원",
@@ -5652,9 +5652,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 10,
-      "externalHostCount": 19
+      "totalUrls": 15,
+      "uniqueHosts": 7,
+      "externalHostCount": 15
     },
     {
       "slug": "항공기조종사",
@@ -5724,9 +5724,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 20,
-      "uniqueHosts": 4,
-      "externalHostCount": 20
+      "totalUrls": 13,
+      "uniqueHosts": 3,
+      "externalHostCount": 13
     },
     {
       "slug": "헬스트레이너",
@@ -5742,9 +5742,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
-      "uniqueHosts": 7,
-      "externalHostCount": 19
+      "totalUrls": 18,
+      "uniqueHosts": 6,
+      "externalHostCount": 18
     },
     {
       "slug": "호스피스전문간호사",
@@ -5778,9 +5778,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 6,
-      "uniqueHosts": 5,
-      "externalHostCount": 6
+      "totalUrls": 4,
+      "uniqueHosts": 3,
+      "externalHostCount": 4
     },
     {
       "slug": "화가",
@@ -5832,9 +5832,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 8,
-      "uniqueHosts": 5,
-      "externalHostCount": 8
+      "totalUrls": 4,
+      "uniqueHosts": 4,
+      "externalHostCount": 4
     },
     {
       "slug": "회계감사관리자",
