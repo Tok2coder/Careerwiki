@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T10:34:41.244Z",
+  "generated_at": "2026-04-30T10:58:51.719Z",
   "filter": {
     "slug": null,
     "markersOnly": true,
@@ -9,8 +9,8 @@
     "total_jobs": 325,
     "dupMarkers": 3,
     "orphanSrc": 17,
-    "originDomain": 97,
-    "selfCite": 97,
+    "originDomain": 77,
+    "selfCite": 77,
     "selfCiteOnly": 1,
     "listPage": 5,
     "rawURL": 0,
@@ -19,7 +19,7 @@
     "mojibake": 0,
     "sourcesNull": 0,
     "idxGap": 0,
-    "clean": 217
+    "clean": 236
   },
   "jobs": [
     {
@@ -490,54 +490,8 @@
       "slug": "ux-디자인-컨설턴트",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "overviewSalary.sal",
-          "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "overviewSalary.sal",
-          "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cnet/front/base/job/jobView.do?SEQ=10003",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -547,8 +501,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 24,
-      "uniqueHosts": 6,
-      "externalHostCount": 20
+      "uniqueHosts": 5,
+      "externalHostCount": 24
     },
     {
       "slug": "가상현실전문가",
@@ -1911,54 +1865,8 @@
       "slug": "김치밑반찬-제조종사원",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
-          "host": "www.wagework.go.kr"
-        },
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
-          "host": "www.wagework.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EA%B9%80%EC%B9%98%EB%B0%91%EB%B0%98%EC%B0%AC%20%EC%A0%9C%EC%A1%B0%EC%A2%85%EC%82%AC%EC%9B%90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
-          "host": "www.wagework.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
-          "host": "www.wagework.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
-          "host": "www.wagework.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EA%B9%80%EC%B9%98%EB%B0%91%EB%B0%98%EC%B0%AC%20%EC%A0%9C%EC%A1%B0%EC%A2%85%EC%82%AC%EC%9B%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
-          "host": "www.wagework.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -1968,8 +1876,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 15,
-      "uniqueHosts": 7,
-      "externalHostCount": 11
+      "uniqueHosts": 8,
+      "externalHostCount": 15
     },
     {
       "slug": "나무의사",
@@ -2200,54 +2108,8 @@
           "idx": 1
         }
       ],
-      "originDomain": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.work.go.kr/",
-          "host": "www.work.go.kr"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=379",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "overviewSalary.sal",
-          "url": "https://www.work.go.kr/",
-          "host": "www.work.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=379",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.work.go.kr/",
-          "host": "www.work.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=379",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "overviewSalary.sal",
-          "url": "https://www.work.go.kr/",
-          "host": "www.work.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=379",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -2257,8 +2119,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 17,
-      "uniqueHosts": 9,
-      "externalHostCount": 13
+      "uniqueHosts": 7,
+      "externalHostCount": 17
     },
     {
       "slug": "대중가수",
@@ -2476,54 +2338,8 @@
       "slug": "데이터베이스-관리자",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=242",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "overviewSalary.sal",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=242",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "overviewAbilities.technKnow",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=242",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=242",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=242",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "overviewSalary.sal",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=242",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "overviewAbilities.technKnow",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=242",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=242",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -2533,8 +2349,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 32,
-      "uniqueHosts": 14,
-      "externalHostCount": 28
+      "uniqueHosts": 13,
+      "externalHostCount": 32
     },
     {
       "slug": "데이터분석가빅데이터분석가",
@@ -4273,43 +4089,8 @@
       "slug": "보건의료정보관리사",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.wagework.go.kr/",
-          "host": "www.wagework.go.kr"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=256",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=256",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.wagework.go.kr/",
-          "host": "www.wagework.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=256",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=256",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -4319,8 +4100,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 22,
-      "uniqueHosts": 7,
-      "externalHostCount": 19
+      "uniqueHosts": 5,
+      "externalHostCount": 22
     },
     {
       "slug": "보육교사",
@@ -4822,54 +4603,8 @@
       "slug": "비파괴검사원",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=81",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=81",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=81",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=81",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=81",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=81",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=81",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=81",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -4880,7 +4615,7 @@
       "idxGap": null,
       "totalUrls": 21,
       "uniqueHosts": 8,
-      "externalHostCount": 17
+      "externalHostCount": 21
     },
     {
       "slug": "비행기조종사",
@@ -4940,54 +4675,8 @@
       "slug": "사진기자",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=976",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=976",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=976",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=976",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=976",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=976",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=976",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=976",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -4997,8 +4686,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 20,
-      "uniqueHosts": 5,
-      "externalHostCount": 16
+      "uniqueHosts": 6,
+      "externalHostCount": 20
     },
     {
       "slug": "사회단체활동가",
@@ -5331,43 +5020,8 @@
       "slug": "성악가",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=313",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=313",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.work.go.kr/jobMain.do",
-          "host": "www.work.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=313",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=313",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.work.go.kr/jobMain.do",
-          "host": "www.work.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -5377,8 +5031,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 10,
-      "uniqueHosts": 8,
-      "externalHostCount": 7
+      "uniqueHosts": 7,
+      "externalHostCount": 10
     },
     {
       "slug": "성직자",
@@ -5402,54 +5056,8 @@
       "slug": "세라믹소재연구원",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=9510",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=9510",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=9510",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=9510",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=9510",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=9510",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=9510",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=9510",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -5459,8 +5067,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 20,
-      "uniqueHosts": 8,
-      "externalHostCount": 16
+      "uniqueHosts": 10,
+      "externalHostCount": 20
     },
     {
       "slug": "소믈리에",
@@ -5847,43 +5455,8 @@
       "slug": "스포츠에이전트",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.training",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.training",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1088",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -5893,8 +5466,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 17,
-      "uniqueHosts": 4,
-      "externalHostCount": 14
+      "uniqueHosts": 3,
+      "externalHostCount": 17
     },
     {
       "slug": "스포츠트레이너",
@@ -6112,54 +5685,8 @@
       "slug": "시인",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=968",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=968",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=968",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=968",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=968",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=968",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=968",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=968",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -6169,8 +5696,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 21,
-      "uniqueHosts": 6,
-      "externalHostCount": 17
+      "uniqueHosts": 5,
+      "externalHostCount": 21
     },
     {
       "slug": "신부",
@@ -6813,54 +6340,8 @@
       "slug": "연구관리자",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.wagework.go.kr/",
-          "host": "www.wagework.go.kr"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%97%B0%EA%B5%AC%EA%B4%80%EB%A6%AC%EC%9E%90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%97%B0%EA%B5%AC%EA%B4%80%EB%A6%AC%EC%9E%90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.wagework.go.kr/",
-          "host": "www.wagework.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.wagework.go.kr/",
-          "host": "www.wagework.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%97%B0%EA%B5%AC%EA%B4%80%EB%A6%AC%EC%9E%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%97%B0%EA%B5%AC%EA%B4%80%EB%A6%AC%EC%9E%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.wagework.go.kr/",
-          "host": "www.wagework.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -6870,8 +6351,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 7,
-      "uniqueHosts": 5,
-      "externalHostCount": 3
+      "uniqueHosts": 6,
+      "externalHostCount": 7
     },
     {
       "slug": "연극연출가",
@@ -7168,43 +6649,8 @@
       "slug": "외과의사",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=25",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=25",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=25",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=25",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=25",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=25",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -7215,7 +6661,7 @@
       "idxGap": null,
       "totalUrls": 20,
       "uniqueHosts": 5,
-      "externalHostCount": 17
+      "externalHostCount": 20
     },
     {
       "slug": "외교관",
@@ -8592,43 +8038,8 @@
       "slug": "이용사",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1121",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1121",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.work24.go.kr/cm/f/c/0100/selectUnifySearch.do?topQuerySearchArea=tb_workinfo&topQueryData=%EC%9D%B4%EC%9A%A9%EC%82%AC",
-          "host": "www.work24.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1121",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=1121",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.work24.go.kr/cm/f/c/0100/selectUnifySearch.do?topQuerySearchArea=tb_workinfo&topQueryData=%EC%9D%B4%EC%9A%A9%EC%82%AC",
-          "host": "www.work24.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -8639,7 +8050,7 @@
       "idxGap": null,
       "totalUrls": 21,
       "uniqueHosts": 10,
-      "externalHostCount": 18
+      "externalHostCount": 21
     },
     {
       "slug": "인공지능모델개발자",
@@ -8735,43 +8146,8 @@
       "slug": "일반공무원",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.work.go.kr/jobMain.do",
-          "host": "www.work.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.work.go.kr/jobMain.do",
-          "host": "www.work.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.work.go.kr/jobMain.do",
-          "host": "www.work.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.work.go.kr/jobMain.do",
-          "host": "www.work.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.work.go.kr/jobMain.do",
-          "host": "www.work.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.work.go.kr/jobMain.do",
-          "host": "www.work.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -8782,7 +8158,7 @@
       "idxGap": null,
       "totalUrls": 17,
       "uniqueHosts": 5,
-      "externalHostCount": 14
+      "externalHostCount": 17
     },
     {
       "slug": "일반의사",
@@ -9839,43 +9215,8 @@
       "slug": "조선공학기술자",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=90",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -9885,8 +9226,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 22,
-      "uniqueHosts": 7,
-      "externalHostCount": 19
+      "uniqueHosts": 6,
+      "externalHostCount": 22
     },
     {
       "slug": "주식시장투자전략가",
@@ -10147,43 +9488,8 @@
       "slug": "지적-및-측량기술자",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=156",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=156",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=156",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=156",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=156",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=156",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -10193,8 +9499,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 21,
-      "uniqueHosts": 12,
-      "externalHostCount": 18
+      "uniqueHosts": 11,
+      "externalHostCount": 21
     },
     {
       "slug": "지질학연구원",
@@ -10362,43 +9668,8 @@
       "slug": "철도지하철운송사무원",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B2%A0%EB%8F%84%EC%A7%80%ED%95%98%EC%B2%A0%EC%9A%B4%EC%86%A1%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B2%A0%EB%8F%84%EC%A7%80%ED%95%98%EC%B2%A0%EC%9A%B4%EC%86%A1%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B2%A0%EB%8F%84%EC%A7%80%ED%95%98%EC%B2%A0%EC%9A%B4%EC%86%A1%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B2%A0%EB%8F%84%EC%A7%80%ED%95%98%EC%B2%A0%EC%9A%B4%EC%86%A1%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B2%A0%EB%8F%84%EC%A7%80%ED%95%98%EC%B2%A0%EC%9A%B4%EC%86%A1%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B2%A0%EB%8F%84%EC%A7%80%ED%95%98%EC%B2%A0%EC%9A%B4%EC%86%A1%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -10409,7 +9680,7 @@
       "idxGap": null,
       "totalUrls": 16,
       "uniqueHosts": 6,
-      "externalHostCount": 13
+      "externalHostCount": 16
     },
     {
       "slug": "청소년지도사",
@@ -10543,43 +9814,8 @@
       "slug": "총무사무원",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B4%9D%EB%AC%B4%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B4%9D%EB%AC%B4%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B4%9D%EB%AC%B4%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "way",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B4%9D%EB%AC%B4%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B4%9D%EB%AC%B4%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.career.go.kr/cloud/w/search/intro?text=%EC%B4%9D%EB%AC%B4%EC%82%AC%EB%AC%B4%EC%9B%90",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -10589,8 +9825,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 19,
-      "uniqueHosts": 5,
-      "externalHostCount": 16
+      "uniqueHosts": 4,
+      "externalHostCount": 19
     },
     {
       "slug": "총무인사관리자",
@@ -11595,43 +10831,8 @@
       "slug": "판사",
       "dupMarkers": [],
       "orphanSrc": [],
-      "originDomain": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=414",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=414",
-          "host": "www.career.go.kr"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=414",
-          "host": "www.career.go.kr"
-        }
-      ],
-      "selfCite": [
-        {
-          "field": "overviewProspect.main",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=414",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=414",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "url": "https://www.career.go.kr/cloud/w/job/view?seq=414",
-          "host": "www.career.go.kr",
-          "kind": "origin"
-        }
-      ],
+      "originDomain": [],
+      "selfCite": [],
       "selfCiteOnly": false,
       "listPage": [],
       "rawURL": [],
@@ -11641,8 +10842,8 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 17,
-      "uniqueHosts": 9,
-      "externalHostCount": 14
+      "uniqueHosts": 8,
+      "externalHostCount": 17
     },
     {
       "slug": "패션모델",
