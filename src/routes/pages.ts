@@ -14,6 +14,8 @@ import { renderPrivacyPage } from '../templates/legal/privacy'
 import { renderNoticePage } from '../templates/legal/notice'
 import { renderAppealFormPage } from '../templates/user/appealForm'
 import { submitAppeal, listUserAppeals } from '../services/enforcementService'
+import { renderDisputeViewPage, renderDisputeOpenPage } from '../templates/dispute/disputeView'
+import { openDispute, getDisputeThread, getProposalsForThread, proposeConsensus, castDisputeVote } from '../services/disputeService'
 import { renderHelpPage } from '../templates/help'
 import { renderAboutPage } from '../templates/about'
 import { renderPolicyIndexPage } from '../templates/policy/index'
@@ -299,6 +301,118 @@ pagesRoutes.get('/user/appeal', requireAuth, async (c) => {
     prefilled: targetType && targetId ? { target_type: targetType, target_id: targetId } : undefined,
     flash
   }))
+})
+
+// === 토론·합의 (정책 dispute, D1~D8) ===
+pagesRoutes.get('/dispute/open', async (c) => {
+  const user = c.get('user')
+  const userMenuHtml = buildUserMenu(c)
+  const flashType = c.req.query('flash')
+  const flash = flashType === 'success'
+    ? { type: 'success' as const, message: '토론이 발제되었습니다.' }
+    : flashType === 'error'
+    ? { type: 'error' as const, message: '발제에 실패했습니다. 입력 내용을 확인해 주세요.' }
+    : undefined
+  return c.html(renderDisputeOpenPage({
+    userMenuHtml,
+    prefilled: {
+      target_type: c.req.query('target_type') || undefined,
+      target_id: c.req.query('target_id') || undefined,
+      target_field: c.req.query('target_field') || undefined
+    },
+    flash
+  }))
+})
+
+pagesRoutes.post('/dispute/open', requireAuth, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/login?redirect=/dispute/open')
+  const form = await c.req.formData()
+  const targetType = String(form.get('target_type') || '') as any
+  const targetId = String(form.get('target_id') || '').trim()
+  const targetField = String(form.get('target_field') || '').trim() || undefined
+  const openerPosition = String(form.get('opener_position') || '').trim()
+  const openerEvidence = String(form.get('opener_evidence') || '').trim() || undefined
+  const frozenText = String(form.get('frozen_text') || '').trim() || undefined
+  if (!['job', 'major', 'howto', 'comment', 'policy'].includes(targetType) ||
+      !targetId || openerPosition.length < 30) {
+    return c.redirect('/dispute/open?flash=error')
+  }
+  const result = await openDispute(c.env.DB, {
+    targetType,
+    targetId,
+    targetField,
+    openedBy: user.id,
+    openerPosition,
+    openerEvidence,
+    frozenText
+  })
+  return c.redirect(`/dispute/${result.id}`)
+})
+
+pagesRoutes.get('/dispute/:id', async (c) => {
+  const user = c.get('user')
+  const userMenuHtml = buildUserMenu(c)
+  const id = parseInt(c.req.param('id'), 10)
+  if (!Number.isFinite(id)) return c.redirect('/policy/dispute')
+  const thread = await getDisputeThread(c.env.DB, id)
+  if (!thread) {
+    return c.html('<h1>토론을 찾을 수 없습니다</h1>', 404)
+  }
+  const proposals = await getProposalsForThread(c.env.DB, id) as any[]
+  const flashType = c.req.query('flash')
+  const flash = flashType === 'success'
+    ? { type: 'success' as const, message: '제출 완료' }
+    : flashType === 'error'
+    ? { type: 'error' as const, message: '처리에 실패했습니다.' }
+    : undefined
+  return c.html(renderDisputeViewPage({
+    userMenuHtml,
+    thread,
+    proposals,
+    isLoggedIn: !!user,
+    flash
+  }))
+})
+
+pagesRoutes.post('/dispute/:id/propose', requireAuth, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/login')
+  const id = parseInt(c.req.param('id'), 10)
+  if (!Number.isFinite(id)) return c.redirect('/policy/dispute')
+  const form = await c.req.formData()
+  const proposedText = String(form.get('proposed_text') || '').trim()
+  const proposedEvidence = String(form.get('proposed_evidence') || '').trim() || undefined
+  if (proposedText.length < 20) {
+    return c.redirect(`/dispute/${id}?flash=error`)
+  }
+  await proposeConsensus(c.env.DB, {
+    threadId: id,
+    proposerId: user.id,
+    proposedText,
+    proposedEvidence
+  })
+  return c.redirect(`/dispute/${id}?flash=success`)
+})
+
+pagesRoutes.post('/dispute/:id/proposal/:pid/vote', requireAuth, async (c) => {
+  const user = c.get('user')
+  if (!user) return c.redirect('/login')
+  const id = parseInt(c.req.param('id'), 10)
+  const pid = parseInt(c.req.param('pid'), 10)
+  if (!Number.isFinite(id) || !Number.isFinite(pid)) return c.redirect('/policy/dispute')
+  const form = await c.req.formData()
+  const voteType = String(form.get('vote_type') || '') as any
+  if (!['agree', 'object', 'comment'].includes(voteType)) {
+    return c.redirect(`/dispute/${id}?flash=error`)
+  }
+  await castDisputeVote(c.env.DB, {
+    proposalId: pid,
+    userId: user.id,
+    voteType,
+    commentText: undefined
+  })
+  return c.redirect(`/dispute/${id}?flash=success`)
 })
 
 pagesRoutes.post('/user/appeal', requireAuth, async (c) => {

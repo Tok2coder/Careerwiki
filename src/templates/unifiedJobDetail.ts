@@ -5166,12 +5166,24 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     aiFields: aiFieldCount
   })
 
+  // D1 토론 버튼 — 분쟁 페이지로 진입 (직업 슬러그를 target_id로)
+  const disputeOpenButtonBlock = `
+    <div class="flex justify-end mb-2">
+      <a href="/dispute/open?target_type=job&target_id=${encodeURIComponent((profile as any).slug || profile.id)}"
+         class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+         style="background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.3); color:#c4b5fd;"
+         title="이 페이지의 분쟁 발제 — 토론·합의 절차서 §1">
+        <i class="fas fa-comments"></i> 토론 열기
+      </a>
+    </div>`
+
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
       ${safetyBannersBlock}
       ${sensitiveBannerBlock}
       ${trustBoxBlock}
       ${dataSplitBadgeBlock}
+      ${disputeOpenButtonBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
           <div class="space-y-2">
