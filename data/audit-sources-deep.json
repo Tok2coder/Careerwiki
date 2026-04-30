@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T11:52:35.764Z",
+  "generated_at": "2026-04-30T12:15:28.617Z",
   "filter": {
     "slug": null,
     "markersOnly": true,
@@ -7,19 +7,19 @@
   },
   "summary": {
     "total_jobs": 325,
-    "dupMarkers": 3,
-    "orphanSrc": 17,
+    "dupMarkers": 0,
+    "orphanSrc": 0,
     "originDomain": 0,
     "selfCite": 0,
     "selfCiteOnly": 0,
-    "listPage": 2,
+    "listPage": 0,
     "rawURL": 0,
     "brokenRef": 0,
     "bracketPrefix": 0,
     "mojibake": 0,
     "sourcesNull": 0,
     "idxGap": 0,
-    "clean": 303
+    "clean": 325
   },
   "jobs": [
     {
@@ -223,12 +223,7 @@
     {
       "slug": "간호사",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -239,9 +234,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 23,
+      "totalUrls": 22,
       "uniqueHosts": 5,
-      "externalHostCount": 23
+      "externalHostCount": 22
     },
     {
       "slug": "간호조무사",
@@ -282,40 +277,7 @@
     {
       "slug": "검사",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "detailWlb.wlbDetail",
-          "idx": 1
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "idx": 2
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "idx": 1
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "idx": 2
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "idx": 3
-        },
-        {
-          "field": "way",
-          "idx": 1
-        },
-        {
-          "field": "way",
-          "idx": 2
-        },
-        {
-          "field": "way",
-          "idx": 3
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -326,9 +288,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 20,
-      "uniqueHosts": 11,
-      "externalHostCount": 20
+      "totalUrls": 12,
+      "uniqueHosts": 7,
+      "externalHostCount": 12
     },
     {
       "slug": "검침원",
@@ -445,12 +407,7 @@
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
-      "listPage": [
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.gamejob.co.kr/Recruit/Main"
-        }
-      ],
+      "listPage": [],
       "rawURL": [],
       "brokenRef": [],
       "bracketPrefix": [],
@@ -464,20 +421,7 @@
     {
       "slug": "경리사무원",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewProspect.main",
-          "idx": 1
-        },
-        {
-          "field": "trivia",
-          "idx": 1
-        },
-        {
-          "field": "way",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -488,43 +432,14 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 13,
-      "uniqueHosts": 6,
-      "externalHostCount": 13
+      "totalUrls": 10,
+      "uniqueHosts": 5,
+      "externalHostCount": 10
     },
     {
       "slug": "경마검량원",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewProspect.main",
-          "idx": 1
-        },
-        {
-          "field": "overviewProspect.main",
-          "idx": 2
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "idx": 1
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "idx": 1
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "idx": 2
-        },
-        {
-          "field": "way",
-          "idx": 1
-        },
-        {
-          "field": "way",
-          "idx": 2
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -535,19 +450,14 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
+      "totalUrls": 12,
       "uniqueHosts": 5,
-      "externalHostCount": 19
+      "externalHostCount": 12
     },
     {
       "slug": "경비원",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "trivia",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -558,9 +468,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
+      "totalUrls": 16,
       "uniqueHosts": 5,
-      "externalHostCount": 17
+      "externalHostCount": 16
     },
     {
       "slug": "경제학연구원",
@@ -619,40 +529,7 @@
     {
       "slug": "공업기계설치-및-정비원",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewProspect.main",
-          "idx": 1
-        },
-        {
-          "field": "overviewProspect.main",
-          "idx": 2
-        },
-        {
-          "field": "overviewProspect.main",
-          "idx": 3
-        },
-        {
-          "field": "overviewProspect.main",
-          "idx": 4
-        },
-        {
-          "field": "trivia",
-          "idx": 1
-        },
-        {
-          "field": "trivia",
-          "idx": 2
-        },
-        {
-          "field": "trivia",
-          "idx": 3
-        },
-        {
-          "field": "trivia",
-          "idx": 4
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -663,9 +540,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 29,
-      "uniqueHosts": 8,
-      "externalHostCount": 29
+      "totalUrls": 21,
+      "uniqueHosts": 7,
+      "externalHostCount": 21
     },
     {
       "slug": "공예가",
@@ -706,40 +583,7 @@
     {
       "slug": "관광통역안내원",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewProspect.main",
-          "idx": 1
-        },
-        {
-          "field": "overviewProspect.main",
-          "idx": 2
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "idx": 1
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "idx": 2
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "idx": 1
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "idx": 2
-        },
-        {
-          "field": "trivia",
-          "idx": 1
-        },
-        {
-          "field": "way",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -750,9 +594,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 10,
-      "uniqueHosts": 5,
-      "externalHostCount": 10
+      "totalUrls": 2,
+      "uniqueHosts": 2,
+      "externalHostCount": 2
     },
     {
       "slug": "관세사",
@@ -883,16 +727,7 @@
     {
       "slug": "금융관리자",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewProspect.main",
-          "idx": 1
-        },
-        {
-          "field": "overviewProspect.main",
-          "idx": 2
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -903,9 +738,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
+      "totalUrls": 15,
       "uniqueHosts": 6,
-      "externalHostCount": 17
+      "externalHostCount": 15
     },
     {
       "slug": "기상연구원",
@@ -928,52 +763,7 @@
     {
       "slug": "기상캐스터",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewProspect.main",
-          "idx": 1
-        },
-        {
-          "field": "overviewProspect.main",
-          "idx": 2
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "idx": 1
-        },
-        {
-          "field": "detailWlb.wlbDetail",
-          "idx": 2
-        },
-        {
-          "field": "detailWlb.socialDetail",
-          "idx": 1
-        },
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        },
-        {
-          "field": "overviewSalary.sal",
-          "idx": 2
-        },
-        {
-          "field": "trivia",
-          "idx": 1
-        },
-        {
-          "field": "way",
-          "idx": 1
-        },
-        {
-          "field": "way",
-          "idx": 2
-        },
-        {
-          "field": "way",
-          "idx": 3
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -984,9 +774,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 14,
-      "uniqueHosts": 6,
-      "externalHostCount": 14
+      "totalUrls": 3,
+      "uniqueHosts": 1,
+      "externalHostCount": 3
     },
     {
       "slug": "기악연주자",
@@ -1099,35 +889,7 @@
     {
       "slug": "네트워크-관리자",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
-      "originDomain": [],
-      "selfCite": [],
-      "selfCiteOnly": false,
-      "listPage": [],
-      "rawURL": [],
-      "brokenRef": [],
-      "bracketPrefix": [],
-      "mojibake": [],
-      "sourcesNull": false,
-      "idxGap": null,
-      "totalUrls": 18,
-      "uniqueHosts": 11,
-      "externalHostCount": 18
-    },
-    {
-      "slug": "노무사",
-      "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -1139,8 +901,26 @@
       "sourcesNull": false,
       "idxGap": null,
       "totalUrls": 17,
-      "uniqueHosts": 7,
+      "uniqueHosts": 11,
       "externalHostCount": 17
+    },
+    {
+      "slug": "노무사",
+      "dupMarkers": [],
+      "orphanSrc": [],
+      "originDomain": [],
+      "selfCite": [],
+      "selfCiteOnly": false,
+      "listPage": [],
+      "rawURL": [],
+      "brokenRef": [],
+      "bracketPrefix": [],
+      "mojibake": [],
+      "sourcesNull": false,
+      "idxGap": null,
+      "totalUrls": 16,
+      "uniqueHosts": 7,
+      "externalHostCount": 16
     },
     {
       "slug": "대중가수",
@@ -1217,12 +997,7 @@
     {
       "slug": "데이터분석가빅데이터분석가",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -1233,9 +1008,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
+      "totalUrls": 18,
       "uniqueHosts": 8,
-      "externalHostCount": 19
+      "externalHostCount": 18
     },
     {
       "slug": "동물조련사",
@@ -1564,12 +1339,7 @@
     {
       "slug": "물리치료사",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -1580,9 +1350,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 17,
+      "totalUrls": 16,
       "uniqueHosts": 4,
-      "externalHostCount": 17
+      "externalHostCount": 16
     },
     {
       "slug": "미디어콘텐츠창작자크리에이터",
@@ -2163,12 +1933,7 @@
     {
       "slug": "보험인수심사원언더라이터",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -2179,9 +1944,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
+      "totalUrls": 18,
       "uniqueHosts": 7,
-      "externalHostCount": 19
+      "externalHostCount": 18
     },
     {
       "slug": "부사관",
@@ -3122,12 +2887,7 @@
     {
       "slug": "애니메이션작가",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -3138,9 +2898,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 8,
+      "totalUrls": 7,
       "uniqueHosts": 3,
-      "externalHostCount": 8
+      "externalHostCount": 7
     },
     {
       "slug": "약국약사",
@@ -3613,12 +3373,7 @@
     {
       "slug": "웹-기획자",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -3629,9 +3384,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 19,
+      "totalUrls": 18,
       "uniqueHosts": 10,
-      "externalHostCount": 19
+      "externalHostCount": 18
     },
     {
       "slug": "웹툰pd",
@@ -3780,12 +3535,7 @@
     {
       "slug": "유치원교사",
       "dupMarkers": [],
-      "orphanSrc": [
-        {
-          "field": "overviewSalary.sal",
-          "idx": 1
-        }
-      ],
+      "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
@@ -3796,9 +3546,9 @@
       "mojibake": [],
       "sourcesNull": false,
       "idxGap": null,
-      "totalUrls": 18,
+      "totalUrls": 17,
       "uniqueHosts": 6,
-      "externalHostCount": 18
+      "externalHostCount": 17
     },
     {
       "slug": "은행개인금융상담역",
@@ -3987,16 +3737,7 @@
       "originDomain": [],
       "selfCite": [],
       "selfCiteOnly": false,
-      "listPage": [
-        {
-          "field": "trivia",
-          "url": "https://www.kpbma.or.kr/data/research/list"
-        },
-        {
-          "field": "way",
-          "url": "https://www.nrf.re.kr/biz/info/info/list?menu_no=349"
-        }
-      ],
+      "listPage": [],
       "rawURL": [],
       "brokenRef": [],
       "bracketPrefix": [],
@@ -4315,18 +4056,7 @@
     },
     {
       "slug": "자동차정비원",
-      "dupMarkers": [
-        {
-          "field": "overviewProspect.main",
-          "marker": "[1]",
-          "count": 2
-        },
-        {
-          "field": "way",
-          "marker": "[1]",
-          "count": 2
-        }
-      ],
+      "dupMarkers": [],
       "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
@@ -5136,13 +4866,7 @@
     },
     {
       "slug": "청원경찰",
-      "dupMarkers": [
-        {
-          "field": "way",
-          "marker": "[1]",
-          "count": 2
-        }
-      ],
+      "dupMarkers": [],
       "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
@@ -5448,13 +5172,7 @@
     },
     {
       "slug": "택배원",
-      "dupMarkers": [
-        {
-          "field": "way",
-          "marker": "[1]",
-          "count": 2
-        }
-      ],
+      "dupMarkers": [],
       "orphanSrc": [],
       "originDomain": [],
       "selfCite": [],
