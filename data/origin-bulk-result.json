@@ -1,0 +1,42 @@
+{
+  "generated_at": "2026-04-30",
+  "phase": "dry-run",
+  "summary": {
+    "attempted": 2,
+    "in_scope_clean": 2,
+    "in_scope_fail": 0,
+    "out_of_scope_residual": 1
+  },
+  "jobs": [
+    {
+      "slug": "개인브랜드매니저",
+      "id": "1775053184500",
+      "rev": 13485,
+      "replacements_applied": 1,
+      "origin_before": ["www.career.go.kr"],
+      "origin_after": [],
+      "in_scope_clean": true,
+      "out_of_scope": [],
+      "external_added": ["magazine.hankyung.com"],
+      "verification": "WebFetch 200 + 키워드 '브랜드 컨설턴트'·'에이전시'·'네이미스트' 매칭"
+    },
+    {
+      "slug": "청원경찰",
+      "id": "1765283380625282",
+      "rev": 13486,
+      "replacements_applied": 10,
+      "origin_before": ["www.career.go.kr (×5)", "www.wagework.go.kr (×5)"],
+      "origin_after": [],
+      "in_scope_clean": true,
+      "out_of_scope": ["dupMarkers=1"],
+      "external_added": ["www.law.go.kr (×4)", "www.kci.go.kr (×2)", "www.bok.or.kr (×2)", "www.laborplus.co.kr", "www.ohmynews.com"],
+      "verification": "10건 모두 WebFetch 200 + 본문 마커 매칭 (3조 2교대/공직의 서자/청원경찰법 등)"
+    }
+  ],
+  "tools": {
+    "prepare": "scripts/skill-cache/prepare-origin-bulk.cjs",
+    "fix": "scripts/skill-cache/origin-bulk-fix.cjs",
+    "audit": "scripts/skill-cache/audit-sources-deep.cjs"
+  },
+  "next_step": "batch 152 직업 — 사용자 GO 받고 시작 (subagent 2 직업/병렬 패턴 반복)"
+}
