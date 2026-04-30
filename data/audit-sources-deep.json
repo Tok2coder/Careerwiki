@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T05:59:57.588Z",
+  "generated_at": "2026-04-30T06:07:38.270Z",
   "filter": {
     "slug": null,
     "markersOnly": true,
@@ -4243,19 +4243,9 @@
       "orphanSrc": [],
       "originDomain": [
         {
-          "field": "overviewProspect.main",
-          "url": "https://www.scourt.go.kr/portal/news/NewsListAction.work?gubun=3",
-          "host": "www.scourt.go.kr"
-        },
-        {
           "field": "detailWlb.socialDetail",
           "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
           "host": "www.wagework.go.kr"
-        },
-        {
-          "field": "trivia",
-          "url": "https://www.scourt.go.kr/portal/news/NewsListAction.work?gubun=3",
-          "host": "www.scourt.go.kr"
         },
         {
           "field": "way",
@@ -4265,21 +4255,9 @@
       ],
       "selfCite": [
         {
-          "field": "overviewProspect.main",
-          "url": "https://www.scourt.go.kr/portal/news/NewsListAction.work?gubun=3",
-          "host": "www.scourt.go.kr",
-          "kind": "origin"
-        },
-        {
           "field": "detailWlb.socialDetail",
           "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
           "host": "www.wagework.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "trivia",
-          "url": "https://www.scourt.go.kr/portal/news/NewsListAction.work?gubun=3",
-          "host": "www.scourt.go.kr",
           "kind": "origin"
         },
         {
@@ -4299,7 +4277,7 @@
       "idxGap": null,
       "totalUrls": 7,
       "uniqueHosts": 4,
-      "externalHostCount": 3
+      "externalHostCount": 5
     },
     {
       "slug": "벤처캐피탈투자심사역",
@@ -11242,26 +11220,6 @@
           "field": "detailWlb.wlbDetail",
           "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
           "host": "www.wagework.go.kr"
-        },
-        {
-          "field": "trivia",
-          "url": "https://www.youth.go.kr/yworker/",
-          "host": "www.youth.go.kr"
-        },
-        {
-          "field": "way",
-          "url": "https://www.youth.go.kr/yworker/",
-          "host": "www.youth.go.kr"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.youth.go.kr/yworker/",
-          "host": "www.youth.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.youth.go.kr/yworker/",
-          "host": "www.youth.go.kr"
         }
       ],
       "selfCite": [
@@ -11276,30 +11234,6 @@
           "url": "https://www.wagework.go.kr/pt/b/a/retrieveOccpSrchByJobCare.do",
           "host": "www.wagework.go.kr",
           "kind": "origin"
-        },
-        {
-          "field": "trivia",
-          "url": "https://www.youth.go.kr/yworker/",
-          "host": "www.youth.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "way",
-          "url": "https://www.youth.go.kr/yworker/",
-          "host": "www.youth.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.curriculum",
-          "url": "https://www.youth.go.kr/yworker/",
-          "host": "www.youth.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.youth.go.kr/yworker/",
-          "host": "www.youth.go.kr",
-          "kind": "origin"
         }
       ],
       "selfCiteOnly": false,
@@ -11312,7 +11246,7 @@
       "idxGap": null,
       "totalUrls": 24,
       "uniqueHosts": 7,
-      "externalHostCount": 18
+      "externalHostCount": 22
     },
     {
       "slug": "청원경찰",
@@ -12694,16 +12628,6 @@
           "field": "detailWlb.socialDetail",
           "url": "https://www.career.go.kr/cloud/w/job/view?seq=414",
           "host": "www.career.go.kr"
-        },
-        {
-          "field": "trivia",
-          "url": "https://www.scourt.go.kr/portal/news/NewsViewAction.work?gubun=6&seqnum=2696",
-          "host": "www.scourt.go.kr"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.scourt.go.kr/portal/news/NewsViewAction.work?gubun=6&seqnum=2685",
-          "host": "www.scourt.go.kr"
         }
       ],
       "selfCite": [
@@ -12724,18 +12648,6 @@
           "url": "https://www.career.go.kr/cloud/w/job/view?seq=414",
           "host": "www.career.go.kr",
           "kind": "origin"
-        },
-        {
-          "field": "trivia",
-          "url": "https://www.scourt.go.kr/portal/news/NewsViewAction.work?gubun=6&seqnum=2696",
-          "host": "www.scourt.go.kr",
-          "kind": "origin"
-        },
-        {
-          "field": "detailReady.recruit",
-          "url": "https://www.scourt.go.kr/portal/news/NewsViewAction.work?gubun=6&seqnum=2685",
-          "host": "www.scourt.go.kr",
-          "kind": "origin"
         }
       ],
       "selfCiteOnly": false,
@@ -12748,7 +12660,7 @@
       "idxGap": null,
       "totalUrls": 17,
       "uniqueHosts": 9,
-      "externalHostCount": 12
+      "externalHostCount": 14
     },
     {
       "slug": "패션모델",
