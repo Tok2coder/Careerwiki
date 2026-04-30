@@ -21,49 +21,48 @@ export function renderCommunityPolicyPage(options?: PolicyPageOptions): string {
       `
     },
     {
-      id: 'identity-tier',
-      title: '제2조 익명성 모델 — 4단계 Tier',
+      id: 'identity-model',
+      title: '제2조 익명성 모델 — 단순 가입제',
       content: `
-        <p>Careerwiki는 다음 4단계 Tier로 사용자 권한을 차등합니다.
-        익숙해지면 권한이 늘어나는 누적제 (Hacker News karma 모델 차용).</p>
+        <p>Careerwiki는 다음 3단계로 사용자 권한을 구분합니다.</p>
         <table>
           <thead>
-            <tr><th>Tier</th><th>조건</th><th>권한</th></tr>
+            <tr><th>구분</th><th>조건</th><th>권한</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Tier 0</strong></td>
+              <td><strong>비회원</strong></td>
               <td>비로그인</td>
               <td>읽기만 가능</td>
             </tr>
             <tr>
-              <td><strong>Tier 1</strong></td>
+              <td><strong>일반 회원</strong></td>
               <td>Google 로그인 + 닉네임</td>
-              <td>댓글, 추천(👍), 신고 가능. 비추천 불가.</td>
+              <td>댓글·추천·비추천·신고·HowTo 작성·위키 편집</td>
             </tr>
             <tr>
-              <td><strong>Tier 2</strong></td>
-              <td>학교 인증 (이메일·재학증명)</td>
-              <td>"○○대 4학년" 라벨 노출. 비추천(👎) 권한 추가.</td>
-            </tr>
-            <tr>
-              <td><strong>Tier 3</strong></td>
-              <td>직업 인증 (재직증명·명함)</td>
-              <td>"현직 5년차 ○○" 라벨 노출. 베스트 답변 가산점.</td>
+              <td><strong>운영진</strong></td>
+              <td>운영팀 임명</td>
+              <td>신고 검토·임시조치·중재 등 운영 권한</td>
             </tr>
           </tbody>
         </table>
-        <h3 class="text-base font-semibold text-white mt-4 mb-2">인증 데이터 처리 (블라인드 모델)</h3>
-        <ul class="list-disc list-inside space-y-1">
-          <li>인증용 이메일·증빙은 <strong>검증 즉시 폐기 + 단방향 해시</strong>.</li>
-          <li>Careerwiki는 사용자 식별 정보를 보유하지 않습니다.</li>
-          <li>닉네임은 변경 가능하나, "이전 닉" 흔적은 운영자만 봅니다 (다중계정 추적 가능성 유지).</li>
-        </ul>
+        <div class="callout">
+          <strong>학교·직업 인증은 현재 정책에 포함되지 않습니다.</strong>
+          별도 인증을 통한 신뢰 라벨(예: "○○대 4학년", "현직 5년차") 시스템은
+          <strong>커리어트리(Career Tree) 영역에서만</strong> 별도 기획 중이며,
+          댓글·위키·HowTo 영역에는 적용되지 않습니다. 본 지침에서는
+          본인이 본문에 자기 경력·학년을 직접 적는 자기 진술만 인정합니다.
+        </div>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">신고 권한 가드</h3>
         <ul class="list-disc list-inside space-y-1">
           <li>신규 가입 후 24시간 이내: 신고권 제한 (Reddit 모델).</li>
           <li>허위 신고 누적 3회: 신고권 박탈 (링커리어 모델).</li>
-          <li>비추천(👎)은 어뷰징 방어 위해 Tier 2 이상만 가능.</li>
+        </ul>
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">닉네임 정책</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li>닉네임은 변경 가능하나, "이전 닉" 흔적은 운영자만 봅니다 (다중계정 추적 가능성 유지).</li>
+          <li>닉네임 자체에 욕설·차별·타인 사칭 표현 사용 금지.</li>
         </ul>
       `
     },
@@ -85,7 +84,6 @@ export function renderCommunityPolicyPage(options?: PolicyPageOptions): string {
           <li>특정 회사·학교에 대한 명백한 허위 사실 (객관 검증 가능한 거짓).</li>
           <li>특정 인물 저격 (이름·직책·식별 가능 별명으로 동료·상사·교수·학생 비방).</li>
           <li>회사 기밀·NDA 위반 가능 정보 (미공개 재무·영업비밀·인사 정보).</li>
-          <li><strong>재직/재학 사칭</strong> — 인증 라벨을 거짓으로 사용하는 행위. 적발 시 영구 정지.</li>
         </ol>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">C. 품질 문제 (1차 경고)</h3>
         <ol class="list-decimal list-inside space-y-1">
@@ -114,7 +112,7 @@ export function renderCommunityPolicyPage(options?: PolicyPageOptions): string {
           <li><strong>자동 1차 분류 (5분 내)</strong> — AI 분류기로 §3-A(즉시 삭제) 검출 시 자동 임시가림. <strong>회색지대(§3-B/D)는 자동 처리 절대 금지</strong>.</li>
           <li><strong>사람 검토 (24~72시간)</strong> — 운영자 4가지 결과: 유지 / 삭제 / 경고+유지 / 작성자 수정요청. 잡플래닛 모델 — 즉시 삭제보다 "수정 요청"이 1순위.</li>
           <li><strong>이의제기 (30일 임시조치)</strong> — 작성자 30일간 임시 비공개 + 재검토. 회사·학교 측 신고는 별도 채널.</li>
-          <li><strong>제재 (단계제)</strong> — 1차 경고 → 2차 7일 정지 → 3차 30일 정지 → 4차 영구. 명백 위반(폭력/아동성착취/사칭)은 1회 영구.</li>
+          <li><strong>제재 (단계제)</strong> — 1차 경고 → 2차 7일 정지 → 3차 30일 정지 → 4차 영구. 명백 위반(폭력·아동성착취·반복 허위사실)은 1회 영구.</li>
         </ol>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">SLA</h3>
         <ul class="list-disc list-inside space-y-1">
@@ -187,7 +185,7 @@ export function renderCommunityPolicyPage(options?: PolicyPageOptions): string {
         </table>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">B. 회사 반론권 (Glassdoor 모델)</h3>
         <ul class="list-disc list-inside space-y-1">
-          <li>회사가 자사 페이지의 부정 후기에 <strong>1회 답글 가능</strong> (회사 인증 후).</li>
+          <li>회사가 자사 페이지의 부정 후기에 <strong>1회 답글 가능</strong> (운영팀이 회사 측 신원·소속 확인 후).</li>
           <li>답글도 모더레이션 대상 (작성자 협박·법적 위협 금지).</li>
           <li>분쟁 미해결 시 "양측 의견 병기" 라벨로 처리.</li>
         </ul>
@@ -225,15 +223,17 @@ export function renderCommunityPolicyPage(options?: PolicyPageOptions): string {
       content: `
         <h3 class="text-base font-semibold text-white mt-4 mb-2">A. 추천·베스트 시스템</h3>
         <ul class="list-disc list-inside space-y-1">
-          <li><strong>추천(👍)</strong>: Tier 1+ 가능. 댓글당 1회.</li>
-          <li><strong>비추천(👎)</strong>: Tier 2+ (학교/직업 인증자만). 어뷰징 방어.</li>
+          <li><strong>추천(👍)</strong>: 일반 회원 누구나. 댓글당 1회.</li>
+          <li><strong>비추천(👎)</strong>: 일반 회원 누구나. 단 가입 후 24시간 이내·karma -5 이하는 제한.</li>
           <li><strong>베스트 답변(★)</strong>: 추천 N개(예: 10) + 댓글 3개 → 페이지 상단 자동 등재 (디시 개념글 모델).</li>
           <li><strong>에디터 추천</strong>: 운영자 또는 검증된 전문가가 수동 별표 부여 (디시 실베 + Anthropic Trust 모델).</li>
         </ul>
-        <h3 class="text-base font-semibold text-white mt-4 mb-2">B. 인증 라벨</h3>
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">B. 자기 진술 (인증 시스템 없음)</h3>
         <ul class="list-disc list-inside space-y-1">
-          <li>"현직 7년차 PM", "○○대 경영학과 4학년" 같은 라벨이 닉네임 옆에.</li>
-          <li>이 라벨이 "출처" 역할을 하므로, [개인 의견] 라벨 없이도 본인 경험 진술 가능.</li>
+          <li>댓글·후기에 "저는 ○○ 회사 5년차입니다" 같은 자기 진술은 자유롭게 가능합니다.</li>
+          <li>다만 시스템이 검증하지 않으므로, 다른 독자가 신뢰할지는 글 내용·문맥에 달려 있습니다.</li>
+          <li>본인 경험 단락은 <code>[개인 의견]</code> 라벨을 병기하면 출처 등급 룰 적용에서 제외됩니다.</li>
+          <li>학교·직업 인증을 통한 자동 라벨 시스템은 본 정책에 포함되지 않습니다(커리어트리 영역에서 별도 기획).</li>
         </ul>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">C. karma (평판 점수)</h3>
         <ul class="list-disc list-inside space-y-1">

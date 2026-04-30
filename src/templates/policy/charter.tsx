@@ -139,7 +139,7 @@ export function renderCharterPage(options?: PolicyPageOptions): string {
         <ul class="list-disc list-inside space-y-1">
           <li>위키 본문에서 의견 한 단락: <code>[개인 의견]</code> 라벨로 시작하거나, "현직자 본인의 견해입니다" 등 한 줄을 단락 처음에.</li>
           <li>HowTo 글 전체가 의견 기반: 본문 상단 "이 글은 작성자 ○○의 경험·시각으로 쓴 글입니다" 박스.</li>
-          <li>댓글: 자연스러운 1인칭이 기본이라 별도 라벨 불필요. 단 "현직자 인증" 라벨이 있는 경우 라벨 자체가 출처 역할을 합니다.</li>
+          <li>댓글: 자연스러운 1인칭이 기본이라 별도 라벨 불필요. 본문에 "저는 ○○ 5년차입니다" 식의 자기 진술을 적는 것은 자유.</li>
         </ul>
         <p class="mt-3 text-sm text-slate-400">
           단, "출처 있는 사실"인 척 의견을 위장하는 행위는

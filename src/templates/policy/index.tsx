@@ -73,7 +73,7 @@ const CARDS: PolicyCard[] = [
     icon: 'fa-comments',
     color: 'from-emerald-500/20 to-teal-500/20 border-emerald-400/30 text-emerald-200',
     title: '커뮤니티 운영지침',
-    desc: '익명성 모델 Tier, 댓글 차단·삭제 사유, 자살자해 매뉴얼, 회사·학교 비방 처리 원칙.'
+    desc: '댓글 차단·삭제 사유, 자살자해 매뉴얼, 회사·학교 비방 처리 원칙. (인증 시스템은 별도 기획)'
   },
 
   // === 운영 절차 ===

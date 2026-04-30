@@ -108,16 +108,16 @@ export function renderEnforcementPage(options?: PolicyPageOptions): string {
             <tr><td>1차</td><td><strong>경고</strong></td><td>해당 콘텐츠 삭제 + 사유 통지</td></tr>
             <tr><td>2차</td><td><strong>7일 작성 정지</strong></td><td>댓글·편집·HowTo 발행 모두 정지</td></tr>
             <tr><td>3차</td><td><strong>30일 정지</strong></td><td>읽기는 가능</td></tr>
-            <tr><td>4차</td><td><strong>영구 정지</strong></td><td>인증 라벨 박탈 포함</td></tr>
+            <tr><td>4차</td><td><strong>영구 정지</strong></td><td>계정·작성물 작성권 영구 제한</td></tr>
           </tbody>
         </table>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">즉시 영구 정지 사유 (단계 건너뛰기)</h3>
         <ul class="list-disc list-inside space-y-1">
           <li>아동성착취물 게시·유포.</li>
           <li>구체적 폭력·살해 협박.</li>
-          <li>재직/재학 사칭 — 인증 라벨 거짓 사용 적발.</li>
           <li>차단 회피를 위한 다중계정 운영 적발.</li>
           <li>해킹·악성코드 유포 시도.</li>
+          <li>같은 사안에서 반복적으로 허위사실을 주장해 타인의 진로 결정에 손해를 입힌 적발.</li>
         </ul>
         <h3 class="text-base font-semibold text-white mt-4 mb-2">감경 사유</h3>
         <ul class="list-disc list-inside space-y-1">
