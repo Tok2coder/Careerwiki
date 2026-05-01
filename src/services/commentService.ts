@@ -21,7 +21,9 @@ const DEFAULT_IP_DISPLAY_MODE: 'masked' = 'masked'
 const MODERATOR_IP_BLOCK_ENABLED = true
 const MODERATOR_ROLE_ORDER: ReadonlyArray<UserRole> = ['super-admin', 'operator']
 const BLINDED_PLACEHOLDER = '신고 누적으로 블라인드 처리된 댓글입니다.'
-const DELETED_PLACEHOLDER = '삭제된 댓글입니다. (작성자 자진 삭제 또는 운영자 결정 — 이의가 있으면 /user/appeal 에서 소명)'
+const DELETED_BY_AUTHOR_PLACEHOLDER = '작성자가 삭제한 댓글입니다.'
+const DELETED_BY_MOD_PLACEHOLDER = '운영자에 의해 삭제된 댓글입니다. (이의가 있으면 /user/appeal 에서 소명)'
+const DELETED_LEGACY_PLACEHOLDER = '삭제된 댓글입니다.'
 const MAX_CONTENT_LENGTH = 500  // 한글 기준 500자
 const MAX_DEPTH = 3  // 최대 3단계 답글
 
@@ -63,6 +65,11 @@ export interface CommentRecord {
   depth?: number  // 답글 깊이 (0=최상위, 1=답글, 2=답글의 답글, 3=최대)
   moderated?: boolean  // 욕설 필터 적용 여부
   originalContent?: string | null  // 필터링 전 원본 내용
+  // 정책 §3 검열·삭제 투명성 (0056 마이그레이션)
+  removedBy?: 'author' | 'moderator' | null  // 삭제 출처
+  removedAt?: string | null
+  removedReasonCategory?: string | null
+  removedDecisionId?: number | null
 }
 
 export interface CommentThread extends CommentRecord {
@@ -202,8 +209,15 @@ const applyViewerPolicy = (record: CommentRecord, role: UserRole): CommentRecord
       ? record.displayIp
       : null
   if (role === 'user' && record.status !== 'visible') {
-    // 정책 §3 검열·삭제 투명성: 일반 사용자에게는 자리표시자로 노출
-    const placeholder = record.status === 'deleted' ? DELETED_PLACEHOLDER : BLINDED_PLACEHOLDER
+    // 정책 §3 검열·삭제 투명성: 출처에 따라 다른 자리표시자
+    let placeholder: string
+    if (record.status === 'deleted') {
+      if (record.removedBy === 'moderator') placeholder = DELETED_BY_MOD_PLACEHOLDER
+      else if (record.removedBy === 'author') placeholder = DELETED_BY_AUTHOR_PLACEHOLDER
+      else placeholder = DELETED_LEGACY_PLACEHOLDER
+    } else {
+      placeholder = BLINDED_PLACEHOLDER
+    }
     return {
       ...record,
       content: placeholder,
@@ -270,7 +284,12 @@ const mapRowToComment = (row: any): CommentRecord => {
     mentions,
     depth: row.depth !== null && row.depth !== undefined ? Number(row.depth) : 0,
     moderated: Number(row.moderated ?? 0) === 1,
-    originalContent: typeof row.original_content === 'string' ? row.original_content : null
+    originalContent: typeof row.original_content === 'string' ? row.original_content : null,
+    // 정책 §3 검열·삭제 투명성 (0056 마이그레이션)
+    removedBy: (row.removed_by === 'author' || row.removed_by === 'moderator') ? row.removed_by : null,
+    removedAt: typeof row.removed_at === 'string' ? row.removed_at : null,
+    removedReasonCategory: typeof row.removed_reason_category === 'string' ? row.removed_reason_category : null,
+    removedDecisionId: row.removed_decision_id !== null && row.removed_decision_id !== undefined ? Number(row.removed_decision_id) : null
   }
 }
 
@@ -438,7 +457,9 @@ export const getCommentsForPage = async (
   const selectSql = viewerId
     ? `SELECT c.id, c.page_id, c.parent_id, c.author_id, c.nickname, c.content, c.likes, c.dislike_count, c.report_count,
              c.status, c.is_anonymous, c.display_ip, c.created_at, c.password_hash, c.anonymous_number,
-             c.is_edited, c.edited_at, c.mentions, c.depth, v.vote AS viewer_vote, u.role AS author_role,
+             c.is_edited, c.edited_at, c.mentions, c.depth, c.moderated, c.original_content,
+             c.removed_by, c.removed_at, c.removed_reason_category, c.removed_decision_id,
+             v.vote AS viewer_vote, u.role AS author_role,
              u.picture_url AS author_picture_url, u.custom_picture_url AS author_custom_picture_url
        FROM comments c
        LEFT JOIN comment_votes v ON v.comment_id = c.id AND v.user_id = ?
@@ -448,7 +469,9 @@ export const getCommentsForPage = async (
        LIMIT ?`
     : `SELECT c.id, c.page_id, c.parent_id, c.author_id, c.nickname, c.content, c.likes, c.dislike_count, c.report_count,
              c.status, c.is_anonymous, c.display_ip, c.created_at, c.password_hash, c.anonymous_number,
-             c.is_edited, c.edited_at, c.mentions, c.depth, 0 AS viewer_vote, u.role AS author_role,
+             c.is_edited, c.edited_at, c.mentions, c.depth, c.moderated, c.original_content,
+             c.removed_by, c.removed_at, c.removed_reason_category, c.removed_decision_id,
+             0 AS viewer_vote, u.role AS author_role,
              u.picture_url AS author_picture_url, u.custom_picture_url AS author_custom_picture_url
        FROM comments c
        LEFT JOIN users u ON u.id = c.author_id
@@ -1269,18 +1292,31 @@ export const deleteComment = async (db: D1Database, payload: DeleteCommentPayloa
     }
   }
 
+  // 정책 §3 검열·삭제 투명성: 삭제 출처 기록 (0056 마이그레이션)
+  // - 관리자가 본인 댓글 아닌 것을 삭제 → 'moderator'
+  // - 본인 댓글(로그인) 또는 본인(익명+비밀번호) → 'author'
+  const isOwnComment = (authorId && payload.userId === authorId) || (isAnonymous && !!payload.password)
+  const removedBy = isAdmin && !isOwnComment ? 'moderator' : 'author'
+
   // Soft delete: 손자 → 자식 → 원본 순으로 status='deleted' 전환
+  // 자식·손자는 작성자 삭제와 같은 출처로 기록 (실질적으로는 부모 삭제로 인한 cascade)
   await db
-    .prepare('UPDATE comments SET status = ?, content = ? WHERE parent_id IN (SELECT id FROM comments WHERE parent_id = ?)')
-    .bind('deleted', '삭제된 댓글입니다.', payload.commentId)
+    .prepare(`UPDATE comments
+              SET status = ?, content = ?, removed_by = ?, removed_at = CURRENT_TIMESTAMP
+              WHERE parent_id IN (SELECT id FROM comments WHERE parent_id = ?)`)
+    .bind('deleted', '삭제된 댓글입니다.', removedBy, payload.commentId)
     .run()
   await db
-    .prepare('UPDATE comments SET status = ?, content = ? WHERE parent_id = ?')
-    .bind('deleted', '삭제된 댓글입니다.', payload.commentId)
+    .prepare(`UPDATE comments
+              SET status = ?, content = ?, removed_by = ?, removed_at = CURRENT_TIMESTAMP
+              WHERE parent_id = ?`)
+    .bind('deleted', '삭제된 댓글입니다.', removedBy, payload.commentId)
     .run()
   await db
-    .prepare('UPDATE comments SET status = ?, content = ? WHERE id = ?')
-    .bind('deleted', '삭제된 댓글입니다.', payload.commentId)
+    .prepare(`UPDATE comments
+              SET status = ?, content = ?, removed_by = ?, removed_at = CURRENT_TIMESTAMP
+              WHERE id = ?`)
+    .bind('deleted', '삭제된 댓글입니다.', removedBy, payload.commentId)
     .run()
 
   return true

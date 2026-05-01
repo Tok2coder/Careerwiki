@@ -1284,10 +1284,28 @@ adminRoutes.post('/admin/moderation/:id/decide', requireAdmin, async (c) => {
     ).bind(queueId).first<{ target_type: string; target_id: number }>()
     if (queueRow) {
       if (decision === 'delete' && queueRow.target_type === 'comment') {
-        // 댓글 status를 deleted로
+        // 정책 §3 검열·삭제 투명성: 운영자 삭제로 명확히 기록
+        // moderation_decisions에서 사유 카테고리도 가져와서 함께 저장
+        const reasonRow = await c.env.DB.prepare(
+          `SELECT cr.reason FROM comment_reports cr
+           INNER JOIN moderation_decisions md ON md.source_report_id = cr.id
+           WHERE md.id = ? LIMIT 1`
+        ).bind(queueId).first<{ reason: string | null }>()
+        const reasonText = reasonRow?.reason || ''
+        // 사유 카테고리 추출 (예: "[hate]" 형태가 reason에 들어있을 수 있음)
+        let categoryGuess: string | null = null
+        const catMatch = /\b(hate|abuse|misinfo|privacy|spam|other)\b/i.exec(reasonText)
+        if (catMatch) categoryGuess = catMatch[1].toLowerCase()
+
         await c.env.DB.prepare(
-          `UPDATE comments SET status = 'deleted' WHERE id = ?`
-        ).bind(queueRow.target_id).run()
+          `UPDATE comments
+           SET status = 'deleted',
+               removed_by = 'moderator',
+               removed_at = CURRENT_TIMESTAMP,
+               removed_reason_category = COALESCE(removed_reason_category, ?),
+               removed_decision_id = ?
+           WHERE id = ?`
+        ).bind(categoryGuess, queueId, queueRow.target_id).run()
       } else if (decision === 'keep' && queueRow.target_type === 'comment') {
         // 자동 블라인드된 댓글 복구
         await c.env.DB.prepare(
