@@ -21,6 +21,7 @@ const DEFAULT_IP_DISPLAY_MODE: 'masked' = 'masked'
 const MODERATOR_IP_BLOCK_ENABLED = true
 const MODERATOR_ROLE_ORDER: ReadonlyArray<UserRole> = ['super-admin', 'operator']
 const BLINDED_PLACEHOLDER = '신고 누적으로 블라인드 처리된 댓글입니다.'
+const DELETED_PLACEHOLDER = '삭제된 댓글입니다. (작성자 자진 삭제 또는 운영자 결정 — 이의가 있으면 /user/appeal 에서 소명)'
 const MAX_CONTENT_LENGTH = 500  // 한글 기준 500자
 const MAX_DEPTH = 3  // 최대 3단계 답글
 
@@ -201,9 +202,11 @@ const applyViewerPolicy = (record: CommentRecord, role: UserRole): CommentRecord
       ? record.displayIp
       : null
   if (role === 'user' && record.status !== 'visible') {
+    // 정책 §3 검열·삭제 투명성: 일반 사용자에게는 자리표시자로 노출
+    const placeholder = record.status === 'deleted' ? DELETED_PLACEHOLDER : BLINDED_PLACEHOLDER
     return {
       ...record,
-      content: BLINDED_PLACEHOLDER,
+      content: placeholder,
       displayIp: allowIp,
       likeCount: record.likeCount,
       dislikeCount: record.dislikeCount
@@ -429,6 +432,9 @@ export const getCommentsForPage = async (
   const viewerRole = options.viewerRole ?? 'user'
   const includeModerated = options.includeModerated ?? isModeratorRole(viewerRole)
 
+  // 정책 §3 검열·삭제 투명성 (namu-wiki 비판 §7 대응):
+  //  - deleted 댓글도 응답에 포함하되 자리표시자로 노출 (일반 사용자)
+  //  - 관리자는 원본 content + status까지 모두 (includeModerated=true)
   const selectSql = viewerId
     ? `SELECT c.id, c.page_id, c.parent_id, c.author_id, c.nickname, c.content, c.likes, c.dislike_count, c.report_count,
              c.status, c.is_anonymous, c.display_ip, c.created_at, c.password_hash, c.anonymous_number,
@@ -437,7 +443,7 @@ export const getCommentsForPage = async (
        FROM comments c
        LEFT JOIN comment_votes v ON v.comment_id = c.id AND v.user_id = ?
        LEFT JOIN users u ON u.id = c.author_id
-       WHERE c.page_id = ? ${includeModerated ? "AND c.status != 'deleted'" : "AND c.status = 'visible'"}
+       WHERE c.page_id = ? ${includeModerated ? "" : "AND c.status IN ('visible', 'deleted', 'blinded')"}
        ORDER BY c.created_at DESC
        LIMIT ?`
     : `SELECT c.id, c.page_id, c.parent_id, c.author_id, c.nickname, c.content, c.likes, c.dislike_count, c.report_count,
@@ -446,7 +452,7 @@ export const getCommentsForPage = async (
              u.picture_url AS author_picture_url, u.custom_picture_url AS author_custom_picture_url
        FROM comments c
        LEFT JOIN users u ON u.id = c.author_id
-       WHERE c.page_id = ? ${includeModerated ? "AND c.status != 'deleted'" : "AND c.status = 'visible'"}
+       WHERE c.page_id = ? ${includeModerated ? "" : "AND c.status IN ('visible', 'deleted', 'blinded')"}
        ORDER BY c.created_at DESC
        LIMIT ?`
 

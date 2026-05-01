@@ -99,15 +99,22 @@ export function renderDisputeViewPage(props: DisputeViewPageProps): string {
         </div>
         ${remainingLabel ? `<div class="mt-3 text-sm">${remainingLabel}</div>` : ''}
         ${props.isLoggedIn && p.status === 'awaiting_objection' ? `
-        <div class="mt-4 flex gap-2 flex-wrap">
+        <div class="mt-4 space-y-3">
           <form method="POST" action="/dispute/${t.id}/proposal/${p.id}/vote" style="display:inline;">
             <input type="hidden" name="vote_type" value="agree">
             <button type="submit" class="px-3 py-1.5 rounded-lg text-sm" style="background:rgba(52,211,153,0.15); color:#86efac; border:1px solid rgba(52,211,153,0.4); cursor:pointer;">👍 동의</button>
           </form>
-          <form method="POST" action="/dispute/${t.id}/proposal/${p.id}/vote" style="display:inline;">
-            <input type="hidden" name="vote_type" value="object">
-            <button type="submit" class="px-3 py-1.5 rounded-lg text-sm" style="background:rgba(248,113,113,0.15); color:#fca5a5; border:1px solid rgba(248,113,113,0.4); cursor:pointer;">⚠️ 이의제기 (+6h)</button>
-          </form>
+          <details class="ml-2 inline-block align-top" style="vertical-align: top;">
+            <summary style="display:inline-block; padding:6px 12px; border-radius:8px; background:rgba(248,113,113,0.15); color:#fca5a5; border:1px solid rgba(248,113,113,0.4); cursor:pointer; font-size:0.875rem; list-style:none;">⚠️ 이의제기 (+6h)</summary>
+            <form method="POST" action="/dispute/${t.id}/proposal/${p.id}/vote" class="mt-2 space-y-2" style="max-width:520px;">
+              <input type="hidden" name="vote_type" value="object">
+              <textarea name="comment_text" required minlength="30" rows="4"
+                class="w-full px-3 py-2 bg-wiki-bg border border-wiki-border rounded-lg text-sm resize-y"
+                placeholder="이의 사유를 30자 이상 적어주세요. (단순 반대는 받지 않습니다 — 새 근거·출처·대안을 함께 제시)"></textarea>
+              <p class="text-xs text-slate-400">동일인이 같은 합의안에 두 번째 이의 제기는 받지 않습니다.</p>
+              <button type="submit" class="px-4 py-2 rounded-lg text-sm font-semibold" style="background:rgba(248,113,113,0.25); color:#fecaca; border:1px solid rgba(248,113,113,0.6); cursor:pointer;">이의 제출</button>
+            </form>
+          </details>
         </div>` : ''}
       </article>
     `

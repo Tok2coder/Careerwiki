@@ -22,6 +22,23 @@ export function renderDisputePage(options?: PolicyPageOptions): string {
       `
     },
     {
+      id: 'objection-quality-rule',
+      title: '제1.5조 이의 제기 품질 룰 (다수결 보완)',
+      content: `
+        <p>나무위키의 토론 시스템에서 가장 자주 비판받는 부분은 "한 사람이 무한 갱신으로
+        토론을 막을 수 있다"는 점이었습니다. Careerwiki는 다수결 원칙을 명시적으로 도입하지
+        않는 대신, 다음 두 가지 룰로 그 문제를 차단합니다.</p>
+
+        <ol class="list-decimal list-inside space-y-2">
+          <li><strong>이의 제기 시 새 근거 30자 이상 필수</strong> — 단순 반대 표시(👎 또는 빈 댓글)는 받지 않습니다. 새 출처·대안·반박 근거를 함께 제시해야 이의로 인정되며, 그 이의만 이의 제기 기간을 6시간 갱신합니다.</li>
+          <li><strong>동일인 1합의안 1이의 원칙</strong> — 같은 합의안에 같은 사람이 두 번째 이의를 제기하는 것은 자동 차단됩니다. 새 근거가 추가됐다면 별도 합의안으로 발의해 별도 토론을 여세요.</li>
+        </ol>
+
+        <p class="mt-3">이 두 룰이 충족되지 않으면 시스템이 자동으로 거부합니다(<code>OBJECTION_REQUIRES_EVIDENCE</code> /
+        <code>OBJECTION_DUPLICATE_OBJECTOR</code>). 운영자 개입 없이도 토론 무한 연장 시도를 막습니다.</p>
+      `
+    },
+    {
       id: 'flow',
       title: '제2조 토론 흐름',
       content: `

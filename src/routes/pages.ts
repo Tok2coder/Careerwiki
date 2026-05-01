@@ -363,6 +363,10 @@ pagesRoutes.get('/dispute/:id', async (c) => {
   const flashType = c.req.query('flash')
   const flash = flashType === 'success'
     ? { type: 'success' as const, message: '제출 완료' }
+    : flashType === 'evidence_required'
+    ? { type: 'error' as const, message: '이의 제기는 30자 이상의 새 근거·대안이 필요합니다. 단순 반대는 받지 않습니다.' }
+    : flashType === 'duplicate_objector'
+    ? { type: 'error' as const, message: '동일 합의안에 같은 이용자가 두 번째 이의를 제기할 수 없습니다 (정책 dispute §2 다수결 룰 보강).' }
     : flashType === 'error'
     ? { type: 'error' as const, message: '처리에 실패했습니다.' }
     : undefined
@@ -403,16 +407,27 @@ pagesRoutes.post('/dispute/:id/proposal/:pid/vote', requireAuth, async (c) => {
   if (!Number.isFinite(id) || !Number.isFinite(pid)) return c.redirect('/policy/dispute')
   const form = await c.req.formData()
   const voteType = String(form.get('vote_type') || '') as any
+  const commentText = String(form.get('comment_text') || '').trim() || undefined
   if (!['agree', 'object', 'comment'].includes(voteType)) {
     return c.redirect(`/dispute/${id}?flash=error`)
   }
-  await castDisputeVote(c.env.DB, {
-    proposalId: pid,
-    userId: user.id,
-    voteType,
-    commentText: undefined
-  })
-  return c.redirect(`/dispute/${id}?flash=success`)
+  try {
+    await castDisputeVote(c.env.DB, {
+      proposalId: pid,
+      userId: user.id,
+      voteType,
+      commentText
+    })
+    return c.redirect(`/dispute/${id}?flash=success`)
+  } catch (e: any) {
+    if (e?.message === 'OBJECTION_REQUIRES_EVIDENCE') {
+      return c.redirect(`/dispute/${id}?flash=evidence_required`)
+    }
+    if (e?.message === 'OBJECTION_DUPLICATE_OBJECTOR') {
+      return c.redirect(`/dispute/${id}?flash=duplicate_objector`)
+    }
+    return c.redirect(`/dispute/${id}?flash=error`)
+  }
 })
 
 pagesRoutes.post('/user/appeal', requireAuth, async (c) => {

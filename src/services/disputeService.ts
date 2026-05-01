@@ -94,7 +94,14 @@ export async function proposeConsensus(
 /**
  * 동의 또는 이의 (D2)
  * - agreement_count 증가, 1명 이상 동의 시 awaiting_objection 단계로 진입
- * - 이의 제기 시 objection window 6시간 갱신 (최대 2회)
+ * - 이의 제기 시:
+ *   · 새 근거(commentText 30자 이상) 의무 — 단순 반대 차단
+ *   · 동일인이 같은 합의안에 2회 이상 이의 제기 시 차단 (운영자 검토 필요)
+ *   · 위 둘 모두 통과한 이의만 objection window 6시간 갱신 (전체 최대 2회)
+ *
+ * 에러 코드:
+ *   OBJECTION_REQUIRES_EVIDENCE — 이의 시 30자 이상 근거 미제출
+ *   OBJECTION_DUPLICATE_OBJECTOR — 동일인 2회째 이의
  */
 export async function castDisputeVote(
   db: D1Database,
@@ -105,19 +112,34 @@ export async function castDisputeVote(
     commentText?: string
   }
 ): Promise<void> {
+  // ── 이의 제기는 사전 검증 (정책 dispute §2 + namu-wiki 비판 §4 다수결 룰 보강)
+  if (params.voteType === 'object') {
+    const evidence = (params.commentText || '').trim()
+    if (evidence.length < 30) {
+      throw new Error('OBJECTION_REQUIRES_EVIDENCE')
+    }
+    // 동일인이 같은 합의안에 이미 이의 제기한 적 있는지 검사
+    const dup = await db.prepare(
+      `SELECT id FROM dispute_votes
+       WHERE proposal_id = ? AND user_id = ? AND vote_type = 'object'
+       LIMIT 1`
+    ).bind(params.proposalId, params.userId).first()
+    if (dup) {
+      throw new Error('OBJECTION_DUPLICATE_OBJECTOR')
+    }
+  }
+
   await db.prepare(
     `INSERT OR IGNORE INTO dispute_votes (proposal_id, user_id, vote_type, comment_text)
      VALUES (?, ?, ?, ?)`
   ).bind(params.proposalId, params.userId, params.voteType, params.commentText ?? null).run()
 
   if (params.voteType === 'agree') {
-    // 동의자 수 재계산 (UNIQUE 보장 — DISTINCT user_id)
     const row = await db.prepare(
       `SELECT COUNT(DISTINCT user_id) AS c FROM dispute_votes WHERE proposal_id = ? AND vote_type = 'agree'`
     ).bind(params.proposalId).first<{ c: number }>()
     const count = Number(row?.c ?? 0)
 
-    // 1명 이상 동의 → awaiting_objection (이의 제기 기간 시작)
     if (count >= 1) {
       const startsAt = new Date().toISOString()
       const endsAt = new Date(Date.now() + 48 * 3600_000).toISOString()
@@ -134,7 +156,6 @@ export async function castDisputeVote(
       ).bind(count, params.proposalId).run()
     }
   } else if (params.voteType === 'object') {
-    // 이의 → objection window 6시간 연장 (최대 2회)
     const proposal = await db.prepare(
       `SELECT objection_extensions, objection_window_ends_at, status FROM dispute_proposals WHERE id = ?`
     ).bind(params.proposalId).first<{ objection_extensions: number; objection_window_ends_at: string; status: string }>()

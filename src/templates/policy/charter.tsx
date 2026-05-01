@@ -228,6 +228,70 @@ export function renderCharterPage(options?: PolicyPageOptions): string {
       `
     },
     {
+      id: 'ads',
+      title: '제6.5장 광고·후원 정책',
+      content: `
+        <p>Careerwiki는 운영비 충당과 무료 서비스 유지를 위해 광고를 게재합니다.
+        독자의 가독성·신뢰를 해치지 않는 선에서 다음 원칙을 따릅니다.</p>
+
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">A. 광고 위치·개수 제한</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li>본문 콘텐츠 사이 인라인 광고는 페이지당 <strong>최대 2개</strong>까지.</li>
+          <li>본문 시작과 끝 사이의 자연스러운 단락 경계에만 배치 — 단락을 끊는 형태 금지.</li>
+          <li>댓글·토론·신뢰 박스 영역에는 광고 미배치.</li>
+          <li>편집·역사·발제 등 사용자 도구 페이지에는 광고 미배치.</li>
+        </ul>
+
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">B. 모바일 가독성</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li><strong>모바일 전면광고(인터스티셜) 금지</strong> — 위키·HowTo·댓글 모두.</li>
+          <li>고정 위치 배너로 본문 일부를 가리는 것 금지.</li>
+          <li>스크롤 시 따라오는 sticky 광고는 본문보다 작게(높이 80px 이하).</li>
+        </ul>
+
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">C. 광고 차단기 사용자 보호</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li>광고 차단 프로그램(uBlock Origin·AdBlock 등) 사용자에게 콘텐츠 차단 또는 경고 노출 금지.</li>
+          <li>광고 차단 우회 또는 강제 비활성화 요구 금지.</li>
+        </ul>
+
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">D. 광고 표시·구분</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li>모든 광고는 <code>광고</code> 또는 <code>Sponsored</code> 라벨이 명확히 보이는 형태로만 게재.</li>
+          <li>본문과 시각적으로 구분되도록 배경·테두리 차이 또는 별도 구획 사용.</li>
+          <li>네이티브 광고(콘텐츠로 위장)는 게재하지 않음.</li>
+        </ul>
+
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">E. 후원·제휴</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li>HowTo의 광고·제휴 표시는 <a href="/policy/howto#ad-disclosure" class="text-blue-300 hover:underline">HowTo 발행지침 §4</a> 적용 (공정거래위원회 추천보증 심사지침 강행 규정).</li>
+          <li>위키 본문 자체에는 제휴·협찬 콘텐츠 게재 불가.</li>
+        </ul>
+
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">F. 수익 투명성</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li>현재 광고 수익은 Cloudflare 인프라 비용·OpenAI API 비용·도메인 등 운영비 충당에 사용됩니다.</li>
+          <li>분기별 운영 투명성 보고서(<a href="/policy/transparency" class="text-blue-300 hover:underline">/policy/transparency</a>)에 광고 수익·지출 요약을 향후 포함 예정.</li>
+          <li>광고주의 콘텐츠 편집 개입을 받지 않습니다 — 기사형 광고·후원 콘텐츠 명시적 거부.</li>
+        </ul>
+
+        <h3 class="text-base font-semibold text-white mt-4 mb-2">G. 금지 광고 카테고리</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li>도박·불법 의약품·성인 콘텐츠</li>
+          <li>학력 조작·자격증 부정 발급·시험 부정 행위 알선</li>
+          <li>다단계·금융 사기·고수익 보장 투자 권유</li>
+          <li>미성년자 대상 부적절 광고 (Google AdSense 정책 외 추가 차단)</li>
+          <li>특정 직업·전공·학교에 대한 비방·허위 사실 광고</li>
+        </ul>
+
+        <div class="callout">
+          <strong>광고 신고:</strong> 위 정책에 어긋나는 광고를 발견하시면
+          <a href="mailto:contact@careerwiki.org?subject=%5B%EA%B4%91%EA%B3%A0%EC%8B%A0%EA%B3%A0%5D" style="color:#93c5fd; text-decoration:underline;">contact@careerwiki.org</a>로 신고해 주세요.
+          스크린샷·URL 첨부 시 빠르게 처리합니다.
+        </div>
+      `
+    },
+    {
       id: 'rule-hierarchy',
       title: '제7장 규정의 위계 — 무엇이 우선인가',
       content: `
