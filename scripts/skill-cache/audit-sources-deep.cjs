@@ -338,15 +338,21 @@ async function verifyUrlsForJobs(jobs, concurrency = 10) {
       try {
         const ac = new AbortController();
         const t = setTimeout(() => ac.abort(), TIMEOUT);
-        const resp = await fetch(u.url, {
+        const headers = { 'User-Agent': 'Mozilla/5.0 (CareerwikiAudit/1.0)' };
+        let resp = await fetch(u.url, {
           method: 'HEAD',
           signal: ac.signal,
           redirect: 'follow',
-          headers: { 'User-Agent': 'Mozilla/5.0 (CareerwikiAudit/1.0)' },
+          headers,
         }).catch(async () => await fetch(u.url, {
-          method: 'GET', signal: ac.signal, redirect: 'follow',
-          headers: { 'User-Agent': 'Mozilla/5.0 (CareerwikiAudit/1.0)' },
+          method: 'GET', signal: ac.signal, redirect: 'follow', headers,
         }));
+        // 2026-05-01: HTTP 405/501 (HEAD 미지원) GET retry — false positive 제거
+        if (resp && (resp.status === 405 || resp.status === 501)) {
+          resp = await fetch(u.url, {
+            method: 'GET', signal: ac.signal, redirect: 'follow', headers,
+          }).catch(() => resp);
+        }
         clearTimeout(t);
         if (!resp || resp.status >= 400) broken.push({ ...u, status: resp ? resp.status : 'NO_RESPONSE' });
       } catch (e) {
