@@ -438,6 +438,15 @@ function validate(data) {
     const footnoteMatches = text.match(/\[(\d+)\]/g);
     if (!footnoteMatches) continue;
 
+    // [markerCluster] 마커 뭉침 검사 — 사용자 캡처 사고 (가상현실전문가 [1][2][3][4]) 후 추가
+    // 본문에 `[N1][N2][N3]` 같이 연속 마커 (공백 0~1개) 있으면 즉시 FAIL
+    // 해결: 가운뎃점 분리 → `[1]·[2]·[3]·[4]` (옵션 b — UX 분리 + 프론트 [N] 인식 유지)
+    // 자동 fix: scripts/skill-cache/fix-marker-cluster.cjs --slug={X}
+    const clusterMatches = text.match(/\[\d+\](\s{0,1}\[\d+\])+/g);
+    if (clusterMatches) {
+      errors.push(`[markerCluster] ${fieldPath}: 본문에 연속 마커 뭉침 ${clusterMatches.length}개 (예: "${clusterMatches[0]}") — UX 망가짐. 가운뎃점 분리 (\`[1]·[2]\`) 또는 sentence 분할 필요. fix: node scripts/skill-cache/fix-marker-cluster.cjs --slug={X}`);
+    }
+
     // 각주 중복 검사
     const counts = {};
     footnoteMatches.forEach(m => { counts[m] = (counts[m] || 0) + 1; });

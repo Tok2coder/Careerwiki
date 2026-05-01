@@ -121,12 +121,13 @@ async function processJob(slug, recs) {
     // build sources entries (id will be assigned by editService)
     newSources[field] = urls.map(u => ({ url: u.url, text: u.text }));
 
-    // body marker addition
+    // body marker addition (마커 뭉침 방지: 가운뎃점 분리 — 2026-04-30 사고 후 fix)
     if (BODY_FIELDS.includes(field)) {
       const body = getNested(ucj, field);
       if (typeof body !== 'string') continue;
       const cleanBody = stripMarkers(body).trimEnd();
-      const markers = urls.map((_, i) => `[${i + 1}]`).join('');
+      // [1][2][3][4] 뭉침 → [1]·[2]·[3]·[4] 가운뎃점 분리
+      const markers = urls.map((_, i) => `[${i + 1}]`).join('·');
       newFields[field] = cleanBody + markers;
     } else if (ARRAY_FIELDS.includes(field)) {
       const arr = getNested(ucj, field);
