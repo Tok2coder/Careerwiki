@@ -39,6 +39,70 @@ const {
   detectBrokenSourceRef,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
+// ── Sentence-level marker cluster detection (audit-sentence-clusters.cjs와 동일 로직) ──
+// 한 문장 안에 마커 [N] 2개 이상 → cluster. 본질: 한 의미 단위(=문장)는 1 마커.
+function _findSentenceBoundaries(text) {
+  const boundaries = [];
+  let i = 0;
+  while (i < text.length) {
+    const c = text[i];
+    if (c === '\n') { boundaries.push(i + 1); i++; continue; }
+    if (c === '.' || c === '!' || c === '?') {
+      let j = i + 1;
+      let advanced = true;
+      while (advanced && j < text.length) {
+        advanced = false;
+        const m = text.slice(j).match(/^\[\d+\]/);
+        if (m) { j += m[0].length; advanced = true; continue; }
+        if (text[j] === '·') { j++; advanced = true; continue; }
+        if (/[ \t]/.test(text[j])) {
+          let k = j;
+          while (k < text.length && /[ \t]/.test(text[k])) k++;
+          if (k < text.length && (text[k] === '[' || text[k] === '·')) { j = k; advanced = true; continue; }
+        }
+      }
+      if (j >= text.length) { boundaries.push(j); i = j; continue; }
+      if (/\s/.test(text[j])) {
+        let k = j;
+        while (k < text.length && /[ \t]/.test(text[k])) k++;
+        boundaries.push(k); i = k; continue;
+      }
+      i++; continue;
+    }
+    i++;
+  }
+  return boundaries;
+}
+function _getSentenceId(pos, boundaries) {
+  for (let i = 0; i < boundaries.length; i++) { if (pos < boundaries[i]) return i; }
+  return boundaries.length;
+}
+function detectSentenceClusters(text) {
+  if (typeof text !== 'string' || !text) return [];
+  const markers = [...text.matchAll(/\[\d+\]/g)];
+  if (markers.length === 0) return [];
+  const boundaries = _findSentenceBoundaries(text);
+  const bySentence = new Map();
+  for (const m of markers) {
+    const sid = _getSentenceId(m.index, boundaries);
+    if (!bySentence.has(sid)) bySentence.set(sid, []);
+    bySentence.get(sid).push(m);
+  }
+  const clusters = [];
+  for (const [sid, ms] of bySentence) {
+    if (ms.length >= 2) {
+      const sStart = sid === 0 ? 0 : boundaries[sid - 1];
+      const sEnd = sid < boundaries.length ? boundaries[sid] : text.length;
+      clusters.push({
+        markers: ms.map(m => m[0]).join(''),
+        count: ms.length,
+        sentence: text.slice(sStart, sEnd).trim(),
+      });
+    }
+  }
+  return clusters;
+}
+
 // ── 검증 규칙 ──────────────────────────────────────────
 
 const FORBIDDEN_EXAM_KEYWORDS = ['시험', 'LEET', 'TOEIC', 'TOEFL', 'TEPS', 'IELTS', '수능', '모의고사'];
@@ -232,6 +296,20 @@ function validate(data) {
           errors.push(`[OS-Orphan] detailReady.${sub}: sources["${srcKey}"]가 등록되어 있지만 배열 항목에 [N] 마커가 없음 — 마지막 항목 끝에 [1] 추가 필요`);
         }
       }
+    }
+
+    // [markerCluster-array] sentence-level cluster 검사 (배열 항목 내부)
+    // 한 항목 안에 마커 2+ → FAIL. 항목 분리 또는 sentence 분리 필요.
+    for (const sub of ['curriculum', 'recruit', 'training', 'certificate']) {
+      if (!dr[sub] || !Array.isArray(dr[sub])) continue;
+      dr[sub].forEach((item, idx) => {
+        if (typeof item !== 'string') return;
+        const clusters = detectSentenceClusters(item);
+        if (clusters.length > 0) {
+          const c = clusters[0];
+          errors.push(`[markerCluster] detailReady.${sub}[${idx}]: 한 항목 안에 sentence cluster — "${c.markers}" in "${item.slice(0, 100)}${item.length > 100 ? '...' : ''}". 항목 분리 또는 sentence 분리 필요.`);
+        }
+      });
     }
 
     // 중복 [N] 탐지: detailReady 배열의 같은 필드에서 동일한 [N] 마커가 2회 이상 등장하면 WARN
@@ -438,13 +516,15 @@ function validate(data) {
     const footnoteMatches = text.match(/\[(\d+)\]/g);
     if (!footnoteMatches) continue;
 
-    // [markerCluster] 마커 뭉침 검사 — 사용자 캡처 사고 (가상현실전문가 [1][2][3][4]) 후 추가
-    // 본문에 `[N1][N2][N3]` 같이 연속 마커 (공백 0~1개) 있으면 즉시 FAIL
-    // 해결: 가운뎃점 분리 → `[1]·[2]·[3]·[4]` (옵션 b — UX 분리 + 프론트 [N] 인식 유지)
-    // 자동 fix: scripts/skill-cache/fix-marker-cluster.cjs --slug={X}
-    const clusterMatches = text.match(/\[\d+\](\s{0,1}\[\d+\])+/g);
-    if (clusterMatches) {
-      errors.push(`[markerCluster] ${fieldPath}: 본문에 연속 마커 뭉침 ${clusterMatches.length}개 (예: "${clusterMatches[0]}") — UX 망가짐. 가운뎃점 분리 (\`[1]·[2]\`) 또는 sentence 분할 필요. fix: node scripts/skill-cache/fix-marker-cluster.cjs --slug={X}`);
+    // [markerCluster] sentence-level cluster 검사 — 본질: 한 sentence(의미 단위) = 1 마커
+    // 같은 문장(마침표/!/?/줄바꿈 사이) 안에 마커 2+ → FAIL.
+    // chained-at-end (`[1][2]`, `[1]·[2]`), mid-sentence comma (`...전망되며[1], ...있다[2]`) 모두 catch.
+    // 해결: 본문을 의미 단위로 분리 + 각 sentence에 마커 1개. 가운뎃점 분리는 본질 미해결 (deprecated).
+    // audit: node scripts/skill-cache/audit-sentence-clusters.cjs --slug={X}
+    const sentenceClusters = detectSentenceClusters(text);
+    if (sentenceClusters.length > 0) {
+      const c = sentenceClusters[0];
+      errors.push(`[markerCluster] ${fieldPath}: sentence-level cluster ${sentenceClusters.length}개 (예: "${c.markers}" in "${c.sentence.slice(0, 100)}${c.sentence.length > 100 ? '...' : ''}"). 한 sentence 안에 마커 ${c.count}개 — 본문을 의미 단위로 분리 + 각 sentence에 마커 1개 매핑 필요.`);
     }
 
     // 각주 중복 검사
