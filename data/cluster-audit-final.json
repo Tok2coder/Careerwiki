@@ -1,7 +1,7 @@
 {
-  "auditedAt": "2026-05-01T09:22:18.905Z",
-  "scope": "slug=프롬프트-엔지니어",
-  "totalScanned": 1,
+  "auditedAt": "2026-05-01T09:36:03.115Z",
+  "scope": "is_active=1 AND ucj LIKE %[1]%",
+  "totalScanned": 967,
   "totalClusterJobs": 0,
   "totalClusters": 0,
   "bodyFields": [
