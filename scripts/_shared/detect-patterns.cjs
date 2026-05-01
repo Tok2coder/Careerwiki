@@ -330,6 +330,19 @@ const LIST_PAGE_PATTERNS = [
   /^https?:\/\/(www\.)?q-net\.or\.kr\/crf005\.do(\?(?!.*\b(jmCd|id)=)[^#]*)?(\#.*)?$/i,
   // 사람인/잡코리아 카테고리 인덱스 (cat_kewd, occupation 등)
   /^https?:\/\/(www\.)?(saramin|jobkorea)\.co\.kr\/(zf_user\/)?[^?#]*\/(jobs|job-category|recruit-list)(\?[^#]*)?(\#.*)?$/i,
+  // 2026-05-01 격상: 일반 도메인 search/list URL 사고 방지
+  // 사례: kfb.or.kr/search?query=은행사무원, kbi.or.kr/search?query=..., kofta.org/search?query=...,
+  //       bhent.co.kr/search?query=..., kglass.or.kr/search?query=..., kto.visitkorea.or.kr/search?query=...,
+  //       hrdkorea.or.kr/search?query=..., kila.or.kr/search?query=...
+  // hostname 무관, path 마지막 segment가 search 또는 list (.ext optional), query 파라미터에 검색어
+  // (query/keyword/q/searchword/text/word/kw/term/searchKeyword/searchValue/sw)
+  /^https?:\/\/[^\/?#]+\/(?:[^?#]+\/)?(search|list)(\.[a-z]{1,5})?\?[^#]*\b(query|keyword|q|searchword|searchKeyword|searchvalue|searchValue|text|word|kw|kwd|term|sw)=/i,
+  // 게시판 검색결과 사고: klnews.co.kr/news/articleList.html?sc_word=...
+  /^https?:\/\/[^\/?#]+\/(?:[^?#]+\/)?articleList(\.[a-z]{1,5})?\?[^#]*\b(sc_word|searchword|searchKeyword|sc_section|sc_sub_section|searchValue)=/i,
+  // 커리어넷 신형 검색 사고: career.go.kr/cloud/w/search/intro?text=...
+  /^https?:\/\/(www\.)?career\.go\.kr\/cloud\/w\/search\//i,
+  // 워크피디아 검색 form 사고: wagework.go.kr/pt/b/a/retrieveOccpSrch... or retrieveJobSrch...
+  /^https?:\/\/(www\.)?wagework\.go\.kr\/pt\/b\/a\/(retrieveOccp|retrieveJob)/i,
 ];
 
 function detectListPageUrl(url) {
