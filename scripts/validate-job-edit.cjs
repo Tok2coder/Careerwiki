@@ -55,6 +55,91 @@ const FORBIDDEN_PRESIDENTS = [
   '김영삼', '김대중', '노무현', '이명박', '박근혜', '문재인', '윤석열',
 ];
 
+// ── URL HEAD fetch (실시간 hallucinated URL 차단) ──
+// validate() async 호출 시 _sources URL 전수 HEAD fetch → 4xx/5xx/timeout이면 [urlBroken] FAIL
+// 사용:
+//   VALIDATE_CHECK_URLS=1 node scripts/validate-job-edit.cjs file.json
+//   VALIDATE_URL_SAMPLE=30 ... (30% sample mode)
+async function checkUrlsLive(sources, sampleRate = 100) {
+  const allUrls = [];
+  for (const [field, arr] of Object.entries(sources || {})) {
+    if (!Array.isArray(arr)) continue;
+    arr.forEach((s, idx) => {
+      if (!s || !s.url) return;
+      if (sampleRate < 100 && Math.random() * 100 > sampleRate) return;
+      allUrls.push({ field, idx, url: s.url });
+    });
+  }
+  if (allUrls.length === 0) return [];
+
+  const TIMEOUT = 6000;
+  const CONCURRENCY = 5;
+  const broken = [];
+
+  const semaphore = (n) => {
+    const queue = [];
+    let active = 0;
+    const next = () => {
+      while (active < n && queue.length > 0) {
+        const { fn, resolve, reject } = queue.shift();
+        active++;
+        fn().then(resolve, reject).finally(() => { active--; next(); });
+      }
+    };
+    return (fn) => new Promise((resolve, reject) => { queue.push({ fn, resolve, reject }); next(); });
+  };
+  const sem = semaphore(CONCURRENCY);
+
+  await Promise.all(allUrls.map(u => sem(async () => {
+    try {
+      const ac = new AbortController();
+      const t = setTimeout(() => ac.abort(), TIMEOUT);
+      const resp = await fetch(u.url, {
+        method: 'HEAD',
+        signal: ac.signal,
+        redirect: 'follow',
+        headers: { 'User-Agent': 'Mozilla/5.0 (CareerwikiValidator/1.0)' },
+      }).catch(async () => {
+        // HEAD 실패 시 GET으로 재시도 (일부 서버는 HEAD 미지원)
+        return await fetch(u.url, {
+          method: 'GET',
+          signal: ac.signal,
+          redirect: 'follow',
+          headers: { 'User-Agent': 'Mozilla/5.0 (CareerwikiValidator/1.0)' },
+        });
+      });
+      clearTimeout(t);
+      if (!resp || resp.status >= 400) {
+        broken.push({ ...u, status: resp ? resp.status : 'NO_RESPONSE' });
+      }
+    } catch (e) {
+      const msg = String(e.message || e);
+      if (msg.includes('CERT')) broken.push({ ...u, status: 'SSL_ERROR' });
+      else if (msg.includes('ENOTFOUND')) broken.push({ ...u, status: 'DNS_ERROR' });
+      else if (msg.includes('aborted') || msg.includes('timeout')) broken.push({ ...u, status: 'TIMEOUT' });
+      else broken.push({ ...u, status: `FETCH_ERR(${msg.slice(0, 30)})` });
+    }
+  })));
+
+  return broken;
+}
+
+async function validateAsync(data) {
+  const result = validate(data);
+  // URL HEAD fetch (옵션)
+  if (process.env.VALIDATE_CHECK_URLS === '1' || data.checkUrls === true) {
+    const sampleRate = parseInt(process.env.VALIDATE_URL_SAMPLE || '100', 10);
+    const broken = await checkUrlsLive(data.sources || {}, sampleRate);
+    for (const b of broken) {
+      result.errors.push(`[urlBroken] _sources.${b.field}[${b.idx}] HTTP ${b.status} — ${b.url}`);
+    }
+    if (broken.length > 0) {
+      result.errors.push(`[urlBrokenSummary] ${broken.length}개 URL 검증 실패 (총 ${Object.values(data.sources || {}).reduce((s, a) => s + (Array.isArray(a) ? a.length : 0), 0)}개 중) — hallucinated URL 의심`);
+    }
+  }
+  return result;
+}
+
 function validate(data) {
   const errors = [];   // 치명적 — API 호출 차단
   const warnings = []; // 경고 — 수동 확인 필요
@@ -1015,7 +1100,7 @@ function getSourceKey(fieldPath) {
 
 // ── 메인 실행 ──
 
-function main() {
+async function main() {
   let input;
 
   if (process.argv[2]) {
@@ -1025,6 +1110,8 @@ function main() {
   } else {
     console.error('Usage: node scripts/validate-job-edit.js <json-file>');
     console.error('   or: echo \'{"fields":...}\' | node scripts/validate-job-edit.js');
+    console.error('Env: VALIDATE_CHECK_URLS=1 — _sources URL HEAD fetch 검증 (4xx/5xx/timeout = [urlBroken] FAIL)');
+    console.error('     VALIDATE_URL_SAMPLE=30 — 30%만 sample 검증');
     process.exit(1);
   }
 
@@ -1036,7 +1123,7 @@ function main() {
     process.exit(1);
   }
 
-  const { errors, warnings } = validate(data);
+  const { errors, warnings } = await validateAsync(data);
 
   console.log(`\n=== 검증 결과: ${data.jobName || 'Unknown'} ===\n`);
 
@@ -1067,8 +1154,8 @@ function main() {
 }
 
 // Export for programmatic use
-module.exports = { validate };
+module.exports = { validate, validateAsync, checkUrlsLive };
 
 if (require.main === module) {
-  main();
+  main().catch(e => { console.error(e); process.exit(1); });
 }

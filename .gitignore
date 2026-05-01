@@ -140,3 +140,4 @@ scripts/bridge.log
 .skill-runs/
 data/skill-runs.jsonl
 data/skill-runs/
+data/url-verify-result*.json
