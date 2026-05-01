@@ -141,3 +141,4 @@ scripts/bridge.log
 data/skill-runs.jsonl
 data/skill-runs/
 data/url-verify-result*.json
+data/audit-sources-deep.json

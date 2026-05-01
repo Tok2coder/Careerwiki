@@ -1654,6 +1654,23 @@ node scripts/skill-cache/audit-sources.cjs --pattern=sources_NULL --json | grep 
 - changeSummary에 [job-data-enhance] 마커만 있고 fields/sources 비어있으면 즉시 FAIL
 - 단축 처리 사고 시 server-side에서 차단됨
 
+### Phase 4-MARKER. 본문 마커 뭉침 절대 금지 ⚠️ **신규 (2026-04-30 사용자 캡처 사고 후 추가)**
+
+본문에 `[N1][N2][N3]...` **연속된 마커 뭉침 절대 금지** — 시각적으로 뭉쳐 보여 UX 망가짐.
+
+**사고 사례**: 가상현실전문가 `overviewProspect.main` 끝에 `[1][2][3][4]` 뭉침 (apply-rebuild.cjs가 본문 끝에 [1]..[N] 그대로 append한 게 원인). 사용자가 캡처로 발견.
+
+**룰**:
+- 본문에서 `\[\d+\](\s*\[\d+\])+` 정규식 매칭 시 즉시 FAIL — validate Gate `[markerCluster]`
+- 한 sentence 끝에 마커 max 1개 권장
+- 다중 출처 같은 위치 모인 경우 → **옵션 b 채택**: 가운뎃점 분리 → `[1]·[2]·[3]·[4]` (프론트가 [N] 패턴 그대로 인식 + 시각적 분리)
+- 자동 fix: `node scripts/skill-cache/fix-marker-cluster.cjs --slug={X}`
+
+**enhance subagent prompt 박힘**:
+- 본문 작성 시 한 sentence 끝에 마커 ≤ 1
+- 다중 출처 필요 시 sentence 분할 또는 가운뎃점 분리
+- 절대 `[N1][N2]` 연속 X (validate에서 FAIL)
+
 ### Phase 5-VERIFY. POST 직후 _sources URL 실시간 검증 ⚠️ **신규 (2026-04-30 hallucination 사고 후 추가)**
 
 API POST 성공 직후 (Phase 3 완료 + Phase 5-AUDIT PASS 직후) `post-edit-verify.cjs` 호출 → _sources URL 전수 HTTP HEAD fetch → BROKEN (4xx/5xx/timeout/SSL/DNS) 발견 시 즉시 stop + 사용자 보고.
