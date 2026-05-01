@@ -1321,6 +1321,9 @@ export const renderLayout = (
                 countEl.textContent = Math.max(0, currentCount + countDelta);
               }
 
+              // data-saved 속성으로 시각 효과 토글 (cw-icon-btn--bookmark[data-saved="1"] CSS 매치)
+              btn.setAttribute('data-saved', saved ? '1' : '0');
+
               if (saved) {
                 btn.classList.add(SAVED_CLASS, SAVED_COLOR, SAVED_BORDER);
                 btn.classList.remove('text-wiki-muted', 'border-wiki-border/40');
