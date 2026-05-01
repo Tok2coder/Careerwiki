@@ -1318,6 +1318,72 @@ fetch(url).then(r => Promise.all([r.status, r.text()])).then(([status, body]) =>
 
 > 🚨 **2026-04-30 사고 사례**: subagent가 tool_uses=0 (WebFetch 미사용)으로 URL 추정 → 캐디·동물조련사 등 50+ 직업에 hallucinated URL 등록 → 사용자 spot-check에서 "잘못된 접근입니다" / "ERR_CERT_COMMON_NAME_INVALID" / 404 다수 발생. 검증 결과 BROKEN 392개 + redirect 89개 자동 제거 + SUSPECT 1657개 잔존. 이후 모든 enhance subagent는 **WebFetch tool_uses ≥ URL 개수** 강제 — 그렇지 않으면 추천 거부.
 
+### 🚨 Hallucinated 도메인 블랙리스트 (재발 방지)
+
+다음 도메인들은 LLM이 사실관계 추정으로 fabricate한 사례. **subagent가 후보 URL에 다음 호스트를 사용하면 즉시 reject** (또는 WebSearch로 진짜 도메인 재확인 필수):
+
+| 가짜 도메인 | LLM 오인 | 실제 (검증된 진짜) |
+|---|---|---|
+| `kgta.or.kr` | "한국캐디협회"로 추정 | 실제는 경기도화물자동차운송사업협회. 캐디 협회는 사실상 부재 (k-caddie.com TLS expired) |
+| `k-lpn.or.kr` | "대한간호조무사협회"로 추정 | **klpna.or.kr** (단 SSL 만료 — 위키백과 협회 페이지로 대체) |
+| `kpba.co.kr` | "한국애견연맹"로 추정 | **kkc.or.kr** (한국애견협회) / **thekkf.or.kr** (한국애견연맹 KKF) |
+| `kindergarten.go.kr` | "유치원알리미"로 추정 | **e-childschoolinfo.moe.go.kr** |
+| `humanrights.go.kr/.../boardid={랜덤}` | LLM이 인권위 boardid 추정 | 진짜 보드 ID는 WebSearch로만 확인 가능 (예: 캐디 인권 권고는 boardid=555281) |
+| `learn.unity.com/pathway/junior-programmer` | Unity 학습 deep path 추정 | **learn.unity.com** root만 (deep path 절대 추정 X) |
+| `careers.nexon.com/recruit/intro` | 넥슨 채용 deep path 추정 | **careers.nexon.com** root만 |
+| `unrealengine.com/ko/onlinelearning-courses/...` | 언리얼 학습 deep path 추정 | **unrealengine.com** root만 |
+| `kocca.kr/kocca/bbs/list/B0000{숫자}.do` | KOCCA BBS ID 추정 | WebSearch로 진짜 menuNo 확인 필수 |
+| `gamejob.co.kr/Library/Content_View.asp` | 게임잡 ASP path 추정 | **gamejob.co.kr** root만 |
+| `moe.go.kr/.../boardSeq={round 숫자}` | 교육부 보도자료 ID 추정 | WebSearch로 진짜 boardSeq 확인 필수 (98765 같은 round 숫자 즉시 의심) |
+| `law.go.kr/.../lsiSeq={round 숫자}` | 법령 ID 추정 (234567 등 round number) | WebSearch로 진짜 lsiSeq 확인 (예: 유아교육법 = 255107) |
+| `sen.go.kr/.../bbsNo={랜덤}`, `goe.go.kr/.../bbsId={랜덤}` | 시도교육청 게시판 ID 추정 | WebSearch 필수 |
+| `surgery.or.kr/surgery/middle_surgery/sub/...html` | 외과학회 deep path 추정 | **surgery.or.kr** root만 |
+| `krta.or.kr/bbs/board.php?bo_table=sub01_03` | 방사선사협회 BBS path 추정 | **krta.or.kr** root + WebSearch verified path만 |
+| `emt.or.kr/sub01/sub01_01.php`, `kacpr.org/include/sub04_01.asp` | 응급구조/심폐소생협회 PHP/ASP 추정 | root + WebSearch verified path만 |
+| `kuksiwon.or.kr/Site/Info.aspx?SiteID=87` | 국시원 ASPX 추정 | 실제 시스템은 .do 사용 (`subcnt/c_{년도}/...`) |
+| `kpf.or.kr/front/board/boardContentsView.do?board_id=246&contents_id={uuid}` | 언론진흥재단 contents_id 추정 | WebSearch verified만 |
+| `kwppa.or.kr/sub02/sub02_01.php` | 웨딩플래너협회 PHP path 추정 | **kwppa.or.kr/p/{slug}** 라우팅 사용 (PHP path 가짜) |
+| `kostat.go.kr/board.es?mid=...&bid=204` | 통계청 mid/bid 추정 | WebSearch verified만 (round number 즉시 의심) |
+
+### ✅ 검증된 진짜 도메인 화이트리스트 (참고)
+
+다음 호스트는 검증된 권위 출처. WebFetch tool_uses ≥ URL 카운트 룰은 그대로 적용하되, root 페이지 또는 WebSearch가 직접 반환한 path는 신뢰성 ↑:
+
+- **정부/통계**: kosis.kr · korea.kr (정책브리핑) · law.go.kr · index.go.kr · data.go.kr · molit.go.kr · mohw.go.kr · moel.go.kr · mafra.go.kr · msit.go.kr · moe.go.kr · customs.go.kr · kdca.go.kr · nfa.go.kr · scourt.go.kr · kipo.go.kr · iros.go.kr
+- **공기업/연구원**: kocca.kr · krict.re.kr · kigam.re.kr · etri.re.kr · krri.re.kr · nipa.kr · sw.or.kr · sprio (spri.kr) · kdata.or.kr · kait.or.kr · krivet.re.kr · kcue.or.kr · kice.re.kr · neti.go.kr · nrf.re.kr
+- **학회/협회**: kma.org · surgery.or.kr · kams.or.kr · kafm.or.kr · kpta.co.kr · kdha.or.kr · kdtech.or.kr · kamt.or.kr · krta.or.kr · kao.or.kr · kafa.or.kr · kshpa.or.kr · kashm.org · k-his.or.kr · khima.or.kr · kemco.or.kr · ksgis.or.kr · snak.or.kr · kila.or.kr · kasf.or.kr · kspa.or.kr · kuksiwon.or.kr · q-net.or.kr · license.korcham.net · license.kofia.or.kr · misi.knia.or.kr
+- **언론**: hankyung.com · doctorsnews.co.kr · medicaltimes.com · etnews.com · medigatenews.com · bosa.co.kr · journalist.or.kr · madtimes.org · seoul.co.kr · pressian.com · korea.kr · khan.co.kr · pmg.co.kr
+- **위키/직업정보**: ko.wikipedia.org · en.wikipedia.org · namu.wiki (단 fetch 차단 잦음) · jobkorea.co.kr · saramin.co.kr · wanted.co.kr · job.asamaru.net · adiga.kr · majormap.net · hibrain.net
+- **글로벌**: oecd.org · ifr.org · idc.com · hbr.org · mckinsey.com · stackoverflow.co · linuxfoundation.org · cisco.com · cfasociety.org · bis.org · stat.kita.net
+
+### Phase 4-SRC 자동 적용 — Subagent Prompt 필수 박힘 항목
+
+dispatch session에서 enhance subagent prompt 작성 시 **다음 절을 반드시 prompt에 포함**:
+
+```
+🚨 **사용자가 hallucination 사고로 큰 신뢰 잃었음. 한 번이라도 LLM 추정 URL 등록 시 그 추천 무효 + 사용자 보고됨.**
+
+## 룰
+1. 모든 _sources URL은 등록 *전* WebFetch tool_use 1회+ 필수
+2. fetch 응답 본문에 직업명/핵심 키워드 1~2개 등장 직접 확인
+3. WebFetch 차단 → Jina Reader → Wayback → WebSearch 순으로 대체. 모두 fail이면 그 entry 추천 X
+4. **블랙리스트 도메인 절대 사용 금지** — kgta.or.kr · k-lpn.or.kr · kpba.co.kr · kindergarten.go.kr 등 (SKILL.md Phase 4-SRC 블랙리스트 참조)
+5. **deep path 추정 절대 금지** — board ID/lsiSeq/boardSeq round number 의심
+6. **origin 도메인 절대 금지**: career.go.kr · work.go.kr · work24.go.kr · wagework.go.kr · job.go.kr
+
+## 출력 형식 (JSON only)
+{
+  "verified_urls": [{"field":"...","url":"...","text":"..."}, ...],
+  "rejected_candidates": [{"url":"...","reason":"..."}, ...],
+  "webfetch_tool_uses_count": <N>,
+  "comment": "..."
+}
+
+## 검증 강제
+- webfetch_tool_uses_count < verified_urls.length → DONE 무효 → RETRY
+- rejected_candidates 명시 안 하면 의심 (Agent가 사고 사례 인지 못함)
+```
+
 ---
 
 → **Phase 5.5 내용은 Phase 3.5로 이동됨.** API 호출 직전 Self-check은 Phase 3.5를 참조.
@@ -1587,6 +1653,30 @@ node scripts/skill-cache/audit-sources.cjs --pattern=sources_NULL --json | grep 
 **🛑 validate-job-edit.cjs `[minimalPOST]` FAIL** (commit 2026-04-29):
 - changeSummary에 [job-data-enhance] 마커만 있고 fields/sources 비어있으면 즉시 FAIL
 - 단축 처리 사고 시 server-side에서 차단됨
+
+### Phase 5-VERIFY. POST 직후 _sources URL 실시간 검증 ⚠️ **신규 (2026-04-30 hallucination 사고 후 추가)**
+
+API POST 성공 직후 (Phase 3 완료 + Phase 5-AUDIT PASS 직후) `post-edit-verify.cjs` 호출 → _sources URL 전수 HTTP HEAD fetch → BROKEN (4xx/5xx/timeout/SSL/DNS) 발견 시 즉시 stop + 사용자 보고.
+
+```bash
+node scripts/skill-cache/post-edit-verify.cjs --slug={SLUG} --strict
+# exit 0: 모든 URL 200 OK (작업 완료 가능)
+# exit 1: BROKEN 발견 (purge-broken-urls 호출 또는 다른 출처로 즉시 교체)
+```
+
+**왜 필요한가**: Phase 4-SRC에서 subagent가 WebFetch로 검증했어도 다음 사고 가능:
+- TLS expired 전환 (예: k-caddie.com SSL 만료)
+- 게시판 ID 변경 (예: humanrights.go.kr boardid 만료)
+- subagent가 LLM 자가검증 도피 조항 우회 (이전 사고)
+
+→ POST 직후 1회 더 검증해서 fabricated/만료 URL을 user 보기 전 차단.
+
+**대안**: validate-job-edit.cjs 호출 시 `VALIDATE_CHECK_URLS=1` 환경변수 설정하면 API 호출 *전*에 검증 가능.
+
+```bash
+VALIDATE_CHECK_URLS=1 node scripts/validate-job-edit.cjs draft.json
+# [urlBroken] FAIL — _sources.way[0] HTTP 404 — https://example.com/...
+```
 
 ### END_TRACKING (skill 1회 실행 시간·결과 영구 로그) ⚠️ **필수 실행 단계 — bash 명령 직접 실행 (참고 예시 아님)**
 

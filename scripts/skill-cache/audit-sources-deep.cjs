@@ -144,6 +144,8 @@ function analyzeJob(slug, ucjStr) {
   }
 
   const sources = ucj._sources || null;
+  // verify-urls 옵션을 위해 _sources 보관
+  findings._sources = sources;
 
   // sources NULL + body marker 검사
   let hasBodyMarker = false;
@@ -303,7 +305,68 @@ function buildWhereClause() {
   return conds.join(' AND ');
 }
 
-function main() {
+// ── URL HEAD fetch (--verify-urls 옵션) ──
+// audit + URL 실존성 한 번에 검증. 결과 jobs[i].urlVerify = {broken: [...], total, brokenCount}
+async function verifyUrlsForJobs(jobs, concurrency = 10) {
+  const TIMEOUT = 6000;
+  const semaphore = (n) => {
+    const queue = [];
+    let active = 0;
+    const next = () => {
+      while (active < n && queue.length > 0) {
+        const { fn, resolve, reject } = queue.shift();
+        active++;
+        fn().then(resolve, reject).finally(() => { active--; next(); });
+      }
+    };
+    return (fn) => new Promise((resolve, reject) => { queue.push({ fn, resolve, reject }); next(); });
+  };
+  const sem = semaphore(concurrency);
+
+  let totalUrls = 0, totalBroken = 0;
+  await Promise.all(jobs.map(job => (async () => {
+    const sources = job._sources || job.sources || {};
+    const urls = [];
+    for (const [field, arr] of Object.entries(sources)) {
+      if (!Array.isArray(arr)) continue;
+      arr.forEach((s, idx) => {
+        if (s && s.url) urls.push({ field, idx, url: s.url, text: s.text });
+      });
+    }
+    const broken = [];
+    await Promise.all(urls.map(u => sem(async () => {
+      try {
+        const ac = new AbortController();
+        const t = setTimeout(() => ac.abort(), TIMEOUT);
+        const resp = await fetch(u.url, {
+          method: 'HEAD',
+          signal: ac.signal,
+          redirect: 'follow',
+          headers: { 'User-Agent': 'Mozilla/5.0 (CareerwikiAudit/1.0)' },
+        }).catch(async () => await fetch(u.url, {
+          method: 'GET', signal: ac.signal, redirect: 'follow',
+          headers: { 'User-Agent': 'Mozilla/5.0 (CareerwikiAudit/1.0)' },
+        }));
+        clearTimeout(t);
+        if (!resp || resp.status >= 400) broken.push({ ...u, status: resp ? resp.status : 'NO_RESPONSE' });
+      } catch (e) {
+        const msg = String(e.message || e);
+        let status = 'FETCH_ERR';
+        if (msg.includes('CERT')) status = 'SSL_ERROR';
+        else if (msg.includes('ENOTFOUND')) status = 'DNS_ERROR';
+        else if (msg.includes('aborted') || msg.includes('timeout')) status = 'TIMEOUT';
+        broken.push({ ...u, status });
+      }
+    })));
+    job.urlVerify = { total: urls.length, brokenCount: broken.length, broken };
+    totalUrls += urls.length;
+    totalBroken += broken.length;
+  })()));
+
+  return { totalUrls, totalBroken };
+}
+
+async function main() {
   const where = buildWhereClause();
   const sql = `SELECT slug, user_contributed_json FROM jobs WHERE ${where} ORDER BY slug`;
 
@@ -320,7 +383,17 @@ function main() {
     console.error(`[audit-sources-deep] URL ≤ ${maxN} 필터 후 ${jobs.length}개`);
   }
 
+  // --verify-urls: 실시간 URL HEAD fetch 검증
+  let urlVerifySummary = null;
+  if (args['verify-urls']) {
+    console.error(`[audit-sources-deep] URL HEAD fetch 검증 (concurrency 10) ...`);
+    const concurrency = parseInt(args['url-concurrency'] || '10', 10);
+    urlVerifySummary = await verifyUrlsForJobs(jobs, concurrency);
+    console.error(`[audit-sources-deep] URL 검증 완료: ${urlVerifySummary.totalUrls} URLs, BROKEN ${urlVerifySummary.totalBroken}`);
+  }
+
   const summary = summarize(jobs);
+  if (urlVerifySummary) summary.urlVerify = urlVerifySummary;
 
   if (args.jsonl) {
     for (const j of jobs) console.log(JSON.stringify(j));
@@ -373,6 +446,22 @@ function main() {
   }
   console.log('');
 
+  // --verify-urls 결과 사람용 출력
+  if (urlVerifySummary) {
+    console.log(`\n--- URL 검증 (--verify-urls) ---`);
+    console.log(`총 URL: ${urlVerifySummary.totalUrls}, BROKEN: ${urlVerifySummary.totalBroken} (${urlVerifySummary.totalUrls > 0 ? (urlVerifySummary.totalBroken / urlVerifySummary.totalUrls * 100).toFixed(1) : 0}%)`);
+    const brokenJobs = jobs.filter(j => j.urlVerify && j.urlVerify.brokenCount > 0);
+    if (brokenJobs.length > 0) {
+      console.log(`BROKEN 직업 ${brokenJobs.length}건:`);
+      brokenJobs.slice(0, 20).forEach(j => {
+        console.log(`  ${j.slug}: ${j.urlVerify.brokenCount}/${j.urlVerify.total}`);
+        j.urlVerify.broken.slice(0, 3).forEach(b => console.log(`    [${b.field}#${b.idx}] HTTP ${b.status} — ${b.url.slice(0, 80)}`));
+      });
+      if (brokenJobs.length > 20) console.log(`  ... 외 ${brokenJobs.length - 20}건`);
+    }
+    console.log('');
+  }
+
   // 단일 슬러그면 상세 출력
   if (args.slug && jobs.length === 1) {
     const j = jobs[0];
@@ -381,4 +470,4 @@ function main() {
   }
 }
 
-main();
+main().catch(e => { console.error(e); process.exit(1); });
