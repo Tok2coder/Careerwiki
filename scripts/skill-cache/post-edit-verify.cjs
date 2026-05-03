@@ -54,15 +54,28 @@ function d1Query(sql) {
 }
 
 const TIMEOUT = 6000;
+// HEAD fetch + GET retry on 400/403/404/405/501 (HEAD 차단·미지원 사이트 false positive 차단).
+// audit-sources-deep.cjs의 verifyUrlsForJobs와 동일 정책 (2026-05-01/05-03 commit 79f0fbe 후속).
 async function checkUrl(url) {
+  const headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'ko,en-US;q=0.9,en;q=0.8',
+  };
   try {
     const ac = new AbortController();
     const t = setTimeout(() => ac.abort(), TIMEOUT);
     let resp;
     try {
-      resp = await fetch(url, { method: 'HEAD', signal: ac.signal, redirect: 'follow', headers: { 'User-Agent': 'CareerwikiPostEditVerifier/1.0' } });
+      resp = await fetch(url, { method: 'HEAD', signal: ac.signal, redirect: 'follow', headers });
     } catch {
-      resp = await fetch(url, { method: 'GET', signal: ac.signal, redirect: 'follow', headers: { 'User-Agent': 'CareerwikiPostEditVerifier/1.0' } });
+      resp = await fetch(url, { method: 'GET', signal: ac.signal, redirect: 'follow', headers });
+    }
+    // HEAD 차단·미지원 → GET retry (400/403/404/405/501)
+    if (resp && (resp.status === 400 || resp.status === 403 || resp.status === 404 || resp.status === 405 || resp.status === 501)) {
+      try {
+        resp = await fetch(url, { method: 'GET', signal: ac.signal, redirect: 'follow', headers });
+      } catch { /* keep original resp */ }
     }
     clearTimeout(t);
     if (!resp || resp.status >= 400) return { ok: false, status: resp ? resp.status : 'NO_RESPONSE' };

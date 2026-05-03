@@ -308,7 +308,7 @@ function buildWhereClause() {
 // ── URL HEAD fetch (--verify-urls 옵션) ──
 // audit + URL 실존성 한 번에 검증. 결과 jobs[i].urlVerify = {broken: [...], total, brokenCount}
 async function verifyUrlsForJobs(jobs, concurrency = 10) {
-  const TIMEOUT = 6000;
+  const TIMEOUT = parseInt(process.env.URL_VERIFY_TIMEOUT_MS || '4000', 10);
   const semaphore = (n) => {
     const queue = [];
     let active = 0;
@@ -338,7 +338,7 @@ async function verifyUrlsForJobs(jobs, concurrency = 10) {
       try {
         const ac = new AbortController();
         const t = setTimeout(() => ac.abort(), TIMEOUT);
-        const headers = { 'User-Agent': 'Mozilla/5.0 (CareerwikiAudit/1.0)' };
+        const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'ko,en-US;q=0.9,en;q=0.8' };
         let resp = await fetch(u.url, {
           method: 'HEAD',
           signal: ac.signal,
@@ -348,7 +348,17 @@ async function verifyUrlsForJobs(jobs, concurrency = 10) {
           method: 'GET', signal: ac.signal, redirect: 'follow', headers,
         }));
         // 2026-05-01: HTTP 405/501 (HEAD 미지원) GET retry — false positive 제거
-        if (resp && (resp.status === 405 || resp.status === 501)) {
+        // 2026-05-03: 403/404 (HEAD 차단·HEAD 미지원으로 404 반환) GET retry 확장
+        //   — edujin.co.kr (HEAD→404, GET→200), kcdf.or.kr (HEAD→403, GET→200) 사고 차단
+        // 2026-05-03 (utility-manager batch): 400 추가
+        //   — kogas.or.kr (HEAD→400, GET→200), 일부 .or.kr 정부산하 사이트
+        // 2026-05-03 (드론-개발자 batch): 401 추가
+        //   — kiast.or.kr (HEAD→401, GET→200), drone.korchamhrd.net (HEAD→401, GET→200)
+        //     일부 portal 사이트가 HEAD에 인증 요구하나 GET은 공개
+        // 2026-05-03 (보건위생환경검사원 batch): 406 추가
+        //   — keco.or.kr (HEAD→406 Not Acceptable, GET→200)
+        //     서버가 HEAD에 Accept 검증을 엄격히 적용하나 GET은 정상
+        if (resp && (resp.status === 405 || resp.status === 501 || resp.status === 403 || resp.status === 404 || resp.status === 401 || resp.status === 400 || resp.status === 406)) {
           resp = await fetch(u.url, {
             method: 'GET', signal: ac.signal, redirect: 'follow', headers,
           }).catch(() => resp);
