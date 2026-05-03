@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-05-03] audit-sources-deep HEAD 403/404 false positive — GET retry 누락
+- **상황**: 공예가(id=1765284782985734) URL fix 의뢰. 6/18 broken 신고 (edujin idxno=3659 404 ×3, kcdf.or.kr/main 403 ×3). WebFetch + Node.js fetch GET으로 재검증 시 모두 200 OK + 콘텐츠 매칭 (공예학과 진로, 한국공예·디자인문화진흥원). 즉 모두 false positive
+- **원인**: `audit-sources-deep.cjs` `verifyUrlsForJobs()`가 HEAD 요청만 사용. 일부 사이트(edujin/kcdf 등)는 봇 차단/HEAD 미지원으로 HEAD에 403/404 반환하나 GET에는 200 응답. 기존 GET-retry 로직은 `405 || 501`만 처리해 403/404 케이스 누락
+- **해결**: `verifyUrlsForJobs()` GET-retry 조건을 `405 || 501 || 403 || 404`로 확장. 재실행 시 brokenCount 6→0
+- **교훈**: HEAD 기반 link checker는 사이트별 차이가 커서 false positive 빈발. **403/404도 GET retry 필수** (일부 봇 차단·HEAD 미지원이 404로 위장). audit "broken" 보고를 받으면 반드시 GET으로 재검증한 뒤 교체 결정. 진짜 broken이 아닌 URL을 교체하면 콘텐츠 적합성 회귀 가능
+
 ### [2026-04-16] Windows CP949 인코딩 오류로 한글 Mojibake 저장 (준법감시인 technKnow)
 - **상황**: 준법감시인 직업의 `overviewAbilities.technKnow` 필드 전체가 아랍·키릴·라틴확장 문자 뭉치로 깨져 저장됨 (사용자 직접 발견). `_sources.overviewAbilities.technKnow[0].text` 각주 텍스트도 동시 깨짐. rev 11598/11599에서 발생
 - **원인**: Windows 환경에서 한글 JSON을 curl 또는 shell 파이프로 전송 시 CP949 인코딩 오류 발생. 하네스(validate-job-edit.cjs, full-quality-audit.cjs)에 Mojibake 탐지 로직이 없어 그대로 통과
