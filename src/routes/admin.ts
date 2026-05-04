@@ -1130,6 +1130,8 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       // 관리자 수동 검증
       skill_verified_by_user: number
       skill_verified_at: string | null
+      // 최근 편집 (user / admin _last_updated_at 의 MAX, unix ms)
+      last_edited_at: number
     }
     const allRows: Row[] = []
     {
@@ -1166,7 +1168,8 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
                 AND (json_type(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)
                THEN 1 ELSE 0 END AS yt_low,
           COALESCE(skill_verified_by_user, 0) AS skill_verified_by_user,
-          skill_verified_at
+          skill_verified_at,
+          MAX(COALESCE(user_last_updated_at, 0), COALESCE(admin_last_updated_at, 0)) AS last_edited_at
         FROM ${tableName}
         WHERE is_active = 1 AND user_contributed_json IS NOT NULL
         ORDER BY name LIMIT 500 OFFSET ?`
@@ -1238,6 +1241,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
         srcMojibake: mergedParsed.hasMojibake,
         userVerified: !!row.skill_verified_by_user,
         userVerifiedAt: row.skill_verified_at ?? null,
+        lastEditedAt: row.last_edited_at && row.last_edited_at > 0 ? row.last_edited_at : null,
       }
     })
 
