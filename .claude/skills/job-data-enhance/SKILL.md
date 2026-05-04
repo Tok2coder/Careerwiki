@@ -1458,6 +1458,38 @@ dispatch session에서 enhance subagent prompt 작성 시 **다음 절을 반드
 - 출처 페이지 fetch 후 본문에 등장한 **고유 식별자(회사명·통계 수치·연도·순위 등)**가 그 페이지에 직접 등장하는지 확인
 - 단순 키워드 매칭 (예: "조경" 단어 hit)은 부족 — 그 회사명·그 통계가 직접 등장해야 함
 
+#### 룰 4-B. 모든 sub-field 검증 의무 (2026-05-04 신설) ⚠️ **VR recruit 사고 후 추가**
+
+🚨 **fix 시 way·trivia만 손대고 detailReady는 손대지 않는 사고 패턴 차단.**
+
+dispatch agent는 다음 sub-field **전부**에 본문 fact 검증 + 출처 cover 의무:
+- 산문 필드: `way`, `trivia`, `overviewProspect.main`, `overviewSalary.sal`, `detailWlb.wlbDetail`, `detailWlb.socialDetail`, `overviewAbilities.technKnow`, `summary`
+- 배열 필드: `detailReady.curriculum`, `detailReady.recruit`, `detailReady.training`, `detailReady.certificate`
+
+**detailReady 배열 sub-field 특별 주의 — 회사·기관·자격 fact가 자주 등장**:
+
+| sub-field | 자주 등장하는 fact | 적합한 1차 출처 |
+|---|---|---|
+| `detailReady.recruit` | 회사명 (KBS·삼성·LG·넥슨 등) | 그 회사 공식 채용 페이지 (careers.nexon.com / recruit.cjenm.com 등) |
+| `detailReady.curriculum` | 교육기관·강의 (K-MOOC·대학원 학과·온라인 강좌) | 그 강좌 deep page / 학과 deep page (kmooc.kr/view/course/detail/{id} 등) |
+| `detailReady.training` | 자격증·연수 프로그램 (CCDM·SCDM·재직자 과정) | 자격 발급 기관 공식 페이지 (scdm.org/ccdm-certification 등) |
+| `detailReady.certificate` | 자격증 발급기관 (Q-net·KOSAC 등) | 자격증 안내 deep page |
+
+**사고 패턴 (절대 금지)**:
+
+```
+❌ recruit[0] "넥슨·크래프톤·컴투스 채용" + 출처 = ssafy.com (전혀 무관)
+❌ recruit[1] "통신 3사 채용" + 출처 = naverlabs.com (전혀 무관)
+❌ curriculum[2] "Unity·Unreal 학습" + 출처 = en.wiki/Case_report_form (페이지에 미등장)
+```
+
+**fix 우선순위**:
+1. **진짜 deep page 찾기**: 그 회사 채용 페이지 / 그 교육 페이지 / 그 자격 발급 기관
+2. **못 찾으면 본문 일반화**: "넥슨·크래프톤·컴투스 채용" → "주요 게임사 메타버스 직군 채용" + 게임 산업 트렌드 deep page
+3. **또는 fact 제거**: 일반화도 어색하면 그 array 항목 제거
+
+**검증 강제**: dispatch agent self-verify 시 sub-field별 cover 확인 결과 명시 (산문 필드 + 배열 필드 모두). 산문만 verify하고 배열은 skip하면 self-verify 무효 → POST 차단.
+
 #### Phase 4-SRC-FACT Subagent Prompt 박힘 항목
 
 dispatch session에서 enhance subagent prompt에 **반드시 다음 절 포함**:
