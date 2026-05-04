@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### [2026-05-04] SQLite scalar MAX + 문자열 "null" 함정 — admin job-equalize 정렬 깨짐
+- **상황**: /admin/job-equalize 정렬에 "최근 편집순" 추가. SQL `MAX(COALESCE(user_last_updated_at,0), COALESCE(admin_last_updated_at,0))`로 행-단위 MAX 계산. prod에서 정렬 검증 시 한 row가 결과 NULL — wrangler 출력 `"last_edited_at": "null"`
+- **원인**: ETL 버그로 `admin_last_updated_at` 컬럼에 문자열 "null" (text 타입)이 저장된 row 존재. COALESCE는 SQL NULL만 대체하므로 string "null"은 그대로 통과. 그 결과 scalar `MAX(int, "null")`이 string 비교로 풀려 string이 가장 큰 값으로 평가, 정렬 결과 깨짐
+- **해결**: `MAX(CAST(COALESCE(...,0) AS INTEGER), CAST(COALESCE(...,0) AS INTEGER))`. SQLite는 비-숫자 문자열을 INTEGER로 CAST 시 0 반환 → 깨끗
+- **교훈**: 컬럼이 INTEGER 선언이어도 ETL 경로에 따라 string "null"이 들어갈 수 있다. **timestamp 비교/정렬 SQL은 반드시 `CAST(... AS INTEGER)`로 감싸기**. COALESCE는 SQL NULL만 막고 string "null"은 못 막는다. typeof()로 타입 분포 한 번 살피는 게 빠른 진단
+
 ### [2026-05-03] audit-sources-deep HEAD 403/404 false positive — GET retry 누락
 - **상황**: 공예가(id=1765284782985734) URL fix 의뢰. 6/18 broken 신고 (edujin idxno=3659 404 ×3, kcdf.or.kr/main 403 ×3). WebFetch + Node.js fetch GET으로 재검증 시 모두 200 OK + 콘텐츠 매칭 (공예학과 진로, 한국공예·디자인문화진흥원). 즉 모두 false positive
 - **원인**: `audit-sources-deep.cjs` `verifyUrlsForJobs()`가 HEAD 요청만 사용. 일부 사이트(edujin/kcdf 등)는 봇 차단/HEAD 미지원으로 HEAD에 403/404 반환하나 GET에는 200 응답. 기존 GET-retry 로직은 `405 || 501`만 처리해 403/404 케이스 누락
