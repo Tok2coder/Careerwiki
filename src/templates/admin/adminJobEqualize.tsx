@@ -71,6 +71,7 @@ export interface JobEqualizeItem {
   srcMojibake: boolean    // _sources 항목에 깨진 인코딩 문자 (사고 패턴 3)
   userVerified: boolean       // 관리자 수동 "스킬 검증 완료" 토글
   userVerifiedAt: string | null
+  lastEditedAt: number | null  // user/admin _last_updated_at 의 MAX (unix ms), 한 번도 편집 안 됐으면 null
 }
 
 export interface QualityAlerts {
@@ -422,6 +423,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           <option value="skill-desc" selected>스킬 적용순 (최근)</option>
           <option value="verified-desc">검증 완료순 (최근)</option>
           <option value="verified-asc">미검증 우선</option>
+          <option value="lastEdited-desc">최근 편집순 (최근 먼저)</option>
+          <option value="lastEdited-asc">최근 편집순 (오래된 먼저)</option>
           <option value="name-asc">이름순 ↑</option>
           <option value="name-desc">이름순 ↓</option>
           <option value="field-desc">완성도 높은순</option>
@@ -647,6 +650,17 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
             if (!an && bn) return -1;
             if (an && bn) return a.name.localeCompare(b.name, 'ko');
             va = a.uniqueUrlCount; vb = b.uniqueUrlCount;
+          }
+          else if (key === 'lastEdited') {
+            // null(편집 이력 없음)은 항상 가장 뒤로 — 방향과 무관하게
+            var aE = a.lastEditedAt;
+            var bE = b.lastEditedAt;
+            var aNull = aE === null || aE === undefined;
+            var bNull = bE === null || bE === undefined;
+            if (aNull && !bNull) return 1;
+            if (!aNull && bNull) return -1;
+            if (aNull && bNull) return a.name.localeCompare(b.name, 'ko');
+            va = aE; vb = bE;
           }
           else if (key === 'yt') { va = a.youtubeCount; vb = b.youtubeCount; }
           else { va = 0; vb = 0; }
