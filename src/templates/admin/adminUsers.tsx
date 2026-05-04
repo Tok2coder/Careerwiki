@@ -225,6 +225,39 @@ function renderAiUsageChart(dist: AiUsageDistribution): string {
   `
 }
 
+function renderTopReferers(v: VisitorRecord): string {
+  if (!v.topReferer) return '<span class="text-slate-600">직접 방문</span>'
+
+  // topReferersJson: [{r:string, c:number}, ...]
+  let parsed: Array<{ r: string; c: number }> = []
+  try {
+    if (v.topReferersJson) {
+      const arr = JSON.parse(v.topReferersJson)
+      if (Array.isArray(arr)) parsed = arr
+    }
+  } catch { /* fallback to topReferer below */ }
+
+  if (parsed.length === 0) {
+    // 폴백 — 단일 referer만
+    return `<i class="fas fa-external-link-alt text-xs mr-1 text-slate-500"></i><a href="?tab=visitor-detail&ip=${encodeURIComponent(v.ipHash)}" class="text-slate-300 hover:text-white hover:underline truncate">${escapeHtml(String(v.topReferer))}</a>`
+  }
+
+  const distinct = Number(v.distinctReferers) || parsed.length
+  const more = Math.max(0, distinct - parsed.length)
+
+  const chips = parsed.map(item => {
+    const label = escapeHtml(String(item.r))
+    const cnt = Number(item.c) || 0
+    return `<a href="?tab=visitor-detail&ip=${encodeURIComponent(v.ipHash)}" class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-700/60 hover:bg-slate-600/60 rounded text-xs text-slate-200 max-w-full truncate" title="${label} (${cnt}건)"><span class="truncate">${label}</span><span class="text-slate-400">×${cnt}</span></a>`
+  }).join(' ')
+
+  const moreLabel = more > 0
+    ? ` <a href="?tab=visitor-detail&ip=${encodeURIComponent(v.ipHash)}" class="text-xs text-blue-400 hover:text-blue-300">+${more}개 더</a>`
+    : ''
+
+  return `<div class="flex flex-wrap items-center gap-1">${chips}${moreLabel}</div>`
+}
+
 function renderVisitorsTab(props: AdminUsersProps): string {
   const { visitors = [], visitorsTotal = 0, visitorsPage = 1, visitorsTotalPages = 0, visitorSort = 'recent', refererDistribution, visitorFilters = {} } = props
 
@@ -363,8 +396,8 @@ function renderVisitorsTab(props: AdminUsersProps): string {
                 </td>
                 <td class="px-4 py-3 text-center text-white">${v.visitDays}일</td>
                 <td class="px-4 py-3 text-center text-white">${Number(v.pageViews) || 0}</td>
-                <td class="px-4 py-3 text-sm text-slate-400 max-w-[180px] truncate">
-                  ${v.topReferer ? `<i class="fas fa-external-link-alt text-xs mr-1 text-slate-500"></i>${escapeHtml(String(v.topReferer))}` : '<span class="text-slate-600">직접 방문</span>'}
+                <td class="px-4 py-3 text-sm text-slate-400 max-w-[280px]">
+                  ${renderTopReferers(v)}
                 </td>
                 <td class="px-4 py-3 text-center text-sm text-slate-400">${v.lastVisit}</td>
                 <td class="px-4 py-3 text-center">

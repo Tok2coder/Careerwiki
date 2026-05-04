@@ -986,6 +986,8 @@ export interface VisitorRecord {
   editCount: number
   pageViews: number
   topReferer: string | null
+  topReferersJson: string | null  // [{r:string, c:number}, ...] 상위 3개
+  distinctReferers: number  // 고유 referer 개수 (NULL 제외)
 }
 
 export interface VisitorListResult {
@@ -1063,8 +1065,20 @@ export async function getVisitorList(db: D1Database, params: {
       SELECT ip_hash, COUNT(*) as cnt FROM page_revisions WHERE ip_hash IS NOT NULL GROUP BY ip_hash
     ) pr ON pr.ip_hash = uv.ip_hash
     LEFT JOIN (
-      SELECT ip_hash, COUNT(*) as pvCount,
-        (SELECT referer FROM visitor_page_views v2 WHERE v2.ip_hash = visitor_page_views.ip_hash AND v2.referer IS NOT NULL ORDER BY v2.created_at DESC LIMIT 1) as topReferer
+      SELECT
+        ip_hash,
+        COUNT(*) as pvCount,
+        (SELECT referer FROM visitor_page_views v2 WHERE v2.ip_hash = visitor_page_views.ip_hash AND v2.referer IS NOT NULL ORDER BY v2.created_at DESC LIMIT 1) as topReferer,
+        (SELECT json_group_array(json_object('r', referer, 'c', cnt))
+         FROM (
+           SELECT referer, COUNT(*) as cnt
+           FROM visitor_page_views v3
+           WHERE v3.ip_hash = visitor_page_views.ip_hash AND v3.referer IS NOT NULL
+           GROUP BY referer
+           ORDER BY cnt DESC
+           LIMIT 3
+         )) as topReferersJson,
+        COUNT(DISTINCT CASE WHEN referer IS NOT NULL THEN referer END) as distinctReferers
       FROM visitor_page_views GROUP BY ip_hash
     ) pv ON pv.ip_hash = uv.ip_hash
     GROUP BY uv.ip_hash

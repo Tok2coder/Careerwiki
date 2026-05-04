@@ -23,15 +23,22 @@ async function recordUniqueVisitor(db: D1Database, ip: string): Promise<void> {
 }
 
 /**
- * Referer URL에서 도메인만 추출 (개인정보 보호 — 쿼리스트링 제거)
+ * Referer URL에서 도메인 + path 추출 (쿼리스트링은 PII 위험으로 제거)
+ * 브라우저 Referrer-Policy로 path가 잘려 hostname만 오는 경우도 많음
  */
 function extractRefererDomain(referer?: string): string | null {
   if (!referer) return null
   try {
     const url = new URL(referer)
+    const path = url.pathname || ''
+    if (path && path !== '/') {
+      // 80자 초과 시 절단
+      const cleanPath = path.length > 80 ? path.slice(0, 80) + '…' : path
+      return url.hostname + cleanPath
+    }
     return url.hostname
   } catch {
-    return referer.slice(0, 100) // URL 파싱 실패 시 앞부분만
+    return referer.slice(0, 120) // URL 파싱 실패 시 앞부분만
   }
 }
 
