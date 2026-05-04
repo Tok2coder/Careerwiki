@@ -1169,7 +1169,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
                THEN 1 ELSE 0 END AS yt_low,
           COALESCE(skill_verified_by_user, 0) AS skill_verified_by_user,
           skill_verified_at,
-          MAX(COALESCE(user_last_updated_at, 0), COALESCE(admin_last_updated_at, 0)) AS last_edited_at
+          MAX(CAST(COALESCE(user_last_updated_at, 0) AS INTEGER), CAST(COALESCE(admin_last_updated_at, 0) AS INTEGER)) AS last_edited_at
         FROM ${tableName}
         WHERE is_active = 1 AND user_contributed_json IS NOT NULL
         ORDER BY name LIMIT 500 OFFSET ?`
