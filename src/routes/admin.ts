@@ -291,8 +291,31 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
     // 방문자 탭
     if (tab === 'visitors') {
       const sort = (c.req.query('sort') || 'recent') as 'recent' | 'frequent' | 'edits'
+
+      // 숫자 필터 파싱 — 빈 문자열/NaN은 undefined로
+      const numOrUndef = (s: string | undefined): number | undefined => {
+        if (s == null || s === '') return undefined
+        const n = Number(s)
+        return Number.isFinite(n) ? n : undefined
+      }
+      const refTypeRaw = c.req.query('refType') || 'all'
+      const refType = (['all', 'direct', 'external'].includes(refTypeRaw) ? refTypeRaw : 'all') as 'all' | 'direct' | 'external'
+
+      const visitorFilters = {
+        visitDaysMin: numOrUndef(c.req.query('vdMin')),
+        visitDaysMax: numOrUndef(c.req.query('vdMax')),
+        pageViewsMin: numOrUndef(c.req.query('pvMin')),
+        pageViewsMax: numOrUndef(c.req.query('pvMax')),
+        editCountMin: numOrUndef(c.req.query('edMin')),
+        editCountMax: numOrUndef(c.req.query('edMax')),
+        referer: (c.req.query('referer') || '').trim() || undefined,
+        refType,
+        lastVisitFrom: (c.req.query('lvFrom') || '').trim() || undefined,
+        lastVisitUntil: (c.req.query('lvUntil') || '').trim() || undefined,
+      }
+
       const [result, refererDist] = await Promise.all([
-        getVisitorList(c.env.DB, { page, perPage: 30, sort }),
+        getVisitorList(c.env.DB, { page, perPage: 30, sort, filters: visitorFilters }),
         getRefererDistribution(c.env.DB, 10),
       ])
       return c.html(renderAdminUsers({
@@ -305,6 +328,7 @@ adminRoutes.get('/admin/users', requireAdmin, async (c) => {
         visitorsTotalPages: result.totalPages,
         visitorSort: sort,
         refererDistribution: refererDist,
+        visitorFilters,
       }))
     }
 

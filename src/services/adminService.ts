@@ -996,44 +996,85 @@ export interface VisitorListResult {
   totalPages: number
 }
 
+export interface VisitorFilters {
+  visitDaysMin?: number
+  visitDaysMax?: number
+  pageViewsMin?: number
+  pageViewsMax?: number
+  editCountMin?: number
+  editCountMax?: number
+  referer?: string
+  refType?: 'all' | 'direct' | 'external'
+  lastVisitFrom?: string
+  lastVisitUntil?: string
+}
+
 export async function getVisitorList(db: D1Database, params: {
   page?: number
   perPage?: number
   sort?: 'recent' | 'frequent' | 'edits'
+  filters?: VisitorFilters
 }): Promise<VisitorListResult> {
   const page = params.page || 1
   const perPage = params.perPage || 30
   const offset = (page - 1) * perPage
+  const f = params.filters || {}
 
   const orderBy = params.sort === 'frequent' ? 'visitDays DESC'
     : params.sort === 'edits' ? 'editCount DESC'
     : 'lastVisit DESC'
 
+  // HAVING 조건 + 바인드 인자 (집계 컬럼 별칭으로 필터)
+  const having: string[] = []
+  const havingBinds: Array<string | number> = []
+
+  if (f.visitDaysMin != null) { having.push('visitDays >= ?'); havingBinds.push(f.visitDaysMin) }
+  if (f.visitDaysMax != null) { having.push('visitDays <= ?'); havingBinds.push(f.visitDaysMax) }
+  if (f.pageViewsMin != null) { having.push('pageViews >= ?'); havingBinds.push(f.pageViewsMin) }
+  if (f.pageViewsMax != null) { having.push('pageViews <= ?'); havingBinds.push(f.pageViewsMax) }
+  if (f.editCountMin != null) { having.push('editCount >= ?'); havingBinds.push(f.editCountMin) }
+  if (f.editCountMax != null) { having.push('editCount <= ?'); havingBinds.push(f.editCountMax) }
+  if (f.lastVisitFrom) { having.push('lastVisit >= ?'); havingBinds.push(f.lastVisitFrom) }
+  if (f.lastVisitUntil) { having.push('lastVisit <= ?'); havingBinds.push(f.lastVisitUntil) }
+  if (f.refType === 'direct') {
+    having.push('topReferer IS NULL')
+  } else if (f.refType === 'external') {
+    having.push('topReferer IS NOT NULL')
+  }
+  if (f.referer && f.referer.trim()) {
+    having.push('topReferer LIKE ?')
+    havingBinds.push(`%${f.referer.trim()}%`)
+  }
+
+  const havingSql = having.length > 0 ? `HAVING ${having.join(' AND ')}` : ''
+
+  // GROUP BY + HAVING 결과를 그대로 감싸서 COUNT/페이징 공통 사용
+  const baseQuery = `
+    SELECT
+      uv.ip_hash as ipHash,
+      COUNT(DISTINCT uv.stat_date) as visitDays,
+      MIN(uv.stat_date) as firstVisit,
+      MAX(uv.stat_date) as lastVisit,
+      COALESCE(pr.cnt, 0) as editCount,
+      COALESCE(pv.pvCount, 0) as pageViews,
+      pv.topReferer
+    FROM unique_visitor_daily uv
+    LEFT JOIN (
+      SELECT ip_hash, COUNT(*) as cnt FROM page_revisions WHERE ip_hash IS NOT NULL GROUP BY ip_hash
+    ) pr ON pr.ip_hash = uv.ip_hash
+    LEFT JOIN (
+      SELECT ip_hash, COUNT(*) as pvCount,
+        (SELECT referer FROM visitor_page_views v2 WHERE v2.ip_hash = visitor_page_views.ip_hash AND v2.referer IS NOT NULL ORDER BY v2.created_at DESC LIMIT 1) as topReferer
+      FROM visitor_page_views GROUP BY ip_hash
+    ) pv ON pv.ip_hash = uv.ip_hash
+    GROUP BY uv.ip_hash
+    ${havingSql}
+  `
+
   try {
     const [countRes, listRes] = await Promise.all([
-      db.prepare(`SELECT COUNT(DISTINCT ip_hash) as c FROM unique_visitor_daily`).first<{ c: number }>(),
-      db.prepare(`
-        SELECT
-          uv.ip_hash as ipHash,
-          COUNT(DISTINCT uv.stat_date) as visitDays,
-          MIN(uv.stat_date) as firstVisit,
-          MAX(uv.stat_date) as lastVisit,
-          COALESCE(pr.cnt, 0) as editCount,
-          COALESCE(pv.pvCount, 0) as pageViews,
-          pv.topReferer
-        FROM unique_visitor_daily uv
-        LEFT JOIN (
-          SELECT ip_hash, COUNT(*) as cnt FROM page_revisions WHERE ip_hash IS NOT NULL GROUP BY ip_hash
-        ) pr ON pr.ip_hash = uv.ip_hash
-        LEFT JOIN (
-          SELECT ip_hash, COUNT(*) as pvCount,
-            (SELECT referer FROM visitor_page_views v2 WHERE v2.ip_hash = visitor_page_views.ip_hash AND v2.referer IS NOT NULL ORDER BY v2.created_at DESC LIMIT 1) as topReferer
-          FROM visitor_page_views GROUP BY ip_hash
-        ) pv ON pv.ip_hash = uv.ip_hash
-        GROUP BY uv.ip_hash
-        ORDER BY ${orderBy}
-        LIMIT ? OFFSET ?
-      `).bind(perPage, offset).all<VisitorRecord>(),
+      db.prepare(`SELECT COUNT(*) as c FROM (${baseQuery})`).bind(...havingBinds).first<{ c: number }>(),
+      db.prepare(`${baseQuery} ORDER BY ${orderBy} LIMIT ? OFFSET ?`).bind(...havingBinds, perPage, offset).all<VisitorRecord>(),
     ])
     const total = countRes?.c || 0
     return {

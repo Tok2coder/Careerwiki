@@ -41,6 +41,18 @@ export interface AdminUsersProps {
   visitorsPage?: number
   visitorsTotalPages?: number
   visitorSort?: string
+  visitorFilters?: {
+    visitDaysMin?: number
+    visitDaysMax?: number
+    pageViewsMin?: number
+    pageViewsMax?: number
+    editCountMin?: number
+    editCountMax?: number
+    referer?: string
+    refType?: 'all' | 'direct' | 'external'
+    lastVisitFrom?: string
+    lastVisitUntil?: string
+  }
   // 편집 이력 탭
   editorRevisions?: EditorRevisionRecord[]
   editorRevisionsTotal?: number
@@ -214,20 +226,110 @@ function renderAiUsageChart(dist: AiUsageDistribution): string {
 }
 
 function renderVisitorsTab(props: AdminUsersProps): string {
-  const { visitors = [], visitorsTotal = 0, visitorsPage = 1, visitorsTotalPages = 0, visitorSort = 'recent', refererDistribution } = props
+  const { visitors = [], visitorsTotal = 0, visitorsPage = 1, visitorsTotalPages = 0, visitorSort = 'recent', refererDistribution, visitorFilters = {} } = props
+
+  // 필터 상태를 sort/pagination 링크 보존용 쿼리스트링으로 직렬화
+  const f = visitorFilters
+  const filterQs: string[] = []
+  const addQs = (k: string, v: string | number | undefined) => {
+    if (v == null || v === '') return
+    filterQs.push(`${k}=${encodeURIComponent(String(v))}`)
+  }
+  addQs('vdMin', f.visitDaysMin); addQs('vdMax', f.visitDaysMax)
+  addQs('pvMin', f.pageViewsMin); addQs('pvMax', f.pageViewsMax)
+  addQs('edMin', f.editCountMin); addQs('edMax', f.editCountMax)
+  addQs('referer', f.referer)
+  if (f.refType && f.refType !== 'all') addQs('refType', f.refType)
+  addQs('lvFrom', f.lastVisitFrom); addQs('lvUntil', f.lastVisitUntil)
+  const preserved = filterQs.length > 0 ? '&' + filterQs.join('&') : ''
+
+  const numAttr = (n: number | undefined) => n != null ? `value="${n}"` : ''
+  const strAttr = (s: string | undefined) => s ? `value="${escapeHtml(s)}"` : ''
+  const hasAnyFilter = filterQs.length > 0
 
   return `
     <!-- 유입경로 차트 -->
     ${renderRefererChart(refererDistribution || [])}
 
-    <!-- 정렬 옵션 -->
+    <!-- 필터 -->
     <div class="glass-card rounded-xl p-4 mb-6">
-      <div class="flex items-center gap-3">
-        <span class="text-sm text-slate-400">정렬:</span>
-        <a href="?tab=visitors&sort=recent" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'recent' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">최근 방문</a>
-        <a href="?tab=visitors&sort=frequent" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'frequent' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">방문 빈도</a>
-        <a href="?tab=visitors&sort=edits" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'edits' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">편집 수</a>
-      </div>
+      <form id="visitorFilterForm" method="get" class="space-y-3">
+        <input type="hidden" name="tab" value="visitors">
+        <input type="hidden" name="sort" value="${visitorSort}">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- 방문 일수 -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1"><i class="fas fa-calendar-day text-blue-400 mr-1"></i>방문 일수</label>
+            <div class="flex items-center gap-1">
+              <input type="number" name="vdMin" min="0" placeholder="최소" ${numAttr(f.visitDaysMin)}
+                class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+              <span class="text-slate-500 text-xs">~</span>
+              <input type="number" name="vdMax" min="0" placeholder="최대" ${numAttr(f.visitDaysMax)}
+                class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+            </div>
+          </div>
+          <!-- 페이지뷰 -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1"><i class="fas fa-eye text-emerald-400 mr-1"></i>페이지뷰</label>
+            <div class="flex items-center gap-1">
+              <input type="number" name="pvMin" min="0" placeholder="최소" ${numAttr(f.pageViewsMin)}
+                class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+              <span class="text-slate-500 text-xs">~</span>
+              <input type="number" name="pvMax" min="0" placeholder="최대" ${numAttr(f.pageViewsMax)}
+                class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+            </div>
+          </div>
+          <!-- 편집 수 -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1"><i class="fas fa-pen text-amber-400 mr-1"></i>편집 수</label>
+            <div class="flex items-center gap-1">
+              <input type="number" name="edMin" min="0" placeholder="최소" ${numAttr(f.editCountMin)}
+                class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+              <span class="text-slate-500 text-xs">~</span>
+              <input type="number" name="edMax" min="0" placeholder="최대" ${numAttr(f.editCountMax)}
+                class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+            </div>
+          </div>
+          <!-- 마지막 방문 -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1"><i class="fas fa-clock text-teal-400 mr-1"></i>마지막 방문</label>
+            <div class="flex items-center gap-1">
+              <input type="date" name="lvFrom" ${strAttr(f.lastVisitFrom)}
+                class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+              <span class="text-slate-500 text-xs">~</span>
+              <input type="date" name="lvUntil" ${strAttr(f.lastVisitUntil)}
+                class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+            </div>
+          </div>
+          <!-- 유입 경로 종류 -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1"><i class="fas fa-route text-purple-400 mr-1"></i>유입 경로 종류</label>
+            <select name="refType" class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+              <option value="all" ${(!f.refType || f.refType === 'all') ? 'selected' : ''}>전체</option>
+              <option value="direct" ${f.refType === 'direct' ? 'selected' : ''}>직접 방문만</option>
+              <option value="external" ${f.refType === 'external' ? 'selected' : ''}>외부 유입만</option>
+            </select>
+          </div>
+          <!-- 유입 경로 검색 -->
+          <div>
+            <label class="block text-xs text-slate-400 mb-1"><i class="fas fa-search text-pink-400 mr-1"></i>유입 경로 검색</label>
+            <input type="text" name="referer" placeholder="예: google, naver" ${strAttr(f.referer)}
+              class="w-full px-2 py-2 min-h-[40px] bg-slate-700/50 border border-slate-600 rounded text-white text-sm" style="font-size: 16px;">
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-slate-400">정렬:</span>
+            <button type="submit" name="sort" value="recent" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'recent' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">최근 방문</button>
+            <button type="submit" name="sort" value="frequent" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'frequent' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">방문 빈도</button>
+            <button type="submit" name="sort" value="edits" class="px-3 py-1.5 rounded-lg text-sm transition-colors ${visitorSort === 'edits' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">편집 수</button>
+          </div>
+          <div class="flex items-center gap-2">
+            ${hasAnyFilter ? `<a href="?tab=visitors&sort=${visitorSort}" class="px-3 py-1.5 rounded-lg text-sm bg-slate-700 text-slate-300 hover:bg-slate-600 transition-colors"><i class="fas fa-times mr-1"></i>필터 초기화</a>` : ''}
+            <button type="submit" class="px-4 py-1.5 rounded-lg text-sm bg-blue-600 hover:bg-blue-500 text-white transition-colors"><i class="fas fa-filter mr-1"></i>적용</button>
+          </div>
+        </div>
+      </form>
     </div>
 
     <!-- 방문자 테이블 -->
@@ -301,7 +403,7 @@ function renderVisitorsTab(props: AdminUsersProps): string {
     ${visitorsTotalPages > 1 ? `
       <div class="flex flex-wrap items-center justify-center gap-2">
         ${visitorsPage > 1 ? `
-          <a href="?tab=visitors&sort=${visitorSort}&page=${visitorsPage - 1}"
+          <a href="?tab=visitors&sort=${visitorSort}&page=${visitorsPage - 1}${preserved}"
              class="min-w-[44px] min-h-[44px] px-3 py-2 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded text-white transition-colors">
             <i class="fas fa-chevron-left"></i>
           </a>
@@ -309,13 +411,13 @@ function renderVisitorsTab(props: AdminUsersProps): string {
         ${generatePagination(visitorsPage, visitorsTotalPages).map(p => p === '...' ? `
           <span class="min-w-[44px] min-h-[44px] px-3 py-2 flex items-center justify-center text-slate-500">...</span>
         ` : `
-          <a href="?tab=visitors&sort=${visitorSort}&page=${p}"
+          <a href="?tab=visitors&sort=${visitorSort}&page=${p}${preserved}"
              class="min-w-[44px] min-h-[44px] px-3 py-2 flex items-center justify-center ${Number(p) === visitorsPage ? 'bg-blue-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white'} rounded transition-colors">
             ${p}
           </a>
         `).join('')}
         ${visitorsPage < visitorsTotalPages ? `
-          <a href="?tab=visitors&sort=${visitorSort}&page=${visitorsPage + 1}"
+          <a href="?tab=visitors&sort=${visitorSort}&page=${visitorsPage + 1}${preserved}"
              class="min-w-[44px] min-h-[44px] px-3 py-2 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded text-white transition-colors">
             <i class="fas fa-chevron-right"></i>
           </a>
