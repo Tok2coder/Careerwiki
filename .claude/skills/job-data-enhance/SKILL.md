@@ -1489,7 +1489,7 @@ dispatch session에서 enhance subagent prompt에 **반드시 다음 절 포함*
 - covers_evidence 명시 안 하면 의심
 ```
 
-#### 룰 3. 한국 출처 우선 (2026-05-04 신설) ⚠️ **필수**
+#### 룰 5. 한국 출처 우선 (2026-05-04 신설) ⚠️ **필수**
 
 CareerWiki는 한국어 직업 정보 위키. **한국 직업·산업 fact는 한국 1차 출처가 우선**. 외국 사이트는 fallback only.
 
