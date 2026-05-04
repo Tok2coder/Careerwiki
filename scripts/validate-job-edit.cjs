@@ -1244,6 +1244,34 @@ function validate(data) {
         }
       }
     }
+
+    // ── 12-B. detailReady 배열 항목 다문장 금지 (2026-05-04 의료기기개발전문가 사고) ──
+    // dispatch agent가 marker isolation 위해 sentence를 split했지만 array 항목으로 분리하지 않고
+    // 한 항목 안에 ". " 다음에 두번째 문장 + [N]을 합치는 사고. 한 bullet에 여러 문장 표시됨.
+    //   사고 예: "삼성전자 ... 채용 응시[2]. LG전자 ... 채용 응시[4]"  ← 한 항목인데 두 bullet 의미
+    // 룰: 배열 항목 안에 ". " 또는 ".[N]" 패턴 + 추가 콘텐츠 (10자+) 발견 시 FAIL
+    for (const sub of ['curriculum', 'recruit', 'training']) {
+      if (!dr12[sub] || !Array.isArray(dr12[sub])) continue;
+      for (let i = 0; i < dr12[sub].length; i++) {
+        const item = dr12[sub][i];
+        const text = typeof item === 'string' ? item : (item && typeof item === 'object' && item.text ? item.text : '');
+        if (!text) continue;
+        // ". " 또는 ".[N]" 다음에 10자 이상 콘텐츠가 등장하면 두 문장 합쳐진 사고
+        // 끝에 ". " 만 있는 경우 (sentence 마침표) 제외 — text.trim() 후 마지막 . 제외
+        const trimmed = text.trim().replace(/\.$/, '');
+        // 패턴1: ". " + 한글/영문 다음 글자 (마침표 후 새 문장 시작)
+        // 패턴2: "[N]. " + 한글/영문 다음 글자 (마커 다음 마침표 후 새 문장)
+        const multiSentence = /\. (?:\[\d+\] *)?[가-힣A-Z][가-힣A-Za-z·]/.test(trimmed) ||
+                              /\.\s*\[\d+\]\s*[가-힣A-Z][가-힣A-Za-z·]/.test(trimmed);
+        if (multiSentence) {
+          errors.push(
+            `[치명] detailReady.${sub}[${i}] 한 array 항목에 두 문장 합쳐짐 — 한 bullet은 단일 sentence여야 함. ` +
+            `". " 다음 두번째 문장이 시작되면 별도 array 항목으로 분리 필요. ` +
+            `(현재: "${text.slice(0, 100)}")`
+          );
+        }
+      }
+    }
   }
 
   return { errors, warnings };

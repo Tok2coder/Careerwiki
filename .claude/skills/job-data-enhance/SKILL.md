@@ -1465,6 +1465,27 @@ dispatch session에서 enhance subagent prompt에 **반드시 다음 절 포함*
 - covers_evidence 명시 안 하면 의심
 ```
 
+#### Phase 4-SRC-FACT 추가 룰: detailReady 배열 항목 = 단일 sentence per item
+
+⚠️ **2026-05-04 의료기기개발전문가 사고 후 추가**: dispatch agent가 marker isolation 위해 sentence를 split했지만 array 항목으로는 분리하지 않고 한 array item 안에 ". " 다음 두번째 문장 + 두번째 마커를 합치는 사고. 사용자 화면에는 한 bullet에 두 문장이 표시됨.
+
+```
+❌ 사고 패턴:
+recruit: [
+  "삼성전자 의료기기 사업부의 영상의료기기 R&D 채용 응시[2]. LG전자 헬스케어 R&D·의료기기 품질평가 전문가 채용 응시[4]"
+]
+
+✅ 올바른 패턴:
+recruit: [
+  "삼성전자 의료기기 사업부의 영상의료기기 R&D 채용 응시[2]",
+  "LG전자 헬스케어 R&D·의료기기 품질평가 전문가 채용 응시[4]"
+]
+```
+
+룰: detailReady.curriculum/recruit/training 각 array 항목 = **단일 sentence**. 한 항목 안에 ". " 다음 새 문장 시작 + 마커 합치기 절대 금지. 문장 분리 = array 항목 분리.
+
+`scripts/validate-job-edit.cjs` `[치명] detailReady.{sub}[i] 한 array 항목에 두 문장 합쳐짐` 룰로 자동 차단.
+
 ---
 
 → **Phase 5.5 내용은 Phase 3.5로 이동됨.** API 호출 직전 Self-check은 Phase 3.5를 참조.
