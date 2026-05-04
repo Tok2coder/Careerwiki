@@ -1489,6 +1489,29 @@ dispatch session에서 enhance subagent prompt에 **반드시 다음 절 포함*
 - covers_evidence 명시 안 하면 의심
 ```
 
+#### 룰 3. 한국 출처 우선 (2026-05-04 신설) ⚠️ **필수**
+
+CareerWiki는 한국어 직업 정보 위키. **한국 직업·산업 fact는 한국 1차 출처가 우선**. 외국 사이트는 fallback only.
+
+**출처 도메인 우선순위 (high → low)**:
+1. 🇰🇷 **한국 공식**: 정부 (.go.kr) / 협회·학회 (.or.kr) / 기업 (.co.kr) / 대학 (.ac.kr) / 연구원 (.re.kr) — **deep page** (root URL X)
+2. 🇰🇷 **한국 미디어**: 한국경제·전자신문·연합뉴스·이코노믹리뷰·KBS·MBC·SBS·JTBC·CJ ENM 뉴스룸 등 1차 보도
+3. 🇰🇷 **한국 위키**: ko.wikipedia.org (1순위 시도)
+4. 🌐 **외국 1차 출처** (fallback): en.wikipedia.org / 글로벌 기관 (FDA·IFR·OECD 등) — 한국 출처 부재 시에만
+
+**한국 한정 fact는 외국 출처 절대 X**:
+- ❌ "한국 N위 / 한국 시장 N억 / 한국 채용 / 한국 인력 부족" + en.wikipedia.org → FAIL
+- ❌ "한국 조선업 세계 1위" + 외국 사이트 → FAIL (한국 출처에서 확인 필수)
+- ✅ "ChatGPT 등장" + en.wikipedia.org/ChatGPT → OK (글로벌 사실)
+- ✅ "글로벌 의료기기 시장 N억 달러" + 글로벌 통계 → OK
+
+**한국 위키 우선 패턴**:
+```
+1. ko.wikipedia.org/wiki/{topic} 시도 (WebFetch verify)
+2. 한국 위키 부재 또는 stub → en.wikipedia.org/wiki/{topic} fallback
+3. 한국 위키에 있는데 외국 위키 사용 → FAIL
+```
+
 #### Phase 4-SRC-FACT-VERIFY: fix 직후 자기 검증 (2026-05-04 신설) ⚠️ **필수**
 
 dispatch agent가 본문-출처 fix 후 API POST 직전에 **자기 검증** 1회 수행. validate PASS만 통과하면 끝나는 게 아님 — 새 출처가 본문 fact를 진짜 cover하는지 의미적으로 확인.
