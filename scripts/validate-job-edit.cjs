@@ -1140,6 +1140,54 @@ function validate(data) {
             );
           }
         }
+
+        // ── 10-D-2. 장식적 출처 패턴 (2026-05-04 신설) ──
+        // 본문 서사적/통계적 진술 + 출처 root URL = WARN (장식적 출처 의심)
+        // dispatch agent가 retry 트리거로 사용
+        const NARRATIVE_OR_STAT = [
+          /주\s*\d{1,2}\s*시간/,             // 주 60시간
+          /\d{1,2}\s*[~\-]\s*\d{1,2}\s*년/,   // 5~7년
+          /방송\s*고시|언론\s*고시|언시/,
+          /수주\s*잔량/,
+          /수출\s*\d+(?:\.\d+)?\s*억\s*달러/,
+          /세계\s*[1-9]위|국내\s*[1-9]위/,
+          /\d{1,3}(?:,\d{3})*\s*억\s*(?:원|달러)/,
+          /\d{1,4}\s*조\s*원/,
+          /(?:서류|필기|실무|면접)[가-힣\s·]*?(?:서류|필기|실무|면접)/,
+        ];
+        const beforeWide = val.slice(Math.max(0, m.index - 100), m.index);
+        let isRootUrl = false;
+        try {
+          const u = new URL(src.url);
+          const path = u.pathname || '/';
+          if (path === '/' || path === '' || path === '/index.html' ||
+              /^\/main\.do$/.test(path) || /^\/(intro|about)\/?$/.test(path)) {
+            isRootUrl = true;
+          }
+        } catch {}
+        // 추가: 직업백과·자소서·블로그/카페 등 장식적 출처 호스트
+        const decorativeHosts = [
+          /^(www\.|job\.)?asamaru\.net/i,
+          /^(www\.)?jasoseol\.com/i,
+          /^(www\.)?linkareer\.com/i,
+          /^community\.linkareer\.com/i,
+          /^blog\.naver\.com/i,
+          /^cafe\.naver\.com/i,
+        ];
+        const isDecorativeHost = decorativeHosts.some(re => re.test(host));
+        if (isRootUrl || isDecorativeHost) {
+          for (const re of NARRATIVE_OR_STAT) {
+            const mm = beforeWide.match(re);
+            if (mm) {
+              warnings.push(
+                `[decorativeSource] ${fp} 본문 "${mm[0]}"가 [${N}] 직전 서사적/통계적 진술인데 ` +
+                `_sources["${fp}"][${N-1}].url이 ${isRootUrl ? 'root URL' : '장식적 출처(직업백과/자소서/블로그)'} (${src.url}) — ` +
+                `해당 사실을 직접 보도/기술하는 1차 출처 deep page로 교체 또는 본문 일반화 필수`
+              );
+              break;
+            }
+          }
+        }
       }
     }
   }

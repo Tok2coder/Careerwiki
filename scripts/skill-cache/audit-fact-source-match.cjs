@@ -106,20 +106,62 @@ function getNested(obj, dottedPath) {
 //   4) 연도 (2024년, 2023년 등)
 //   5) 순위 (1위, 상위 N% 등)
 
+// 좁은 범위: 진짜 회사·공기관 형태만. 사용자 사고 사례 (조경설계사 = 사무소, LH = 공사) 패턴 우선.
 const ORG_KEYWORDS = [
-  '사무소', '회사', '은행', '공사', '연구원', '연구소', '병원', '학회', '협회',
-  '재단', '기금', '공단', '진흥원', '위원회', '연합회', '총회', '재단법인',
-  '그룹', '전자', '반도체', '중공업', '건설', '조선', '항공', '자동차', '해운',
-  '화학', '제약', '바이오', '카드', '증권', '보험', '캐피탈', '저축은행',
-  '대학교', '대학원', '학원', '직업학교',
+  '사무소', '공사', '재단법인', '재단', '진흥원', '연합회',
+  '연구원', '연구소', '학회', '협회', '공단', '위원회',
+  '은행', '증권', '카드', '캐피탈', '저축은행',
+  '전자', '반도체', '중공업', '조선', '자동차', '해운', '화학', '제약', '바이오', '항공',
+  '대학교', '대학원',
 ];
 
+// 기술 약어 / 일반 약어 / 의학 약어 blacklist — 회사·기관명이 아니므로 host 매칭에서 제외
 const LATIN_ABBR_BLACKLIST = new Set([
+  // 일반
   'SHA', 'MBA', 'NCS', 'GPA', 'URL', 'API', 'CEO', 'CTO', 'CFO', 'CIO',
   'IT', 'AI', 'ML', 'DL', 'NLP', 'CV', 'OS', 'PC', 'TV', 'CD', 'DVD',
   'OK', 'NO', 'GO', 'TO', 'IN', 'ON', 'AT', 'BY', 'OF', 'PR', 'HR', 'DB',
-  'OECD', 'WHO', 'WTO', 'IMF', 'UN', 'UNESCO', 'EU', 'US', 'UK',  // 글로벌 일반 (host 매칭은 별도)
+  // 의학
+  'MRI', 'CT', 'PET', 'EEG', 'ECG', 'EKG', 'IVD', 'IVF', 'ICU', 'CCU', 'PCR',
+  'DNA', 'RNA', 'ATP', 'ADP', 'CRP', 'HIV', 'HPV', 'STD', 'WBC', 'RBC',
+  'BMI', 'DBP', 'SBP', 'BP', 'HR', 'BPM', 'IM', 'IV', 'PO',
+  // 기술
+  'RPA', 'OCR', 'NLP', 'CNN', 'RNN', 'GAN', 'GPT', 'LLM', 'SDK',
+  'IDE', 'GUI', 'CLI', 'TCP', 'UDP', 'IP', 'DNS', 'VPN', 'SSL', 'TLS',
+  'SaaS', 'PaaS', 'IaaS', 'FaaS',
+  'AWS', 'GCP', 'CRM', 'ERP', 'BI', 'ETL', 'OLAP', 'OLTP', 'SQL',
+  'XML', 'JSON', 'YAML', 'CSV', 'PDF', 'HTML', 'CSS', 'JS', 'TS',
+  'CICD', 'CICDS', 'DEVOPS',
+  // 공학·과학
+  'GIS', 'GPS', 'BIM', 'CAD', 'CAM', 'CAE', 'CFD', 'FEA', 'FMEA',
+  'RND', 'RD', 'QA', 'QC', 'KPI', 'OKR', 'ROI', 'NPV', 'IRR',
+  'ESG', 'SDG', 'CSR',
+  // 자격·시험
+  'CFA', 'CPA', 'TOEIC', 'TOEFL', 'TEPS', 'IELTS', 'JLPT', 'HSK',
+  'PSAT', 'LEET', 'GMAT', 'GRE', 'SAT', 'ACT',
+  // 글로벌 기구
+  'OECD', 'WHO', 'WTO', 'IMF', 'UN', 'UNESCO', 'EU', 'US', 'UK',
+  'NATO', 'ASEAN', 'APEC', 'GATT', 'NAFTA', 'BRICS',
+  // 한국 일반 약어
+  'KS', 'KSC', 'KOSPI', 'KOSDAQ', 'BCG',
 ]);
+
+// 서사적 진술 패턴 — 이런 표현이 본문에 등장하면 출처가 그 사실을 직접 보도/기술해야 함
+// 협회 메인·직업백과·자소서 사이트 같은 root URL은 보통 cover 못 함 (장식적 출처)
+const NARRATIVE_PATTERNS = [
+  // 근무 강도/시간
+  { re: /주\s*\d{1,2}\s*시간/g, label: 'work_hours' },
+  { re: /\d{1,2}\s*[~\-]\s*\d{1,2}\s*년(?:차|간|동안|에)?/g, label: 'years_range' },
+  { re: /야근|야간\s*근무|밤\s*샘|시간\s*외\s*근무/g, label: 'overtime' },
+  // 공모전·시험·관문
+  { re: /방송\s*고시|언론\s*고시|언시|입사\s*경쟁률|경쟁률\s*\d+:\d+/g, label: 'exam_metaphor' },
+  // 산업 현황
+  { re: /수주\s*잔량\s*\d+(?:\.\d+)?\s*년치?|수주\s*[가-힣]*?\s*[1-9]\d*\s*조|수출\s*\d+(?:\.\d+)?\s*억\s*달러/g, label: 'industry_metric' },
+  // 시장 점유율·1위
+  { re: /세계\s*[1-9]위|세계\s*\d+\s*대|글로벌\s*[1-9]위|국내\s*[1-9]위|점유율\s*\d{1,2}(?:\.\d+)?\s*%/g, label: 'rank_metric' },
+  // 채용 단계 서술
+  { re: /(?:서류|필기|실무|면접)[가-힣\s·]*?(?:서류|필기|실무|면접)/g, label: 'recruit_steps' },
+];
 
 function extractFacts(text) {
   if (!text || typeof text !== 'string') return [];
@@ -141,16 +183,31 @@ function extractFacts(text) {
     }
   }
 
-  // 3) 통계 수치 (평균임금 N만원, 종사자 N만명)
+  // 3) 통계 수치 (평균임금 N만원, 종사자 N만명) — 좁은 패턴
   const statRe = /(평균임금|평균 임금|초임|연봉|월급|종사자\s*수?|종사자|취업률|채용\s*인원)\s*[은는이가:]?\s*([0-9]{1,5}(?:,[0-9]{3})*(?:\.[0-9]+)?\s*(?:만\s*원|만원|원|만\s*명|만명|명|%))/g;
   while ((m = statRe.exec(text)) !== null) {
     facts.push({ type: 'statistic', text: m[0], index: m.index, fingerprint: m[2] });
   }
 
-  // 4) 연도 (2020-2026)
-  const yearRe = /\b(20[12][0-9])년/g;
+  // 3-B) 일반 수치 fact (강화: 2026-05-04) — 산업 통계, 매출, 시장 규모, 종업원 수 등
+  // "X억원 / X조 / N만명 / X% 증가/감소 / X배" 등
+  const generalNumRe = /([0-9]{1,5}(?:,[0-9]{3})*(?:\.[0-9]+)?)\s*(억\s*달러|억\s*원|조\s*원|조|만\s*개|만\s*명|만명|만|%|배|위)/g;
+  while ((m = generalNumRe.exec(text)) !== null) {
+    facts.push({ type: 'general_number', text: m[0], index: m.index, fingerprint: m[1] + m[2] });
+  }
+
+  // 4) 연도 (2010-2029)
+  const yearRe = /\b(20[0-2][0-9])년/g;
   while ((m = yearRe.exec(text)) !== null) {
     facts.push({ type: 'year', text: m[0], index: m.index, fingerprint: m[1] });
+  }
+
+  // 4-B) 서사적 진술 (강화: 2026-05-04) — 출처가 root URL이면 보통 cover 못 함
+  for (const { re, label } of NARRATIVE_PATTERNS) {
+    re.lastIndex = 0;
+    while ((m = re.exec(text)) !== null) {
+      facts.push({ type: 'narrative', text: m[0], index: m.index, fingerprint: m[0], narrativeLabel: label });
+    }
   }
 
   // 5) 순위 (1위, 상위 N%)
@@ -203,25 +260,45 @@ function mapFactsToMarkers(text, facts) {
 // Korean 회사명은 host에 등장 X (host는 latin only) → 휴리스틱: 한글 회사명은 NEUTRAL (cover 여부 모름).
 // Latin 약어, 통계 수치, 연도, 순위는 host에 등장하면 cover, 안 하면 NOT_COVER.
 
-function checkCoverage(fact, host) {
+function checkCoverage(fact, host, srcUrl) {
   if (!host) return 'NEUTRAL';
   const fp = fact.fingerprint;
   if (!fp) return 'NEUTRAL';
 
-  if (fact.type === 'korean_org') {
-    // 한글은 host에 등장 X — neutral (LLM check 필요)
-    return 'NEUTRAL';
-  }
-  if (fact.type === 'statistic' || fact.type === 'rank') {
-    // 통계 수치도 host에 보통 등장 X — neutral
-    return 'NEUTRAL';
-  }
-  if (fact.type === 'year') {
-    // 연도는 host에 거의 등장 X — neutral
-    return 'NEUTRAL';
-  }
   if (fact.type === 'latin_abbr') {
     return host.toLowerCase().includes(fp.toLowerCase()) ? 'COVER' : 'NOT_COVER';
+  }
+
+  // 강화 (2026-05-04): narrative / statistic / general_number / year / korean_org / rank
+  // → root URL 출처일 경우 자동 NOT_COVER로 격하 (장식적 출처 패턴 차단)
+  // root URL 판정: pathname이 / 또는 빈 또는 main.do 등
+  let isRootUrl = false;
+  if (srcUrl) {
+    try {
+      const u = new URL(srcUrl);
+      const path = u.pathname || '/';
+      if (path === '/' || path === '' || path === '/index.html' || /^\/main\.do$/.test(path) ||
+          /^\/(intro|about)\/?$/.test(path)) {
+        isRootUrl = true;
+      }
+    } catch {}
+  }
+
+  if (fact.type === 'narrative') {
+    // 서사적 진술은 root URL이면 cover 못 함
+    return isRootUrl ? 'NOT_COVER' : 'NEUTRAL';
+  }
+  if (fact.type === 'statistic' || fact.type === 'general_number' || fact.type === 'rank') {
+    // 통계 수치 — root URL이면 cover 못 함 (구체 통계는 보통 deep page에서 발표)
+    return isRootUrl ? 'NOT_COVER' : 'NEUTRAL';
+  }
+  if (fact.type === 'year') {
+    // 연도 — root URL이면 cover 약함 (NEUTRAL 유지)
+    return 'NEUTRAL';
+  }
+  if (fact.type === 'korean_org') {
+    // 한글 회사명은 host와 비교 불가 — root URL이면 의심으로 격하
+    return isRootUrl ? 'NOT_COVER' : 'NEUTRAL';
   }
   return 'NEUTRAL';
 }
@@ -233,10 +310,19 @@ function checkCoverage(fact, host) {
 const GENERAL_DOMAIN_PATTERNS = [
   // 부처 root (path 없음 또는 / 만)
   { pattern: /^(www\.)?(mohw|molit|moel|moe|mafra|msit|customs|moef|mois|mosf|kostat)\.go\.kr\/?$/i, label: '부처 메인' },
-  // 직업백과 일반
-  { pattern: /^(www\.)?asamaru\.net\/jobinfo\//i, label: '직업백과 일반' },
+  // 직업백과 일반 (asamaru 어디든)
+  { pattern: /^(www\.|job\.)?asamaru\.net/i, label: '직업백과 (asamaru)' },
   // 위키 직업 정의 페이지 (path에 직업명만)
   { pattern: /^ko\.wikipedia\.org\/wiki\//i, label: '위키 직업 정의' },
+  { pattern: /^en\.wikipedia\.org\/wiki\//i, label: '위키 영문 정의' },
+  // 자기소개서·취업 가이드 사이트 — specific 회사 자소서가 아니면 cover 약함
+  { pattern: /^(www\.)?jasoseol\.com/i, label: '자기소개서 사이트 (jasoseol)' },
+  { pattern: /^(www\.)?linkareer\.com/i, label: '취업 가이드 (linkareer)' },
+  { pattern: /^(www\.)?incruit\.com/i, label: '채용 사이트 (incruit)' },
+  { pattern: /^community\.linkareer\.com/i, label: '취업 커뮤니티 (linkareer)' },
+  // 네이버 블로그·유튜브 같은 UGC
+  { pattern: /^blog\.naver\.com/i, label: '네이버 블로그 (UGC)' },
+  { pattern: /^cafe\.naver\.com/i, label: '네이버 카페 (UGC)' },
 ];
 
 function isGeneralDomain(url) {
@@ -279,7 +365,7 @@ function processFieldText(fp, text, sources, result) {
     result.factCount++;
     result.totalSourcesChecked++;
 
-    const coverage = checkCoverage(mapping, host);
+    const coverage = checkCoverage(mapping, host, src.url);
     if (coverage === 'COVER') result.coveredCount++;
     else if (coverage === 'NOT_COVER') {
       result.notCoveredCount++;
@@ -291,10 +377,11 @@ function processFieldText(fp, text, sources, result) {
       result.neutralCount++;
     }
 
-    // 일반 도메인 사용 검사
+    // 일반 도메인 사용 검사 (강화: narrative·general_number·year도 포함)
     const generalLabel = isGeneralDomain(src.url);
     if (generalLabel) {
-      if (mapping.type === 'korean_org' || mapping.type === 'statistic' || mapping.type === 'latin_abbr') {
+      const flagTypes = ['korean_org', 'statistic', 'general_number', 'narrative', 'latin_abbr', 'year', 'rank'];
+      if (flagTypes.includes(mapping.type)) {
         result.generalDomainFacts.push({
           field: fp, marker: N, fact: mapping.text, factType: mapping.type,
           srcUrl: src.url, label: generalLabel,

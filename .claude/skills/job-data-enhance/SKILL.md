@@ -1416,10 +1416,34 @@ dispatch session에서 enhance subagent prompt 작성 시 **다음 절을 반드
 
 다음 카테고리는 **산업 일반 정보용으로만** 사용 가능. 본문 구체 fact 출처로 등록 시 자동 **factMismatch FAIL**:
 
-- **협회 메인** (ksla.or.kr / kosca.or.kr / kpta.co.kr 등 root) — 산업 개관·자격증 일반 OK / 회사·통계 fact 출처 X
-- **직업백과 일반 페이지** (asamaru.net 등) — 직업 정의·일반 설명 OK / 구체 회사·통계 출처 X
+- **협회 메인** (ksla.or.kr / kosca.or.kr / kpta.co.kr 등 root) — 산업 개관·자격증 일반 OK / 회사·통계·서사적 진술 fact 출처 X
+- **직업백과 일반 페이지** (asamaru.net 어디든) — 직업 정의·일반 설명 OK / 구체 회사·통계 출처 X
 - **부처 메인** (mohw.go.kr / molit.go.kr 등 root) — 정책 일반 OK / 구체 통계 출처 X
-- **위키 일반 페이지** (ko.wikipedia.org 직업 정의) — 정의·역사 OK / 구체 회사·통계 출처 X
+- **위키 일반 페이지** (ko.wikipedia.org / en.wikipedia.org 직업 정의) — 정의·역사 OK / 구체 회사·통계 출처 X
+- **자기소개서·취업 가이드 사이트** (jasoseol.com / linkareer.com / incruit.com) — specific 회사 자소서 1개만 cover / 다수 회사·채용 fact 출처 X
+- **UGC** (blog.naver.com / cafe.naver.com / brunch / Medium 등) — 개인 의견·후기 OK / 통계·산업 사실 출처 X
+
+#### 룰 2-B. 장식적 출처 (Decorative Source) 패턴 절대 금지 ⚠️ **신규 (2026-05-04)**
+
+🚨 **본문이 서사적/통계적 진술인데 출처가 root URL → 자동 NOT_COVER**:
+
+```
+❌ 사고 패턴 (1차 batch fix에서 잔존)
+본문: "주 60시간 근무, 야외 로케 잦음[1]"  +  출처[1]: asamaru.net (직업백과)
+본문: "조연출 5~7년 후 메인 PD 입봉[2]"  +  출처[2]: kpda.co (PD협회 메인)
+본문: "수주 잔량 3~4년치 확보[3]"  +  출처[3]: koshipa.or.kr (협회 메인)
+본문: "2023년 수출액 457억 달러[4]"  +  출처[4]: kesis.keei.re.kr (통계 root)
+본문: "1970년대 시작 50년 만에 세계 1위[5]"  +  출처[5]: koshipa.or.kr 메인
+```
+
+이런 경우 출처 페이지에 그 사실이 직접 등장하지 않음 → 절대 그대로 두지 말 것:
+1. **더 구체적 출처 deep page**: 그 통계 발표 페이지 / 그 보도 기사 / 그 직무 설명 deep path
+2. **본문 fact 자체 일반화** (구체 → 추상):
+   - "주 60시간" → "근무 강도 높음"
+   - "조연출 5~7년" → "조연출 경험 후"
+   - "2023년 457억 달러" → "수출 주력 산업"
+   - "수주 잔량 3~4년치" → "조선업 호황기"
+3. **fact 자체 제거**: 구체 수치/서사가 출처 미존재 + 일반화도 어색하면 그 sentence 제거
 
 #### 룰 3. 출처가 본문 fact 못 cover하면 둘 중 하나
 
@@ -1464,6 +1488,40 @@ dispatch session에서 enhance subagent prompt에 **반드시 다음 절 포함*
 - covers=false인 pair 1개라도 → 본문 일반화 또는 fact 제거 필수 (그대로 등록 X)
 - covers_evidence 명시 안 하면 의심
 ```
+
+#### Phase 4-SRC-FACT-VERIFY: fix 직후 자기 검증 (2026-05-04 신설) ⚠️ **필수**
+
+dispatch agent가 본문-출처 fix 후 API POST 직전에 **자기 검증** 1회 수행. validate PASS만 통과하면 끝나는 게 아님 — 새 출처가 본문 fact를 진짜 cover하는지 의미적으로 확인.
+
+```
+## 자기 verify 절차 (agent self-check)
+
+각 변경한 fact별로:
+1. 새 출처 URL을 WebFetch (Jina Reader 우회 가능)
+2. 응답 본문에서 fact 고유 식별자가 직접 등장하는지 확인:
+   - 회사명 등장 OK?
+   - 통계 수치 (정확한 숫자) 등장 OK?
+   - 연도 (정확한 연도) 등장 OK?
+   - 서사적 진술 (예: "주 60시간"이라는 표현) 등장 OK?
+3. cover 안 되면 → 1번 더 fix 시도 (다른 출처 / 본문 더 일반화 / fact 제거)
+4. 2회째도 cover 안 되면 → fact 제거 (절대 잔존 금지)
+
+## 자기 verify 보고 형식 (POST 직전 출력 필수)
+{
+  "verify_result": [
+    {"fact": "...", "src_url": "...", "covers": true, "evidence": "WebFetch에 'XXX' 직접 등장"},
+    ...
+  ],
+  "all_covered": true,
+  "fixes_applied_after_verify": <N>
+}
+
+## 강제
+- all_covered=false인 fact 1개라도 → POST 절대 X (또 한 번 fix)
+- evidence 명시 안 한 fact는 cover=false로 간주
+```
+
+이 단계 통과 후에만 편집 API POST. validate PASS는 minimal 차단 (포맷 위반만), Phase 4-SRC-FACT-VERIFY가 실질적 정합성 보증.
 
 #### Phase 4-SRC-FACT 추가 룰: detailReady 배열 항목 = 단일 sentence per item
 
