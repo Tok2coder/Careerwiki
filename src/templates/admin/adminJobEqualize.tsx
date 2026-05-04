@@ -48,6 +48,7 @@ export const EQUALIZE_FIELD_TOOLTIPS: Record<string, string> = {
 }
 
 export interface JobEqualizeItem {
+  id: string
   name: string
   slug: string
   fields: boolean[]   // 12 fields in EQUALIZE_FIELDS order
@@ -68,6 +69,8 @@ export interface JobEqualizeItem {
   srcRawURL: boolean      // _sources 항목의 text가 raw URL (사고 패턴 1)
   srcBracket: boolean     // _sources 항목의 text가 '[' 로 시작 (사고 패턴 2)
   srcMojibake: boolean    // _sources 항목에 깨진 인코딩 문자 (사고 패턴 3)
+  userVerified: boolean       // 관리자 수동 "스킬 검증 완료" 토글
+  userVerifiedAt: string | null
 }
 
 export interface QualityAlerts {
@@ -88,6 +91,7 @@ export interface AdminJobEqualizeProps {
   items: JobEqualizeItem[]
   qualityAlerts: QualityAlerts
   skillAppliedCount: number    // 스킬 적용된 엔티티 수
+  userVerifiedCount: number    // 관리자 수동 검증 완료 엔티티 수
 }
 
 /** Check if a field has meaningful content */
@@ -185,12 +189,14 @@ export function parseSources(sources: any): {
 }
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
-  const { tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts, skillAppliedCount } = props
+  const { tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts, skillAppliedCount, userVerifiedCount } = props
   const skillAppliedPct = totalJobs > 0 ? ((skillAppliedCount / totalJobs) * 100).toFixed(1) : '0.0'
+  const userVerifiedPct = totalJobs > 0 ? ((userVerifiedCount / totalJobs) * 100).toFixed(1) : '0.0'
 
   const isJob = tab === 'job'
   const entityLabel = isJob ? '직업' : '전공'
   const entityUrlPrefix = isJob ? '/job/' : '/major/'
+  const entityType = isJob ? 'job' : 'major'
   const skillName = isJob ? 'job-data-enhance' : 'major-data-enhance'
 
   const itemsJson = JSON.stringify(items)
@@ -260,7 +266,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
     </div>
 
     <!-- 요약 통계 KPI — 사용자 KPI = [${skillName}] 마커 적용 여부 -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
       <div class="glass-card rounded-xl p-4 stat-card">
         <div class="flex items-center gap-2 mb-2">
           <div class="w-8 h-8 ${isJob ? 'bg-blue-500/20' : 'bg-purple-500/20'} rounded-lg flex items-center justify-center">
@@ -317,6 +323,16 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         </div>
         <div class="text-xl font-bold text-purple-400">${avgJsonSize > 1024 ? (avgJsonSize / 1024).toFixed(1) + 'KB' : avgJsonSize + 'B'}</div>
       </div>
+      <div class="glass-card rounded-xl p-4 stat-card" title="관리자가 직접 '검증 완료' 체크한 ${entityLabel} (수동 사람-검증)">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-circle-check text-emerald-400 text-xs"></i>
+          </div>
+          <span class="text-[11px] text-slate-400">검증 완료</span>
+        </div>
+        <div class="text-xl font-bold text-emerald-400">${userVerifiedCount.toLocaleString()}</div>
+        <div class="text-[10px] text-slate-500">${userVerifiedPct}%</div>
+      </div>
     </div>
 
     <!-- 진행률 바 (스킬 적용률 기준) -->
@@ -369,6 +385,10 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
             <option value="skillApplied">스킬 적용됨</option>
             <option value="skillNotApplied">스킬 미적용</option>
           </optgroup>
+          <optgroup label="── 사람 검증 ──">
+            <option value="userVerified">검증 완료 (관리자 체크)</option>
+            <option value="userNotVerified">미검증</option>
+          </optgroup>
           <optgroup label="── 품질 이슈 ──">
             <option value="quality">품질 이슈 있음</option>
             <option value="wayIsArray">way 배열 오류</option>
@@ -400,6 +420,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         <!-- 정렬 -->
         <select id="sortSelect" class="px-3 py-2 bg-slate-800/60 border border-slate-600/50 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500/50">
           <option value="skill-desc" selected>스킬 적용순 (최근)</option>
+          <option value="verified-desc">검증 완료순 (최근)</option>
+          <option value="verified-asc">미검증 우선</option>
           <option value="name-asc">이름순 ↑</option>
           <option value="name-desc">이름순 ↓</option>
           <option value="field-desc">완성도 높은순</option>
@@ -442,6 +464,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px]" data-tooltip="현재 페이지 행 번호 (필터/정렬 적용 후)">#</th>
               <th class="px-4 py-3 text-xs text-slate-400 font-medium sticky left-0 bg-slate-800/90 z-10 min-w-[140px] cursor-pointer hover:text-white" data-sort="name" data-tooltip="${entityLabel}명 (클릭하면 정렬, 다시 클릭하면 방향 토글)">${entityLabel}명 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[56px] cursor-pointer hover:text-white" data-sort="skill" data-tooltip="스킬 적용 여부 (클릭=정렬)">스킬 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
+              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[56px] cursor-pointer hover:text-white" data-sort="verified" data-tooltip="관리자 수동 검증 — 클릭하여 토글, 컬럼 헤더 클릭=정렬">검증 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
               <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px] cursor-pointer hover:text-white" data-sort="field" data-tooltip="12개 필드 중 채워진 필드 수 (n/12, 클릭=정렬)">완성도 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="way 필드 — 직업 진입 경로/방법 정보">방법</th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="overviewSalary 필드 — 급여/임금 정보">임금</th>
@@ -490,6 +513,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
     (function() {
       var ITEMS = ${itemsJson};
       var URL_PREFIX = ${JSON.stringify(entityUrlPrefix)};
+      var ENTITY = ${JSON.stringify(entityType)}; // 'job' | 'major' — verify endpoint 경로 결정
       var pageSize = 50;
       var currentPage = 1;
       var filtered = ITEMS;
@@ -564,6 +588,8 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           if (filter === 'poor' && item.fieldCount >= 6) return false;
           if (filter === 'skillApplied' && !item.skillApplied) return false;
           if (filter === 'skillNotApplied' && item.skillApplied) return false;
+          if (filter === 'userVerified' && !item.userVerified) return false;
+          if (filter === 'userNotVerified' && item.userVerified) return false;
           if (filter === 'quality' && !(item.wayIsArray || item.imageUrlBad || item.wayTrunc || item.srcOrderBad || item.ytLow)) return false;
           if (filter === 'wayIsArray' && !item.wayIsArray) return false;
           if (filter === 'imageUrlBad' && !item.imageUrlBad) return false;
@@ -587,6 +613,22 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
               if (at !== bt) {
                 var c = bt.localeCompare(at); // desc by default
                 return dir === 'asc' ? -c : c;
+              }
+            }
+            return a.name.localeCompare(b.name, 'ko');
+          }
+          if (key === 'verified') {
+            // 검증된 것 먼저 (desc), 그 안에서 최근 검증순 desc, 미검증끼리는 이름 asc
+            if (a.userVerified !== b.userVerified) {
+              var diff = a.userVerified ? -1 : 1;
+              return dir === 'asc' ? -diff : diff;
+            }
+            if (a.userVerified) {
+              var av = a.userVerifiedAt || '';
+              var bv = b.userVerifiedAt || '';
+              if (av !== bv) {
+                var cv = bv.localeCompare(av);
+                return dir === 'asc' ? -cv : cv;
               }
             }
             return a.name.localeCompare(b.name, 'ko');
@@ -712,6 +754,16 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
             html += '<span class="text-slate-600 text-[10px]" title="스킬 미적용">—</span>';
           }
           html += '</td>';
+          // 검증 체크박스 — 클릭 시 toggleVerify(id, idx) 호출
+          var vTitle = item.userVerified
+            ? '검증 완료' + (item.userVerifiedAt ? ' · ' + item.userVerifiedAt : '') + ' (클릭하여 해제)'
+            : '미검증 (클릭하여 검증 완료로 표시)';
+          html += '<td class="px-2 py-2 text-center">';
+          html += '<input type="checkbox" class="verify-cb cursor-pointer accent-emerald-500 w-4 h-4 align-middle"'
+            + ' data-id="' + escapeHtml(item.id) + '"'
+            + (item.userVerified ? ' checked' : '')
+            + ' title="' + escapeHtml(vTitle) + '"/>';
+          html += '</td>';
           html += '<td class="px-3 py-2 text-center">';
           html += '<div class="flex items-center gap-1.5 justify-center">';
           html += '<div class="w-12 bg-slate-700/50 rounded-full h-1.5"><div class="h-1.5 rounded-full ' + barColor + '" style="width:' + pct + '%"></div></div>';
@@ -765,7 +817,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           html += '</tr>';
         }
         if (page.length === 0) {
-          html = '<tr><td colspan="21" class="px-4 py-12 text-center text-slate-500 text-sm">필터 조건에 해당하는 ' + ${JSON.stringify(entityLabel)} + '이 없습니다.</td></tr>';
+          html = '<tr><td colspan="22" class="px-4 py-12 text-center text-slate-500 text-sm">필터 조건에 해당하는 ' + ${JSON.stringify(entityLabel)} + '이 없습니다.</td></tr>';
         }
         tableBody.innerHTML = html;
       }
@@ -802,6 +854,62 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           applyFilters();
         });
       }
+
+      // 검증 체크박스 토글 — 위임
+      tableBody.addEventListener('change', function(ev) {
+        var t = ev.target;
+        if (!t || !t.classList || !t.classList.contains('verify-cb')) return;
+        var id = t.getAttribute('data-id');
+        if (!id) return;
+        var nextValue = !!t.checked;
+        // 낙관적 업데이트: ITEMS 갱신 + 즉시 반영
+        var prev = null;
+        for (var i = 0; i < ITEMS.length; i++) {
+          if (ITEMS[i].id === id) {
+            prev = { v: ITEMS[i].userVerified, at: ITEMS[i].userVerifiedAt };
+            ITEMS[i].userVerified = nextValue;
+            ITEMS[i].userVerifiedAt = nextValue ? new Date().toISOString() : null;
+            break;
+          }
+        }
+        t.disabled = true;
+        t.style.opacity = '0.5';
+        fetch('/api/admin/' + ENTITY + '/' + encodeURIComponent(id) + '/verify', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ value: nextValue }),
+        }).then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        }).then(function(data) {
+          if (!data || !data.success) throw new Error(data && data.error ? data.error : 'unknown');
+          // 서버에서 받은 verified_at 으로 보정
+          for (var j = 0; j < ITEMS.length; j++) {
+            if (ITEMS[j].id === id) {
+              ITEMS[j].userVerified = !!data.verified;
+              ITEMS[j].userVerifiedAt = data.verified_at || null;
+              break;
+            }
+          }
+          t.disabled = false;
+          t.style.opacity = '';
+          // KPI 카드는 다음 새로고침 때 갱신 (낙관적 업데이트로 충분)
+        }).catch(function(err) {
+          // 롤백
+          for (var k = 0; k < ITEMS.length; k++) {
+            if (ITEMS[k].id === id && prev) {
+              ITEMS[k].userVerified = prev.v;
+              ITEMS[k].userVerifiedAt = prev.at;
+              break;
+            }
+          }
+          t.checked = prev ? !!prev.v : !nextValue;
+          t.disabled = false;
+          t.style.opacity = '';
+          alert('검증 상태 저장 실패: ' + (err && err.message ? err.message : err));
+        });
+      });
 
       searchInput.addEventListener('input', applyFilters);
       filterSelect.addEventListener('change', applyFilters);

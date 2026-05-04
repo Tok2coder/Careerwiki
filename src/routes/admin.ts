@@ -1061,6 +1061,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       alertSrcOrderBadResult,
       alertYtLowResult,
       skillAppliedResult,
+      userVerifiedResult,
     ] = await Promise.all([
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active = 1`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_type(user_contributed_json,'$.way')='array'`).first<{ count: number }>(),
@@ -1069,6 +1070,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(merged_profile_json,'$._sources')) > 0 AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND (json_extract(merged_profile_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(merged_profile_json,'$.youtubeLinks')) = 0) AND (json_extract(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(DISTINCT entity_id) as count FROM page_revisions WHERE entity_type = ? AND change_summary LIKE ?`).bind(entityType, skillMarkerLike).first<{ count: number }>(),
+      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND skill_verified_by_user=1`).first<{ count: number }>(),
     ])
 
     const totalJobs = totalResult?.count || 0
@@ -1080,6 +1082,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       ytLow: alertYtLowResult?.count || 0,
     }
     const skillAppliedCount = skillAppliedResult?.count || 0
+    const userVerifiedCount = userVerifiedResult?.count || 0
 
     // 2. 스킬 적용된 entity_id → 최근 적용 시각 맵 조회 (skillApplied + 정렬용)
     //    created_at은 'YYYY-MM-DD HH:MM:SS' 포맷이라 문자열 비교로 시간순 정렬 가능
@@ -1124,6 +1127,9 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       way_trunc: number      // merged.way 잘림 의심
       src_order_bad: number  // merged._sources 첫 항목
       yt_low: number         // merged.youtubeLinks 0 + note 없음
+      // 관리자 수동 검증
+      skill_verified_by_user: number
+      skill_verified_at: string | null
     }
     const allRows: Row[] = []
     {
@@ -1158,7 +1164,9 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
                THEN 1 ELSE 0 END AS src_order_bad,
           CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0)=0
                 AND (json_type(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)
-               THEN 1 ELSE 0 END AS yt_low
+               THEN 1 ELSE 0 END AS yt_low,
+          COALESCE(skill_verified_by_user, 0) AS skill_verified_by_user,
+          skill_verified_at
         FROM ${tableName}
         WHERE is_active = 1 AND user_contributed_json IS NOT NULL
         ORDER BY name LIMIT 500 OFFSET ?`
@@ -1213,6 +1221,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       if (fieldCount < 6) poorCount++
 
       return {
+        id: row.id,
         name: row.name, slug: row.slug, fields, fieldCount, jsonSize,
         sourceCount: mergedParsed.sourceCount,
         urlSourceCount: mergedParsed.urlSourceCount,
@@ -1227,6 +1236,8 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
         srcRawURL: mergedParsed.hasRawURL,
         srcBracket: mergedParsed.hasBracket,
         srcMojibake: mergedParsed.hasMojibake,
+        userVerified: !!row.skill_verified_by_user,
+        userVerifiedAt: row.skill_verified_at ?? null,
       }
     })
 
@@ -1235,13 +1246,47 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
 
     return c.html(renderAdminJobEqualize({
       tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize,
-      items, qualityAlerts, skillAppliedCount,
+      items, qualityAlerts, skillAppliedCount, userVerifiedCount,
     }))
   } catch (error: any) {
     console.error('Job equalize page error:', error)
     return c.text(`데이터 보완 현황을 불러오는데 실패했습니다. Error: ${error?.message || String(error)}`, 500)
   }
 })
+
+// POST /api/admin/job/:id/verify, /api/admin/major/:id/verify — 관리자 수동 "스킬 검증 완료" 토글
+//   body: { value: boolean }   응답: { success, verified, verified_at }
+//   /admin/job-equalize 표 체크박스 클릭 시 호출. UCJ 자동 마커와 별개의 사람-검증 플래그.
+async function handleVerifyToggle(c: any, table: 'jobs' | 'majors') {
+  try {
+    const id = c.req.param('id')
+    if (!id) return c.json({ success: false, error: 'invalid id' }, 400)
+
+    let value: boolean
+    try {
+      const body = (await c.req.json()) as { value?: boolean } | null
+      value = !!body?.value
+    } catch {
+      return c.json({ success: false, error: 'invalid body' }, 400)
+    }
+
+    const verifiedAt = value ? new Date().toISOString() : null
+    const result = await c.env.DB.prepare(
+      `UPDATE ${table} SET skill_verified_by_user = ?, skill_verified_at = ? WHERE id = ?`
+    ).bind(value ? 1 : 0, verifiedAt, id).run()
+
+    if (!result.meta || (result.meta.changes ?? 0) === 0) {
+      return c.json({ success: false, error: 'not found' }, 404)
+    }
+    return c.json({ success: true, verified: value, verified_at: verifiedAt })
+  } catch (error: any) {
+    console.error(`Verify toggle (${table}) error:`, error)
+    return c.json({ success: false, error: error?.message || String(error) }, 500)
+  }
+}
+
+adminRoutes.post('/api/admin/job/:id/verify', requireAdmin, (c) => handleVerifyToggle(c, 'jobs'))
+adminRoutes.post('/api/admin/major/:id/verify', requireAdmin, (c) => handleVerifyToggle(c, 'majors'))
 
 // POST /admin/api/update-related-jobs — 관련직업 재계산 (v2: heroTags + keyword + domain)
 import { updateRelatedJobs } from '../scripts/etl/updateRelatedJobs'
