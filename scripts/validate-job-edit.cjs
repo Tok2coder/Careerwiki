@@ -1053,6 +1053,97 @@ function validate(data) {
     }
   }
 
+  // ── 10-D. 본문-출처 fact 정합성 (2026-05-04 조경설계사 사고 후 추가) ───────
+  //
+  // 본문에 구체 회사명/기관명을 적시할 경우, 매핑되는 [N] _sources의 host에
+  // 그 회사명·기관명이 직접 등장(host substring 매칭)해야 함.
+  //
+  // 사고 사례:
+  //   way: "조경설계사무소(서안·동심원·환경디자인 등) 신입·경력 채용 지원[12]"
+  //   _sources["way"][11].url = https://www.ksla.or.kr  (한국조경협회 메인)
+  //   → 본문에 '서안','동심원','환경디자인'이 있는데 출처 host(ksla)는 어느 것도 cover X → WARN
+  //
+  // LLM 자가 검증 부분(WebFetch 본문 텍스트 등장 확인)은 dispatch agent 책임.
+  // 이 룰은 host substring으로 휴리스틱 1차 차단만 한다.
+  {
+    const BODY_FIELDS_FACT_CHECK = [
+      'way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia',
+      'summary', 'overviewAbilities.technKnow',
+      'detailWlb.wlbDetail', 'detailWlb.socialDetail',
+    ];
+
+    // 본문 회사·기관명 추출: 한글 2~10자 + (사무소|회사|은행|공사|연구원|연구소|병원|학회|협회|재단|기금|공단|진흥원|위원회|연합회|총회|재단법인)
+    // 또는 한글 2~10자 (그룹|전자|반도체|중공업|건설|조선|항공|자동차) (한정된 대표 코퍼스 키워드)
+    const ORG_KEYWORDS = [
+      '사무소', '회사', '은행', '공사', '연구원', '연구소', '병원', '학회', '협회',
+      '재단', '기금', '공단', '진흥원', '위원회', '연합회', '총회', '재단법인',
+      '그룹', '전자', '반도체', '중공업', '건설', '조선', '항공', '자동차',
+      'SHA', '한국토지주택공사', 'LH', 'KAIST', 'POSTECH',
+    ];
+    const HOST_LATIN = /[a-z]{3,}/i; // host substring 검사용
+
+    function _romanizeFingerprint(name) {
+      // 영문 약어 (LH, KAIST 등) 그대로
+      if (/^[A-Z]{2,}$/.test(name)) return [name.toLowerCase()];
+      // 한글 회사명 → host에 등장할 가능성 있는 latin substring 후보 없음 (직접 host 매칭은 한글 안 됨)
+      // 따라서 영문 약어/혼합만 fingerprint 추출
+      const latinHits = name.match(/[A-Za-z]{2,}/g) || [];
+      return latinHits.map(s => s.toLowerCase());
+    }
+
+    for (const fp of BODY_FIELDS_FACT_CHECK) {
+      const val = fp.includes('.') ? fp.split('.').reduce((o,k)=>o?.[k], fields) : fields[fp];
+      if (!val || typeof val !== 'string') continue;
+      const srcArr = sources[fp];
+      if (!Array.isArray(srcArr) || srcArr.length === 0) continue;
+
+      // 본문 [N] 마커 위치 + 회사명 추출
+      // 패턴: "...삼성전자[3]..." → [3] 마커 직전에 등장한 회사·기관명
+      const markerRe = /\[(\d+)\]/g;
+      let m;
+      while ((m = markerRe.exec(val)) !== null) {
+        const N = parseInt(m[1], 10);
+        if (N < 1 || N > srcArr.length) continue;
+        const src = srcArr[N - 1];
+        if (!src || !src.url) continue;
+        let host;
+        try { host = new URL(src.url).host.toLowerCase(); } catch { continue; }
+
+        // [N] 직전 60자에서 회사·기관명 추출
+        const before = val.slice(Math.max(0, m.index - 60), m.index);
+        const orgs = [];
+        // pattern1: 한글 2~10자 + ORG_KEYWORD
+        const re1 = new RegExp(`([가-힣A-Za-z0-9]{2,10})(?:${ORG_KEYWORDS.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'g');
+        let mm;
+        while ((mm = re1.exec(before)) !== null) {
+          orgs.push(mm[0]);
+        }
+        // pattern2: latin uppercase 약어 (LH, KAIST 등)
+        const reLatin = /\b[A-Z]{2,8}\b/g;
+        while ((mm = reLatin.exec(before)) !== null) {
+          if (mm[0].length >= 2 && !['SHA','MBA','NCS','GPA','URL','API'].includes(mm[0])) {
+            orgs.push(mm[0]);
+          }
+        }
+
+        // 각 org가 host에 cover되는지 확인
+        for (const org of orgs) {
+          const fingerprints = _romanizeFingerprint(org);
+          if (fingerprints.length === 0) continue; // 한글만 → host와 비교 불가, 스킵
+          const covered = fingerprints.some(fp2 => host.includes(fp2));
+          if (!covered) {
+            warnings.push(
+              `[factHostMismatch] ${fp} 본문에 "${org}"가 [${N}] 직전에 등장하지만 ` +
+              `_sources["${fp}"][${N-1}].url host(${host})에 매칭 안 됨 — ` +
+              `그 회사·기관 공식 페이지로 출처 교체 또는 본문에서 그 회사명 제거 검토. ` +
+              `(LLM이 본문 fact를 cover 못 하는 일반 도메인 협회·부처 메인을 등록하는 사고 패턴)`
+            );
+          }
+        }
+      }
+    }
+  }
+
   // ── 11. 무출처 문장 감지 ──
   //
   // 2-티어 검사:
