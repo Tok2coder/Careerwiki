@@ -1,279 +1,295 @@
-# CLAUDE.md - CareerWiki Project Guide
+# CLAUDE.md — CareerWiki Project Guide
+
+> **글로벌 일반 원칙**: `~/.claude/CLAUDE.md` (forrestchang/andrej-karpathy-skills 기반 — Think before / Simplicity / Surgical / Goal-driven).
+> 이 파일은 **CareerWiki 특화 룰 + 컨텍스트**. 글로벌과 충돌 시 이 파일 우선.
 
 ## Project Overview
 
-CareerWiki는 한국어 진로 정보 위키 플랫폼. AI 기반 직업/전공 추천 + 사용자 편집 가능한 위키 시스템.
+- **이름**: CareerWiki (한국어 진로 정보 위키)
 - **Production**: https://careerwiki.org
-- **데이터**: 608개 전공 + 6,945개 직업
+- **데이터**: 608 majors / 6,945 jobs
+- **Repo**: `C:\Users\user\Careerwiki`
 
 ## Tech Stack
 
 - **Runtime**: Cloudflare Workers (Pages)
 - **Framework**: Hono (TypeScript, JSX)
 - **Database**: Cloudflare D1 (SQLite)
-- **Storage**: Cloudflare R2 (이미지), KV (세션)
-- **Vector Search**: Cloudflare Vectorize (OpenAI text-embedding-3-small, 1536d, cosine)
-- **AI/LLM**: Workers AI, OpenAI API (GPT-4o-mini)
-- **Frontend**: TailwindCSS 3, TipTap editor
-- **Build**: Vite, TypeScript strict mode
+- **Storage**: R2 (이미지) / KV (세션)
+- **Vector**: Cloudflare Vectorize (OpenAI text-embedding-3-small, 1536d, cosine)
+- **AI/LLM**: Workers AI / OpenAI GPT-4o-mini
+- **Frontend**: TailwindCSS 3 + TipTap editor
+- **Build**: Vite + TypeScript strict
 
-## Key Commands
+## Cloudflare Bindings (wrangler.jsonc)
 
-```bash
-npm run dev              # 로컬 개발 서버 (port 3000)
-npm run build            # 프로덕션 빌드 (CSS + Vite)
-npm run deploy           # Cloudflare Pages 배포
-npm run db:migrate:local # 로컬 D1 마이그레이션
-npm run db:migrate:prod  # 프로덕션 D1 마이그레이션
-npm run build:editor     # TipTap 에디터 번들 빌드
-npx tsc --noEmit         # TypeScript 타입 체크
-```
+| Binding | Resource |
+|---|---|
+| `DB` | D1 database (careerwiki-kr) |
+| `BUCKET` | R2 bucket (careerwiki-uploads) |
+| `KV` | KV namespace |
+| `VECTORIZE` | Vectorize index (careerwiki-embeddings) |
+| `AI` | Workers AI |
+
+## Database
+
+핵심 테이블: `jobs` (6,945 row), `majors` (608 row), `job_sources`, `major_sources`, `wiki_pages`, `page_revisions`, `comments`, `users`, `user_sessions`, `job_attributes`, `major_attributes`, `narrative_facts`, `embedding_metadata`
+
+- **마이그레이션**: `migrations/` (0001~0057+). 컬럼·인덱스 디테일은 항상 `migrations/*.sql` 직접 read (drift 방지).
+- **page_revisions**: 직업 편집 이력. `change_summary`에 `[job-data-enhance]` 마커 있는 row의 DISTINCT `entity_id`가 enhance 적용된 직업 목록.
+- **DB query**: `wrangler d1 execute careerwiki-kr --remote --command "SELECT ..."` (또는 `--json` 추가).
 
 ## Project Structure
 
 ```
 src/
-├── index.tsx                  # 메인 엔트리포인트 (모든 라우트)
-├── services/                  # 비즈니스 로직
-│   ├── ai-analyzer/           # AI 추천 엔진 (50+ 파일)
-│   │   ├── routes.ts          # AI 분석기 API 라우트
-│   │   ├── vectorize-pipeline.ts  # Multi-Query 벡터 검색
-│   │   ├── llm-interviewer.ts # LLM 인터뷰 시스템
-│   │   ├── llm-judge.ts       # LLM 스코어링
-│   │   ├── llm-reporter.ts    # 리포트 생성
-│   │   └── personalized-scoring.ts # 맞춤 점수 산출
-│   ├── profileDataService.ts  # 직업/전공 데이터 통합
-│   ├── rag-search.ts          # RAG 기반 통합 검색
-│   ├── editService.ts         # 위키 편집 시스템
-│   └── cacheService.ts        # ISR 캐싱
-├── templates/                 # HTML 렌더링 템플릿
-├── types/                     # TypeScript 타입 정의
-├── utils/                     # 유틸리티 함수
-├── api/                       # 외부 API 연동 (CareerNet, Work24)
-├── routes/                    # 라우트 분리 (auth 등)
-└── middleware/                # 미들웨어 (인증 등)
-migrations/                    # D1 마이그레이션 (0001-0039)
-scripts/                       # ETL 및 유틸리티 스크립트
+├── index.tsx                     # 메인 엔트리
+├── services/
+│   ├── ai-analyzer/              # AI 추천 (50+ 파일)
+│   │   ├── routes.ts
+│   │   ├── vectorize-pipeline.ts # Multi-Query 벡터 검색
+│   │   ├── llm-interviewer.ts
+│   │   ├── llm-judge.ts
+│   │   ├── llm-reporter.ts
+│   │   └── personalized-scoring.ts
+│   ├── profileDataService.ts
+│   ├── rag-search.ts
+│   ├── editService.ts
+│   └── cacheService.ts
+├── templates/
+├── types/
+├── utils/
+├── api/                          # CareerNet, Work24
+├── routes/                       # auth, admin 등 (admin.ts 주의 — CPU 한도)
+└── middleware/
+migrations/                       # 0001~0057+
+scripts/                          # ETL + quality harness
+scripts/skill-cache/              # 스킬 임시 산출물 + audit-sources-deep.cjs
+.claude/skills/job-data-enhance/  # 메인 enhance 스킬
+.claude/skills/job-data-create/   # 신규 직업 추가
+.claude/skills/howto-publish/     # HowTo 가이드
+.claude/hooks/                    # 자동 hook (.md, hookify 형식)
 ```
 
-## Architecture
+## Key Commands
 
-### ISR (Incremental Static Regeneration) 패턴
-- 요청 시 `wiki_pages` 캐시 확인 → 캐시 히트면 즉시 반환 (50ms)
-- 캐시 미스/버전 불일치 시 렌더링 후 캐시 저장
+```bash
+npm run dev               # 로컬 (단, Cloudflare 바인딩 동작 X — 테스트 금지)
+npm run build             # 프로덕션 빌드
+npm run deploy            # safe-deploy.cjs: tsc → build → deploy
+npm run db:migrate:local
+npm run db:migrate:prod
+npm run build:editor      # TipTap 에디터 번들
+npx tsc --noEmit          # 타입 체크
 
-### 데이터 통합 (Unified Profile)
-- 다중 소스 (CareerNet, Work24) → 단일 통합 뷰
-- `api_data_json` + `user_contributed_json` = `aggregated_profile_json`
+# DB 직접 query
+wrangler d1 execute careerwiki-kr --remote --command "SELECT ..." --json
 
-### AI 추천 파이프라인
-1. LLM 인터뷰 → 사용자 팩트 수집
-2. Multi-Query 벡터 검색 → 후보 풀 확장 (600-800개)
-3. TAG 필터 → 하드 제외
-4. Personalized Scoring → 맞춤 점수
-5. LLM Judge → 다차원 평가
-6. LLM Reporter → 서사적 리포트 생성
+# 직업 편집 API
+curl -X POST https://careerwiki.org/api/job/{id}/edit \
+  -H "X-Admin-Secret: careerwiki-admin-2026" \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -d @file.json
+```
 
-## Database
+## CareerWiki-Specific Rules
 
-- **D1 주요 테이블**: `jobs`, `majors`, `job_sources`, `major_sources`, `wiki_pages`, `comments`, `users`, `user_sessions`, `job_attributes`, `major_attributes`, `narrative_facts`, `embedding_metadata`
-- **마이그레이션**: `migrations/` 폴더 (0001-0039), 순서대로 적용
+### URL/API
+| 항목 | 값 |
+|---|---|
+| 직업 페이지 | `https://careerwiki.org/job/{슬러그}` (`.kr` / `/jobs` 절대 X) |
+| 편집 API | `POST https://careerwiki.org/api/job/{id}/edit` |
+| 인증 헤더 | `X-Admin-Secret: careerwiki-admin-2026` |
+| prod URL 검증 | preview URL 신뢰 X. `careerwiki.org` 도메인에서 직접 fetch 후 키워드 매칭 |
+
+### 데이터 페이로드
+| 항목 | 룰 |
+|---|---|
+| `way` 타입 | **반드시 string** — 배열 보내면 즉시 500 |
+| R2 이미지 키 | `jobs/job-{slug}.webp` (`uploads/` prefix 절대 X) |
+| DB image_url | `/uploads/jobs/job-{slug}.webp?v={timestamp}` |
+| `overviewSalary.wage` | **절대 덮어쓰기 금지** — 바 차트 데이터 |
+| `sources` 키 | 필드명 그대로 (`way`, `overviewSalary.sal`, `detailWlb.wlbDetail`) — `way_sources` 등 X |
+| sources 전송 | fields + sources 함께 — 누락 시 각주 깨짐 |
+
+### Vectorize
+- topK 쿼리 시 Vectorize 상한 100개 → Multi-Query 배치로 우회
+
+### 배포
+- **main 브랜치만** — worktree 배포 시 다음 main 배포에서 롤백됨
+- `safe-deploy.cjs`가 tsc → build → deploy 한 번에 실행
+- `--no-verify`로 pre-commit hook 우회 절대 금지 (`scripts/check-secrets.cjs`가 비밀키 차단)
+
+## Validation Loops (CareerWiki)
+
+### Code 변경 시
+- `npx tsc --noEmit` clean
+- 변경 코드 `Read`로 재확인
+- `Grep`으로 호출처/import 충돌 확인 — 특히 `services/ai-analyzer/` 내부 cross-reference
+
+### Production 배포 시
+- main → `npm run deploy` → `careerwiki.org` 도메인 직접 fetch (preview X)
+- HTTP 200 + 본문 키워드 매칭으로 배포 확인
+- 직접 접속 못 하면 명시적으로 "검증 못 함" 보고
+
+### Data 변경 시 (DB·prod 직업 페이지)
+- 변경 전 row 백업 (revision history는 `page_revisions`에 자동 저장됨)
+- POST 직후 GET으로 readback (prod 페이지 fetch + 변경 본문 grep)
+- `audit-sources-deep.cjs --slug=X` 실행 → 9 패턴 (origin / orphan / dup / rawURL / brokenRef / markerCluster / listPage / mojibake / idxGap) 통과
+- URL HEAD verify (BROKEN 0 보장)
+
+### LLM Agent (subagent / dispatch) 사용 시
+- WebFetch tool_uses ≥ verified URL 카운트 강제 (hallucination 방지)
+- 자가 "LLM 검증 1줄"로 통과 금지 — 결정적 스크립트 (validate-job-edit / audit-sources-deep) 별도 실행
+- 자기 보고 "DONE"은 신뢰하지 말고 별도 verify
+
+## Source Priority (한국 직업 페이지)
+
+직업 페이지 출처 우선순위:
+
+1. **한국 1차 출처** — 정부 .go.kr (정책 deep page) / 협회·학회 .or.kr (deep page) / 한국 기업 .co.kr (채용·IR) / 한국 학교 .ac.kr
+2. **한국 미디어** — 한국경제·전자신문·연합뉴스·KBS·SBS·MBC·JTBC deep article
+3. **한국 위키** — ko.wikipedia.org
+4. **외국 fallback** — en.wikipedia.org / 외국 1차 출처 (한국 출처 부재 시만)
+
+**금지 패턴**:
+- 협회/기업 root URL을 구체 fact 출처로 등록 (예: `kfb.or.kr/` 메인 → 은행 통계 출처 X)
+- search/list URL (`/search?query=`, `/articleList?sc_word=`) — 검색 페이지는 직업-specific X
+- 자기 사이트 (`careerwiki.org`) 인용
+- **정부 직업포털 origin** (`career.go.kr` / `work.go.kr` / `wagework.go.kr` / `work24.go.kr` / `job.go.kr`) — 데이터 원본 자기인용
+
+## Body-Source Coherence (본문-출처 1:1 정합성)
+
+본문 구체 fact (회사명·통계·연도·순위·금액)가 있으면 그 fact를 직접 cover하는 출처 매핑:
+
+- 본문 "삼성전자·SK하이닉스 R&D 채용" → 그 회사들 채용 페이지 deep URL
+- 본문 "2024 시장 N억원" → 그 통계 발표 페이지 deep URL
+- cover 못 하면:
+  1. 더 구체적 출처 찾기 (WebFetch 검증)
+  2. 본문 일반화 (회사명 → 산업 표현)
+  3. fact 자체 제거
+
+**한 sentence = 한 마커 max** — `[1][2][3]` 연속 X. 다중 출처 시 sentence 분리.
+
+## Failure Modes (Auto Block / Recurring)
+
+다음 사고 패턴은 자동 차단 / 인지:
+
+### URL Hallucination
+- LLM 일반 지식으로 URL 추정 → fabricated URL prod 등록
+- 차단: WebFetch tool_uses ≥ URL 카운트 강제. 못 fetch하면 등록 X
+- 사고 사례: `kgta.or.kr` (캐디), `k-lpn.or.kr` (간호조무사), `kpba.co.kr` (동물조련사) 등
+
+### Origin Self-Cite
+- 데이터 원본 (career.go.kr 등) / `careerwiki.org` 자기자신 → 출처 등록 X
+- 차단: `pre-bash-origin-block.md` hook + `audit-sources-deep.cjs` Gate `[originDomain]` FAIL
+
+### Marker Cluster
+- 본문 한 sentence에 `[1][2][3][4]` 연속 마커
+- 차단: `audit-sources-deep.cjs` Gate `[markerCluster]` FAIL
+- 한 sentence 1 마커 max
+
+### Decorative Source
+- 본문에 구체 서사·통계 + 출처가 협회 메인 root → fact cover X
+- 차단: Gate `[decorativeSource]` WARN. 의미적 cover 검증 (단순 키워드 hit X)
+
+### Mojibake (Windows curl)
+- Windows bash에서 `curl -d '{"name":"한글"}'` → mojibake (한글 깨져서 prod 저장)
+- 강제: 파일 기반 `curl -d @file.json`만
+- 자동 차단: `pre-bash-mojibake-block.md` hook
+
+### Admin Worker CPU 1102
+- 거대 쿼리 (jobs 전체 JOIN, narrative_facts 대량 집계)가 admin 라우트에서 CPU 한도 (50ms) 초과 → 1102 에러
+- 회피: 페이지네이션 / chunking / cron 작업으로 분리
+- 영향 영역: `src/routes/admin.ts` 신규 endpoint 추가 시 항상 검토
+
+### Worktree 배포 롤백
+- `.claude/worktrees/*`에서 deploy → 다음 main 배포 시 롤백됨
+- 강제: 배포는 main 체크아웃 후만
+
+### Pre-commit Hook 우회
+- `--no-verify`로 `scripts/check-secrets.cjs` 우회 시 .dev.vars 등 비밀키 노출 위험
+- 강제: hook fail 시 원인 fix, skip 절대 금지
+
+## Quality Harness
+
+배포 전·후 데이터 품질 검증 스크립트.
+
+| 스크립트 | 역할 | 시점 |
+|---|---|---|
+| `scripts/safe-deploy.cjs` | tsc → build → deploy 래퍼 | `npm run deploy` 자동 |
+| `scripts/validate-job-edit.cjs` | 편집 JSON 10개 룰 검증 | enhance Phase 2 |
+| `scripts/full-quality-audit.cjs` | 직업 페이지 전체 품질 감사 | enhance Phase 4 |
+| `scripts/skill-cache/audit-sources-deep.cjs` | 9 패턴 deep audit | 편집 직후 |
+| `scripts/data-health-report.cjs` | 전체 DB 건강 보고 | 정기 모니터링 |
+
+```bash
+node scripts/validate-job-edit.cjs data.json
+node scripts/skill-cache/audit-sources-deep.cjs --slug=소프트웨어개발자
+node scripts/full-quality-audit.cjs --slug=소프트웨어개발자
+node scripts/data-health-report.cjs --top-missing=20
+```
+
+## 스킬 시스템
+
+| 스킬 | 상태 | 용도 |
+|---|---|---|
+| `job-data-enhance` | **메인** | 직업 데이터 보완·균등화·고도화 통합 |
+| `job-data-create` | 사용 | 신규 직업 추가 |
+| `howto-publish` | 사용 | HowTo 가이드 워크플로우 |
+| `job-supplement` | DEPRECATED | → enhance 통합 |
+| `job-data-equalize` | DEPRECATED | → enhance 통합 |
+
+키워드("데이터 보완", "균등화", "부실 직업", "NULL 직업")는 **반드시 `job-data-enhance`** 사용.
+
+## Hooks (.claude/hooks/)
+
+이 프로젝트 자동 hook — `.claude/hooks/*.md`:
+
+| Hook | Trigger | Why |
+|---|---|---|
+| `post-edit-tsc-check.md` | PostToolUse Edit/Write `*.ts*` | 타입 에러 즉시 차단 |
+| `pre-bash-origin-block.md` | PreToolUse Bash (edit API) | originDomain URL 등록 차단 |
+| `pre-bash-mojibake-block.md` | PreToolUse Bash (`curl -d`) | 인라인 한글 차단 |
+| `post-edit-audit-deep.md` | PostToolUse Bash (edit API success) | audit-sources-deep 자동 실행 |
+| `stop-validate-pending.md` | Stop (코드 변경 있음) | validate-job-edit + git status |
+
+## Testing Rules
+
+- **로컬 dev 서버 금지** — Cloudflare 바인딩(D1/Vectorize/AI/KV/R2)이 로컬 동작 X. `npm run dev` / `preview_start` 사용 X.
+- **`npm run deploy` 후 prod 도메인에서 직접 검증**
+- **검증은 `curl` / `WebFetch`** — HTML fetch 후 grep
+- **MCP 도구 전체 금지** — `mcp__playwright__*`, `mcp__Claude_in_Chrome__*`, `preview_*` 등 일체 사용 X. curl/WebFetch로 충분.
 
 ## Coding Conventions
 
-- **파일명**: camelCase (`profileDataService.ts`)
-- **타입/인터페이스**: PascalCase (`UnifiedJobDetail`)
-- **상수**: UPPER_SNAKE_CASE (`MIN_VECTOR_SCORE`)
-- **DB 컬럼**: snake_case (`raw_payload`)
-- **커밋 메시지**: `feat/fix/chore: [한국어 설명]`
-- **TypeScript**: strict mode, async/await, functional style
+- 파일명: camelCase (`profileDataService.ts`)
+- 타입/인터페이스: PascalCase (`UnifiedJobDetail`)
+- 상수: UPPER_SNAKE_CASE (`MIN_VECTOR_SCORE`)
+- DB 컬럼: snake_case (`raw_payload`)
+- 커밋: `feat/fix/chore: [한국어 설명]`
+- TS strict mode, async/await, functional style
 
-## Workflow Rules
+## Design Doc Protocol
 
-### 1. 자가 검증 프로토콜 (Self-Verification)
-
-코드 변경 시 **완료 선언 전** 반드시 아래 단계 수행:
-
-**Step 1: 기본 검증**
-- `npx tsc --noEmit` — 타입 에러 0개 확인
-- `npm run build` — 빌드 성공 확인
-- 변경한 코드를 `Read`로 다시 열어 의도대로인지 재확인
-
-**Step 2: 충돌/회귀 검증**
-- 변경한 함수를 `Grep`으로 검색 → import/호출하는 모든 파일에서 호환성 확인
-- 변경한 API 경로 → 프론트엔드 호출 코드와 일치 여부 확인
-- 공유 타입/유틸 변경 시 → 영향받는 전체 모듈 파악 후 이상 없음 확인
-- DB 스키마 변경 시 → 해당 컬럼 참조하는 모든 쿼리 확인
-
-**Step 3: 과거 실수 대조**
-- `memory/lessons-learned.md` 확인 → 동일/유사 실수 반복 여부 체크
-
-**Step 4: 오류 탐지**
-- edge case 누락, null/undefined 처리, SQL injection 가능성 점검
-- TailwindCSS 클래스 오타, JSX 닫힘 태그 누락, 이벤트 핸들러 누락 등 점검
-
-### 2. 배포 파이프라인 (Deploy Pipeline)
-
-검증 완료 후 **한 세트로 연속 실행** (중간에 멈추지 않음):
-
-```
-npx tsc --noEmit
-→ npm run build
-→ npm run deploy
-→ careerwiki.org에서 변경사항 동작 확인
-→ git add [변경파일만]
-→ git commit -m "feat/fix/chore: [한국어 설명]"
-→ git push
-```
-
-- 각 단계 실패 시 → 즉시 수정 후 파이프라인 처음부터 재시작
-- push까지 자동 실행 (별도 유저 승인 불필요)
-- 완료 후 변경 요약 보고
-
-### 3. 실수 학습 (Compound Learning)
-
-오류 발생, 빌드 실패, 잘못된 코드 발견 시:
-1. **즉시** `memory/lessons-learned.md`에 기록
-2. 포맷:
-   ```
-   ### [YYYY-MM-DD] 카테고리: 제목
-   - **상황**: 무엇을 하다가
-   - **원인**: 왜 발생했는지
-   - **해결**: 어떻게 고쳤는지
-   - **교훈**: 다음에 어떻게 방지하는지
-   ```
-3. 기존 항목과 중복이면 기존 항목 업데이트 (새로 추가 X)
-4. **새 작업 시작 전** 반드시 lessons-learned.md 확인
-
-### 4. 설계서 프로토콜 (Design Doc)
-
-다음 조건 중 **하나 이상** 해당 시 → 코드 작성 전 설계서 작성 (Plan Mode 사용):
-- 새 기능 추가 (3개 이상 파일 변경 예상)
-- DB 스키마 변경 (마이그레이션 추가)
+다음 중 하나 이상 → 코드 작성 전 설계서 작성 (Plan Mode):
+- 새 기능 (3+ 파일 변경)
+- DB 스키마 변경
 - API 엔드포인트 추가/변경
-- UI 페이지 또는 레이아웃 신규/대폭 변경
+- UI 페이지/레이아웃 신규/대폭 변경
 
-**설계서 필수 항목:**
-
-```
-## 1. 기능 정의 (What)
-- 목적: 왜 만드는지
-- 범위: 포함 / 명시적 제외
-
-## 2. UI/레이아웃 (How it looks)
-- ASCII 목업 또는 상세 레이아웃 설명
-- 반응형 (모바일/데스크톱) 고려
-- 기존 디자인 패턴과의 일관성
-
-## 3. 동작 명세 (How it works)
-- 정상 플로우 (step by step)
-- 엣지 케이스 목록 + 처리 방식
-- 에러 처리
-
-## 4. 영향 분석 (Impact)
-- 변경/추가할 파일 목록
-- 기존 기능 영향 여부
-- DB 마이그레이션 필요 여부
-- 캐시 무효화 필요 여부
-```
-
-유저 승인 후 구현 시작.
-
-### 테스트 (중요)
-- **로컬 dev 서버(preview_start, npm run dev) 절대 사용 금지** — Cloudflare 바인딩(D1, Vectorize, AI, KV, R2)이 로컬에서 정상 동작하지 않음
-- **반드시 `npm run deploy`로 배포 후 careerwiki.org에서 직접 테스트**
-- **프로덕션 확인은 `curl`/`WebFetch`로** — HTML 가져와서 grep/확인. 간단하고 빠름
-- **MCP 도구 전체 사용 금지** — `mcp__playwright__*`, `mcp__Claude_in_Chrome__*`, `preview_*` 등 모든 MCP 도구 사용하지 않음. curl/WebFetch로 충분함
-
-## 품질 하네스 (Quality Harness)
-
-배포 전·후 데이터 품질을 자동으로 검증하는 스크립트 세트.
-
-### 스크립트
-
-| 스크립트 | 역할 | 사용 시점 |
-|----------|------|-----------|
-| `scripts/safe-deploy.cjs` | tsc → build → deploy 안전 래퍼 | `npm run deploy` 시 자동 호출 |
-| `scripts/validate-job-edit.cjs` | 편집 API 호출 전 JSON 10개 규칙 검증 | job-data-enhance 스킬 Phase 2 |
-| `scripts/full-quality-audit.cjs` | 배포 후 직업 페이지 전체 품질 감사 | job-data-enhance 스킬 Phase 4 |
-| `scripts/data-health-report.cjs` | 전체 DB 데이터 건강 보고서 | 정기 모니터링, 배치 작업 전 |
-
-### 사용법
-
-```bash
-# 직업 편집 전 검증
-node scripts/validate-job-edit.cjs data.json
-
-# 배포 후 품질 감사
-node scripts/full-quality-audit.cjs --slug=소프트웨어개발자
-
-# 데이터 건강 보고
-node scripts/data-health-report.cjs --top-missing=20
-
-# 안전 배포 (tsc + build + deploy 한번에)
-npm run deploy
-```
-
-### Git Hooks
-
-- `.git/hooks/pre-commit` — `src/` 변경 시 `npx tsc --noEmit` 자동 실행 (커밋 차단)
-
-## Critical Rules
-
-- **절대 금지**: `git stash`, `git reset --hard`, `DROP TABLE`, `DELETE FROM` (WHERE 없이), `.dev.vars`/`dev.vars`/`.env*` 등 비밀키 파일 커밋 (pre-commit hook이 차단하지만 `git add` 시점부터 주의)
-- **커밋 전 필수**: `git diff --cached --name-only`로 staged 파일 목록 확인 — 비밀키 파일 포함 여부 수동 검증. `scripts/check-secrets.cjs`가 자동 차단하나 우회 방법(`--no-verify`) 절대 금지
-- **D1 주의**: topK 쿼리 시 Vectorize 상한 100개 제한 → Multi-Query 배치로 우회
-- **빌드 전 확인**: `npx tsc --noEmit`으로 타입 에러 확인
-- **배포 전 확인**: `npm run build` 성공 확인 후 `npm run deploy`
+설계서 항목: 기능 정의 (목적·범위) / UI 목업 / 동작 명세 (정상·엣지·에러) / 영향 분석. 유저 승인 후 구현.
 
 ## Environment Variables
 
-`.dev.vars` 파일에 저장 (절대 커밋 금지):
+`.dev.vars` (절대 커밋 금지):
 - `CAREER_NET_API_KEY`, `GOYONG24_MAJOR_API_KEY`, `GOYONG24_JOB_API_KEY`
 - `ADMIN_SECRET`, `JWT_SECRET`
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
 - `OPENAI_API_KEY`, `CLOUDFLARE_API_TOKEN`
 
-## Cloudflare Bindings (wrangler.jsonc)
+## See Also
 
-- `DB` → D1 database (careerwiki-kr)
-- `BUCKET` → R2 bucket (careerwiki-uploads)
-- `KV` → KV namespace
-- `VECTORIZE` → Vectorize index (careerwiki-embeddings)
-- `AI` → Workers AI
-
-## 스킬 시스템 (Claude Harness)
-
-### 스킬 통합 현황
-
-| 스킬 | 상태 | 용도 |
-|------|------|------|
-| `job-data-enhance` | **메인 (사용)** | 직업 데이터 보완·균등화·고도화 통합 스킬 |
-| `job-supplement` | ⚠️ DEPRECATED | → job-data-enhance로 통합됨 |
-| `job-data-equalize` | ⚠️ DEPRECATED | → job-data-enhance로 통합됨 |
-| `job-data-create` | 사용 | 완전히 새로운 직업 추가 전용 |
-| `howto-publish` | 사용 | HowTo 가이드 기획·작성·발행 전체 워크플로우 |
-
-직업 데이터 보완 관련 키워드 ("데이터 보완", "균등화", "부실 직업", "NULL 직업", "직업 데이터 업데이트" 등)는 **반드시 job-data-enhance 스킬**로 처리한다.
-
-### 안전장치 목록
-
-| 도구 | 경로 | 역할 |
-|------|------|------|
-| `full-quality-audit.cjs` | `scripts/full-quality-audit.cjs` | 저장 후 품질 감사 — PASS 없이 다음 직업 진행 금지 |
-| `validate-job-edit.cjs` | `scripts/validate-job-edit.cjs` | 편집 API 호출 전 draft JSON 검증 — PASS 확인 후에만 API 호출 |
-
-### 핵심 기술 규칙 (직업 데이터 작업 시 항상 적용)
-
-| 규칙 | 내용 |
-|------|------|
-| `way` 타입 | **반드시 string** — 배열이면 즉시 500 에러 |
-| R2 이미지 키 | `jobs/job-{slug}.webp` — `uploads/` prefix 절대 금지 |
-| DB image_url | `/uploads/jobs/job-{slug}.webp?v={timestamp}` |
-| 직업 페이지 URL | `https://careerwiki.org/job/슬러그` — `.kr` 또는 `/jobs` 절대 금지 |
-| 편집 API URL | `POST https://careerwiki.org/api/job/{id}/edit` |
-| 인증 헤더 | `X-Admin-Secret: careerwiki-admin-2026` |
-| sources 전송 | fields + sources 반드시 함께 전송 — sources 누락 시 각주 깨짐 |
-| sources 키 | `way`, `overviewSalary.sal`, `detailWlb.wlbDetail` 등 필드명 키 사용 — `way_sources` 등 금지 |
-| overviewSalary.wage | **절대 덮어쓰기 금지** — 바 차트 렌더링 데이터 |
-| 배포 브랜치 | **반드시 main 브랜치** — worktree에서 배포 시 다음 main 배포에서 롤백됨 |
+- 글로벌 일반 원칙: `~/.claude/CLAUDE.md`
+- Serena MCP 가이드: `.claude/serena-config.md`
+- 메모리: `agent/memory/` (없으면 생성 — feedback / project / reference / user)
