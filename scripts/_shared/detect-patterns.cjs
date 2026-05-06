@@ -573,6 +573,31 @@ function detectBrokenSourceRefArrayItems(arrayItems, sourceArr) {
   return detectBrokenSourceRef(allText, sourceArr);
 }
 
+// ── 룰 L: sidebar 영역 _sources 등록 금지 (2026-05-06 후속 사고 차단) ────────
+//
+// SKILL 정책: sidebarCerts/sidebarOrgs/sidebarMajors/sidebarJobs 본문에 [N] 마커
+// 절대 금지 (sidebar 자체 `{name, url}` 객체 배열 사용). 따라서 _sources에
+// 등록해도 본문 sup이 안 만들어져 orphan 발생 → 사용자 시각 사고.
+//
+// 사고 사례: 게임-기획자 _sources.sidebarCerts[0] (id=15) — 본문에 [15] 마커
+// 없는데 출처 섹션엔 [15] 표시. 사용자가 orphan으로 인식.
+//
+// @param {object} sources - _sources 객체
+// @returns {Array<{field, ids, count}>} sidebar 영역에 등록된 항목 list (있으면 사고)
+const SIDEBAR_FIELDS_FORBIDDEN = ['sidebarCerts', 'sidebarOrgs', 'sidebarMajors', 'sidebarJobs'];
+function detectSidebarSources(sources) {
+  if (!sources || typeof sources !== 'object') return [];
+  const found = [];
+  for (const f of SIDEBAR_FIELDS_FORBIDDEN) {
+    const arr = sources[f];
+    if (Array.isArray(arr) && arr.length > 0) {
+      const ids = arr.map(s => (s && typeof s.id === 'number') ? s.id : null).filter(x => x != null);
+      found.push({ field: f, ids, count: arr.length });
+    }
+  }
+  return found;
+}
+
 // ── 룰 K: 본문 [N] 첫 등장 sequential 검사 ─────────────────────────────────
 //
 // 본문 전체(산문 필드 + 배열 필드) 합본에서 [N] 마커가 처음 등장하는 순서가
@@ -637,4 +662,7 @@ module.exports = {
   // 룰 J/K (2026-05-06 detailReady arrays 사고 + 본문 순서 사고 차단)
   detectBrokenSourceRefArrayItems,
   detectMarkerOrderViolation,
+  // 룰 L (2026-05-06 후속 — sidebar 영역 _sources orphan 차단)
+  detectSidebarSources,
+  SIDEBAR_FIELDS_FORBIDDEN,
 };

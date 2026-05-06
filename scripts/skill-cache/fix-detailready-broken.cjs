@@ -36,6 +36,10 @@ if (!DRY_RUN && !APPLY) { console.error('--dry-run 또는 --apply 필수'); proc
 
 const ARRAY_SUBS = ['curriculum', 'recruit', 'training'];
 
+// 2026-05-06 후속 사고 차단: sidebar 영역 _sources 등록 시 orphan 발생.
+// 새 _sources 빌드 시 이 영역은 항상 제거.
+const SIDEBAR_DROP = ['sidebarCerts', 'sidebarOrgs', 'sidebarMajors', 'sidebarJobs'];
+
 // 페이지 _sources 등록 순서대로 글로벌 id 1..N 재부여 시 _sources의 fieldKey 순서가
 // 페이지 표시 순서와 비슷해야 자연스럽다. enhance가 작성한 순서를 그대로 쓰되,
 // 새로 추가한 detailReady.X 항목은 끝에 추가.
@@ -204,12 +208,21 @@ async function postEdit(jobId, payload) {
 
   // 3) _sources 재구성: 산문 sub-field는 그대로 + detailReady.X는 newDrSources로 교체
   //    글로벌 id 1..N 재부여 (등록 순서 = 산문 fields 먼저, detailReady fields 나중)
+  //    sidebar 영역(sidebarCerts/Orgs/Majors/Jobs)은 항상 제거 (orphan 차단)
   const newSources = {};
   let nextId = 1;
+  const droppedSidebar = [];
 
-  // 산문 + 기타 (detailReady.X 제외)
+  // 산문 + 기타 (detailReady.X / sidebar 제외)
   for (const [fk, arr] of Object.entries(sources)) {
     if (fk.startsWith('detailReady.')) continue;
+    if (SIDEBAR_DROP.includes(fk)) {
+      // 2026-05-06: sidebar 영역은 _sources에 등록 X. 자체 {name, url} 사용.
+      if (Array.isArray(arr) && arr.length > 0) {
+        droppedSidebar.push({ field: fk, count: arr.length, ids: arr.map(s => s && s.id).filter(x => x != null) });
+      }
+      continue; // 새 _sources에 추가 X
+    }
     if (!Array.isArray(arr)) { newSources[fk] = arr; continue; }
     newSources[fk] = arr.map(s => ({ ...s, id: nextId++ }));
   }
@@ -240,23 +253,33 @@ async function postEdit(jobId, payload) {
 
   // researchList / pathExplore 등은 그대로 (수정 X — already preserved by spread)
 
+  // sidebar 영역은 server-side merge 정책상 명시적 delete 필요
+  // (sources 객체에 fieldKey 없으면 기존 값 유지됨 — job-editor.ts:543-564)
+  const sourcesWithDeletes = { ...newSources };
+  for (const sf of SIDEBAR_DROP) {
+    if (sources[sf]) sourcesWithDeletes[sf] = { delete: true };
+  }
+
   const payload = {
     fields: {
       detailReady: newDr,
     },
-    sources: newSources,
-    changeSummary: '[job-data-enhance][post-fix-detailready] detailReady 배열 본문 [N] 글로벌→field-local 재번호 + _sources idx 재정렬 (2026-05-06 사고 차단)',
+    sources: sourcesWithDeletes,
+    changeSummary: '[job-data-enhance][post-fix-detailready] detailReady 배열 본문 [N] 글로벌→field-local 재번호 + _sources idx 재정렬 + sidebar _sources 제거 (2026-05-06 사고 차단)',
   };
 
   // 5) 출력
   console.log(`\n--- fix summary ---`);
-  if (fixSummary.length === 0) {
-    console.log(`  변경 없음 (이미 field-local 또는 detailReady 배열 없음)`);
+  if (fixSummary.length === 0 && droppedSidebar.length === 0) {
+    console.log(`  변경 없음 (이미 field-local 또는 detailReady 배열 없음, sidebar _sources도 없음)`);
   } else {
     fixSummary.forEach(s => {
       console.log(`  detailReady.${s.sub}: srcLen ${s.oldSrcLen} → ${s.newSrcLen}`);
       console.log(`     mapping: ${s.mapping}`);
       if (s.added) console.log(`     added (cross-ref): ${s.added}`);
+    });
+    droppedSidebar.forEach(d => {
+      console.log(`  🚨 ${d.field}: ${d.count}건 _sources 제거 (orphan 차단, ids=[${d.ids.join(',')}])`);
     });
   }
   console.log(`\n새 _sources 글로벌 id 분포:`);
@@ -299,6 +322,16 @@ async function postEdit(jobId, payload) {
       stillBroken = true;
     } else {
       console.log(`  ✅ detailReady.${sub} OK (srcLen=${arr.length}, body markers=${ms.length})`);
+    }
+  }
+  // sidebar _sources 잔존 검사
+  for (const sf of SIDEBAR_DROP) {
+    const arr = afterSources[sf];
+    if (Array.isArray(arr) && arr.length > 0) {
+      console.error(`  ❌ ${sf} _sources 여전히 ${arr.length}건 등록됨 (제거 실패)`);
+      stillBroken = true;
+    } else {
+      console.log(`  ✅ ${sf} _sources 0건 (정상)`);
     }
   }
   if (stillBroken) process.exit(2);

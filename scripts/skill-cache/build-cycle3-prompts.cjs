@@ -113,7 +113,7 @@ git fetch origin main && git log --oneline origin/main | head -3
 12-19. selfDomain / **originDomain (wagework 1건이라도 FAIL)** / listPageURL / brokenRef / orphanSrc / text=기관명 / sal-수정금지 / homonym + careerTree 정치인
 
 ### 🆕 Cycle 정책
-20. detailReady 항목별 [N] + _sources 등록 필수 — ⚠️ **2026-05-06 사고 차단**: detailReady 배열 본문 [N]은 **field-local 1..N** (해당 \`_sources["detailReady.X"]\` 길이 안), 글로벌 idx 금지. 본문 [N] 첫 등장 순서 sequential. _sources 글로벌 id 1..N 연속
+20. detailReady 항목별 [N] + _sources 등록 필수 — ⚠️ **2026-05-06 사고 차단**: detailReady 배열 본문 [N]은 **field-local 1..N** (해당 \`_sources["detailReady.X"]\` 길이 안), 글로벌 idx 금지. 본문 [N] 첫 등장 순서 sequential. _sources 글로벌 id 1..N 연속. 🚨 \`_sources\`에 \`sidebar*\` (sidebarCerts/Orgs/Majors/Jobs) 등록 절대 금지 (orphan 발생)
 21. 외부 host minimum 3+ (origin 카운트 안 됨)
 22. careerTree 손대지 않음
 23. Phase 4-SRC URL fetch + 키워드 매칭 검증

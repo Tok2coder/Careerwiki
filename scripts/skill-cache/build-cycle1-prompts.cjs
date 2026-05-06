@@ -165,6 +165,7 @@ git fetch origin main && git log --oneline origin/main | head -3
     - validate \`[UCJ각주항목누락]\` FAIL 차단됨
     - ⚠️ **2026-05-06 사고 차단**: detailReady 배열 본문 [N]은 **field-local 1..N** (해당 \`_sources["detailReady.X"]\` 길이 안). 글로벌 idx 박지 마. 다른 sub-field 출처 필요하면 \`_sources["detailReady.X"]\` 끝에 항목 추가 후 그 새 local idx로 인용. validate \`[arrayBrokenRef]\` FAIL 차단됨
     - ⚠️ **2026-05-06**: 본문 [N] 첫 등장 순서가 1, 2, 3, ... sequential 보장 (orderViolation FAIL 차단). _sources 글로벌 id 1..N 연속 (idxGap FAIL 차단)
+    - 🚨 **2026-05-06 후속**: \`_sources\`에 \`sidebarCerts\` / \`sidebarOrgs\` / \`sidebarMajors\` / \`sidebarJobs\` **절대 등록 금지** — sidebar 본문에 [N] 마커 안 박히므로 _sources 등록 시 orphan. validate \`[sidebarSources]\` FAIL 차단됨. sidebar 항목은 자체 \`{name, url}\` 객체 배열의 \`url\` 필드만 사용
 
 21. **외부 host minimum 3+ 권장** ⚠️ (이전 리포터 외부 2개 통과 사례 빈약함 발견):
     - \`externalHostCount ≥ 3\` 권장 (가능하면 5+)
