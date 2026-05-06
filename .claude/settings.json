@@ -16,12 +16,56 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/origin-block.cjs\"",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/mojibake-block.cjs\"",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/tsc-check.cjs\"",
+            "timeout": 60000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/audit-after-edit.cjs\"",
+            "timeout": 120000
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "prompt",
             "prompt": "이번 턴에서 코드 파일을 변경(Edit, Write 도구)했는지 확인하세요. 코드 변경이 없었거나 단순 조회/질문 응답이면 즉시 {\"ok\": true}를 반환하세요. 코드 변경이 있었다면 다음 검증이 완료되었는지 확인: 1) npx tsc --noEmit 타입체크 실행 여부 2) npm run build 실행 여부 3) 변경 코드를 Read로 다시 읽어 재확인했는지 4) Grep으로 기존 코드 충돌 가능성을 확인했는지. 모두 완료했으면 {\"ok\": true}, 누락 항목이 있으면 {\"ok\": false, \"reason\": \"누락된 검증 단계를 수행하세요: [누락 항목]\"} 반환."
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop-validate.cjs\"",
+            "timeout": 60000
           }
         ]
       }

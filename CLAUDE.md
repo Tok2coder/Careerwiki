@@ -122,10 +122,25 @@ curl -X POST https://careerwiki.org/api/job/{id}/edit \
 
 ## Validation Loops (CareerWiki)
 
-### Code 변경 시
-- `npx tsc --noEmit` clean
-- 변경 코드 `Read`로 재확인
-- `Grep`으로 호출처/import 충돌 확인 — 특히 `services/ai-analyzer/` 내부 cross-reference
+### Code 변경 시 — 4 step (압축 X)
+
+**Step 1: 기본 검증**
+- `npx tsc --noEmit` — 타입 에러 0개
+- `npm run build` — 빌드 성공
+- 변경 코드 `Read`로 다시 열어 의도대로인지 재확인
+
+**Step 2: 충돌/회귀 검증**
+- 변경 함수 `Grep` 검색 → import/호출 모든 파일 호환성 확인 — 특히 `services/ai-analyzer/` 내부 cross-reference
+- API 경로 변경 → 프론트엔드 호출 코드 일치 확인
+- 공유 타입/유틸 변경 → 영향 모듈 전체 파악
+- DB 스키마 변경 → 해당 컬럼 참조 모든 쿼리 확인
+
+**Step 3: 과거 실수 대조**
+- `memory/lessons-learned.md` 확인 — 동일/유사 실수 반복 여부
+
+**Step 4: 오류 탐지**
+- edge case 누락, null/undefined 처리, SQL injection 가능성
+- TailwindCSS 클래스 오타, JSX 닫힘 태그 누락, 이벤트 핸들러 누락
 
 ### Production 배포 시
 - main → `npm run deploy` → `careerwiki.org` 도메인 직접 fetch (preview X)
@@ -242,17 +257,19 @@ node scripts/data-health-report.cjs --top-missing=20
 
 키워드("데이터 보완", "균등화", "부실 직업", "NULL 직업")는 **반드시 `job-data-enhance`** 사용.
 
-## Hooks (.claude/hooks/)
+## Hooks (.claude/hooks/ + settings.json)
 
-이 프로젝트 자동 hook — `.claude/hooks/*.md`:
+네이티브 Claude Code hooks — `.claude/settings.json`에 등록, 실행 스크립트는 `.claude/hooks/*.cjs`:
 
-| Hook | Trigger | Why |
+| Hook script | Trigger | Action |
 |---|---|---|
-| `post-edit-tsc-check.md` | PostToolUse Edit/Write `*.ts*` | 타입 에러 즉시 차단 |
-| `pre-bash-origin-block.md` | PreToolUse Bash (edit API) | originDomain URL 등록 차단 |
-| `pre-bash-mojibake-block.md` | PreToolUse Bash (`curl -d`) | 인라인 한글 차단 |
-| `post-edit-audit-deep.md` | PostToolUse Bash (edit API success) | audit-sources-deep 자동 실행 |
-| `stop-validate-pending.md` | Stop (코드 변경 있음) | validate-job-edit + git status |
+| `origin-block.cjs` | PreToolUse Bash | edit API payload에 origin domain (career/wagework/work24/work/job.go.kr / careerwiki.org) 매칭 시 exit 2 차단 |
+| `mojibake-block.cjs` | PreToolUse Bash | `curl ... -d '...'` 인라인 한글 매칭 시 exit 2 차단 |
+| `tsc-check.cjs` | PostToolUse Edit/Write/MultiEdit | `*.ts*` 파일 변경 시 `npx tsc --noEmit` 실행, 에러 시 stderr 출력 |
+| `audit-after-edit.cjs` | PostToolUse Bash | `POST /api/job/{id}/edit` exit 0 후 `audit-sources-deep.cjs --slug=X` 자동, WARN/FAIL alert |
+| `stop-validate.cjs` | Stop | 코드 변경 감지 시 최근 draft validate-job-edit + git status + tsc |
+
+기존 LLM Stop hook (자가검증 prompt) 그대로 병행 — `type: prompt`와 `type: command`가 같은 Stop event 안에 공존.
 
 ## Testing Rules
 
