@@ -41,7 +41,12 @@ const {
   detectBrokenSourceRefArrayItems,
   detectMarkerOrderViolation,
   detectSourceIdxGap,
+  // 2026-05-06 후속 — sidebar 영역 _sources orphan 차단
+  detectSidebarSources,
+  SIDEBAR_FIELDS_FORBIDDEN,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+
+const SIDEBAR_FIELDS_FORBIDDEN_TXT = SIDEBAR_FIELDS_FORBIDDEN.join('/');
 
 // ── Sentence-level marker cluster detection (audit-sentence-clusters.cjs와 동일 로직) ──
 // 한 문장 안에 마커 [N] 2개 이상 → cluster. 본질: 한 의미 단위(=문장)는 1 마커.
@@ -1084,6 +1089,25 @@ function validate(data) {
         `idx ${firstMismatch}: expected ${gap.expected[firstMismatch]}, got ${gap.actual[firstMismatch]}. ` +
         `평탄화 순서: [${gap.actual.slice(0, 20).join(',')}${gap.actual.length > 20 ? ',...' : ''}]. ` +
         `_sources 등록 순서 + id 번호를 페이지 표시 순서대로 1,2,3,... 재정렬 필요`
+      );
+    }
+  }
+
+  // ── 10-H. sidebar 영역 _sources 등록 금지 (2026-05-06 후속 사고 차단) ────────
+  //
+  // 사고 사례: 게임-기획자 _sources.sidebarCerts[0] (id=15) — SKILL 정책상 sidebar
+  // 본문에 [N] 마커 금지. 그래서 _sources.sidebarCerts에 등록해도 본문 sup이
+  // 안 만들어져 orphan 발생 (출처 섹션엔 [15] 표시되지만 본문 매칭 X).
+  // sidebarCerts/sidebarOrgs/sidebarMajors/sidebarJobs는 자체 `{name, url}` 객체
+  // 배열로 표시되므로 _sources 별도 등록 불필요.
+  {
+    const sidebarHits = detectSidebarSources(sources);
+    if (sidebarHits.length > 0) {
+      const desc = sidebarHits.map(h => `${h.field}(${h.count}건, ids=${h.ids.join(',')})`).join(', ');
+      errors.push(
+        `[sidebarSources] _sources에 sidebar 영역(${SIDEBAR_FIELDS_FORBIDDEN_TXT}) 등록됨: ${desc} — ` +
+        `sidebar는 자체 \`{name, url}\` 객체 배열을 사용하고 본문에 [N] 마커가 박히지 않으므로 ` +
+        `_sources에 등록하면 orphan 발생. 해당 항목들을 _sources에서 제거 필요`
       );
     }
   }

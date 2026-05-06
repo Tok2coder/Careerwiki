@@ -41,6 +41,7 @@ const {
   detectSourceIdxGap,
   detectBrokenSourceRefArrayItems,
   detectMarkerOrderViolation,
+  detectSidebarSources,
   SELF_DOMAINS,
   DEFINITE_ORIGIN_HOSTS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -134,6 +135,7 @@ function analyzeJob(slug, ucjStr) {
     idxGap: null,         // 글로벌 id 연속성 (gap이면 {expected, actual})
     arrayBrokenRef: [],   // [{field, broken:[N], srcLen}] — 2026-05-06 룰 J
     orderViolation: null, // {breakAt, firstAppear} | null — 2026-05-06 룰 K
+    sidebarSources: [],   // [{field, ids, count}] — 2026-05-06 룰 L
     totalUrls: 0,
     uniqueHosts: 0,
     externalHostCount: 0,
@@ -281,6 +283,9 @@ function analyzeJob(slug, ucjStr) {
   }
   findings.orderViolation = detectMarkerOrderViolation(allBodyParts.join('\n'));
 
+  // ── 룰 L (2026-05-06): sidebar 영역 _sources 등록 금지 ───────────────────────
+  findings.sidebarSources = detectSidebarSources(sources);
+
   return finalizeMetrics(findings);
 }
 
@@ -310,6 +315,7 @@ function summarize(jobs) {
     idxGap: 0,
     arrayBrokenRef: 0,    // 2026-05-06 룰 J
     orderViolation: 0,    // 2026-05-06 룰 K
+    sidebarSources: 0,    // 2026-05-06 룰 L
     clean: 0,
   };
   for (const j of jobs) {
@@ -327,13 +333,15 @@ function summarize(jobs) {
     if (j.idxGap) counts.idxGap++;
     if (j.arrayBrokenRef && j.arrayBrokenRef.length > 0) counts.arrayBrokenRef++;
     if (j.orderViolation) counts.orderViolation++;
+    if (j.sidebarSources && j.sidebarSources.length > 0) counts.sidebarSources++;
 
     const anyIssue = j.dupMarkers.length > 0 || j.orphanSrc.length > 0 ||
       j.originDomain.length > 0 || j.selfCite.length > 0 ||
       j.selfCiteOnly || j.listPage.length > 0 || j.rawURL.length > 0 ||
       j.brokenRef.length > 0 || j.bracketPrefix.length > 0 || j.mojibake.length > 0 ||
       j.sourcesNull || j.idxGap ||
-      (j.arrayBrokenRef && j.arrayBrokenRef.length > 0) || j.orderViolation;
+      (j.arrayBrokenRef && j.arrayBrokenRef.length > 0) || j.orderViolation ||
+      (j.sidebarSources && j.sidebarSources.length > 0);
     if (!anyIssue) counts.clean++;
   }
   return counts;
@@ -501,6 +509,7 @@ async function main() {
     ['idxGap',       '_sources 글로벌 id 1부터 연속 아님'],
     ['arrayBrokenRef','🚨 detailReady 배열 [N]이 _sources 길이 초과 (2026-05-06)'],
     ['orderViolation','본문 [N] 첫 등장 순서가 1,2,3,... 아님 (2026-05-06)'],
+    ['sidebarSources','🚨 sidebar 영역 _sources 등록 (orphan 발생, 2026-05-06)'],
   ];
   for (const [key, label] of order) {
     const n = summary[key];

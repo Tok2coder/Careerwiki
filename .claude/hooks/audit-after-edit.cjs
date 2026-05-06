@@ -43,14 +43,16 @@ try {
   const out = execSync(`node "${auditScript}" --slug=${slug}`, { cwd, encoding: 'utf8', timeout: 90000 });
   const tail = out.trim().split('\n').slice(-40).join('\n');
   console.log(tail);
-  // 새 룰 (arrayBrokenRef / orderViolation) 발견 시 추가 강조
+  // 새 룰 (arrayBrokenRef / orderViolation / sidebarSources) 발견 시 추가 강조
   const arrayBroken = /arrayBrokenRef[^0]\s*[1-9]/.test(out) || /detailReady\.\w+:\s+broken=/.test(out);
   const orderBad = /orderViolation[^0]\s*[1-9]/.test(out);
-  if (arrayBroken || orderBad) {
+  const sidebarBad = /sidebarSources[^0]\s*[1-9]/.test(out) || /sidebar(Certs|Orgs|Majors|Jobs).*ids=/.test(out);
+  if (arrayBroken || orderBad || sidebarBad) {
     console.error('\n🚨🚨🚨 [audit-after-edit] 2026-05-06 사고 패턴 감지 🚨🚨🚨');
     if (arrayBroken) console.error('  - arrayBrokenRef: detailReady 배열 본문 [N]이 _sources 길이 초과');
     if (orderBad) console.error('  - orderViolation: 본문 [N] 첫 등장 순서가 sequential 아님');
-    console.error('  → 즉시 surgical fix 필요. node scripts/skill-cache/fix-detailready-broken.cjs --slug=' + slug + ' --apply');
+    if (sidebarBad) console.error('  - sidebarSources: sidebar* 영역 _sources 등록 (orphan 발생)');
+    console.error('  → 즉시 surgical fix 필요. ADMIN_SECRET=... node scripts/skill-cache/fix-detailready-broken.cjs --slug=' + slug + ' --apply');
   } else if (/FAIL|WARN/i.test(out)) {
     console.log('');
     console.log('⚠ audit-deep WARN/FAIL 발견. 위 로그 확인 후 fix 필요.');

@@ -21,6 +21,7 @@ const {
   detectSourceIdxGap,
   detectBrokenSourceRefArrayItems,
   detectMarkerOrderViolation,
+  detectSidebarSources,
   SELF_DOMAINS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
 
@@ -64,6 +65,7 @@ function analyze(slug, data) {
     idxGap: null,
     arrayBrokenRef: [],
     orderViolation: null,
+    sidebarSources: [],
   };
 
   const flatSources = [];
@@ -162,6 +164,9 @@ function analyze(slug, data) {
   }
   findings.orderViolation = detectMarkerOrderViolation(allBodyParts.join('\n'));
 
+  // 룰 L: sidebar 영역 _sources 등록 금지
+  findings.sidebarSources = detectSidebarSources(sources);
+
   return findings;
 }
 
@@ -170,7 +175,8 @@ function isFail(j) {
     j.dupMarkers.length > 0 || j.orphanSrc.length > 0 ||
     j.originDomain.length > 0 || j.listPage.length > 0 || j.rawURL.length > 0 ||
     j.brokenRef.length > 0 || j.bracketPrefix.length > 0 || j.mojibake.length > 0 ||
-    j.sourcesNull || j.idxGap || j.arrayBrokenRef.length > 0 || j.orderViolation
+    j.sourcesNull || j.idxGap || j.arrayBrokenRef.length > 0 || j.orderViolation ||
+    (j.sidebarSources && j.sidebarSources.length > 0)
   );
 }
 
@@ -193,6 +199,7 @@ function isFail(j) {
     if (f.arrayBrokenRef.length) flags.push(`arrayBrokenRef(${f.arrayBrokenRef.length})`);
     if (f.brokenRef.length) flags.push(`brokenRef(${f.brokenRef.length})`);
     if (f.orderViolation) flags.push('orderViolation');
+    if (f.sidebarSources && f.sidebarSources.length) flags.push(`sidebarSources(${f.sidebarSources.length})`);
     if (f.orphanSrc.length) flags.push(`orphan(${f.orphanSrc.length})`);
     if (f.originDomain.length) flags.push(`origin(${f.originDomain.length})`);
     if (f.dupMarkers.length) flags.push(`dup(${f.dupMarkers.length})`);
@@ -208,6 +215,8 @@ function isFail(j) {
     if (f.orderViolation) {
       console.log(`         orderViolation @${f.orderViolation.breakAt}: expected ${f.orderViolation.breakAt + 1}, got ${f.orderViolation.firstAppear[f.orderViolation.breakAt]}`);
     }
+    (f.sidebarSources || []).forEach(h =>
+      console.log(`         sidebarSources ${h.field}: count=${h.count}, ids=[${h.ids.join(',')}] (orphan — sidebar 본문 [N] 마커 없음)`));
   }
 
   const failCount = results.filter(isFail).length;
