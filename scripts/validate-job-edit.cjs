@@ -37,6 +37,10 @@ const {
   detectOriginDomain,
   detectOrphanSourceIdx,
   detectBrokenSourceRef,
+  // 2026-05-06 detailReady arrays 사고 + 본문 순서 사고 차단
+  detectBrokenSourceRefArrayItems,
+  detectMarkerOrderViolation,
+  detectSourceIdxGap,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── Sentence-level marker cluster detection (audit-sentence-clusters.cjs와 동일 로직) ──
@@ -1036,6 +1040,90 @@ function validate(data) {
           }
         }
       }
+    }
+  }
+
+  // ── 10-E. detailReady 배열 항목 brokenRef (2026-05-06 사고 차단) ─────────────
+  //
+  // 사고 사례: 국무총리/게임-기획자/산부인과의사가 detailReady.curriculum/recruit/training
+  // 배열 항목 안에 글로벌 idx [N]을 박았으나 _sources["detailReady.X"]는 field-local
+  // 길이만큼만 등록 → 본문 [N]이 srcLen 초과. validate가 산문 필드만 brokenRef를
+  // 검사해서 통과시켰던 누락. 이제 배열도 동일 룰로 차단.
+  {
+    const dr = fields.detailReady;
+    if (dr && typeof dr === 'object') {
+      for (const sub of ['curriculum', 'recruit', 'training']) {
+        const items = dr[sub];
+        if (!Array.isArray(items) || items.length === 0) continue;
+        const fieldKey = `detailReady.${sub}`;
+        const srcArr = sources[fieldKey];
+        if (!Array.isArray(srcArr)) continue; // 누락은 위 [curriculum-출처누락]에서 처리
+        const broken = detectBrokenSourceRefArrayItems(items, srcArr);
+        if (broken.length > 0) {
+          errors.push(
+            `[arrayBrokenRef] ${fieldKey} 항목 본문에 [${broken.join('], [')}] 마커 있는데 ` +
+            `_sources["${fieldKey}"] 길이 ${srcArr.length}개로 부족 — ` +
+            `detailReady 배열 항목 안의 [N]은 field-local 1..N 연속이어야 함 ` +
+            `(글로벌 idx 박지 마). _sources에 누락 항목 추가하거나 본문 마커 재번호 필요`
+          );
+        }
+      }
+    }
+  }
+
+  // ── 10-F. _sources 글로벌 idxGap 검사 (2026-05-06 사고 차단) ────────────────
+  //
+  // 사고 사례: 국무총리 _sources에 id=5 누락 (1,2,3,4,6,7,...). audit-deep는
+  // detectSourceIdxGap으로 잡지만 validate Gate에는 빠져 prod 통과. Gate 강화.
+  {
+    const gap = detectSourceIdxGap(sources);
+    if (gap && gap.ok === false) {
+      const firstMismatch = gap.actual.findIndex((id, i) => id !== gap.expected[i]);
+      errors.push(
+        `[idxGap] _sources 글로벌 id가 1부터 연속이 아님 — ` +
+        `idx ${firstMismatch}: expected ${gap.expected[firstMismatch]}, got ${gap.actual[firstMismatch]}. ` +
+        `평탄화 순서: [${gap.actual.slice(0, 20).join(',')}${gap.actual.length > 20 ? ',...' : ''}]. ` +
+        `_sources 등록 순서 + id 번호를 페이지 표시 순서대로 1,2,3,... 재정렬 필요`
+      );
+    }
+  }
+
+  // ── 10-G. 본문 [N] 첫 등장 sequential 검사 (2026-05-06 사고 차단) ───────────
+  //
+  // 본문 (산문 + detailReady 배열) 합본에서 [N] 첫 등장 순서가 1,2,3,... 인지
+  // 검사. 글로벌 idx 시스템에서 첫 등장 순서가 _sources 등록 순서와 일치해야
+  // 사용자가 위→아래로 읽을 때 자연스럽다.
+  {
+    const BODY_FIELDS_FOR_ORDER = [
+      'way', 'trivia', 'overviewProspect.main', 'overviewSalary.sal',
+      'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'overviewAbilities.technKnow',
+      'summary', 'overviewWork.main',
+    ];
+    const parts = [];
+    for (const f of BODY_FIELDS_FOR_ORDER) {
+      const v = getNestedField(fields, f);
+      if (typeof v === 'string') parts.push(v);
+    }
+    const dr = fields.detailReady;
+    if (dr && typeof dr === 'object') {
+      for (const sub of ['curriculum', 'recruit', 'training']) {
+        const items = dr[sub];
+        if (Array.isArray(items)) {
+          for (const it of items) {
+            const t = typeof it === 'string' ? it : (it && (it.text || it.title)) || '';
+            if (t) parts.push(t);
+          }
+        }
+      }
+    }
+    const order = detectMarkerOrderViolation(parts.join('\n'));
+    if (order && order.ok === false) {
+      errors.push(
+        `[orderViolation] 본문 [N] 첫 등장 순서가 sequential 아님 — ` +
+        `idx ${order.breakAt}에서 expected [${order.breakAt + 1}], got [${order.firstAppear[order.breakAt]}]. ` +
+        `첫 등장 순서: [${order.firstAppear.slice(0, 20).join(',')}${order.firstAppear.length > 20 ? ',...' : ''}]. ` +
+        `본문 마커 + _sources 등록 순서를 페이지 표시 순서대로 1부터 재번호 필요`
+      );
     }
   }
 

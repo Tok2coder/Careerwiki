@@ -552,6 +552,56 @@ function detectSourceIdxGap(sources) {
   return { ok: false, expected, actual: flat };
 }
 
+// ── 룰 J: detailReady 배열 항목 brokenRef 탐지 ──────────────────────────────
+//
+// detailReady.curriculum / recruit / training 같은 배열 필드의 각 항목 안에
+// 등장하는 [N] 마커가 _sources["detailReady.X"] 길이를 초과하면 broken.
+// (산문 필드용 detectBrokenSourceRef와 동일한 로직, 입력만 배열로 변환)
+//
+// 사고 사례 (2026-05-06): 국무총리/게임-기획자/산부인과의사가 detailReady 배열에
+// 글로벌 idx ([4][12][2] 등)를 박았으나 _sources["detailReady.X"]에는 field-local
+// 길이(1~3개)만 등록되어 본문 마커가 srcLen 초과 → brokenRef 누락 사고.
+//
+// @param {Array} arrayItems - detailReady.X 배열 (string 또는 {text})
+// @param {Array} sourceArr - _sources["detailReady.X"]
+// @returns {number[]} broken 마커 list (deduped)
+function detectBrokenSourceRefArrayItems(arrayItems, sourceArr) {
+  if (!Array.isArray(arrayItems) || arrayItems.length === 0) return [];
+  const allText = arrayItems
+    .map(x => (typeof x === 'string' ? x : (x && (x.text || x.title)) || ''))
+    .join(' ');
+  return detectBrokenSourceRef(allText, sourceArr);
+}
+
+// ── 룰 K: 본문 [N] 첫 등장 sequential 검사 ─────────────────────────────────
+//
+// 본문 전체(산문 필드 + 배열 필드) 합본에서 [N] 마커가 처음 등장하는 순서가
+// 1, 2, 3, ... 순으로 sequential 인지 검사.
+//
+// 사고 사례: 본문에 [3][1][2] 순으로 등장하는 패턴은 사용자가 위에서 아래로 읽을 때
+// "주석 순서 엉망"으로 보임. 글로벌 idx 시스템에서는 첫 등장 순서가 _sources 등록
+// 순서와 일치해야 자연스럽다.
+//
+// @param {string} bodyText - 모든 산문/배열 본문을 join한 문자열
+// @returns {{ok:boolean, expected:number[], firstAppear:number[], breakAt:number}|null}
+//          정상이면 null. 깨지면 break 위치 포함 객체 반환.
+function detectMarkerOrderViolation(bodyText) {
+  if (typeof bodyText !== 'string' || bodyText.length === 0) return null;
+  const matches = [...bodyText.matchAll(/\[(\d+)\]/g)].map(m => Number(m[1]));
+  if (matches.length === 0) return null;
+  const seen = new Set();
+  const firstAppear = [];
+  for (const n of matches) { if (!seen.has(n)) { seen.add(n); firstAppear.push(n); } }
+  const expected = firstAppear.map((_, i) => i + 1);
+  const ok = firstAppear.every((n, i) => n === expected[i]);
+  if (ok) return null;
+  let breakAt = -1;
+  for (let i = 0; i < firstAppear.length; i++) {
+    if (firstAppear[i] !== i + 1) { breakAt = i; break; }
+  }
+  return { ok: false, expected, firstAppear, breakAt };
+}
+
 module.exports = {
   detectMultipleUrlsInSourceText,
   detectMergedOrgLabel,
@@ -584,4 +634,7 @@ module.exports = {
   detectOrphanSourceIdx,
   detectBrokenSourceRef,
   detectSourceIdxGap,
+  // 룰 J/K (2026-05-06 detailReady arrays 사고 + 본문 순서 사고 차단)
+  detectBrokenSourceRefArrayItems,
+  detectMarkerOrderViolation,
 };

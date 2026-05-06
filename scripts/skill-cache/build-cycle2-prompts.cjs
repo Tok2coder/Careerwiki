@@ -143,7 +143,7 @@ git fetch origin main && git log --oneline origin/main | head -3
 7. **Phase 4 검증**: Node.js fetch + \`encodeURIComponent\` + \`full-quality-audit.cjs\` PASS
 8. **Phase 5-DEDUP**: \`auto-dedup-sweep.cjs --slug=${j.slug} --apply\`
 9. **Phase 5-AUDIT-DEEP**: \`node scripts/skill-cache/audit-sources-deep.cjs --slug=${j.slug}\`
-   - 9패턴 + originDomain 모두 0건 확인
+   - 11패턴 (9 + arrayBrokenRef + orderViolation) + originDomain 모두 0건 확인 — 2026-05-06 강화
    - 1+ 발견 시 **즉시 Phase 1 다시** (단축 금지)
 10. **Phase 5 끝 END_TRACKING** + UCJ 17필드 self-report
 11. **[job-data-enhance] 마커 부착**: change_summary에 포함
@@ -164,6 +164,8 @@ git fetch origin main && git log --oneline origin/main | head -3
     - \`detailReady.curriculum\` / \`recruit\` / \`training\` 각 항목 끝 \`[N]\` 부착
     - 각 sub 필드 \`_sources["detailReady.X"]\` 등록 필수
     - validate \`[UCJ각주항목누락]\` FAIL 차단됨
+    - ⚠️ **2026-05-06 사고 차단**: detailReady 배열 본문 [N]은 **field-local 1..N** (해당 \`_sources["detailReady.X"]\` 길이 안). 글로벌 idx 금지. validate \`[arrayBrokenRef]\` FAIL + audit-deep \`arrayBrokenRef\` FAIL 차단됨
+    - ⚠️ **2026-05-06**: 본문 [N] 첫 등장 순서 1,2,3,... sequential (orderViolation 차단), _sources 글로벌 id 1..N 연속 (idxGap 차단)
 
 21. **외부 host minimum 3+ 권장** (5+ 이상적):
     - 외부 1차 출처(협회·KOSIS·전문 미디어·학술논문·정부 부처 정책 페이지 등)로 구성
@@ -184,7 +186,7 @@ git fetch origin main && git log --oneline origin/main | head -3
 
 ### 종료 후 보고 형식
 
-**deep audit clean (9패턴 + originDomain 0건) 시**:
+**deep audit clean (11패턴 + originDomain 0건) 시**:
 \`\`\`
 DONE: ${j.slug} rev={N} deep-audit=CLEAN externalHosts={N≥3} (dup=0 orphan=0 originDomain=0 listPage=0 rawURL=0 brokenRef=0 bracket=0 moji=0 idxGap=NO srcNULL=NO)
 출처 검증: N/N URL 200 OK + 키워드 매칭 PASS

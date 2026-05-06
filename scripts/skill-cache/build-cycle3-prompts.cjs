@@ -105,7 +105,7 @@ git fetch origin main && git log --oneline origin/main | head -3
 6. **Phase 3**: \`POST https://careerwiki.org/api/job/${j.id}/edit\` (Node.js fetch + UTF-8)
 7. **Phase 4**: \`full-quality-audit.cjs\` PASS
 8. **Phase 5-DEDUP**: \`auto-dedup-sweep.cjs --slug=${j.slug} --apply\`
-9. **Phase 5-AUDIT-DEEP**: \`audit-sources-deep.cjs --slug=${j.slug}\`, 9패턴+originDomain=0
+9. **Phase 5-AUDIT-DEEP**: \`audit-sources-deep.cjs --slug=${j.slug}\`, 11패턴(9+arrayBrokenRef+orderViolation)+originDomain=0 — 2026-05-06 강화
 10. **END_TRACKING** + UCJ 17필드 self-report
 11. **[job-data-enhance] 마커 부착**
 
@@ -113,7 +113,7 @@ git fetch origin main && git log --oneline origin/main | head -3
 12-19. selfDomain / **originDomain (wagework 1건이라도 FAIL)** / listPageURL / brokenRef / orphanSrc / text=기관명 / sal-수정금지 / homonym + careerTree 정치인
 
 ### 🆕 Cycle 정책
-20. detailReady 항목별 [N] + _sources 등록 필수
+20. detailReady 항목별 [N] + _sources 등록 필수 — ⚠️ **2026-05-06 사고 차단**: detailReady 배열 본문 [N]은 **field-local 1..N** (해당 \`_sources["detailReady.X"]\` 길이 안), 글로벌 idx 금지. 본문 [N] 첫 등장 순서 sequential. _sources 글로벌 id 1..N 연속
 21. 외부 host minimum 3+ (origin 카운트 안 됨)
 22. careerTree 손대지 않음
 23. Phase 4-SRC URL fetch + 키워드 매칭 검증

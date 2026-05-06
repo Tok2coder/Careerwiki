@@ -39,6 +39,8 @@ const {
   detectOrphanSourceIdx,
   detectBrokenSourceRef,
   detectSourceIdxGap,
+  detectBrokenSourceRefArrayItems,
+  detectMarkerOrderViolation,
   SELF_DOMAINS,
   DEFINITE_ORIGIN_HOSTS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -130,6 +132,8 @@ function analyzeJob(slug, ucjStr) {
     mojibake: [],         // [{location, sample}]
     sourcesNull: false,   // _sources 자체가 NULL이지만 본문에 [N] 있음
     idxGap: null,         // 글로벌 id 연속성 (gap이면 {expected, actual})
+    arrayBrokenRef: [],   // [{field, broken:[N], srcLen}] — 2026-05-06 룰 J
+    orderViolation: null, // {breakAt, firstAppear} | null — 2026-05-06 룰 K
     totalUrls: 0,
     uniqueHosts: 0,
     externalHostCount: 0,
@@ -240,6 +244,43 @@ function analyzeJob(slug, ucjStr) {
   // idxGap — 글로벌 id 연속성
   findings.idxGap = detectSourceIdxGap(sources);
 
+  // ── 룰 J (2026-05-06): detailReady 배열 항목 brokenRef ──────────────────────
+  // detailReady.curriculum / recruit / training 본문 [N]이 _sources["detailReady.X"]
+  // 길이를 초과하면 broken. 산문 필드용 brokenRef와 별개로 검사.
+  const dr = ucj.detailReady || {};
+  for (const sub of ['curriculum', 'recruit', 'training']) {
+    const items = dr[sub];
+    if (!Array.isArray(items) || items.length === 0) continue;
+    const fieldKey = `detailReady.${sub}`;
+    const srcArr = sources[fieldKey];
+    const broken = detectBrokenSourceRefArrayItems(items, srcArr);
+    if (broken.length > 0) {
+      findings.arrayBrokenRef.push({
+        field: fieldKey,
+        broken,
+        srcLen: Array.isArray(srcArr) ? srcArr.length : 0,
+      });
+    }
+  }
+
+  // ── 룰 K (2026-05-06): 본문 [N] 첫 등장 sequential 검사 ─────────────────────
+  // 산문 + detailReady 배열 본문을 모두 join한 텍스트에서 [N] 첫 등장 순서 검사.
+  const allBodyParts = [];
+  for (const f of BODY_FIELDS) {
+    const v = getNested(ucj, f);
+    if (typeof v === 'string') allBodyParts.push(v);
+  }
+  for (const sub of ['curriculum', 'recruit', 'training']) {
+    const items = dr[sub];
+    if (Array.isArray(items)) {
+      for (const it of items) {
+        const t = typeof it === 'string' ? it : (it && (it.text || it.title)) || '';
+        if (t) allBodyParts.push(t);
+      }
+    }
+  }
+  findings.orderViolation = detectMarkerOrderViolation(allBodyParts.join('\n'));
+
   return finalizeMetrics(findings);
 }
 
@@ -267,6 +308,8 @@ function summarize(jobs) {
     mojibake: 0,
     sourcesNull: 0,
     idxGap: 0,
+    arrayBrokenRef: 0,    // 2026-05-06 룰 J
+    orderViolation: 0,    // 2026-05-06 룰 K
     clean: 0,
   };
   for (const j of jobs) {
@@ -282,12 +325,15 @@ function summarize(jobs) {
     if (j.mojibake.length > 0) counts.mojibake++;
     if (j.sourcesNull) counts.sourcesNull++;
     if (j.idxGap) counts.idxGap++;
+    if (j.arrayBrokenRef && j.arrayBrokenRef.length > 0) counts.arrayBrokenRef++;
+    if (j.orderViolation) counts.orderViolation++;
 
     const anyIssue = j.dupMarkers.length > 0 || j.orphanSrc.length > 0 ||
       j.originDomain.length > 0 || j.selfCite.length > 0 ||
       j.selfCiteOnly || j.listPage.length > 0 || j.rawURL.length > 0 ||
       j.brokenRef.length > 0 || j.bracketPrefix.length > 0 || j.mojibake.length > 0 ||
-      j.sourcesNull || j.idxGap;
+      j.sourcesNull || j.idxGap ||
+      (j.arrayBrokenRef && j.arrayBrokenRef.length > 0) || j.orderViolation;
     if (!anyIssue) counts.clean++;
   }
   return counts;
@@ -453,6 +499,8 @@ async function main() {
     ['mojibake',     '인코딩 깨짐'],
     ['sourcesNull',  '본문 [N] 있는데 _sources NULL'],
     ['idxGap',       '_sources 글로벌 id 1부터 연속 아님'],
+    ['arrayBrokenRef','🚨 detailReady 배열 [N]이 _sources 길이 초과 (2026-05-06)'],
+    ['orderViolation','본문 [N] 첫 등장 순서가 1,2,3,... 아님 (2026-05-06)'],
   ];
   for (const [key, label] of order) {
     const n = summary[key];
