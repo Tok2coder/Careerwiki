@@ -139,8 +139,8 @@ git fetch origin main && git log --oneline origin/main | head -3
    - **반드시 Node.js fetch + UTF-8** (curl 절대 금지)
 7. **Phase 4 검증**: Node.js fetch + \`encodeURIComponent\` + \`full-quality-audit.cjs\` PASS
 8. **Phase 5-DEDUP**: \`auto-dedup-sweep.cjs --slug=${j.slug} --apply\`
-9. **Phase 5-AUDIT-DEEP** ⚠️ **신규 (2026-04-29)**: \`node scripts/skill-cache/audit-sources-deep.cjs --slug=${j.slug}\`
-   - 9패턴 모두 0건 확인: dupMarkers / orphanSrc / selfCite / selfCiteOnly / listPage / rawURL / brokenRef / bracketPrefix / mojibake / idxGap / sourcesNull
+9. **Phase 5-AUDIT-DEEP** ⚠️ **2026-05-06 강화**: \`node scripts/skill-cache/audit-sources-deep.cjs --slug=${j.slug}\`
+   - 11패턴 모두 0건 확인: dupMarkers / orphanSrc / selfCite / selfCiteOnly / listPage / rawURL / brokenRef / bracketPrefix / mojibake / idxGap / sourcesNull / **arrayBrokenRef** / **orderViolation**
    - 1+ 발견 시 **즉시 Phase 1 다시** (단축 금지)
 10. **Phase 5 끝 END_TRACKING** + UCJ 17필드 self-report
 11. **[job-data-enhance] 마커 부착**: change_summary에 포함
@@ -163,6 +163,8 @@ git fetch origin main && git log --oneline origin/main | head -3
     - \`detailReady.training\` 각 항목 끝에 \`[N]\` 부착
     - 각 sub 필드의 \`_sources["detailReady.curriculum"]\` / \`["detailReady.recruit"]\` / \`["detailReady.training"]\` 등록 필수
     - validate \`[UCJ각주항목누락]\` FAIL 차단됨
+    - ⚠️ **2026-05-06 사고 차단**: detailReady 배열 본문 [N]은 **field-local 1..N** (해당 \`_sources["detailReady.X"]\` 길이 안). 글로벌 idx 박지 마. 다른 sub-field 출처 필요하면 \`_sources["detailReady.X"]\` 끝에 항목 추가 후 그 새 local idx로 인용. validate \`[arrayBrokenRef]\` FAIL 차단됨
+    - ⚠️ **2026-05-06**: 본문 [N] 첫 등장 순서가 1, 2, 3, ... sequential 보장 (orderViolation FAIL 차단). _sources 글로벌 id 1..N 연속 (idxGap FAIL 차단)
 
 21. **외부 host minimum 3+ 권장** ⚠️ (이전 리포터 외부 2개 통과 사례 빈약함 발견):
     - \`externalHostCount ≥ 3\` 권장 (가능하면 5+)
