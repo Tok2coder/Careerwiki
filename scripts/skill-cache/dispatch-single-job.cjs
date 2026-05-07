@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// ⚠️ DEPRECATED (2026-05-06) — STANDARD_RULES_BLOCK이 v2 verbose (Phase 4-SRC-FACT 명시 X / WebFetch 강제 명시 X).
+// 새 1직업 dispatch: `node scripts/skill-cache/build-cycle-v3.cjs --slugs={slug} --sessions=1`
+// Bypass: BYPASS_V3_DEPRECATION=1 (사고 risk 자기책임).
+if (process.env.BYPASS_V3_DEPRECATION !== '1') { console.error('이 스크립트는 deprecated. build-cycle-v3.cjs 사용.'); process.exit(2); }
 // scripts/skill-cache/dispatch-single-job.cjs
 // 1 직업 단일 dispatch prompt 생성 — 디스패처(orchestrator)가 5 세션에 1직업/세션 배정 + DONE/RETRY 보고 후 다음 배정.
 //

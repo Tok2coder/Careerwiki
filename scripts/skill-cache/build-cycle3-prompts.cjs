@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// ⚠️ DEPRECATED (2026-05-06) — v2 short template, 안전 룰 압축 (Phase 4-SRC-FACT 명시 약함).
+// 새 dispatch는 반드시 `node scripts/skill-cache/build-cycle-v3.cjs` 사용.
+// Bypass: BYPASS_V3_DEPRECATION=1.
+if (process.env.BYPASS_V3_DEPRECATION !== '1') { console.error('이 스크립트는 deprecated. build-cycle-v3.cjs 사용.'); process.exit(2); }
 // scripts/skill-cache/build-cycle3-prompts.cjs
 // cycle 3 — 자투리 6직업, 5세션에 1직업+1세션이 추가 1건.
 

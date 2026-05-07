@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// ⚠️ DEPRECATED (2026-05-06) — v2 verbose template (~1726 est tokens/job).
+// 새 dispatch는 반드시 `node scripts/skill-cache/build-cycle-v3.cjs` 사용.
+// Bypass: BYPASS_V3_DEPRECATION=1 (사고 risk 자기책임).
+if (process.env.BYPASS_V3_DEPRECATION !== '1') { console.error('이 스크립트는 deprecated. build-cycle-v3.cjs 사용.'); process.exit(2); }
 // scripts/skill-cache/build-cycle2-prompts.cjs
 // cycle 2 — 5세션 × 5직업 = 25직업, single-job mode prompt 생성.
 // cycle 1과 동일 형식 (Phase 0-SYNC + originDomain + Phase 4-SRC + wagework BOLD).
