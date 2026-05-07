@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+// ⚠️ DEPRECATED (2026-05-06) — v1/v2 verbose template (~2015 est tokens/job, 안전 룰 부분 누락 위험).
+// 새 dispatch는 반드시 `node scripts/skill-cache/build-cycle-v3.cjs` 사용 (~1100 tokens/job, 안전 룰 7개 hardcoded).
+// 이 파일은 historical reference만 (cycle 1 결과 재현용). 신규 cycle 생성 금지.
+// Bypass: BYPASS_V3_DEPRECATION=1 환경변수 (사고 risk 자기책임).
+if (process.env.BYPASS_V3_DEPRECATION !== '1') { console.error('이 스크립트는 deprecated. build-cycle-v3.cjs 사용. (강제 실행: BYPASS_V3_DEPRECATION=1)'); process.exit(2); }
 // scripts/skill-cache/build-cycle1-prompts.cjs
 // master-list-50.json에서 cycle 1용 10건 선정 → data/cycle1-prompts.md 출력.
 //
