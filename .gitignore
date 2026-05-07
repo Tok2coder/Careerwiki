@@ -142,3 +142,6 @@ data/skill-runs.jsonl
 data/skill-runs/
 data/url-verify-result*.json
 data/audit-sources-deep.json
+
+# Local skill cache (drafts, audit snapshots, pilot prompts — not for git)
+.skill-cache/
