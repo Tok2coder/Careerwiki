@@ -307,6 +307,7 @@ node scripts/data-health-report.cjs --top-missing=20
 
 ## See Also
 
+- 🎯 **CareerWiki Deck (작업 시작 진입점)**: `~/.claude/projects/C--Users-user-Careerwiki/memory/deck/README.md` — 14 룰 / audit 도구 / dispatch v3 / 사고 history latest (시점 누적 recap과 별개로 항상 최신 유지)
 - 글로벌 일반 원칙: `~/.claude/CLAUDE.md`
 - Serena MCP 가이드: `.claude/serena-config.md`
 - 메모리: `agent/memory/` (없으면 생성 — feedback / project / reference / user)
