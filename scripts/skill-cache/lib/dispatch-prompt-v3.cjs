@@ -46,6 +46,10 @@ function SAFETY_RULES(slug) {
     '',
     '**🚨 LLM 자가검증 1줄로 통과 절대 금지** — validate-job-edit.cjs / audit-sources-deep.cjs / Node.js fetch 키워드 매칭 등 결정적 스크립트로만 검증. self-report 라벨 ("CLEAN", "DONE")만으로 통과 X.',
     '',
+    '**🚨 Root URL 출처 금지 (룰 13, 2026-05-07)** — 협회/회사/학술 publisher root URL은 fact cover X. path depth ≥ 2 + WebFetch 본문 fact 등장 둘 다 만족 필수. 못 만족하면 (a) deep page 찾기 (b) fact 일반화 (c) fact 제거. 정부 부처 root는 룰 F가 별도 처리. validate `[rootURL]` FAIL 차단.',
+    '',
+    '**🚨 Wikipedia Quota — 위키 점유율 ≤ 30% (룰 14, 2026-05-07)** — 직업당 글로벌 출처 풀에서 `*.wikipedia.org` / `namu.wiki` / `*.wikia.com` / `*.fandom.com` 점유율 > 30% 즉시 FAIL. 1차 출처(협회 deep / 정부 통계 / 학술 / 1차 미디어 deep article) 우선. 위키는 보조. validate `[wikiQuota]` FAIL 차단.',
+    '',
     '**🔴 단축 처리 금지** — 토큰 부족 ≠ minimal POST 사유. validate FAIL 시 본문 재작성. minimal POST (마커만 부착) → server-side `[minimalPOST]` FAIL.',
   ].join('\n');
 }
@@ -142,7 +146,7 @@ function buildDispatchPrompt(opts) {
   ].join('\n');
 }
 
-// 안전 룰 7개 keyword를 hardcode — 호출자가 결과 prompt에 모두 포함됐는지 자가 검증 가능.
+// 안전 룰 9개 keyword를 hardcode — 호출자가 결과 prompt에 모두 포함됐는지 자가 검증 가능.
 // 빌더 또는 정합성 테스트가 generated prompt를 이 키워드로 grep해서 누락 0 확인.
 const SAFETY_RULE_KEYWORDS = [
   'WebFetch 강제',                                 // 1
@@ -152,6 +156,8 @@ const SAFETY_RULE_KEYWORDS = [
   'Phase 5-AUDIT-DEEP',                           // 5
   'LLM 자가검증 1줄로 통과 절대 금지',               // 6
   'origin 도메인 절대 금지',                        // 7 (보조: origin 차단)
+  'Root URL 출처 금지',                            // 8 (룰 13, 2026-05-07)
+  'Wikipedia Quota',                              // 9 (룰 14, 2026-05-07)
 ];
 
 function verifySafetyRulesPresent(prompt) {

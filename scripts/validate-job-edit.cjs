@@ -44,6 +44,9 @@ const {
   // 2026-05-06 후속 — sidebar 영역 _sources orphan 차단
   detectSidebarSources,
   SIDEBAR_FIELDS_FORBIDDEN,
+  // 2026-05-07 — root URL 회피 + Wikipedia 점유율 ≤ 30%
+  detectRootDomainOnly,
+  calcWikiQuota,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 const SIDEBAR_FIELDS_FORBIDDEN_TXT = SIDEBAR_FIELDS_FORBIDDEN.join('/');
@@ -1108,6 +1111,50 @@ function validate(data) {
         `[sidebarSources] _sources에 sidebar 영역(${SIDEBAR_FIELDS_FORBIDDEN_TXT}) 등록됨: ${desc} — ` +
         `sidebar는 자체 \`{name, url}\` 객체 배열을 사용하고 본문에 [N] 마커가 박히지 않으므로 ` +
         `_sources에 등록하면 orphan 발생. 해당 항목들을 _sources에서 제거 필요`
+      );
+    }
+  }
+
+  // ── 10-I. Root URL Avoidance (2026-05-07 룰 13) ────────────────────────────
+  //
+  // 사용자 8 pilot 피드백: "협회·회사 홈페이지 root만 나오는 출처 아쉬웠다"
+  // 협회 (.or.kr) / 기업 (.co.kr) / 학술 publisher / 일반 .com·.org에서 root URL
+  // (path === '' / '/' / '/index.*' / '/main.*') 사용 시 fact cover 못 함 → FAIL.
+  // 정부 부처 root는 룰 F (originDomain) 우선 처리 — 룰 13에서 skip.
+  {
+    const rootHits = [];
+    for (const [fieldKey, srcArr] of Object.entries(sources)) {
+      if (!Array.isArray(srcArr)) continue;
+      for (const src of srcArr) {
+        if (src && src.url && detectRootDomainOnly(src.url)) {
+          let host = '';
+          try { host = new URL(src.url).host.toLowerCase(); } catch {}
+          rootHits.push({ field: fieldKey, url: src.url, host });
+        }
+      }
+    }
+    if (rootHits.length > 0) {
+      const desc = rootHits.slice(0, 5).map(h => `${h.field}: ${h.url}`).join(' / ');
+      errors.push(
+        `[rootURL] _sources에 root URL ${rootHits.length}건 발견 (${desc}${rootHits.length > 5 ? ' ...' : ''}) — ` +
+        `협회/회사/학술 publisher root는 fact cover 못 함. path depth ≥ 2의 deep page로 교체 필요. ` +
+        `못 찾으면 본문 fact 일반화 또는 제거. 정부 부처 root는 룰 F (originDomain)에서 별도 처리`
+      );
+    }
+  }
+
+  // ── 10-J. Wikipedia Quota (2026-05-07 룰 14) ───────────────────────────────
+  //
+  // 사용자 8 pilot 피드백: "위키 내용이 링크의 대부분을 차지하는 것 아쉬웠다"
+  // 글로벌 출처 풀에서 위키류(*.wikipedia.org / namu.wiki / *.wikia.com / *.fandom.com)
+  // 점유율 > 30% → FAIL. total < 5는 SKIP. WARN (0.2~0.3) 은 허용.
+  {
+    const q = calcWikiQuota(sources);
+    if (q.level === 'FAIL') {
+      errors.push(
+        `[wikiQuota] _sources의 위키 점유율 ${(q.ratio * 100).toFixed(1)}% (${q.count}/${q.total}) > 30% 초과 — ` +
+        `1차 출처(협회 deep / 정부 통계 / 학술 자료 / 1차 미디어 deep article)로 보강 필수. ` +
+        `위키는 보조 출처로만 허용. (wiki host: *.wikipedia.org / namu.wiki / *.wikia.com / *.fandom.com)`
       );
     }
   }

@@ -286,7 +286,7 @@ function main() {
         factSource,
         keyTask,
       });
-      // 안전 룰 7개 누락 확인
+      // 안전 룰 9개 누락 확인
       const verify = verifySafetyRulesPresent(prompt);
       if (!verify.ok) {
         safetyRuleFails++;
@@ -326,13 +326,13 @@ function main() {
         console.error(`[check] pilot에 ${j.slug} 없음 — skip`);
         return;
       }
-      // 안전 룰 7개 동일 여부만 확인 (prompt 본문 dynamic field는 다름)
+      // 안전 룰 9개 동일 여부만 확인 (prompt 본문 dynamic field는 다름)
       const v = verifySafetyRulesPresent(built);
       if (!v.ok) { mismatch++; console.error(`[check] ${j.slug}: 안전 룰 누락 ${v.missing}`); }
-      else console.error(`[check] ${j.slug}: 안전 룰 7개 모두 박힘 ✓`);
+      else console.error(`[check] ${j.slug}: 안전 룰 9개 모두 박힘 ✓`);
     });
     if (mismatch > 0) { console.error(`[check] FAIL: ${mismatch}건 누락`); process.exit(2); }
-    console.error('[check] PASS — 모든 직업 안전 룰 7개 인라인 ✓');
+    console.error('[check] PASS — 모든 직업 안전 룰 9개 인라인 ✓');
   }
 
   if (args.json) {
@@ -357,7 +357,7 @@ function main() {
   fs.writeFileSync(outPath, md.join('\n'), 'utf8');
   console.error(`[build-cycle-v3] 저장: ${outPath}`);
   console.error(`[build-cycle-v3] 직업 ${jobs.length} / 세션 ${SESSIONS} / 평균 ${Math.round(totalLines / jobs.length)}lines, ${Math.round(totalChars / jobs.length)}chars (~${Math.round((totalChars / jobs.length) / 2.5)} est tokens)`);
-  console.error('[build-cycle-v3] 안전 룰 7개 모두 박힘 ✓');
+  console.error('[build-cycle-v3] 안전 룰 9개 모두 박힘 ✓');
 }
 
 if (require.main === module) {

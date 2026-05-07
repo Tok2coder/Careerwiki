@@ -42,6 +42,8 @@ const {
   detectBrokenSourceRefArrayItems,
   detectMarkerOrderViolation,
   detectSidebarSources,
+  detectRootDomainOnly,
+  calcWikiQuota,
   SELF_DOMAINS,
   DEFINITE_ORIGIN_HOSTS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -136,6 +138,8 @@ function analyzeJob(slug, ucjStr) {
     arrayBrokenRef: [],   // [{field, broken:[N], srcLen}] — 2026-05-06 룰 J
     orderViolation: null, // {breakAt, firstAppear} | null — 2026-05-06 룰 K
     sidebarSources: [],   // [{field, ids, count}] — 2026-05-06 룰 L
+    rootURL: [],          // [{field, idx, url, host}] — 2026-05-07 룰 13
+    wikiQuota: null,      // {count, total, ratio, level} — 2026-05-07 룰 14
     totalUrls: 0,
     uniqueHosts: 0,
     externalHostCount: 0,
@@ -198,6 +202,14 @@ function analyzeJob(slug, ucjStr) {
       // listPage URL
       if (src.url && detectListPageUrl(src.url)) {
         findings.listPage.push({ field: fieldKey, url: src.url });
+      }
+
+      // 룰 13: rootURL — 협회/회사/학술 publisher root만 가리키는 URL (origin 제외)
+      if (src.url && detectRootDomainOnly(src.url)) {
+        try {
+          const host = new URL(src.url).host.toLowerCase();
+          findings.rootURL.push({ field: fieldKey, idx: id, url: src.url, host });
+        } catch {}
       }
 
       // originDomain (격상) + selfCite legacy 카운팅
@@ -286,6 +298,9 @@ function analyzeJob(slug, ucjStr) {
   // ── 룰 L (2026-05-06): sidebar 영역 _sources 등록 금지 ───────────────────────
   findings.sidebarSources = detectSidebarSources(sources);
 
+  // ── 룰 14 (2026-05-07): Wikipedia Quota — 위키 점유율 ≤ 30% ──────────────────
+  findings.wikiQuota = calcWikiQuota(sources);
+
   return finalizeMetrics(findings);
 }
 
@@ -316,6 +331,9 @@ function summarize(jobs) {
     arrayBrokenRef: 0,    // 2026-05-06 룰 J
     orderViolation: 0,    // 2026-05-06 룰 K
     sidebarSources: 0,    // 2026-05-06 룰 L
+    rootURL: 0,           // 2026-05-07 룰 13
+    wikiQuotaFail: 0,     // 2026-05-07 룰 14 (FAIL only)
+    wikiQuotaWarn: 0,     // 2026-05-07 룰 14 (WARN only)
     clean: 0,
   };
   for (const j of jobs) {
@@ -334,6 +352,9 @@ function summarize(jobs) {
     if (j.arrayBrokenRef && j.arrayBrokenRef.length > 0) counts.arrayBrokenRef++;
     if (j.orderViolation) counts.orderViolation++;
     if (j.sidebarSources && j.sidebarSources.length > 0) counts.sidebarSources++;
+    if (j.rootURL && j.rootURL.length > 0) counts.rootURL++;
+    if (j.wikiQuota && j.wikiQuota.level === 'FAIL') counts.wikiQuotaFail++;
+    if (j.wikiQuota && j.wikiQuota.level === 'WARN') counts.wikiQuotaWarn++;
 
     const anyIssue = j.dupMarkers.length > 0 || j.orphanSrc.length > 0 ||
       j.originDomain.length > 0 || j.selfCite.length > 0 ||
@@ -341,7 +362,9 @@ function summarize(jobs) {
       j.brokenRef.length > 0 || j.bracketPrefix.length > 0 || j.mojibake.length > 0 ||
       j.sourcesNull || j.idxGap ||
       (j.arrayBrokenRef && j.arrayBrokenRef.length > 0) || j.orderViolation ||
-      (j.sidebarSources && j.sidebarSources.length > 0);
+      (j.sidebarSources && j.sidebarSources.length > 0) ||
+      (j.rootURL && j.rootURL.length > 0) ||
+      (j.wikiQuota && j.wikiQuota.level === 'FAIL');
     if (!anyIssue) counts.clean++;
   }
   return counts;
