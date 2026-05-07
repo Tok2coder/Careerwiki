@@ -24,7 +24,7 @@
 
 // 빌더 사용 시점에 이 commit 이상이 origin/main HEAD인지 확인 강제.
 // HEAD 갱신 시 이 상수만 바꾸면 prompt 자동 동기화.
-const MAIN_HEAD_MIN = '5f75996';
+const MAIN_HEAD_MIN = '2af54bf';
 
 // 안전 룰 7개 + 보조 (origin 절대 금지, 단축 처리 금지).
 // 이 블록은 호출자가 override 불가. 누락하면 builder가 작동 안 함.
