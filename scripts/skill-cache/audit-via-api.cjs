@@ -22,6 +22,8 @@ const {
   detectBrokenSourceRefArrayItems,
   detectMarkerOrderViolation,
   detectSidebarSources,
+  detectRootDomainOnly,
+  calcWikiQuota,
   SELF_DOMAINS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
 
@@ -66,6 +68,8 @@ function analyze(slug, data) {
     arrayBrokenRef: [],
     orderViolation: null,
     sidebarSources: [],
+    rootURL: [],          // 2026-05-07 룰 13
+    wikiQuota: null,      // 2026-05-07 룰 14
   };
 
   const flatSources = [];
@@ -96,6 +100,12 @@ function analyze(slug, data) {
       }
       if (src.url && detectListPageUrl(src.url)) {
         findings.listPage.push({ field: fieldKey, url: src.url });
+      }
+      if (src.url && detectRootDomainOnly(src.url)) {
+        try {
+          const host = new URL(src.url).host.toLowerCase();
+          findings.rootURL.push({ field: fieldKey, idx: id, url: src.url, host });
+        } catch {}
       }
       if (src.url) {
         try {
@@ -167,6 +177,9 @@ function analyze(slug, data) {
   // 룰 L: sidebar 영역 _sources 등록 금지
   findings.sidebarSources = detectSidebarSources(sources);
 
+  // 룰 14 (2026-05-07): Wikipedia 점유율 ≤ 30%
+  findings.wikiQuota = calcWikiQuota(sources);
+
   return findings;
 }
 
@@ -176,7 +189,9 @@ function isFail(j) {
     j.originDomain.length > 0 || j.listPage.length > 0 || j.rawURL.length > 0 ||
     j.brokenRef.length > 0 || j.bracketPrefix.length > 0 || j.mojibake.length > 0 ||
     j.sourcesNull || j.idxGap || j.arrayBrokenRef.length > 0 || j.orderViolation ||
-    (j.sidebarSources && j.sidebarSources.length > 0)
+    (j.sidebarSources && j.sidebarSources.length > 0) ||
+    (j.rootURL && j.rootURL.length > 0) ||
+    (j.wikiQuota && j.wikiQuota.level === 'FAIL')
   );
 }
 
@@ -200,6 +215,9 @@ function isFail(j) {
     if (f.brokenRef.length) flags.push(`brokenRef(${f.brokenRef.length})`);
     if (f.orderViolation) flags.push('orderViolation');
     if (f.sidebarSources && f.sidebarSources.length) flags.push(`sidebarSources(${f.sidebarSources.length})`);
+    if (f.rootURL && f.rootURL.length) flags.push(`rootURL(${f.rootURL.length})`);
+    if (f.wikiQuota && f.wikiQuota.level === 'FAIL') flags.push(`wikiQuota(${(f.wikiQuota.ratio*100).toFixed(0)}%)`);
+    else if (f.wikiQuota && f.wikiQuota.level === 'WARN') flags.push(`wikiQuotaWARN(${(f.wikiQuota.ratio*100).toFixed(0)}%)`);
     if (f.orphanSrc.length) flags.push(`orphan(${f.orphanSrc.length})`);
     if (f.originDomain.length) flags.push(`origin(${f.originDomain.length})`);
     if (f.dupMarkers.length) flags.push(`dup(${f.dupMarkers.length})`);

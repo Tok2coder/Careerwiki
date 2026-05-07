@@ -627,6 +627,82 @@ function detectMarkerOrderViolation(bodyText) {
   return { ok: false, expected, firstAppear, breakAt };
 }
 
+// ── 룰 13: Root URL Avoidance (협회·회사·학술 publisher root 차단, 2026-05-07) ──
+//
+// 사용자 8 pilot 피드백 (2026-05-07): "협회·회사 홈페이지 root만 나오는 출처 아쉬웠다"
+// 조치: fact별 deep page 강제. root URL은 fact cover 못 함.
+//
+// 룰 F (originDomain) 우선 — 정부 산하 직업포털 (career.go.kr 등) 및 정부 부처
+// (.go.kr ALLOWLIST)의 root는 룰 F가 차단/허용. 룰 13은 그 외 host만 검사:
+// 협회 (.or.kr) / 기업 (.co.kr) / 학술 publisher / 일반 .com/.org root.
+//
+// Root path 정의 — 다음 중 하나 매칭 시 root:
+//   - '' 또는 '/' (디폴트 landing)
+//   - '/index' / '/main' (확장자 없음)
+//   - '/index.{html|htm|php|asp|do|jsp}' / '/main.{...}'
+//
+// @param {string} url
+// @returns {boolean} root URL이고 origin 아니면 true (FAIL 신호)
+const ROOT_PATH_PATTERNS = [
+  /^\/?$/,
+  /^\/(index|main)(\.html?|\.php|\.asp|\.do|\.jsp)?\/?$/i,
+];
+function detectRootDomainOnly(url) {
+  if (!url || typeof url !== 'string') return false;
+  // 룰 F 우선 — 정부 부처 root는 origin 룰이 처리, 룰 13에서 skip
+  if (detectOriginDomain(url)) return false;
+  let parsed;
+  try { parsed = new URL(url); } catch { return false; }
+  return ROOT_PATH_PATTERNS.some(p => p.test(parsed.pathname));
+}
+
+// ── 룰 14: Wikipedia Quota (위키류 점유율 ≤ 30%, 2026-05-07) ───────────────
+//
+// 사용자 8 pilot 피드백 (2026-05-07): "위키 내용이 링크의 대부분을 차지하는 것
+// 아쉬웠다". 조치: 글로벌 출처 풀에서 위키류 비율 ≤ 30% 강제.
+//
+// Wiki host 정의: *.wikipedia.org / namu.wiki / *.wikia.com / *.fandom.com
+//   - en.wikipedia.org, ko.wikipedia.org 등 모든 lang variant 포함
+//   - namu.wiki는 sub-domain 없음 (정확 매칭)
+//
+// Threshold:
+//   - ratio > 0.3 → FAIL (1차 출처 보강 필수)
+//   - 0.2 < ratio ≤ 0.3 → WARN (1차 출처 권장)
+//   - ratio ≤ 0.2 → OK
+//   - total < 5 → SKIP (분모 너무 작아 의미 없음)
+//
+// @param {object} sources - _sources 객체 (모든 fieldKey)
+// @returns {{count, total, ratio, level: 'FAIL'|'WARN'|'OK'|'SKIP'}}
+const WIKI_HOST_REGEX = /(^|\.)(wikipedia\.org|wikia\.com|fandom\.com)$|^namu\.wiki$/i;
+function calcWikiQuota(sources) {
+  if (!sources || typeof sources !== 'object') {
+    return { count: 0, total: 0, ratio: 0, level: 'SKIP' };
+  }
+  const allUrls = [];
+  for (const arr of Object.values(sources)) {
+    if (Array.isArray(arr)) {
+      for (const s of arr) {
+        if (s && typeof s === 'object' && s.url) allUrls.push(s.url);
+      }
+    }
+  }
+  if (allUrls.length < 5) {
+    return { count: 0, total: allUrls.length, ratio: 0, level: 'SKIP' };
+  }
+  let count = 0;
+  for (const url of allUrls) {
+    try {
+      const host = new URL(url).host.toLowerCase();
+      if (WIKI_HOST_REGEX.test(host)) count++;
+    } catch {}
+  }
+  const ratio = count / allUrls.length;
+  let level = 'OK';
+  if (ratio > 0.3) level = 'FAIL';
+  else if (ratio > 0.2) level = 'WARN';
+  return { count, total: allUrls.length, ratio, level };
+}
+
 module.exports = {
   detectMultipleUrlsInSourceText,
   detectMergedOrgLabel,
@@ -665,4 +741,9 @@ module.exports = {
   // 룰 L (2026-05-06 후속 — sidebar 영역 _sources orphan 차단)
   detectSidebarSources,
   SIDEBAR_FIELDS_FORBIDDEN,
+  // 룰 13/14 (2026-05-07 — root URL 회피 + Wikipedia 점유율 ≤ 30%)
+  detectRootDomainOnly,
+  ROOT_PATH_PATTERNS,
+  calcWikiQuota,
+  WIKI_HOST_REGEX,
 };

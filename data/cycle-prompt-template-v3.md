@@ -58,6 +58,10 @@
 
 **🚨 LLM 자가검증 1줄로 통과 절대 금지** — validate-job-edit.cjs / audit-sources-deep.cjs / Node.js fetch 키워드 매칭 등 결정적 스크립트로만 검증. self-report 라벨 ("CLEAN", "DONE")만으로 통과 X.
 
+**🚨 Root URL 출처 금지 (룰 13, 2026-05-07)** — 협회/회사/학술 publisher root URL은 fact cover X. path depth ≥ 2 + WebFetch 본문 fact 등장 둘 다 만족 필수. 못 만족하면 (a) deep page 찾기 (b) fact 일반화 (c) fact 제거. 정부 부처 root는 룰 F가 별도 처리. validate `[rootURL]` FAIL 차단됨.
+
+**🚨 Wikipedia Quota — 위키 점유율 ≤ 30% (룰 14, 2026-05-07)** — 직업당 글로벌 출처 풀에서 `*.wikipedia.org` / `namu.wiki` / `*.wikia.com` / `*.fandom.com` 점유율 > 30% 즉시 FAIL. 1차 출처(협회 deep / 정부 통계 / 학술 / 1차 미디어 deep article) 우선. 위키는 보조 출처로만. total < 5 시 SKIP. validate `[wikiQuota]` FAIL 차단됨.
+
 **🔴 단축 처리 금지** — 토큰 부족 ≠ minimal POST 사유. validate FAIL 시 본문 재작성. minimal POST (마커만 부착) → server-side `[minimalPOST]` FAIL.
 
 ## Phase 핵심 (자세히는 SKILL.md Phase 0~5)
