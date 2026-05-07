@@ -200,7 +200,68 @@ async function checkUrlsLive(sources, sampleRate = 100) {
   return broken;
 }
 
+// [sal-readonly] 보강 helper (2026-05-07) — sal _sources url-only surgical fix 검증
+// 사용처: validateAsync에서 data._prevSalSources 자동 fetch + sync validate에서 diff 검증
+async function fetchExistingSalSources(slugOrId) {
+  const url = `https://careerwiki.org/api/job/${encodeURIComponent(slugOrId)}/edit-data`;
+  const r = await fetch(url, { headers: { 'Cache-Control': 'no-cache' } });
+  if (r.status !== 200) throw new Error(`HTTP ${r.status}`);
+  const j = await r.json();
+  if (!j.success) throw new Error(j.error || 'API failure');
+  const srcs = (j.data && j.data._sources) || {};
+  return Array.isArray(srcs['overviewSalary.sal']) ? srcs['overviewSalary.sal'] : [];
+}
+
+// 기존 sal _sources(prev)와 새 sal _sources(next) 비교 — url 외 모든 필드 보존 검증.
+// 보존 필드: id / text / wageSource (있으면) / array length / 항목 추가/제거 X
+// url만 다른 항목은 PASS (rootURL/broken URL surgical 케이스).
+// 위반 사항을 string array로 반환 (빈 배열 = OK).
+function diffSalSources(prev, next) {
+  const violations = [];
+  if (prev.length !== next.length) {
+    violations.push(`array length 변경: ${prev.length} → ${next.length} (항목 추가/제거 차단)`);
+    return violations;
+  }
+  const prevById = new Map(prev.filter(s => s && typeof s === 'object').map(s => [s.id, s]));
+  for (const n of next) {
+    if (!n || typeof n !== 'object') {
+      violations.push(`항목이 object 아님: ${JSON.stringify(n).slice(0, 40)}`);
+      continue;
+    }
+    const p = prevById.get(n.id);
+    if (!p) {
+      violations.push(`id=${n.id} 신규 항목 추가 차단`);
+      continue;
+    }
+    if ((n.text || '') !== (p.text || '')) {
+      violations.push(`id=${n.id} text 변경: "${(p.text || '').slice(0, 30)}" → "${(n.text || '').slice(0, 30)}"`);
+    }
+    if ((n.wageSource || '') !== (p.wageSource || '')) {
+      violations.push(`id=${n.id} wageSource 변경: "${p.wageSource || ''}" → "${n.wageSource || ''}"`);
+    }
+    // url 변경은 허용 (rootURL surgical 등)
+  }
+  const nextIds = new Set(next.map(s => s && s.id).filter(id => id != null));
+  for (const p of prev) {
+    if (p && p.id != null && !nextIds.has(p.id)) {
+      violations.push(`id=${p.id} 항목 제거 차단`);
+    }
+  }
+  return violations;
+}
+
 async function validateAsync(data) {
+  // [sal-readonly] 보강 — sal _sources 변경 시 prev 자동 fetch (data._jobSlug 또는 _jobId 필요)
+  if (data && data.sources && data.sources['overviewSalary.sal'] && !data._prevSalSources) {
+    const ref = data._jobSlug || data._jobId;
+    if (ref) {
+      try {
+        data._prevSalSources = await fetchExistingSalSources(ref);
+      } catch (e) {
+        // fetch 실패 시 sync validate가 _prevSalSources 부재로 errors push
+      }
+    }
+  }
   const result = validate(data);
   // URL HEAD fetch (옵션)
   if (process.env.VALIDATE_CHECK_URLS === '1' || data.checkUrls === true) {
@@ -766,8 +827,28 @@ function validate(data) {
   if (fields.overviewSalary !== undefined) {
     errors.push('[sal-수정금지] overviewSalary 필드 수정 금지 — sal/wage/wageSource 모두 스킬에서 건드리지 않음. 임금 데이터는 API·기존 데이터 그대로 유지');
   }
+  // [sal-readonly] 보강 (2026-05-07) — url-only surgical fix 허용 (rootURL/broken URL 교체)
+  // 기존: sources['overviewSalary.sal'] 전송 자체 차단
+  // 신규: sources['overviewSalary.sal']가 있으면 data._prevSalSources(또는 validateAsync 자동 fetch)와
+  //       diff 검증. id/text/wageSource/length 보존 + url만 변경된 항목만 허용.
+  // 보호 의도: sal 본문 wage 데이터·sal 출처 무결성 — url 교체는 fact 변경 X
   if (sources['overviewSalary.sal']) {
-    errors.push('[sal-readonly] sources["overviewSalary.sal"] must not be sent by job-data-enhance. Salary annotations and salary sources are read-only here.');
+    const newArr = sources['overviewSalary.sal'];
+    if (!Array.isArray(newArr)) {
+      errors.push('[sal-readonly] sources["overviewSalary.sal"]은 array여야 함');
+    } else {
+      const prev = data._prevSalSources;
+      if (!prev) {
+        errors.push('[sal-readonly] sources["overviewSalary.sal"] 변경 시 data._prevSalSources 필수 — url-only surgical 검증 필요. validateAsync는 data._jobSlug/_jobId 있으면 prod API 자동 fetch');
+      } else if (!Array.isArray(prev)) {
+        errors.push('[sal-readonly] data._prevSalSources는 array여야 함 (DB 기존 sal _sources)');
+      } else {
+        const violations = diffSalSources(prev, newArr);
+        if (violations.length > 0) {
+          errors.push(`[sal-readonly] sources["overviewSalary.sal"] url 외 변경 차단 — ${violations.join(' / ')}. url-only 변경만 허용 (rootURL/broken URL surgical 케이스). sal 본문 fact·wage 데이터 보호`);
+        }
+      }
+    }
   }
 
   // ── 9b. youtubeLinks 개수 검증 + 무언 스킵 금지 (2026-04-15 강화) ──
@@ -1569,7 +1650,7 @@ async function main() {
 }
 
 // Export for programmatic use
-module.exports = { validate, validateAsync, checkUrlsLive };
+module.exports = { validate, validateAsync, checkUrlsLive, fetchExistingSalSources, diffSalSources };
 
 if (require.main === module) {
   main().catch(e => { console.error(e); process.exit(1); });
