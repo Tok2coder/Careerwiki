@@ -6,6 +6,11 @@
 // 사용:
 //   node scripts/skill-cache/audit-via-api.cjs slug1 slug2 ...
 //   node scripts/skill-cache/audit-via-api.cjs --all  (전체 마커 보유 직업 — page_revisions 통해)
+//   node scripts/skill-cache/audit-via-api.cjs slug1 --exclude-sal
+//
+// --exclude-sal: sal-protection 정책 영역(`overviewSalary.sal`)을 audit 범위에서 제외.
+//   enhance 사이클이 sal 영역을 절대 손대지 않으므로 (Sal Protection Strict + [sal-readonly]),
+//   audit 14 룰과 sal-readonly 정책 충돌 회피용. default OFF (기존 동작 보존).
 
 'use strict';
 
@@ -33,6 +38,8 @@ const BODY_FIELDS = [
   'summary', 'overviewWork.main',
 ];
 
+const SAL_PROTECTED_FIELDS = ['overviewSalary.sal'];
+
 function getNested(obj, p) {
   if (!obj) return undefined;
   if (obj[p] !== undefined) return obj[p];
@@ -50,7 +57,8 @@ async function fetchJob(slug) {
   return { data: j.data };
 }
 
-function analyze(slug, data) {
+function analyze(slug, data, opts = {}) {
+  const excludeSal = !!opts.excludeSal;
   const sources = data._sources || {};
   const findings = {
     slug,
@@ -76,6 +84,7 @@ function analyze(slug, data) {
 
   let hasBodyMarker = false;
   for (const f of BODY_FIELDS) {
+    if (excludeSal && SAL_PROTECTED_FIELDS.includes(f)) continue;
     const v = getNested(data, f);
     if (typeof v === 'string' && /\[\d+\]/.test(v)) { hasBodyMarker = true; break; }
   }
@@ -83,6 +92,7 @@ function analyze(slug, data) {
 
   for (const [fieldKey, srcArr] of Object.entries(sources)) {
     if (!Array.isArray(srcArr)) continue;
+    if (excludeSal && SAL_PROTECTED_FIELDS.includes(fieldKey)) continue;
     for (let i = 0; i < srcArr.length; i++) {
       const src = srcArr[i];
       if (!src || typeof src !== 'object') continue;
@@ -178,7 +188,16 @@ function analyze(slug, data) {
   findings.sidebarSources = detectSidebarSources(sources);
 
   // 룰 14 (2026-05-07): Wikipedia 점유율 ≤ 30%
-  findings.wikiQuota = calcWikiQuota(sources);
+  if (excludeSal) {
+    const filtered = {};
+    for (const [k, v] of Object.entries(sources)) {
+      if (SAL_PROTECTED_FIELDS.includes(k)) continue;
+      filtered[k] = v;
+    }
+    findings.wikiQuota = calcWikiQuota(filtered);
+  } else {
+    findings.wikiQuota = calcWikiQuota(sources);
+  }
 
   return findings;
 }
@@ -196,17 +215,22 @@ function isFail(j) {
 }
 
 (async () => {
-  const slugs = process.argv.slice(2).filter(a => !a.startsWith('--'));
+  const argv = process.argv.slice(2);
+  const slugs = argv.filter(a => !a.startsWith('--'));
+  const excludeSal = argv.includes('--exclude-sal');
   if (slugs.length === 0) {
-    console.error('사용: node scripts/skill-cache/audit-via-api.cjs slug1 slug2 ...');
+    console.error('사용: node scripts/skill-cache/audit-via-api.cjs slug1 slug2 ... [--exclude-sal]');
     process.exit(1);
+  }
+  if (excludeSal) {
+    console.log(`[audit-via-api] --exclude-sal: sal-protection 영역(${SAL_PROTECTED_FIELDS.join(', ')}) 검증 skip`);
   }
 
   const results = [];
   for (const slug of slugs) {
     const r = await fetchJob(slug);
     if (r.error) { console.log(`ERR  ${slug.padEnd(30)} ${r.error}`); continue; }
-    const f = analyze(slug, r.data);
+    const f = analyze(slug, r.data, { excludeSal });
     results.push(f);
     const status = isFail(f) ? 'FAIL' : 'OK  ';
     const flags = [];
