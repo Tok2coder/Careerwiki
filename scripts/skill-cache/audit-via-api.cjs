@@ -30,13 +30,11 @@ const {
   detectRootDomainOnly,
   calcWikiQuota,
   SELF_DOMAINS,
+  PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
 
-const BODY_FIELDS = [
-  'way', 'trivia', 'overviewProspect.main', 'overviewSalary.sal',
-  'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'overviewAbilities.technKnow',
-  'summary', 'overviewWork.main',
-];
+// PROSE_BODY_FIELDS는 detect-patterns.cjs export — validate-job-edit.cjs와 공유 (proseBodyOrphan 룰 정합성).
+const BODY_FIELDS = PROSE_BODY_FIELDS;
 
 const SAL_PROTECTED_FIELDS = ['overviewSalary.sal'];
 
@@ -46,6 +44,27 @@ function getNested(obj, p) {
   let cur = obj;
   for (const part of p.split('.')) { if (cur == null) return undefined; cur = cur[part]; }
   return cur;
+}
+
+// 산문 본문 raw string 조회 — _proseRaw 우선 (PR 1, 2026-05-08), fallback to getNested.
+//
+// 배경: /api/job/:id/edit-data 응답에서 trivia / overviewWork.main 은 array 형식으로
+// split되며, way / detailWlb.wlbDetail / detailWlb.socialDetail 은 응답에 미노출.
+// 이로 인해 산문 영역 audit 룰 (orphanSrc / brokenRef / dup / orderViolation)이 silent
+// skip 발생 → 9 BODY_FIELDS 중 4개만 실제 검사. PR 1 (a43ac7)에서 _proseRaw namespace
+// 추가하여 9 필드 raw string 노출. 본 함수는 _proseRaw 우선 사용 후 getNested fallback.
+//
+// @param {object} data - /edit-data 응답의 data 객체
+// @param {string} fieldKey - 'way', 'trivia', 'detailWlb.wlbDetail' 등
+// @returns {string} raw body string ('' if not present or non-string)
+function getProseBody(data, fieldKey) {
+  const proseRaw = data && data._proseRaw;
+  if (proseRaw && typeof proseRaw === 'object' && typeof proseRaw[fieldKey] === 'string') {
+    return proseRaw[fieldKey];
+  }
+  // fallback — _proseRaw 미배포 환경 (옛 prod 응답 호환)
+  const v = getNested(data, fieldKey);
+  return typeof v === 'string' ? v : '';
 }
 
 async function fetchJob(slug) {
@@ -85,7 +104,7 @@ function analyze(slug, data, opts = {}) {
   let hasBodyMarker = false;
   for (const f of BODY_FIELDS) {
     if (excludeSal && SAL_PROTECTED_FIELDS.includes(f)) continue;
-    const v = getNested(data, f);
+    const v = getProseBody(data, f);
     if (typeof v === 'string' && /\[\d+\]/.test(v)) { hasBodyMarker = true; break; }
   }
   if (!sources && hasBodyMarker) findings.sourcesNull = true;
@@ -130,9 +149,12 @@ function analyze(slug, data, opts = {}) {
       }
     }
 
-    // body 산문 필드
+    // body 산문 필드 — _proseRaw 우선 사용 (PR 1, 2026-05-08).
+    // 기존 getNested는 way / wlbDetail / socialDetail 미노출 + trivia·overviewWork.main array 형식이라 silent skip 발생.
+    // _proseRaw 도입 후 9 BODY_FIELDS 모두 raw string으로 검사 (proseBodyOrphan 룰 활성화).
+    // typeof === 'string' 체크는 empty string 케이스도 포함 — 빈 본문 + _sources 등록 시 orphan으로 검출.
     if (BODY_FIELDS.includes(fieldKey)) {
-      const body = getNested(data, fieldKey);
+      const body = getProseBody(data, fieldKey);
       if (typeof body === 'string') {
         const orphans = detectOrphanSourceIdx(body, srcArr);
         for (const idx of orphans) findings.orphanSrc.push({ field: fieldKey, idx });
@@ -167,11 +189,11 @@ function analyze(slug, data, opts = {}) {
     }
   }
 
-  // 룰 K: 본문 [N] 첫 등장 sequential
+  // 룰 K: 본문 [N] 첫 등장 sequential — _proseRaw 우선 사용 (PR 1)
   const allBodyParts = [];
   for (const f of BODY_FIELDS) {
-    const v = getNested(data, f);
-    if (typeof v === 'string') allBodyParts.push(v);
+    const v = getProseBody(data, f);
+    if (typeof v === 'string' && v.length > 0) allBodyParts.push(v);
   }
   for (const sub of ['curriculum', 'recruit', 'training']) {
     const items = dr[sub];
