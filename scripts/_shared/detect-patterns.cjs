@@ -627,6 +627,52 @@ function detectMarkerOrderViolation(bodyText) {
   return { ok: false, expected, firstAppear, breakAt };
 }
 
+// ── proseBodyOrphan: 산문 영역 본문 [N] vs _sources 정합 wrapper (2026-05-08) ───
+//
+// 산문 9 필드 (way / trivia / overviewProspect.main / overviewSalary.sal /
+// detailWlb.wlbDetail / detailWlb.socialDetail / overviewAbilities.technKnow /
+// summary / overviewWork.main) 본문 [N] vs _sources[fieldKey] 정합 검사.
+//
+// 기존 detectOrphanSourceIdx + detectBrokenSourceRef + dup marker 검사를 한 번에
+// 실행하는 wrapper. validate / audit 양쪽이 일관된 결과 반환.
+//
+// 사고 차단: 산문 영역에서 body [N] 마커가 _sources 길이를 초과하거나, 등록된
+// _sources idx가 본문에 미인용된 경우, 같은 마커가 한 필드 안에 2회+ 등장 모두
+// 통합 검출. /api/job/:id/edit-data 응답의 _proseRaw namespace로 9 필드 모두 raw
+// string 노출 (PR #13, 2026-05-08) — 기존 trivia·overviewWork.main array 형식
+// silent skip 사고 차단.
+//
+// @param {string} body - 산문 raw string
+// @param {Array} srcArr - 해당 필드 _sources 배열
+// @returns {{orphans:number[], broken:number[], dupMarkers:Array<{marker, count}>}}
+function detectProseBodyMismatch(body, srcArr) {
+  const orphans = detectOrphanSourceIdx(body, srcArr);
+  const broken = detectBrokenSourceRef(body, srcArr);
+  const dupMarkers = [];
+  if (typeof body === 'string') {
+    const matches = body.match(/\[(\d+)\]/g) || [];
+    const cnt = {};
+    for (const m of matches) cnt[m] = (cnt[m] || 0) + 1;
+    for (const [marker, c] of Object.entries(cnt)) {
+      if (c >= 2) dupMarkers.push({ marker, count: c });
+    }
+  }
+  return { orphans, broken, dupMarkers };
+}
+
+// 산문 영역 fieldKey list — validate-job-edit.cjs / audit-via-api.cjs / audit-sources-deep.cjs / job-data-master 스킬 모두 동일 사용.
+const PROSE_BODY_FIELDS = [
+  'way',
+  'summary',
+  'trivia',
+  'overviewWork.main',
+  'overviewProspect.main',
+  'overviewAbilities.technKnow',
+  'overviewSalary.sal',
+  'detailWlb.wlbDetail',
+  'detailWlb.socialDetail',
+];
+
 // ── 룰 13: Root URL Avoidance (협회·회사·학술 publisher root 차단, 2026-05-07) ──
 //
 // 사용자 8 pilot 피드백 (2026-05-07): "협회·회사 홈페이지 root만 나오는 출처 아쉬웠다"
@@ -746,4 +792,7 @@ module.exports = {
   ROOT_PATH_PATTERNS,
   calcWikiQuota,
   WIKI_HOST_REGEX,
+  // proseBodyOrphan wrapper + 산문 fieldKey list (2026-05-08, PR 14)
+  detectProseBodyMismatch,
+  PROSE_BODY_FIELDS,
 };

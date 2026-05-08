@@ -47,6 +47,8 @@ const {
   // 2026-05-07 — root URL 회피 + Wikipedia 점유율 ≤ 30%
   detectRootDomainOnly,
   calcWikiQuota,
+  // 2026-05-08 — 산문 영역 raw fieldKey list (audit-via-api.cjs와 공유 — proseBodyOrphan)
+  PROSE_BODY_FIELDS,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 const SIDEBAR_FIELDS_FORBIDDEN_TXT = SIDEBAR_FIELDS_FORBIDDEN.join('/');
@@ -1010,11 +1012,9 @@ function validate(data) {
     }
 
     // E·H·I) 필드별 검사
-    const BODY_FIELDS_FOR_FOOTNOTE = [
-      'way', 'trivia', 'overviewProspect.main', 'overviewSalary.sal',
-      'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'overviewAbilities.technKnow',
-      'summary', 'overviewWork.main',
-    ];
+    // PROSE_BODY_FIELDS는 detect-patterns.cjs export — audit-via-api.cjs / detect-patterns 모두 동일 list 공유.
+    // (BODY_FIELDS_FOR_FOOTNOTE 별칭은 backward compat 유지)
+    const BODY_FIELDS_FOR_FOOTNOTE = PROSE_BODY_FIELDS;
 
     for (const [fieldKey, srcArr] of Object.entries(sources)) {
       if (!Array.isArray(srcArr)) continue;
