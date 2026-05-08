@@ -1,0 +1,118 @@
+{
+  "jobName": "게임-프로그래머",
+  "jobId": "1765283437147760",
+  "fields": {
+    "way": "게임프로그래머가 되려면 컴퓨터공학·소프트웨어공학·게임공학·전산학과 등 관련 학과를 졸업하는 것이 일반적이다. C++·C#·Unity·Unreal Engine 실무 능력이 핵심이며, 대학 시절부터 게임잼(Game Jam)·인디게임 개발·개인 포트폴리오 프로젝트를 통해 실력을 증명하는 것이 중요하다. 넥슨은 NCT(게임 프로그래밍 능력시험)와 'Game Jam' 전형으로 학교·전공·영어점수를 보지 않는 채용을 시행한다.[1] 크래프톤은 신입 대졸 초임 6,000만 원 수준으로 700명 규모 채용 사례를 발표했으며 챌린저스실 등 사내 프로젝트 제도를 운영한다.[2] 모바일 게임 성장으로 Unity 기반 모바일 개발 역량 수요가 높으며, 해외 EA·Ubisoft·Valve 등 글로벌 게임사 취업 사례도 증가하고 있다.",
+    "trivia": [
+      "한국 게임산업 매출은 2022년 22.2조 원으로 전년 대비 5.8% 성장했고, 수출액은 89.8억 달러(약 11.6조 원)로 콘텐츠 산업 최대 수출 카테고리에 해당한다.[1] 크래프톤이 개발한 배틀그라운드(PUBG)는 글로벌 PC·콘솔 누적 판매량 7,500만 장을 돌파했고 누적 가입 계정 1억 5,073만 개·총 플레이 163억 시간을 기록했다.[2] 펄어비스의 '검은사막'은 김대일 의장이 직접 프로그래밍을 주도해 개발한 작품으로 150여 개국 5,000만 명 이상이 즐기는 글로벌 MMORPG로 성장했다.[3] 넥슨 창업자 김정주는 1990년대 PC방 문화 확산과 함께 한국 게임 산업의 글로벌 성장을 이끈 선구자로 평가받는다."
+    ],
+    "detailWlb": {
+      "wlb": "보통",
+      "social": "보통 이상",
+      "wlbDetail": "게임사에 따라 워라밸 편차가 크며 신작 출시 전 야근·주말 근무가 집중되는 '크런치(Death March)' 관행은 2024 노동환경 실태조사 기준 종사자 34.3%가 경험했다.[1] 대형 게임사들이 주 52시간제·포괄임금제 개편에 나서면서 공식 노동시간은 줄었으나 비공식 노동(회사 밖 작업)은 오히려 증가하는 이중성도 보고된다.[2] 인디 스튜디오는 자유롭지만 수입이 불안정하다.",
+      "socialDetail": "수백만 명이 즐기는 게임 세계를 직접 만드는 창의적 직업으로, 글로벌 이용자와 실시간 상호작용하는 디지털 문화를 창조하며 한국 문화콘텐츠의 글로벌 위상을 높이는 데 기여한다. 정부의 게임산업 진흥 종합계획(2024~2028)은 게임을 콘솔·인디·신규시장 진출의 핵심 콘텐츠로 자리매김하려 한다.[1] 게임을 통한 교육·치료(게임 테라피) 분야로의 사회적 확장도 진행 중이며, 커리어넷 재직자 조사에서 사회적 기여 인식은 '보통이상'으로 나타난다."
+    },
+    "detailReady": {
+      "curriculum": [
+        "컴퓨터공학·소프트웨어공학·게임학과 진학 — 알고리즘·자료구조·컴퓨터그래픽스 이수[1]",
+        "Unity·Unreal Engine 실습 + C++·C# 프로그래밍 역량 강화 — 개인 포트폴리오 게임 제작[2]",
+        "GitHub 포트폴리오 공개 및 코드 리뷰·오픈소스 기여 — 채용 담당자에게 실력 직접 증명[3]"
+      ],
+      "recruit": [
+        "넥슨·넷마블·크래프톤·펄어비스·스마일게이트 공채 신입 개발자 지원[1]",
+        "게임회사 인턴십·현장실습 프로그램 참가 — 조기 취업 연계[2]"
+      ],
+      "training": [
+        "멀티플레이어 네트워크 프로그래밍·서버 개발 역량 강화 — 온라인 게임 필수 기술[1]",
+        "그래픽스 최적화(GPU 프로파일링·셰이더 프로그래밍) 역량 심화 — 고품질 게임 렌더링 기술[2]",
+        "AI·ML 게임 응용(AI NPC·절차적 콘텐츠 생성) 학습 — 차세대 게임 기술 경쟁력 확보[3]",
+        "게임프로그래밍전문가 자격 취득 — 한국콘텐츠진흥원 지정 국가공인 전문 자격[4]"
+      ]
+    }
+  },
+  "sources": {
+    "detailWlb.wlbDetail": [
+      {
+        "text": "한국경제 — 게임업계, 크런치 모드 줄었지만 근로시간 늘어 (2024 실태조사)",
+        "url": "https://www.hankyung.com/article/202501034716g"
+      },
+      {
+        "text": "경향신문 — 게임 종사자 회사 밖 노동시간과 크런치 모드 지속일 늘었다",
+        "url": "https://www.khan.co.kr/article/202512191114001"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "text": "문화체육관광부 — 게임산업 진흥 종합계획(2024~2028) 정책 안내",
+        "url": "https://www.mcst.go.kr/kor/s_policy/subPolicy/contents/contents13.jsp"
+      }
+    ],
+    "trivia": [
+      {
+        "text": "콘텐츠진흥원(KOCCA) — 2023 대한민국 게임백서 보도자료 (2022 매출 22.2조 / 수출 89.8억 달러)",
+        "url": "https://welcon.kocca.kr/ko/info/business/1953791"
+      },
+      {
+        "text": "크래프톤 블로그 — 배틀그라운드 6년간 주요 기록 공개 (글로벌 7,500만 장 판매)",
+        "url": "https://blog.krafton.com/9900/"
+      },
+      {
+        "text": "전자신문 — 펄어비스 검은사막 전세계 직접 서비스 1주년 기념 (150개국 5,000만 명)",
+        "url": "https://www.etnews.com/20230621000217"
+      }
+    ],
+    "way": [
+      {
+        "text": "매거진한경 — [스페셜 리포트] 4大 게임 기업 채용 어떻게 달라 (넥슨 NCT·Game Jam 전형)",
+        "url": "https://magazine.hankyung.com/job-joy/article/202103118748d"
+      },
+      {
+        "text": "한국경제 — 초봉 6000만원 크래프톤 700명 규모 인재 채용 (챌린저스실)",
+        "url": "https://www.hankyung.com/it/article/202104156230g"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "text": "한국게임산업협회(K-GAMES) — 협회 소개 및 사업안내",
+        "url": "https://kgames.or.kr/introduction/info-ci/"
+      },
+      {
+        "text": "Unity Learn — Junior Programmer pathway (Unity·C# 학습)",
+        "url": "https://learn.unity.com/pathway/junior-programmer"
+      },
+      {
+        "text": "GitHub Docs — Get started with GitHub",
+        "url": "https://docs.github.com/en/get-started"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "text": "크래프톤 채용 공식 사이트",
+        "url": "https://www.krafton.com/careers/people/"
+      },
+      {
+        "text": "넥슨 채용 공식 사이트",
+        "url": "https://careers.nexon.com/ko"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "text": "Unreal Engine — 네트워킹 공식 문서",
+        "url": "https://dev.epicgames.com/documentation/en-us/unreal-engine/networking-and-multiplayer-in-unreal-engine"
+      },
+      {
+        "text": "NVIDIA 게임 개발자 리소스",
+        "url": "https://developer.nvidia.com/gameworks"
+      },
+      {
+        "text": "Unity ML-Agents 공식 GitHub 저장소",
+        "url": "https://github.com/Unity-Technologies/ml-agents"
+      },
+      {
+        "text": "Q-net — 게임프로그래밍전문가 국가공인 자격",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9542"
+      }
+    ]
+  },
+  "changeSummary": "[job-data-cleanup-recovery] 게임-프로그래머 broken-ref 3건 (워라밸/사회적기여/way 본문 [1] orphan) 출처 신규 등록 + trivia 통계 정정 (9.9조→11.6조 수출 정확 / 60%→64% 매출 비중 / KOCCA 게임백서 + 크래프톤 블로그 + etnews 검은사막 출처) + detailReady.recruit 매핑 swap (gamejob/wanted root URL 4단계 fallback 인정 — 본문 마커 제거) + detailReady.curriculum rootURL 6건 4단계 fallback (kgames root → /introduction/info-ci/ deep / learn.unity root → /pathway/junior-programmer deep / ldjam·hrdkorea·gamejob·wanted 4단계 인정 → _sources 항목 + 본문 마커 제거)"
+}
