@@ -1,9 +1,9 @@
 ---
 name: job-supplement
-description: "⚠️ DEPRECATED — job-data-enhance로 통합되었습니다. 이 스킬은 더 이상 사용하지 않습니다. 직업 데이터 보완 작업은 job-data-enhance 스킬을 사용하세요."
+description: "⚠️ DEPRECATED — job-data-master로 통합되었습니다. 이 스킬은 더 이상 사용하지 않습니다. 직업 데이터 보완 작업은 job-data-master 스킬을 사용하세요."
 ---
 
-> ⚠️ DEPRECATED: 이 스킬은 `job-data-enhance`로 통합되었습니다. job-data-enhance를 사용하세요.
+> ⚠️ DEPRECATED: 이 스킬은 `job-data-master`로 통합되었습니다 (2026-05-08, 이전엔 `job-data-enhance`로 통합). job-data-master를 사용하세요.
 
 # Careerwiki 직업 데이터 보완 스킬
 
