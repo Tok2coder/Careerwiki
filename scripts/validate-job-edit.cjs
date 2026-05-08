@@ -921,6 +921,11 @@ function validate(data) {
   }
 
   for (const [sourceKey, srcVal] of Object.entries(sources)) {
+    // delete merge 패턴 — server (job-editor.ts:544) 가 `delete updatedUserData._sources[key]` 처리.
+    // job-data-cleanup 스킬 (sidebarSources / rootURL src 통째 제거 케이스) 정합.
+    if (srcVal && typeof srcVal === 'object' && !Array.isArray(srcVal) && srcVal.delete === true) {
+      continue;
+    }
     if (!Array.isArray(srcVal)) {
       errors.push(`[출처포맷] sources["${sourceKey}"]가 배열이 아님 — Array여야 함`);
       continue;
