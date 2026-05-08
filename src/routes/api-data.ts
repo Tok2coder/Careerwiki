@@ -739,7 +739,27 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
       customCharts: (profile as any).customCharts || [],
 
       // 사용자가 추가한 출처 (수정/삭제 가능)
-      _sources: (profile as any)._sources || {}
+      _sources: (profile as any)._sources || {},
+
+      // 산문 영역 audit용 raw 본문 (audit-via-api.cjs / job-data-master 스킬 등)
+      // 편집 UI에서 trivia / overviewWork.main을 array로 변환하므로 본문 [N] 마커 검사 시 silent skip 발생.
+      // 9 BODY_FIELDS 모두 raw string으로 노출하여 detect-patterns의 orphanSrc/brokenRef/dup/orderViolation 등 정합성 검사 가능하게 함.
+      // wlbDetail/socialDetail/trivia(string)/way 등은 UCJ 추가 필드라 base interface에 없음 — `as any` 캐스팅 사용.
+      _proseRaw: (() => {
+        const p = profile as any
+        const pickString = (v: unknown): string => (typeof v === 'string' ? v : '')
+        return {
+          'way': pickString(p.way),
+          'summary': pickString(p.summary),
+          'trivia': pickString(p.trivia),
+          'overviewWork.main': pickString(p.overviewWork?.main),
+          'overviewProspect.main': pickString(p.overviewProspect?.main),
+          'overviewAbilities.technKnow': pickString(p.overviewAbilities?.technKnow),
+          'overviewSalary.sal': pickString(p.overviewSalary?.sal),
+          'detailWlb.wlbDetail': pickString(p.detailWlb?.wlbDetail),
+          'detailWlb.socialDetail': pickString(p.detailWlb?.socialDetail),
+        }
+      })()
     }
 
     // 디버깅: 데이터가 비어있는지 확인
