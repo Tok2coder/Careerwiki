@@ -1,15 +1,10 @@
 ---
 name: job-data-enhance
 description: >
-  CareerWiki 직업 데이터 고도화 스킬 (ultimate). job-supplement + job-data-equalize 통합판.
-  직업 데이터 현황 자동 진단 → 12개 필드 보완 → 4중 품질 게이트(각주/완결성/유튜브/출처순서) →
-  편집 API 저장 → 프로덕션 검증까지 전체 워크플로우를 실행한다.
-  유저가 "데이터 보완", "직업 보완", "균등화", "equalize", "부실 직업", "NULL 직업", "데이터 채워줘",
-  "직업 데이터 업데이트", "배치 처리", "품질 고도화", "job data enhance", "정보보완",
-  "way/salary/trivia 비어있어", "user_contributed_json", "직업 데이터 개선",
-  "품질 수선", "각주 정리", "출처 정리", "마커 정리", "보완된 직업 점검", "trivia 수정",
-  "footnote fix", "quality repair", "orphan marker", "고아 마커", "Phase 5" 등을 언급하면
-  반드시 이 스킬을 사용한다. 단일 직업이든 수백 개 배치든 이 스킬이 처리한다.
+  [ARCHIVED — superseded by job-data-master, 2026-05-08]
+  본 스킬은 더 이상 사용하지 않습니다. 기존 사이클의 reference로만 보존됩니다.
+  새 작업은 반드시 `job-data-master` 스킬을 사용하세요.
+  master 스킬이 enhance + cleanup + 산문 영역 audit + fact verification 모두 통합 처리합니다.
 ---
 
 # CareerWiki 직업 데이터 고도화 스킬

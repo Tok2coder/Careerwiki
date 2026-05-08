@@ -24,7 +24,7 @@
 
 // 빌더 사용 시점에 이 commit 이상이 origin/main HEAD인지 확인 강제.
 // HEAD 갱신 시 이 상수만 바꾸면 prompt 자동 동기화.
-const MAIN_HEAD_MIN = '2af54bf';
+const MAIN_HEAD_MIN = '0e3a43d';
 
 // 안전 룰 7개 + 보조 (origin 절대 금지, 단축 처리 금지).
 // 이 블록은 호출자가 override 불가. 누락하면 builder가 작동 안 함.
@@ -64,7 +64,7 @@ function PHASE_STEPS(slug, id) {
     `5. **Phase 3** POST \`https://careerwiki.org/api/job/${id}/edit\` + \`X-Admin-Secret: careerwiki-admin-2026\` (Node.js fetch + UTF-8 / curl 절대 X)`,
     '6. **Phase 4** `full-quality-audit.cjs` PASS + Phase 4-SRC-FACT 매핑 검증',
     `7. **Phase 5-DEDUP** \`auto-dedup-sweep.cjs --slug=${slug} --apply\``,
-    '8. **Phase 5-AUDIT-DEEP** CLEAN + END_TRACKING + UCJ 17필드 self-report + `[job-data-enhance]` 마커 부착',
+    '8. **Phase 5-AUDIT-DEEP** CLEAN + END_TRACKING + UCJ 17필드 self-report + `[job-data-master]` 마커 부착',
     '',
     '**필수 만족**: 외부 host ≥ 3 (origin 카운트 X) / careerTree 손대지 X (별도 사이클) / detailReady 항목별 [N]+_sources',
   ].join('\n');
@@ -119,9 +119,9 @@ function buildDispatchPrompt(opts) {
     : '';
 
   const headerLines = [
-    '/job-data-enhance 1직업 풀 사이클 — 단축 절대 금지',
+    '/job-data-master 1직업 풀 사이클 — 단축 절대 금지',
     '',
-    '이 prompt는 v3 template (옵션 B\' 최소안전 절감) 자동 생성. /job-data-enhance skill이 가용하면 그대로 invoke해서 SKILL.md 워크플로우를 따르고, 가용하지 않으면 .claude/skills/job-data-enhance/SKILL.md를 직접 read하여 Phase 0~5 진행하세요.',
+    '이 prompt는 v3 template (옵션 B\' 최소안전 절감) 자동 생성. /job-data-master skill이 가용하면 그대로 invoke해서 SKILL.md 워크플로우를 따르고, 가용하지 않으면 .claude/skills/job-data-master/SKILL.md를 직접 read하여 Phase 0~7 진행하세요. (구 enhance/cleanup 스킬은 _archive/ 보존)',
     '',
     `### ${slug} (id=${id})`,
     `- URL: https://careerwiki.org/job/${slug}`,

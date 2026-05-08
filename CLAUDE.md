@@ -36,7 +36,7 @@
 핵심 테이블: `jobs` (6,945 row), `majors` (608 row), `job_sources`, `major_sources`, `wiki_pages`, `page_revisions`, `comments`, `users`, `user_sessions`, `job_attributes`, `major_attributes`, `narrative_facts`, `embedding_metadata`
 
 - **마이그레이션**: `migrations/` (0001~0057+). 컬럼·인덱스 디테일은 항상 `migrations/*.sql` 직접 read (drift 방지).
-- **page_revisions**: 직업 편집 이력. `change_summary`에 `[job-data-enhance]` 마커 있는 row의 DISTINCT `entity_id`가 enhance 적용된 직업 목록.
+- **page_revisions**: 직업 편집 이력. `change_summary`에 `[job-data-master]` (또는 레거시 `[job-data-enhance]`) 마커 있는 row의 DISTINCT `entity_id`가 enhance 적용된 직업 목록. SQL은 `LIKE '%[job-data-master]%' OR LIKE '%[job-data-enhance]%'` 양쪽 매치 권장.
 - **DB query**: `wrangler d1 execute careerwiki-kr --remote --command "SELECT ..."` (또는 `--json` 추가).
 
 ## Project Structure
@@ -65,9 +65,10 @@ src/
 migrations/                       # 0001~0057+
 scripts/                          # ETL + quality harness
 scripts/skill-cache/              # 스킬 임시 산출물 + audit-sources-deep.cjs
-.claude/skills/job-data-enhance/  # 메인 enhance 스킬
+.claude/skills/job-data-master/   # 메인 직업 데이터 통합 스킬 (enhance + cleanup)
 .claude/skills/job-data-create/   # 신규 직업 추가
 .claude/skills/howto-publish/     # HowTo 가이드
+.claude/skills/_archive/          # archive (job-data-enhance / job-data-cleanup 보존)
 .claude/hooks/                    # 자동 hook (.md, hookify 형식)
 ```
 
@@ -249,13 +250,15 @@ node scripts/data-health-report.cjs --top-missing=20
 
 | 스킬 | 상태 | 용도 |
 |---|---|---|
-| `job-data-enhance` | **메인** | 직업 데이터 보완·균등화·고도화 통합 |
+| `job-data-master` | **메인** | 직업 데이터 enhance + cleanup + fact 정정 + 산문 영역 보강 통합 (자동 분기) |
 | `job-data-create` | 사용 | 신규 직업 추가 |
 | `howto-publish` | 사용 | HowTo 가이드 워크플로우 |
-| `job-supplement` | DEPRECATED | → enhance 통합 |
-| `job-data-equalize` | DEPRECATED | → enhance 통합 |
+| `_archive/job-data-enhance` | ARCHIVED | → master로 통합 (2026-05-08) |
+| `_archive/job-data-cleanup` | ARCHIVED | → master로 통합 (2026-05-08) |
+| `job-supplement` | DEPRECATED | → master 통합 |
+| `job-data-equalize` | DEPRECATED | → master 통합 |
 
-키워드("데이터 보완", "균등화", "부실 직업", "NULL 직업")는 **반드시 `job-data-enhance`** 사용.
+키워드("데이터 보완", "균등화", "부실 직업", "NULL 직업", "audit FAIL fix", "rootURL 수정", "fact 정정", "산문 영역 보강")는 **반드시 `job-data-master`** 사용.
 
 ## Hooks (.claude/hooks/ + settings.json)
 

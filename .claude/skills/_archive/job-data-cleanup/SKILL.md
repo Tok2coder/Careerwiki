@@ -1,6 +1,10 @@
 ---
 name: job-data-cleanup
-description: Clean up audit FAIL findings in already-enhanced jobs (sources/markers/sidebar). Lighter than job-data-enhance — no new fact, no new content. Use when audit-via-api shows FAIL on already-enhanced jobs.
+description: >
+  [ARCHIVED — superseded by job-data-master, 2026-05-08]
+  본 스킬은 더 이상 사용하지 않습니다. 기존 사이클의 reference로만 보존됩니다.
+  새 작업은 반드시 `job-data-master` 스킬을 사용하세요.
+  master 스킬이 enhance + cleanup + 산문 영역 audit + fact verification 모두 통합 처리합니다.
 ---
 
 # CareerWiki 직업 데이터 cleanup 스킬

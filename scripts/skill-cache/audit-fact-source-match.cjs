@@ -446,8 +446,8 @@ function buildWhereClause() {
   if (args.slug) {
     conds.push(`slug='${String(args.slug).replace(/'/g, "''")}'`);
   } else {
-    // 기본: 332 풀 (page_revisions [job-data-enhance] 마커)
-    conds.push(`id IN (SELECT DISTINCT entity_id FROM page_revisions WHERE entity_type='job' AND change_summary LIKE '%[job-data-enhance]%')`);
+    // 기본: 풀 (page_revisions [job-data-master] OR [job-data-enhance] 마커)
+    conds.push(`id IN (SELECT DISTINCT entity_id FROM page_revisions WHERE entity_type='job' AND (change_summary LIKE '%[job-data-master]%' OR change_summary LIKE '%[job-data-enhance]%'))`);
   }
   return conds.join(' AND ');
 }
