@@ -72,11 +72,54 @@ stdout에서 FAIL flags 파싱. 각 flag는 룰 ID에 매핑된다:
 
 ## Phase 2 — ANALYZE (Fix 패턴 매핑)
 
+### Phase 2.0 — 영역 분류 매트릭스 (먼저 결정)
+
+각 finding이 **어느 영역**에 속하는지 분류한다. 영역에 따라 fix 가능 패턴이 다르다.
+
+| 영역 종류 | 예시 path | UCJ 각주 필수? | rootURL/origin fix 패턴 |
+|---|---|---|---|
+| **산문 필드** | `trivia`, `overviewProspect.main`, `way`, `summary`, `detailWlb.wlbDetail`, `detailWlb.socialDetail`, `overviewWork.main`, `overviewAbilities.technKnow` | X | src REMOVE + body `[N]` 제거 OK |
+| **detailReady array** | `detailReady.curriculum`, `detailReady.recruit`, `detailReady.training` | **모든 항목 [N] 필수** (validate 룰 A `[UCJ각주항목누락]`) | src REMOVE 시 항목 마커 사라져 즉시 FAIL. **4단계 fallback** 적용 |
+| **사이드바** | `sidebarCerts._sources`, `sidebarOrgs._sources`, `sidebarMajors._sources`, `sidebarJobs._sources` | (orphan만) | 통째 DELETE (`{delete:true}`) |
+
+**왜 영역 분류가 필요한가?** 산문 필드는 src REMOVE → body [N] 제거가 단순 작동하지만, detailReady array는 항목이 [N] 마커를 잃으면 validate `[UCJ각주항목누락]` FAIL. 따라서 detailReady array의 rootURL/origin/listPage fix는 **반드시 url 교체 또는 일반화** 우선. 단순 REMOVE는 항목 자체를 함께 제거할 때만 가능.
+
+### Phase 2.1 — detailReady array rootURL/origin/listPage fix 4단계 fallback
+
+순서대로 시도:
+
+**1단계 — URL 교체 (선호)**
+- WebFetch로 협회/기관 deep page 발굴 (예: `kgames.or.kr/` → `kgames.or.kr/kr/about/index.php`, `learn.unity.com/` → `learn.unity.com/pathway/junior-programmer`)
+- WebFetch 본문에 fact 단어/통계 등장 확인
+- PASS → `_sources[idx].url`만 교체. body는 그대로. 항목 마커 [N] 그대로 유지 → UCJ 룰 PASS
+
+**2단계 — 본문 fact 일반화 + url 교체** (URL 교체 실패 시)
+- 항목 본문을 더 일반적 fact로 약화 (예: 항목 본문 "kgames.or.kr 회원사 list" → "협회 회원사 list")
+- 일반화된 fact를 cover하는 deep page 발굴 (root보다는 deeper, 단 1단계만큼 specific할 필요 X)
+- 본문 1개 변경 + src url 교체. UCJ 마커 [N] 유지 → UCJ 룰 PASS
+- **일반화는 정보 가치 ↓** — 1단계 시도 후만 진입
+
+**3단계 — 항목 merge** (단일 항목 fact가 너무 약하면)
+- 인접 항목의 fact가 같은 출처를 cover한다면 두 항목을 하나로 합침
+- _sources idx 정리 + body marker RE-INDEX
+- 위험: 정보 손실. 신중히 사용. 항목 수 4 이상일 때만 권장 (3 이하면 정보 손실 임팩트 큼)
+
+**4단계 — 인정 + pending 기록** (모든 fallback 실패 시)
+- src 그대로 유지 (root URL 잔존)
+- 사고 인정 → `~/.claude/projects/.../memory/deck/04-pending.md` 직업명 + 룰 + 잔존 finding 기록
+- audit는 영구 FAIL 1건 (게임-기획자 sal id=3 같은 패턴 — 전사적 보류)
+- 사용자에게 **명시 보고** + 다음 cleanup 사이클 또는 별도 enhance 사이클로 이관
+
+### Phase 2.2 — 룰별 Fix 패턴
+
 | 룰 | Fix 패턴 |
 |---|---|
-| **`[origin]`** (career/work/work24/wagework/job.go.kr) | `_sources[fieldKey]`에서 src REMOVE + 본문에서 `[N]` 마커 제거 + 후속 마커 RE-INDEX (1..N 연속). 본문 fact는 그대로 |
-| **`[rootURL]`** | WebFetch deep candidate (협회/기관 deep page). fact cover 검증 PASS면 url만 교체 (text 유지). cover X면 src REMOVE + 본문 마커 RE-INDEX |
-| **`[listPage]`** | WebFetch deep article. PASS면 url 교체. 실패면 REMOVE + RE-INDEX |
+| **`[origin]`** (career/work/work24/wagework/job.go.kr) — **산문 필드** | `_sources[fieldKey]`에서 src REMOVE + 본문에서 `[N]` 마커 제거 + 후속 마커 RE-INDEX (1..N 연속). 본문 fact는 그대로 |
+| **`[origin]`** — **detailReady array** | **4단계 fallback 적용** (1단계 우선). 단순 REMOVE 시 UCJ FAIL — 금지 |
+| **`[rootURL]`** — **산문 필드** | WebFetch deep candidate (협회/기관 deep page). fact cover 검증 PASS면 url만 교체 (text 유지). cover X면 src REMOVE + 본문 마커 RE-INDEX |
+| **`[rootURL]`** — **detailReady array** | **4단계 fallback 적용** (1단계 우선) |
+| **`[listPage]`** — **산문 필드** | WebFetch deep article. PASS면 url 교체. 실패면 REMOVE + RE-INDEX |
+| **`[listPage]`** — **detailReady array** | **4단계 fallback 적용** (1단계 우선) |
 | **`[wikiQuota]` >30%** | wikipedia/namu src 중 cover 가장 약한 것부터 REMOVE + 본문 RE-INDEX. wikipedia 비율이 30% 이하로 떨어지면 stop. 1차 출처 (협회 deep / 정부 통계 / 학술 / 1차 미디어 deep article)는 보존 |
 | **`[sidebarSources]`** | `_sources["sidebarOrgs"]` / `["sidebarCerts"]` / `["sidebarMajors"]` / `["sidebarJobs"]` 통째 DELETE (`{delete: true}` merge). 본문 sidebar* 항목은 미접촉 — 사이드바는 자체 `{name, url}` 객체로 표시 |
 | **`[arrayBrokenRef]`** | `detailReady.{curriculum,recruit,training}` element 안 `[N]` 정정. element 단위 idx 검증 — element[i] 본문 [N] → `_sources["detailReady.{sub}"]` 의 (N-1)번째 entry 존재 필수 |

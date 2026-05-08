@@ -85,17 +85,59 @@ const newBody = body.way.replace(/\[2\]/g, '').replace(/\[3\]/g, '[2]');
 
 **원칙**: 협회/회사/학술 publisher의 root URL은 fact cover X. path depth ≥ 2 + WebFetch 본문 fact 등장 둘 다 만족 필수.
 
+**⚠️ 영역에 따라 fix 패턴이 다르다** — 산문 필드 vs detailReady array 분류 먼저 (SKILL.md Phase 2.0).
+
+#### 산문 필드 (`trivia`, `overviewProspect.main`, `way`, `summary`, `detailWlb.*`, `overviewWork.main`, `overviewAbilities.technKnow`)
+
 **fix 절차**:
 1. WebFetch root URL → site map / 검색 / `/about` / `/news` 등에서 deep page 후보 발굴
 2. deep page (path depth ≥ 2) WebFetch → 본문 fact 키워드 등장 확인
 3. PASS → url만 교체 (text 유지). 본문 RE-INDEX 불필요
-4. FAIL → src REMOVE + body RE-INDEX
+4. FAIL → src REMOVE + body `[N]` 제거 + 후속 마커 RE-INDEX
+
+#### detailReady array (`detailReady.curriculum`, `detailReady.recruit`, `detailReady.training`)
+
+**⚠️ 단순 REMOVE 금지** — 항목이 [N] 마커를 잃으면 validate `[UCJ각주항목누락]` FAIL.
+
+**4단계 fallback** (SKILL.md Phase 2.1 참조):
+
+**1단계 — URL 교체 (선호)**
+1. 항목 본문 fact 추출 (예: "Unity·Unreal Engine 실습 + C++·C# 프로그래밍" — Unity 학습 path가 cover 대상)
+2. WebFetch root URL → site map 발굴 (예: `learn.unity.com/` → `/pathway/junior-programmer`)
+3. deep page (path depth ≥ 2) WebFetch → fact 키워드 등장 확인
+4. PASS → `_sources[idx].url`만 교체. body는 그대로. 항목 [N] 마커 유지 → UCJ PASS
+
+```js
+// curriculum item[1] [2] (field-local idx 2) → src id 7 url 교체
+sources['detailReady.curriculum'] = sources['detailReady.curriculum'].map(s => {
+  if (s.id === 7) return { ...s, url: 'https://learn.unity.com/pathway/junior-programmer' };
+  return s;
+});
+// body 그대로
+```
+
+**2단계 — 본문 fact 일반화 + url 교체**
+- 1단계 deep page 발굴 실패 시: 항목 본문을 더 일반적 fact로 약화 (예: "kgames.or.kr 회원사 list" → "협회 회원사 list" — 산업 표현)
+- 일반화된 fact를 cover하는 deeper URL 발굴 (1단계만큼 specific X 가능)
+- body 항목 1개 변경 + src url 교체. UCJ 마커 [N] 유지 → UCJ PASS
+- **일반화는 정보 가치 ↓** — 1단계 시도 후만 진입
+
+**3단계 — 항목 merge**
+- 단일 항목 fact가 너무 약해서 cover URL 부재 시
+- 인접 항목과 합칠 수 있다면 (같은 출처 cover 가능) 한 sentence로 merge
+- _sources idx 정리 + 항목 idx RE-INDEX
+- 항목 수 4 이상일 때만 권장 (3 이하면 정보 손실 임팩트 큼)
+
+**4단계 — 인정 + pending 기록**
+- src 그대로 유지 (root URL 잔존)
+- `~/.claude/projects/.../memory/deck/04-pending.md`에 직업명 + 룰 + 잔존 finding 기록
+- audit 영구 FAIL 1건. 사용자 명시 보고
 
 **edge case**:
 - **정부 부처 root** (`*.go.kr` 메인 페이지)는 룰 F (origin)가 처리. 룰 13 검출 대상 X
 - **trailing slash**: `https://example.org/` 와 `https://example.org` 모두 root로 검출 (`detectRootDomainOnly`)
 
-**snippet**:
+**snippet (산문 필드 — 직접 REMOVE)**:
 ```js
 // rootURL → deep URL 교체 (cover 검증 PASS)
 const idx = sources.way.findIndex(s => s.url === 'https://www.kgames.or.kr/');
