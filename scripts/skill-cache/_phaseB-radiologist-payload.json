@@ -1,0 +1,29 @@
+{
+  "jobName": "방사선사",
+  "jobId": "1765283311344239",
+  "fields": {
+    "way": "방사선사가 되려면 방사선학과·방사선기술과(3년제 또는 4년제)를 졸업하고 방사선사 국가면허를 취득해야 한다.[1] 국가면허는 한국보건의료인국가시험원(국시원)에서 매년 1회 시행하며, 전공 필기 5과목과 실기 시험으로 구성된다.[2] 주요 취업 기관은 종합병원·대학병원의 방사선과(영상의학과)이며, CT·MRI·X선·혈관촬영·초음파 등 의료영상 장비를 운용한다. 방사선 치료(선형가속기·감마나이프)를 전담하는 방사선종양학과, 핵의학과(PET-CT·SPECT) 업무도 방사선사 면허 범위에 포함된다. 경력 후 의료기기 기업 영업·연구직, 방사선 안전 전문가, 보건직 공무원 등으로 전환하는 경로도 있다.",
+    "trivia": [
+      "방사선사는 방사선 피폭 최소화를 위해 납 앞치마·갑상선 보호대를 착용하고 개인 피폭선량계(TLD·OSL 배지)를 정기 제출해야 한다. 식약처 통계연보 기준 의료기관 방사선관계종사자 직종별 평균 피폭선량은 방사선사가 0.82 mSv로 가장 높으며 의사 0.28 mSv·간호조무사 0.24 mSv 순이고, 전체 평균 0.38 mSv로 의료기관 연간 선량한도 50 mSv의 1/100 이하 수준이다.[1]"
+    ]
+  },
+  "sources": {
+    "trivia": [
+      {
+        "text": "KRTA 방사협 webzine — 의료기관 방사선관계종사자 피폭선량 통계연보 발간 (2021 통계)",
+        "url": "https://webzine.krta.or.kr/healthy-policy/%E3%80%88%EC%9D%98%EB%A3%8C%EA%B8%B0%EA%B4%80-%EB%B0%A9%EC%82%AC%EC%84%A0%EA%B4%80%EA%B3%84%EC%A2%85%EC%82%AC%EC%9E%90-%ED%94%BC%ED%8F%AD%EC%84%A0%EB%9F%89-%ED%86%B5%EA%B3%84%EC%97%B0%EB%B3%B4/"
+      }
+    ],
+    "way": [
+      {
+        "text": "Q-Net — 방사선사 국가자격 종목별 상세",
+        "url": "http://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=6185"
+      },
+      {
+        "text": "국시원 — 방사선사 직종별 시험정보",
+        "url": "https://www.kuksiwon.or.kr/subcnt/c_2013/1/view.do?seq=7&itm_seq=09"
+      }
+    ]
+  },
+  "changeSummary": "[job-data-cleanup-recovery] 방사선사 trivia 통계 정정 (0.6→0.82 mSv 직종별 / 20→50 mSv 의료기관 한도) + KRTA webzine 통계연보 출처 등록. way sources 함께 송신해 server-side _sources renumber 정합 보장 (본문 [1][2] field-local 유지)."
+}

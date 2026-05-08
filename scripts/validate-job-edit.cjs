@@ -1170,15 +1170,31 @@ function validate(data) {
   // 검사. 글로벌 idx 시스템에서 첫 등장 순서가 _sources 등록 순서와 일치해야
   // 사용자가 위→아래로 읽을 때 자연스럽다.
   {
+    // SOURCE_FIELD_ORDER (server src/routes/job-editor.ts:17) 와 정확 동일 순서 — 글로벌 idx 재부여 truth.
+    // 2026-05-08: trivia 추가 시 way 본문 [N] 마커 갱신을 차단하던 mismatch fix.
     const BODY_FIELDS_FOR_ORDER = [
-      'way', 'trivia', 'overviewProspect.main', 'overviewSalary.sal',
-      'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'overviewAbilities.technKnow',
-      'summary', 'overviewWork.main',
+      'summary',
+      'overviewWork.main',
+      'overviewProspect.main',
+      'detailWlb.wlbDetail',
+      'detailWlb.socialDetail',
+      'overviewSalary.sal',
+      'trivia',
+      'overviewAbilities.technKnow',
+      'way',
     ];
     const parts = [];
     for (const f of BODY_FIELDS_FOR_ORDER) {
       const v = getNestedField(fields, f);
-      if (typeof v === 'string') parts.push(v);
+      if (typeof v === 'string') {
+        parts.push(v);
+      } else if (Array.isArray(v)) {
+        // trivia, overviewWork.main 등 array 형식도 본문 마커 검사 대상.
+        for (const it of v) {
+          const t = typeof it === 'string' ? it : (it && (it.text || it.title)) || '';
+          if (t) parts.push(t);
+        }
+      }
     }
     const dr = fields.detailReady;
     if (dr && typeof dr === 'object') {
