@@ -214,6 +214,52 @@ grep -E "overviewSalary|wageSource" payload.json && echo "FAIL: sal 영역" && e
 
 ---
 
+## 14. detailReady array 항목 마침표 금지 (룰 X — 2026-05-09)
+
+**원칙**: `detailReady.{curriculum,recruit,training}` array 항목 끝에 마침표(`.`) X. `[N]` 출처 마커가 항목 종결자 역할.
+
+**Why**: array 항목은 한 줄 한 항목 표시 — 마침표는 시각적으로 redundant, [N] 마커가 자연스러운 끝맺음.
+
+**적용**:
+- `detailReady.curriculum` / `detailReady.recruit` / `detailReady.training` 항목
+- 산문 영역 (way / trivia / overviewWork.main 등) 종결 마침표는 보존 — array만 적용
+
+**잘못 vs 올바른 예**:
+```
+❌ "사람인·인크루트 등 채용 포털 활용.[1]"
+✅ "사람인·인크루트 등 채용 포털 활용 [1]"
+
+❌ "Unity 학습 + C# 프로그래밍 실습.[2]"
+✅ "Unity 학습 + C# 프로그래밍 실습 [2]"
+```
+
+**현재**: SKILL 명시 룰. validate 자동 검사 X (다음 phase에서 audit gate 추가). cleanup 시 수동 검사 + fix.
+
+상세 fix 절차는 `reference/fix-patterns.md` `[arrayItemPeriod]` 섹션.
+
+---
+
+## 15. 출처 마지막 줄 몰아놓기 금지 (룰 Y — 2026-05-09)
+
+**원칙**: detailReady array N개 항목이 1개 출처에만 통째로 의존하면서 마지막 항목에만 [N] 박는 패턴 금지. **1 항목 = 1 [N] 마커** (그 항목 fact가 그 출처 페이지에 직접 등장 시).
+
+**Why**: 마지막 항목에만 [N] 박으면 사용자가 페이지에서 "[1] 출처가 어떤 항목들을 cover하는지" 파악 불가. 1 출처가 5 항목 cover한다고 표시되지만 실제로는 1 출처가 fact specifically cover 못 함 (decorative source).
+
+**적용**:
+- detailReady array — 항목별 fact 추출 → 출처 매핑 1:1
+- 5 항목 모두 1 출처에만 의존 + 마지막 항목에만 [N] = FAIL
+
+**fix 옵션 (우선순위 순)**:
+1. **출처 더 발굴** — 항목별 deep page WebFetch (선호) — 1 항목 = 1 [N], N 출처
+2. **4단계 fallback** — `fix-patterns.md` 4단계 fallback (URL 교체 → 일반화 → merge → 인정)
+3. **항목 일반화** — 1 출처 cover 가능한 일반 표현으로 약화 (정보 가치 ↓ — 마지막 수단)
+
+**잘못 vs 올바른 예**: `reference/fix-patterns.md` `[sourcePositionCluster]` 섹션 코드 참조.
+
+**현재**: SKILL 명시 룰. validate 자동 검사 X (다음 phase에서 audit gate 추가). cleanup 시 수동 검사 + 4단계 fallback 적용.
+
+---
+
 ## 보호 영역 명시
 
 | 영역 | 정책 | 비고 |
