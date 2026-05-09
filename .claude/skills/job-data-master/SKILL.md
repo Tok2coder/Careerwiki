@@ -121,12 +121,21 @@ minimal payload (변경된 field만):
 ```js
 const payload = {
   fields: { /* 변경 본문만 */ },
-  sources: { /* _sources 변경 fieldKey만, sidebar* DELETE 시 {delete:true} */ },
+  sources: {
+    /* _sources 변경 fieldKey만 — patch 내 id를 1부터 차례대로 부여
+       (server가 SOURCE_FIELD_ORDER 기준 1..N 자동 재할당하므로 글로벌 id 유지 시도 X)
+       sidebar* DELETE 시 {delete:true} */
+  },
   changeSummary: "[job-data-master] mode=enhance|cleanup, fixes=...",
   // (선택) sal 영역 검증을 validateAsync로 자동 fetch하려면:
   _jobSlug: '<slug>',
 };
 ```
+
+**server merge 정책 핵심** (`src/routes/job-editor.ts`):
+- patch 안 보낸 _sources fieldKey는 server가 **보존** — minimal POST 안전
+- patch 보낸 fieldKey는 normalize 후 `renumberSourceIds`로 **글로벌 id 1..N 자동 재할당**
+- 즉 client `[idxGap]` validate는 patch sources 평탄화 1..N만 통과하면 PASS — 자세한 충돌 해소는 `reference/fix-patterns.md` `[idxGap]` 섹션 참조
 
 **보호 영역** — `reference/safety-rules.md` 참조:
 - `fields.overviewSalary` 절대 X (sal-protection)
