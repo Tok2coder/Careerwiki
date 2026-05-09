@@ -81,11 +81,15 @@ grep -E "overviewSalary|wageSource" payload.json && echo "FAIL: sal 영역" && e
 
 ## 5. careerTree 보호
 
-**원칙**: `fields.careerTree` 어떤 식으로든 손대지 X.
+**원칙**: `fields.careerTree` payload 키로 어떤 식으로든 손대지 X. 기존 careerTree 데이터 (career_trees / career_tree_job_links DB 행) 절대 수정/삭제 X.
 
-**예외**: enhance 모드의 신규 careerTree 생성 (Phase 3.6 절차) — `wrangler d1 execute` 직접 INSERT (`career_trees` + `career_tree_job_links` 테이블). payload에 포함 X. 기존 careerTree 수정/삭제는 절대 X.
+**예외 — 신규 작성 허용**:
+- **마커 미보유 ENHANCE 모드**: 부재 시 신규 careerTree 작성 허용 (Phase 3.6 절차)
+- **`--force-enhance` 모드**: 동일 — 기존 careerTree 부재 또는 stub이면 archive enhance 본래 capability 그대로 신규 작성 허용 (Phase 3.6)
+- 신규 작성은 **`wrangler d1 execute` 직접 INSERT** (`career_trees` + `career_tree_job_links` 테이블). payload에 포함 X.
+- **기존 careerTree 수정/삭제는 절대 X** — 별도 careerTree 정비 사이클 필요.
 
-**왜?** careerTree는 별도 사이클이 처리. 다른 직업과 공유될 수 있음 (인물 기반).
+**왜?** careerTree는 인물 기반이라 다른 직업과 공유 가능. 기존값 변경 시 연쇄 영향. 단, 부재 시 신규 작성은 archive enhance에서 표준 절차였고 master force-enhance에서도 동일하게 허용 (사용자 명시 — 임의 제한 제거).
 
 **역대 대통령 절대 금지** — 이승만, 윤보선, 박정희, 최규하, 전두환, 노태우, 김영삼, 김대중, 노무현, 이명박, 박근혜, 문재인, 윤석열 등은 `is_active=0` 처리된 인물. validate가 이름 패턴으로 FAIL 처리.
 

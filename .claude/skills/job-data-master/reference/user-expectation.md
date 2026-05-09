@@ -89,35 +89,35 @@
 - 또는 prompt에 "force re-do" / "재처리" / "quality 회복" / "enhance 강제"
 - 또는 audit `arrayItemPeriod(N)` / `sourcePositionCluster(N)` WARN 검출 + quality 회복 요청
 
-**무슨 일이 일어나나**:
+**무슨 일이 일어나나** (archive `job-data-enhance` 본래 capability 그대로):
 - Phase 0-A 자동 분기 skip — ENHANCE 모드 직진 (Phase 1.5)
-- 기존 데이터 조사 (12 필드 진단) → cluster / 마침표 / 출처 0 항목 식별
-- 보강 대상 항목별 deep URL 발굴 (WebFetch verify)
-- 1:1 출처 매핑 + 마침표 제거 + 항목 [N] 정합 + 출처 N개 보강
+- Phase 0-DIAG 12 필드 풀 진단 (cluster / 마침표 / 출처 0 / 부실 항목 모두 식별)
+- 1차 출처 발굴 (정부/협회/학회 deep page) + WebSearch 광범위 리서치 — 마커 미보유 ENHANCE와 동일
+- 17 필드 풀 작성 가능 + Self-Report 17 필드 체크리스트 (마커 미보유 ENHANCE와 동일)
+- careerTree 부재 시 신규 작성 (Phase 3.6 — archive enhance 본래 capability 그대로)
+- 본문 expand / detailReady 항목 추가 / trivia 새 fact 발굴 / 산문 영역 deeper 정보 보강 모두 허용
 - POST → audit 재검증 → CLEAN
 
 **결과물**:
-- DB rev 1건 변경 (`[job-data-master] enhance — force-enhance: detailReady·sources`)
-- detailReady 항목별 [N] 마커 1:1 매핑
+- DB rev 1건 변경 (`[job-data-master] enhance — force-enhance: way·trivia·detailReady·sidebar·...`)
+- 17 필드 모두 신규/보강 시도 (마커 미보유 ENHANCE와 동일 폭)
 - _sources 부족분 deep URL 보강 (WebFetch verified)
-- 마침표 제거 + cluster 해소
-- 보호 영역 (sal/careerTree) 미접촉
+- detailReady 항목별 [N] 마커 1:1 매핑 / 마침표 제거 / cluster 해소
+- careerTree 신규 (인물 1~3명 부재 시) — 기존 careerTree는 절대 미접촉
+- 보호 영역 (sal/wage) 절대 미접촉 — careerTree 기존값도 절대 미접촉
 
 **비용 추정**:
-- 항목당 1 deep URL 발굴 = WebFetch 1회 + WebSearch 0.5회
-- 직업당 평균 9-12 항목 — WebFetch ~10회, WebSearch ~5회
-- 토큰 ~50K-100K / 직업
-- ~5-10분 / 직업 (sequential)
+- 마커 미보유 ENHANCE와 동일: ~50K~80K tokens / 직업
+- ~10-15분 / 직업 (sequential)
+- 항목별 deep URL 발굴 = WebFetch 1회 + WebSearch 0.5회 per fact
 
-**use case 예시** (2026-05-09 5 직업 발견 경위):
-- 가구조립원 / 가축사육종사원 / 가구조립-및-검사원: 1 출처 + 3-4 항목 + 마지막에만 [N] cluster → force-enhance로 1:1 매핑 회복
-- 감정평가사 / 경찰관: detailReady 출처 0개 → force-enhance로 출처 N개 발굴
+**use case 예시** (2026-05-09 발견 경위):
+- 가구조립원 / 가축사육종사원 / 가구조립-및-검사원: 1 출처 + 3-4 항목 + 마지막에만 [N] cluster → force-enhance로 17 필드 풀 보강 + 1:1 매핑 회복
+- 감정평가사 / 경찰관: detailReady 출처 0개 → force-enhance로 풀 enhance 사이클 적용
 
 **일반 ENHANCE 모드와 차이**:
-- 마커 이미 보유 (재 enhance) — change_summary `force-enhance:` 접두
-- careerTree 신규 작성 X — 기존 careerTree 보존 (force-enhance는 데이터 보강 한정)
-- Self-Report 17필드 풀 체크 X — 보강 영역만 부분 체크리스트
-- 보호 영역 (sal/careerTree) 더욱 엄격
+- 마커 이미 보유 (재 enhance) — change_summary `force-enhance:` 접두만 다름
+- 그 외는 archive enhance 본래 capability 그대로 — 임의 제한 X (사용자 명시 2026-05-09)
 
 ---
 
