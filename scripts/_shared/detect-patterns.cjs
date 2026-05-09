@@ -749,6 +749,82 @@ function calcWikiQuota(sources) {
   return { count, total: allUrls.length, ratio, level };
 }
 
+// ── 룰 X: detailReady array 항목 끝 마침표 검출 (2026-05-09) ───────────────
+//
+// SKILL 명시 룰 (job-data-master Safety Rule 14): detailReady.{curriculum,recruit,
+// training} array 항목 끝에 마침표(`.` / `。`) 금지. [N] 출처 마커가 항목 종결자
+// 역할. 산문 영역(way/trivia 등)은 적용 X — array만.
+//
+// 검출 패턴: 항목 본문 끝의 `[N]` 마커를 strip한 뒤 마지막 문자가 `.` 또는 `。`
+//
+// @param {object} detailReady - {curriculum, recruit, training, ...} 객체
+// @returns {Array<{field: string, idx: number, preview: string}>} 마침표 끝 항목 list
+const ARRAY_FIELDS_FOR_PERIOD = ['curriculum', 'recruit', 'training'];
+function detectArrayItemPeriod(detailReady) {
+  if (!detailReady || typeof detailReady !== 'object') return [];
+  const hits = [];
+  for (const sub of ARRAY_FIELDS_FOR_PERIOD) {
+    const items = detailReady[sub];
+    if (!Array.isArray(items)) continue;
+    items.forEach((it, idx) => {
+      const text = typeof it === 'string' ? it : (it && typeof it === 'object' ? (it.text || '') : '');
+      if (!text) return;
+      const stripped = text.replace(/\s*\[\d+\]\s*$/, '').trim();
+      if (stripped.endsWith('.') || stripped.endsWith('。')) {
+        hits.push({
+          field: `detailReady.${sub}`,
+          idx,
+          preview: stripped.slice(-30),
+        });
+      }
+    });
+  }
+  return hits;
+}
+
+// ── 룰 Y: detailReady array 출처 위치 cluster 검출 (2026-05-09) ─────────────
+//
+// SKILL 명시 룰 (job-data-master Safety Rule 15): 1 출처가 N 항목 cover하면서
+// 마지막 항목에만 [N] 박힌 cluster 패턴 금지. **1 항목 = 1 [N] 마커**.
+//
+// 검출 조건 (모두 만족):
+//   - detailReady.{sub} 항목 수 ≥ 2
+//   - 출처 수 (sources['detailReady.{sub}'].length) < 항목 수
+//   - 마커 보유 항목 수 < 항목 수 (일부 항목에만 마커)
+//
+// 즉 출처가 모든 항목 cover 못하면서 일부에만 [N] 박힌 패턴.
+//
+// @param {object} detailReady - {curriculum, recruit, training, ...} 객체
+// @param {object} sources - _sources 객체 (fieldKey → 배열)
+// @returns {Array<{field, items, sources, markedItems, preview}>} cluster 검출 list
+function detectSourcePositionCluster(detailReady, sources) {
+  if (!detailReady || typeof detailReady !== 'object') return [];
+  if (!sources || typeof sources !== 'object') return [];
+  const hits = [];
+  for (const sub of ARRAY_FIELDS_FOR_PERIOD) {
+    const items = detailReady[sub];
+    if (!Array.isArray(items) || items.length < 2) continue;
+    const srcArr = sources[`detailReady.${sub}`];
+    if (!Array.isArray(srcArr) || srcArr.length === 0) continue;
+    const markedItems = items.reduce((acc, it) => {
+      const text = typeof it === 'string' ? it : (it && typeof it === 'object' ? (it.text || '') : '');
+      return acc + (/\[\d+\]/.test(text) ? 1 : 0);
+    }, 0);
+    if (srcArr.length < items.length && markedItems < items.length) {
+      hits.push({
+        field: `detailReady.${sub}`,
+        items: items.length,
+        sources: srcArr.length,
+        markedItems,
+        preview: typeof items[items.length - 1] === 'string'
+          ? items[items.length - 1].slice(-30)
+          : '',
+      });
+    }
+  }
+  return hits;
+}
+
 module.exports = {
   detectMultipleUrlsInSourceText,
   detectMergedOrgLabel,
@@ -795,4 +871,8 @@ module.exports = {
   // proseBodyOrphan wrapper + 산문 fieldKey list (2026-05-08, PR 14)
   detectProseBodyMismatch,
   PROSE_BODY_FIELDS,
+  // 룰 X/Y (2026-05-09 — array 마침표 + 출처 위치 cluster)
+  detectArrayItemPeriod,
+  detectSourcePositionCluster,
+  ARRAY_FIELDS_FOR_PERIOD,
 };

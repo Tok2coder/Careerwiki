@@ -29,6 +29,8 @@ const {
   detectSidebarSources,
   detectRootDomainOnly,
   calcWikiQuota,
+  detectArrayItemPeriod,
+  detectSourcePositionCluster,
   SELF_DOMAINS,
   PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -97,6 +99,8 @@ function analyze(slug, data, opts = {}) {
     sidebarSources: [],
     rootURL: [],          // 2026-05-07 룰 13
     wikiQuota: null,      // 2026-05-07 룰 14
+    arrayItemPeriod: [],  // 2026-05-09 룰 X — WARN level
+    sourcePositionCluster: [], // 2026-05-09 룰 Y — WARN level
   };
 
   const flatSources = [];
@@ -221,6 +225,12 @@ function analyze(slug, data, opts = {}) {
     findings.wikiQuota = calcWikiQuota(sources);
   }
 
+  // 룰 X (2026-05-09): detailReady array 항목 끝 마침표 검출 (WARN level)
+  findings.arrayItemPeriod = detectArrayItemPeriod(dr);
+
+  // 룰 Y (2026-05-09): detailReady array 출처 위치 cluster 검출 (WARN level)
+  findings.sourcePositionCluster = detectSourcePositionCluster(dr, sources);
+
   return findings;
 }
 
@@ -268,6 +278,10 @@ function isFail(j) {
     if (f.originDomain.length) flags.push(`origin(${f.originDomain.length})`);
     if (f.dupMarkers.length) flags.push(`dup(${f.dupMarkers.length})`);
     if (f.mojibake.length) flags.push(`mojibake(${f.mojibake.length})`);
+    // 룰 X/Y (2026-05-09) — WARN level (status 영향 X — isFail 미포함)
+    // 사용자 spec: 결과 line `arrayItemPeriod(N)` / `sourcePositionCluster(N)`
+    if (f.arrayItemPeriod && f.arrayItemPeriod.length) flags.push(`arrayItemPeriod(${f.arrayItemPeriod.length})`);
+    if (f.sourcePositionCluster && f.sourcePositionCluster.length) flags.push(`sourcePositionCluster(${f.sourcePositionCluster.length})`);
     console.log(`${status} ${slug.padEnd(30)} ${flags.join(', ') || 'clean'}`);
     f.arrayBrokenRef.forEach(b =>
       console.log(`         ${b.field}: broken=[${b.broken.join(',')}] srcLen=${b.srcLen}`));
