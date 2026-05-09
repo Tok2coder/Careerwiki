@@ -15,6 +15,10 @@
 └─────────────┬───────────────────────────┘
               │
               ▼
+   --force-enhance flag ? ─ Yes ──► ENHANCE 모드 직진 (Phase 1.5)
+              │
+              No
+              ▼
        is_active = 0 ? ─── Yes ──► SKIP (보고만, Phase 7 DONE)
               │
               No
@@ -40,6 +44,55 @@
               ▼
        CLEANUP 모드 그대로
 ```
+
+---
+
+## Phase 1.5 — `--force-enhance` 모드 직진 (2026-05-09 신규)
+
+audit CLEAN이어도 enhance 사이클을 강제 실행하는 옵션. cluster 패턴 / 출처 0 / 옛 룰 retroactive 보강 use case.
+
+### 진입 신호
+
+다음 중 하나면 force-enhance 모드 직진:
+- 호출에 `--force-enhance` flag 포함
+- 사용자 prompt에 "force re-do" / "재처리" / "quality 회복" / "enhance 강제" / "force enhance" 등 명시
+- audit `arrayItemPeriod(N)` / `sourcePositionCluster(N)` WARN 검출 + 사용자 quality 회복 요청
+
+### 처리 흐름
+
+1. Phase 0-PRE (SYNC) 그대로
+2. Phase 0-A 자동 분기 **skip** — `--force-enhance` flag 인식 시 ENHANCE 모드 직진
+3. Phase 0-DIAG (12 필드 진단) — 기존 데이터 조사
+4. Phase 1 (AUDIT) — current state 검증 (audit CLEAN이라도 룰 X/Y WARN flag 확인)
+5. Phase 2 (ANALYZE) — 보강 대상 항목 식별:
+   - cluster 항목 (1 출처 + N 항목) → 1:1 매핑으로 deep URL N개 발굴
+   - 마침표 항목 → 마침표 제거 (deep URL 발굴 시 함께)
+   - 출처 0 fieldKey → enhance 사이클 풀 적용
+6. Phase 3+ (PATCH → POST → VERIFY) ENHANCE 모드 동일
+
+### enhance 모드와 차이
+
+| 측면 | 마커 미보유 ENHANCE | `--force-enhance` ENHANCE |
+|---|---|---|
+| 진입 조건 | marker_count=0 + active | flag 명시 + (audit CLEAN 무관) |
+| 12 필드 진단 | 풀 진단 | 기존 데이터 조사 + 보강 대상 식별 |
+| Self-Report | 17 필드 체크리스트 | 보강 영역만 부분 체크리스트 |
+| change_summary | `[job-data-master] enhance — way·trivia·...` | `[job-data-master] enhance — force-enhance: detailReady·sources` |
+| careerTree 신규 작성 | 가능 (Phase 3.6) | **금지** — 기존 careerTree 보존 (사용자 명시 force는 데이터 보강이지 careerTree 신규 X) |
+
+### 보호 영역 (force-enhance에도 적용)
+
+- sal-protection: `fields.overviewSalary` / `sources["overviewSalary.sal"]` 절대 X
+- careerTree: 기존 careerTree 절대 수정 X (force-enhance는 데이터 보강 한정)
+- enhance 사이클 일반 보호 영역 그대로 (`reference/safety-rules.md` 4-5)
+
+### 사용자 보고
+
+force-enhance 진입 시 즉시 보고:
+- 진입 사유 (cluster / 출처 0 / quality 회복)
+- 변경 영역 (어느 fieldKey)
+- 예상 비용 (WebFetch 수 / 항목별 deep URL 발굴 수)
+- 보호 영역 (sal/careerTree 미접촉 명시)
 
 ---
 

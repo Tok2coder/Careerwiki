@@ -71,6 +71,28 @@ FROM jobs j WHERE slug = ?;
 
 → `is_active=0` → SKIP. `marker_count=0` → ENHANCE. `marker_count≥1` → audit-via-api 실행 후 CLEAN/FAIL 분기.
 
+### `--force-enhance` 옵션 (2026-05-09 신규)
+
+audit CLEAN이어도 **enhance 사이클을 강제 실행**하는 옵션. 사용 case:
+- cluster 패턴 데이터 (1 출처 + N 항목 + 마지막 항목만 [N]) — audit는 CLEAN이지만 룰 X/Y WARN level 검출 → quality 회복 필요
+- detailReady 출처 0개 직업 (감정평가사 / 경찰관 등) — audit CLEAN이지만 quality 부족
+- 기존 enhance가 옛 룰 (룰 13/14/X/Y 미적용)에서 박혀 retroactive 보강 필요
+
+호출:
+- `/job-data-master <slug> --force-enhance` — 명시 flag
+- 또는 사용자 prompt에 "force re-do" / "재처리" / "quality 회복" / "enhance 강제" 등 신호
+
+자동 분기 우선순위 (force-enhance 추가):
+```
+0. --force-enhance 명시 → ENHANCE 모드 직진 (audit / 마커 무관)
+1. is_active=0 → SKIP
+2. 마커 보유 + audit CLEAN → IDLE
+3. 마커 보유 + audit FAIL → CLEANUP
+4. 마커 미보유 + active → ENHANCE
+```
+
+상세는 `reference/phase-flow.md` Phase 1.5 + `reference/user-expectation.md` 시나리오 4.
+
 ---
 
 ## Phase 0~7 흐름

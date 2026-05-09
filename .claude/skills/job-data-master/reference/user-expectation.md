@@ -80,6 +80,45 @@
 - ~3K~5K tokens / 직업 (audit 1회)
 - ~30초~1분
 
+### 4. force re-do (`--force-enhance`) — quality 재처리 (2026-05-09 신규)
+
+**대상**: audit CLEAN이지만 quality 부족 — cluster 패턴 / 출처 0 / 옛 룰 박힌 데이터 retroactive 보강.
+
+**진입 신호**:
+- `/job-data-master <slug> --force-enhance` 명시 flag
+- 또는 prompt에 "force re-do" / "재처리" / "quality 회복" / "enhance 강제"
+- 또는 audit `arrayItemPeriod(N)` / `sourcePositionCluster(N)` WARN 검출 + quality 회복 요청
+
+**무슨 일이 일어나나**:
+- Phase 0-A 자동 분기 skip — ENHANCE 모드 직진 (Phase 1.5)
+- 기존 데이터 조사 (12 필드 진단) → cluster / 마침표 / 출처 0 항목 식별
+- 보강 대상 항목별 deep URL 발굴 (WebFetch verify)
+- 1:1 출처 매핑 + 마침표 제거 + 항목 [N] 정합 + 출처 N개 보강
+- POST → audit 재검증 → CLEAN
+
+**결과물**:
+- DB rev 1건 변경 (`[job-data-master] enhance — force-enhance: detailReady·sources`)
+- detailReady 항목별 [N] 마커 1:1 매핑
+- _sources 부족분 deep URL 보강 (WebFetch verified)
+- 마침표 제거 + cluster 해소
+- 보호 영역 (sal/careerTree) 미접촉
+
+**비용 추정**:
+- 항목당 1 deep URL 발굴 = WebFetch 1회 + WebSearch 0.5회
+- 직업당 평균 9-12 항목 — WebFetch ~10회, WebSearch ~5회
+- 토큰 ~50K-100K / 직업
+- ~5-10분 / 직업 (sequential)
+
+**use case 예시** (2026-05-09 5 직업 발견 경위):
+- 가구조립원 / 가축사육종사원 / 가구조립-및-검사원: 1 출처 + 3-4 항목 + 마지막에만 [N] cluster → force-enhance로 1:1 매핑 회복
+- 감정평가사 / 경찰관: detailReady 출처 0개 → force-enhance로 출처 N개 발굴
+
+**일반 ENHANCE 모드와 차이**:
+- 마커 이미 보유 (재 enhance) — change_summary `force-enhance:` 접두
+- careerTree 신규 작성 X — 기존 careerTree 보존 (force-enhance는 데이터 보강 한정)
+- Self-Report 17필드 풀 체크 X — 보강 영역만 부분 체크리스트
+- 보호 영역 (sal/careerTree) 더욱 엄격
+
 ---
 
 ## 절대 안 건드리는 것 (보호 영역)
