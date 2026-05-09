@@ -237,11 +237,34 @@ function fixOrderViolation(body, srcArr) {
 
 **원칙**: 글로벌 idx (모든 _sources field 합쳐서 id 1..N) 연속.
 
-**fix 절차**:
-1. 모든 _sources entry 순회하며 글로벌 id 재할당 (`reassignGlobalIds` helper)
-2. 본문 [N] 마커는 field-local이라 영향 X (변경 불필요)
+**서버 동작 (중요 — 충돌 해소 키)**: `src/routes/job-editor.ts:renumberSourceIds`가 매 POST마다 서버 user_contributed_json._sources 전체를 평탄화 → `SOURCE_FIELD_ORDER` 기준 정렬 → 글로벌 id를 1..N로 **자동 재할당**한다. 즉 클라이언트가 보낸 id가 [1,2,3]이든 [3,1,2]든 [5,7,9]든 서버가 무시하고 페이지 표시 순서대로 1..N 부여. 또한 patch에 보내지 않은 fieldKey의 _sources는 server가 기존값 그대로 **보존** (line 532: `updatedUserData._sources = updatedUserData._sources || {}`).
 
-minimal POST 시 일부 _sources만 보내면 idxGap 발생 가능 — 변경 영역의 모든 _sources field를 함께 보내고 변경 영역만 갱신해야.
+**클라이언트 validate (validate-job-edit.cjs:1091-1102)**: patch payload만 평탄화해서 1..N 검사. **즉 patch 내에서만 1부터 연속이면 PASS** — 글로벌 정렬은 server가 보장.
+
+**fix 절차** (cleanup minimal POST):
+1. 변경할 fieldKey의 _sources만 patch에 포함 (안 보낸 fieldKey는 server가 보존)
+2. **patch sources의 id를 1부터 차례대로 부여** (글로벌 idx 유지 시도 X — server가 어차피 재정렬)
+3. 본문 [N] 마커는 field-local — patch 내 id 1..N과 정합되게 부여
+4. validate idxGap이 patch 평탄화로 1..N 연속 확인 → PASS
+
+```js
+// 예: way + trivia 두 fieldKey만 minimal POST
+// 잘못된 시도 (글로벌 id 유지 — way가 기존 id 5,6이라고 그대로 보냄):
+sources: {
+  way:    [{id: 5, text: '...', url: '...'}],
+  trivia: [{id: 7, text: '...', url: '...'}],
+}
+// → validate FAIL `[idxGap] expected 1, got 5`
+
+// 올바른 패턴 (patch 내 1..N):
+sources: {
+  way:    [{id: 1, text: '...', url: '...'}, {id: 2, text: '...', url: '...'}],
+  trivia: [{id: 3, text: '...', url: '...'}],
+}
+// → validate PASS. server가 SOURCE_FIELD_ORDER로 재정렬해서 way → trivia 순서로 1..N 자동 재할당
+```
+
+**경고**: patch에 _sources를 통째로 보내려고 변경 안 한 fieldKey까지 동봉하면 의도치 않은 덮어쓰기 위험 (concurrent edit 충돌). minimal patch + id 1..N 패턴이 안전.
 
 ### `[mojibake]`
 

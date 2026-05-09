@@ -121,7 +121,12 @@ grep -E "overviewSalary|wageSource" payload.json && echo "FAIL: sal 영역" && e
 
 **예외**: changeSummary만 부착하고 fields/sources 둘 다 비어있으면 server side `[minimalPOST]` FAIL. 실제 변경 1건 이상 필수.
 
-**예외 2** (idxGap 호환): 일부 _sources만 보내면 idxGap FAIL 가능. 변경 영역의 모든 _sources field를 함께 보내고 변경 영역만 갱신.
+**예외 2** (idxGap 호환 — 2026-05-09 충돌 해소): server (`src/routes/job-editor.ts:renumberSourceIds`)가 SOURCE_FIELD_ORDER 기준 글로벌 id 1..N **자동 재할당**. patch 안 보낸 fieldKey의 _sources는 **보존**. 따라서 minimal POST 시:
+- 변경 fieldKey만 patch에 포함 (안 보낸 fieldKey는 server가 그대로 둠)
+- **patch sources의 id를 1부터 차례대로 부여** (글로벌 id 유지 시도 X — server가 어차피 재정렬)
+- validate idxGap은 patch 평탄화 1..N만 검사 → PASS
+
+상세 패턴 + 코드 예시는 `reference/fix-patterns.md` `[idxGap]` 섹션.
 
 ---
 
