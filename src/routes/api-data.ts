@@ -745,9 +745,30 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
       // 편집 UI에서 trivia / overviewWork.main을 array로 변환하므로 본문 [N] 마커 검사 시 silent skip 발생.
       // 9 BODY_FIELDS 모두 raw string으로 노출하여 detect-patterns의 orphanSrc/brokenRef/dup/orderViolation 등 정합성 검사 가능하게 함.
       // wlbDetail/socialDetail/trivia(string)/way 등은 UCJ 추가 필드라 base interface에 없음 — `as any` 캐스팅 사용.
+      // profile.trivia / profile.overviewWork.main 등은 DB에 array 또는 string 어느 쪽이든 저장 가능 →
+      // pickString이 array일 때도 element 텍스트(string / .text / .title / .list_content / .value) join하여 raw 본문 노출.
       _proseRaw: (() => {
         const p = profile as any
-        const pickString = (v: unknown): string => (typeof v === 'string' ? v : '')
+        const pickString = (v: unknown): string => {
+          if (typeof v === 'string') return v
+          if (Array.isArray(v)) {
+            return v
+              .map((it) => {
+                if (typeof it === 'string') return it
+                if (it && typeof it === 'object') {
+                  const o = it as Record<string, unknown>
+                  if (typeof o.text === 'string') return o.text
+                  if (typeof o.title === 'string') return o.title
+                  if (typeof o.list_content === 'string') return o.list_content
+                  if (typeof o.value === 'string') return o.value
+                }
+                return ''
+              })
+              .filter((s) => s.length > 0)
+              .join('\n')
+          }
+          return ''
+        }
         return {
           'way': pickString(p.way),
           'summary': pickString(p.summary),
