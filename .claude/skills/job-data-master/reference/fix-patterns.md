@@ -392,6 +392,55 @@ sources: { "detailReady.recruit": [
 
 **현재 자동 검사 X** — SKILL 명시 룰만. cleanup 시 사용자 보고 + 4단계 fallback 적용.
 
+### `[urlCountInsufficient]` (룰 Z — 2026-05-10 신규, audit WARN level)
+
+**원칙**: force-enhance 후 직업당 _sources URL count ≥ `max(12, fieldsCount × 1.5)`. 미달 시 audit-via-api `urlCountInsufficient(N<X)` WARN — 다음 cycle 자동 트리거. validate FAIL은 X (patch 차단 X — 작은 patch 막힐 위험).
+
+**Why**: 2026-05-09 사고 — 103 직업 force-enhance 중 6 직업이 URL <10:
+
+| 직업 | URL | fields | 패턴 |
+|---|---|---|---|
+| 기업고위임원 | 2 | 2 | B (way 글자수만, trivia wiki 1건만) |
+| 대학교수 | 4 | 4 | A (cleanup 8건 제거 후 미보강) |
+| 의료정보시스템개발자 | 4 | 4 | A+C (cleanup 후 4단계 인정) |
+| 물리치료사 | 5 | 3 | A (cluster 6건 제거 후 미보강) |
+| 간호조무사 | 7 | 7 | A (wiki 3 → 1차 출처 1:1 교체, 수 비슷) |
+| 리포터 | 7 | 6 | B (careerTree만 집중 + wlbDetail 글자수) |
+
+**Anti-pattern**:
+- **패턴 A — cleanup 흡수**: cleanup이 broken/wiki/root sources 제거하고 신규 보강 안 함. 제거된 만큼 1차 출처 발굴 의무 누락.
+- **패턴 B — 글자수만 / careerTree만 집중**: way 글자 수 늘리거나 careerTree 신규에만 집중, detailReady·sidebar·산문 영역 출처 추가 X.
+- **패턴 C — 4단계 인정**: deep URL 발굴 실패 → 영구 잔존. URL count 부족 일부 영구 허용.
+
+**fix 절차** (force-enhance 사이클 적용):
+
+1. **Phase 1-A-2**: baseline _sources fieldKey별 count 보고. sparse fieldKey list (count 0~1) 명시.
+2. **Phase 2-4**: 모든 sparse fieldKey 보강 (1차 deep URL WebFetch verified). 영역당 최소 1, 평균 2~3.
+3. **Phase 6-D**: URL count ≥ target 검증.
+4. **미달 시 RETRY**: Phase 2 재진입, 추가 sparse 영역 보강. 1회 후도 미달이면 4단계 인정 또는 STOP.
+
+**target 계산**:
+```js
+const target = Math.max(12, Math.ceil(fieldsCount * 1.5));
+// fieldsCount=2 → target=12 (강제 최소)
+// fieldsCount=8 → target=12
+// fieldsCount=10 → target=15
+// fieldsCount=11 → target=17
+```
+
+**참고 분포** (2026-05-09 103 직업):
+- median URL=18, mean=17.9, max=33, min=2
+- bucket: 0-4 (3), 5-9 (3), 10-14 (14), 15-19 (45), 20-29 (36), 30+ (2)
+- 가구조립원 시범 (URL 23, fields 9, target 14) — 권장 패턴
+
+**검증 명령**:
+```bash
+node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal | grep urlCountInsufficient
+# 출력 예: urlCountInsufficient(7<12) — 7건 < target 12
+```
+
+`detect-patterns.cjs:detectUrlCountInsufficient` 함수가 single source.
+
 ---
 
 ## Edge cases (cross-rule)

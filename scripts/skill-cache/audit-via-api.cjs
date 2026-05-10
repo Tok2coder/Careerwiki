@@ -31,6 +31,7 @@ const {
   calcWikiQuota,
   detectArrayItemPeriod,
   detectSourcePositionCluster,
+  detectUrlCountInsufficient,
   SELF_DOMAINS,
   PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -101,6 +102,7 @@ function analyze(slug, data, opts = {}) {
     wikiQuota: null,      // 2026-05-07 룰 14
     arrayItemPeriod: [],  // 2026-05-09 룰 X — WARN level
     sourcePositionCluster: [], // 2026-05-09 룰 Y — WARN level
+    urlCountInsufficient: null, // 2026-05-10 룰 Z — WARN level
   };
 
   const flatSources = [];
@@ -231,6 +233,19 @@ function analyze(slug, data, opts = {}) {
   // 룰 Y (2026-05-09): detailReady array 출처 위치 cluster 검출 (WARN level)
   findings.sourcePositionCluster = detectSourcePositionCluster(dr, sources);
 
+  // 룰 Z (2026-05-10): URL count insufficient (WARN level — 다음 사이클 트리거)
+  // sal 영역 제외 시 sources에서 sal 빼고 검사
+  if (excludeSal) {
+    const filteredZ = {};
+    for (const [k, v] of Object.entries(sources)) {
+      if (SAL_PROTECTED_FIELDS.includes(k)) continue;
+      filteredZ[k] = v;
+    }
+    findings.urlCountInsufficient = detectUrlCountInsufficient(filteredZ);
+  } else {
+    findings.urlCountInsufficient = detectUrlCountInsufficient(sources);
+  }
+
   return findings;
 }
 
@@ -282,6 +297,12 @@ function isFail(j) {
     // 사용자 spec: 결과 line `arrayItemPeriod(N)` / `sourcePositionCluster(N)`
     if (f.arrayItemPeriod && f.arrayItemPeriod.length) flags.push(`arrayItemPeriod(${f.arrayItemPeriod.length})`);
     if (f.sourcePositionCluster && f.sourcePositionCluster.length) flags.push(`sourcePositionCluster(${f.sourcePositionCluster.length})`);
+    // 룰 Z (2026-05-10) — WARN level (다음 사이클 트리거 역할, isFail 미포함)
+    // 형식: `urlCountInsufficient(N<X)` — N=현재 URL 수, X=target
+    if (f.urlCountInsufficient) {
+      const z = f.urlCountInsufficient;
+      flags.push(`urlCountInsufficient(${z.count}<${z.target})`);
+    }
     console.log(`${status} ${slug.padEnd(30)} ${flags.join(', ') || 'clean'}`);
     f.arrayBrokenRef.forEach(b =>
       console.log(`         ${b.field}: broken=[${b.broken.join(',')}] srcLen=${b.srcLen}`));
