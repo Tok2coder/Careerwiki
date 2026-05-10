@@ -221,8 +221,37 @@ stdout flag 파싱:
 | `brokenRef(N)` | I | 본문 [N] > srcLen (산문) |
 | `dup(N)` | — | 한 필드 같은 [N] 2회+ |
 | `orphan(N)` | H **+ proseBodyOrphan** | 산문 (PR 14 활성화) |
+| `arrayItemPeriod(N)` | X | detailReady array 항목 마침표 (WARN) |
+| `sourcePositionCluster(N)` | Y | detailReady cluster (WARN) |
+| `urlCountInsufficient(N<X)` | **Z (2026-05-10)** | 글로벌 URL count 부족 (WARN) |
 
 **proseBodyOrphan** (PR 14, 2026-05-08): 산문 9 BODY_FIELDS (`way` / `summary` / `trivia` / `overviewWork.main` / `overviewProspect.main` / `overviewAbilities.technKnow` / `overviewSalary.sal` / `detailWlb.wlbDetail` / `detailWlb.socialDetail`) 본문 [N] vs `_sources[fieldKey]` 정합 — `_proseRaw` namespace 활용.
+
+**urlCountInsufficient (룰 Z, 2026-05-10)**: force-enhance 후 직업당 _sources URL count < `max(12, fieldsCount × 1.5)`이면 WARN. 다음 cycle 자동 트리거 역할 (FAIL X — patch 차단 X). 2026-05-09 사고 (6 직업 URL <10) 재발 방지.
+
+### 1-A-2. **sparse fieldKey 식별 의무 (룰 Z, 2026-05-10 신규)**
+
+baseline `_sources` 가져온 후 fieldKey별 count 보고:
+
+```
+[직업명] _sources baseline:
+  way: 3
+  trivia: 2
+  overviewProspect.main: 0  ← sparse (보강 대상)
+  detailWlb.wlbDetail: 1   ← sparse (보강 대상)
+  detailWlb.socialDetail: 0 ← sparse (보강 대상)
+  detailReady.curriculum: 5
+  detailReady.recruit: 3
+  detailReady.training: 0  ← sparse (보강 대상)
+total URL: 14, fields: 5/8
+sparse fieldKey list: [overviewProspect.main, detailWlb.wlbDetail, detailWlb.socialDetail, detailReady.training]
+```
+
+**기준**: count 0 또는 1인 fieldKey = sparse. Phase 2 PATCH에서 모두 보강 의무.
+
+**누락 영역 cleanup-only force-enhance 사고 패턴**:
+- 패턴 A: cleanup으로 broken 5건 + rootURL 3건 제거 → _sources 8건 줄어든 상태로 종료. 신규 보강 X. → 2026-05-09 대학교수 (URL=4)
+- 패턴 B: way 글자수만 늘림 / careerTree만 추가, detailReady·sidebar 출처 추가 X. → 2026-05-09 기업고위임원 (URL=2), 리포터 (URL=7)
 
 ### 1-B. 본문 fact 정확성 사전 검증 (NEW)
 
@@ -253,6 +282,24 @@ stdout flag 파싱:
 ### 2-3. fact 정정 (CLEANUP + fact 정정 모드)
 
 `reference/fact-verification.md` 절차. 본문 통계/숫자/회사명 정정 + 새 출처 등록.
+
+### 2-4. **sparse fieldKey 보강 의무 (룰 Z, 2026-05-10 신규)**
+
+Phase 1-A-2에서 식별한 sparse fieldKey list **모두** 보강 의무. cleanup-only force-enhance 사고 차단.
+
+**원칙**:
+- 영역당 최소 1개 deep URL, 평균 2~3개 목표
+- 산문 영역 (way / trivia / overviewProspect.main / detailWlb.wlbDetail / detailWlb.socialDetail / overviewAbilities.technKnow): 본문 fact마다 출처 등록
+- detailReady array (curriculum / recruit / training): 항목별 1:1 출처 매핑 (룰 Y와 정합)
+- sidebar 영역은 sidebar* 항목 자체 url로 보강 (`_sources["sidebar*"]` 등록 X — 룰 L)
+
+**금지 패턴**:
+- way 글자수만 늘리고 새 출처 발굴 X (기업고위임원 사고)
+- careerTree 신규에만 집중 + detailReady 영역 출처 1씩만 (리포터 사고)
+- cleanup 후 sources 8건 줄어든 채 종료 (대학교수 사고)
+- wiki cleanup 후 1차 출처 1:1 교체로 끝 (간호조무사 — 수 비슷)
+
+**target**: URL count ≥ `max(12, fieldsCount × 1.5)`. Phase 6 VERIFY에서 검증.
 
 ---
 
@@ -364,6 +411,34 @@ node scripts/full-quality-audit.cjs --slug=<slug>
 ```
 
 Gate 1 (각주) PASS 확인. Gate 4 ID 역전 WARN은 editService 구조적 동작 — 정상.
+
+### 6-D. **URL count 검증 (룰 Z, 2026-05-10 신규)**
+
+force-enhance 사이클 종료 직전 URL count target 도달 검증:
+
+```bash
+node -e "
+fetch('https://careerwiki.org/api/jobs/<slug>').then(r=>r.json()).then(j=>{
+  const s = (j.data||j)._sources || {};
+  const urls = Object.values(s).reduce((n,a)=>n+(Array.isArray(a)?a.filter(x=>x.url).length:0),0);
+  const fields = Object.keys(s).length;
+  const target = Math.max(12, Math.ceil(fields*1.5));
+  console.log('URL count:', urls, '/ target:', target, '/ fields:', fields);
+  if (urls < target) console.log('⚠️ urlCountInsufficient — RETRY (Phase 2 재진입, sparse fieldKey 보강)');
+  else console.log('✅ PASS');
+})"
+```
+
+**판정**:
+- URL count ≥ `max(12, fieldsCount × 1.5)` → PASS
+- 미달 → **RETRY** (Phase 2 재진입, 추가 sparse fieldKey 보강)
+- 가구조립원 시범 (URL 23, fields 9, target 14) reference 패턴
+
+**RETRY 횟수 1회 후도 미달**:
+- (a) 4단계 인정 (deep URL 발굴 실패 영역만 인정 + pending 기록)
+- (b) STOP + 사용자 보고 (사고 가능성)
+
+audit-via-api.cjs 출력에서 `urlCountInsufficient(N<X)` flag로 자동 검출.
 
 ---
 

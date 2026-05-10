@@ -797,6 +797,37 @@ function detectArrayItemPeriod(detailReady) {
 // @param {object} detailReady - {curriculum, recruit, training, ...} 객체
 // @param {object} sources - _sources 객체 (fieldKey → 배열)
 // @returns {Array<{field, items, sources, markedItems, preview}>} cluster 검출 list
+// ── 룰 Z (2026-05-10 — URL Count Insufficient 차단) ───────────────────────────
+//
+// force-enhance 후 직업당 _sources URL count가 부족한 사고 재발 방지.
+// 2026-05-09 사고: 103 직업 force-enhance 중 6 직업이 URL <10
+//   - 기업고위임원 2 (way 글자수만)
+//   - 대학교수 4 (cleanup 8개 제거 후 미보강)
+//   - 의료정보시스템개발자 4 (4단계 인정)
+//   - 물리치료사 5 (cleanup 6 cluster 제거)
+//   - 간호조무사 7 (wiki 교체)
+//   - 리포터 7 (careerTree만 집중)
+//
+// target: max(12, fieldsCount × 1.5). 미달 시 WARN (FAIL X — patch 차단 X, 다음 cycle 트리거).
+//
+// fieldsCount: _sources 객체의 키 수 (sidebar* 제외 권장이지만 단순화 위해 모든 fieldKey 포함)
+//
+// @param {object} sources - _sources 객체 ({ "way": [...], "trivia": [...] })
+// @returns {object|null} 부족 시 { rule, count, target, fieldsCount }, 충분 시 null
+function detectUrlCountInsufficient(sources) {
+  if (!sources || typeof sources !== 'object') return null;
+  const fieldKeys = Object.keys(sources).filter(k => Array.isArray(sources[k]));
+  const fieldsCount = fieldKeys.length;
+  const totalUrls = fieldKeys.reduce((n, fk) => {
+    return n + sources[fk].filter(s => s && typeof s === 'object' && s.url).length;
+  }, 0);
+  const minTarget = Math.max(12, Math.ceil(fieldsCount * 1.5));
+  if (totalUrls < minTarget) {
+    return { rule: 'urlCountInsufficient', count: totalUrls, target: minTarget, fieldsCount };
+  }
+  return null;
+}
+
 function detectSourcePositionCluster(detailReady, sources) {
   if (!detailReady || typeof detailReady !== 'object') return [];
   if (!sources || typeof sources !== 'object') return [];
@@ -875,4 +906,6 @@ module.exports = {
   detectArrayItemPeriod,
   detectSourcePositionCluster,
   ARRAY_FIELDS_FOR_PERIOD,
+  // 룰 Z (2026-05-10 — URL Count Insufficient WARN)
+  detectUrlCountInsufficient,
 };
