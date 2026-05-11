@@ -32,6 +32,7 @@ const {
   detectArrayItemPeriod,
   detectSourcePositionCluster,
   detectUrlCountInsufficient,
+  detectBodyWithoutSources,
   SELF_DOMAINS,
   PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -103,6 +104,7 @@ function analyze(slug, data, opts = {}) {
     arrayItemPeriod: [],  // 2026-05-09 룰 X — WARN level
     sourcePositionCluster: [], // 2026-05-09 룰 Y — WARN level
     urlCountInsufficient: null, // 2026-05-10 룰 Z — WARN level
+    bodyWithoutSources: [], // 2026-05-10 룰 ZZ — WARN level (사용자 발견 사고)
   };
 
   const flatSources = [];
@@ -246,6 +248,11 @@ function analyze(slug, data, opts = {}) {
     findings.urlCountInsufficient = detectUrlCountInsufficient(sources);
   }
 
+  // 룰 ZZ (2026-05-10): Body Without Sources (WARN level — 본문 충실 but _sources 부재)
+  // 2026-05-10 사용자 발견 사고: 경찰관 detailWlb / curriculum / training 본문은 있는데 [N]+_sources 0
+  // proseRaw + detailReady 기반 검사 (sal 영역 자동 제외 — proseFields list에서 빼놓음)
+  findings.bodyWithoutSources = detectBodyWithoutSources(data._proseRaw || {}, data.detailReady || {}, sources);
+
   return findings;
 }
 
@@ -302,6 +309,12 @@ function isFail(j) {
     if (f.urlCountInsufficient) {
       const z = f.urlCountInsufficient;
       flags.push(`urlCountInsufficient(${z.count}<${z.target})`);
+    }
+    // 룰 ZZ (2026-05-10) — WARN level (본문 충실 but _sources 부재)
+    // 형식: `bodyWithoutSources(N: f1,f2,...)` — N=영역 수
+    if (f.bodyWithoutSources && f.bodyWithoutSources.length) {
+      const fields = f.bodyWithoutSources.map(b => b.field).join(',');
+      flags.push(`bodyWithoutSources(${f.bodyWithoutSources.length}: ${fields})`);
     }
     console.log(`${status} ${slug.padEnd(30)} ${flags.join(', ') || 'clean'}`);
     f.arrayBrokenRef.forEach(b =>

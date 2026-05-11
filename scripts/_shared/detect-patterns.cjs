@@ -797,6 +797,62 @@ function detectArrayItemPeriod(detailReady) {
 // @param {object} detailReady - {curriculum, recruit, training, ...} 객체
 // @param {object} sources - _sources 객체 (fieldKey → 배열)
 // @returns {Array<{field, items, sources, markedItems, preview}>} cluster 검출 list
+// ── 룰 ZZ (2026-05-10 — Body Without Sources 차단) ────────────────────────────
+//
+// 산문 영역 본문 100자+ 또는 detailReady array 항목 2+ 인데 _sources 부재 사고 차단.
+// 2026-05-10 사고 (사용자 발견): 경찰관 detailWlb.wlbDetail(157자) / socialDetail(115자) /
+// detailReady.curriculum(3) / training(3) — 본문은 충실한데 [N]+_sources 모두 0.
+// 원인: master force-enhance가 detailReady.recruit만 처리, 다른 영역 무시.
+// 룰 Z (urlCountInsufficient)는 _sources 등록 fieldKey만 카운트라 fieldKey 부재 silent.
+//
+// 103 직업 sample: 42% (43/103) 영향. detailWlb.wlbDetail 34건 / socialDetail 28건 /
+// overviewProspect.main 11건 / trivia 4건 / way 3건 / curriculum 1건.
+//
+// @param {object} proseRaw - data._proseRaw (산문 fieldKey raw string)
+// @param {object} detailReady - data.detailReady ({ curriculum:[], recruit:[], training:[] })
+// @param {object} sources - data._sources
+// @returns {Array} findings (빈 배열이면 통과). 각 finding: { rule, area, field, bodyLen|items }
+function detectBodyWithoutSources(proseRaw, detailReady, sources) {
+  const findings = [];
+  // 5 산문 필드만 — UCJ 작성 의무 영역. overviewWork.main / overviewAbilities.technKnow /
+  // summary는 CareerNet API 원본 영역 (api_data_json) — UCJ 출처 의무 X (false positive 회피).
+  // sal 영역 제외 — sal-protection.
+  const proseFields = [
+    'way', 'overviewProspect.main', 'trivia',
+    'detailWlb.wlbDetail', 'detailWlb.socialDetail',
+  ];
+  // 산문 영역
+  if (proseRaw && typeof proseRaw === 'object') {
+    for (const f of proseFields) {
+      const body = typeof proseRaw[f] === 'string' ? proseRaw[f] : '';
+      const srcArr = sources && Array.isArray(sources[f]) ? sources[f] : [];
+      const urlCount = srcArr.filter(s => s && typeof s === 'object' && s.url).length;
+      if (body.length >= 100 && urlCount === 0) {
+        findings.push({ rule: 'bodyWithoutSources', area: 'prose', field: f, bodyLen: body.length });
+      }
+    }
+  }
+  // detailReady array
+  if (detailReady && typeof detailReady === 'object') {
+    for (const sub of ['curriculum', 'recruit', 'training']) {
+      const arr = Array.isArray(detailReady[sub]) ? detailReady[sub] : [];
+      if (arr.length < 2) continue;
+      const fieldKey = `detailReady.${sub}`;
+      const srcArr = sources && Array.isArray(sources[fieldKey]) ? sources[fieldKey] : [];
+      const urlCount = srcArr.filter(s => s && typeof s === 'object' && s.url).length;
+      // 모든 항목에 [N] 마커 부재 + _sources 0 → 본문만 잔존, 출처 0
+      const itemsWithoutMarker = arr.filter(it => {
+        const t = typeof it === 'string' ? it : (it && typeof it === 'object' ? (it.text || '') : '');
+        return !/\[\d+\]/.test(t);
+      }).length;
+      if (itemsWithoutMarker === arr.length && urlCount === 0) {
+        findings.push({ rule: 'bodyWithoutSources', area: 'detailReady', field: fieldKey, items: arr.length });
+      }
+    }
+  }
+  return findings;
+}
+
 // ── 룰 Z (2026-05-10 — URL Count Insufficient 차단) ───────────────────────────
 //
 // force-enhance 후 직업당 _sources URL count가 부족한 사고 재발 방지.
@@ -908,4 +964,6 @@ module.exports = {
   ARRAY_FIELDS_FOR_PERIOD,
   // 룰 Z (2026-05-10 — URL Count Insufficient WARN)
   detectUrlCountInsufficient,
+  // 룰 ZZ (2026-05-10 — Body Without Sources WARN)
+  detectBodyWithoutSources,
 };
