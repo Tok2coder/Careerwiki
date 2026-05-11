@@ -1,0 +1,19 @@
+# Temporary diagnostic outputs — auto-isolate from tracked scripts.
+# Rationale: 2026-05-11 incident — `ls | grep -E '^_phaseA' | xargs rm`
+# wiped 4 tracked `_phaseA-*.cjs` files because temp outputs and tracked
+# scripts shared the same `_phaseA-` prefix.
+#
+# Policy:
+#   - Tracked scripts/payloads: meaningful names (_phaseA-audit.cjs,
+#     _phaseB-prose.cjs, _phaseC-classify.cjs, ...)
+#   - One-shot temp outputs: MUST use `_tmp_*` or `_scratch_*` prefix
+#     (or `*.tmp.json` / `*.tmp.cjs` suffix). These never collide with
+#     tracked names.
+#
+# See: memory/feedback_worktree_safe_cleanup.md
+#      memory/feedback_dirty_folder_rm_pitfall.md
+
+_tmp_*
+_scratch_*
+*.tmp.json
+*.tmp.cjs
