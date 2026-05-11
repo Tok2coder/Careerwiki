@@ -884,6 +884,176 @@ function detectUrlCountInsufficient(sources) {
   return null;
 }
 
+// ── 룰 ZZZZ (2026-05-11 — Orphan Sources FAIL) ────────────────────────────────
+//
+// 사용자 발견 사고 (경찰관, 2026-05-11): _sources에 `detailGrowth.growth` /
+// `detailWork.workDetail` 영역 4건 등록되어 있는데 본문이 _proseRaw에 미노출,
+// API top-level에도 detailGrowth / detailWork 자체가 없음. 본문 0인데 _sources만
+// 잔존 → 사용자 시각 [11][12][13][14] orphan.
+//
+// Rule ZZZ (sourcesWithoutMarkers)는 본문 body.length>=100 케이스만 검출. 본문 자체가
+// 0/미존재인 경우는 silent. Rule ZZZZ가 이 사고 영역 보강.
+//
+// 검출 조건:
+//   - sources fieldKey가 sidebar*면 skip (룰 L 별도 검출)
+//   - sources fieldKey가 overviewSalary.sal이면 skip (sal-protection)
+//   - sources fieldKey가 detailReady.{curriculum|recruit|training}이면:
+//       items 배열이 빈/모두 empty면 orphan
+//   - 그 외 fieldKey:
+//       _proseRaw[fieldKey] 또는 getNested(apiData, fieldKey)가
+//         (a) 미존재 또는 (b) string이지만 length<50 또는 (c) array 항목 모두 length<50
+//       → orphan
+//
+// 사고 차단: _sources에 등록은 됐는데 본문이 아예 없는 영역. 사용자 출처 섹션에서
+// [N] 마커가 보이지만 본문에서 인용 위치를 못 찾는 케이스.
+//
+// @param {object} proseRaw - data._proseRaw
+// @param {object} detailReady - data.detailReady
+// @param {object} sources - data._sources
+// @param {object} apiData - data 전체 (top-level fallback 용 — getNested)
+// @returns {Array<{rule, area, field, srcsCount, severity}>} orphan findings
+const SIDEBAR_FIELDS_SET = new Set(['sidebarCerts', 'sidebarOrgs', 'sidebarMajors', 'sidebarJobs']);
+const SAL_PROTECTED_FIELDS_ZZZZ = new Set(['overviewSalary.sal']);
+const MIN_BODY_LEN_FOR_NON_ORPHAN = 50;
+
+function _getNestedZZZZ(obj, p) {
+  if (!obj) return undefined;
+  if (obj[p] !== undefined) return obj[p];
+  let cur = obj;
+  for (const part of p.split('.')) { if (cur == null) return undefined; cur = cur[part]; }
+  return cur;
+}
+
+function detectOrphanSources(proseRaw, detailReady, sources, apiData) {
+  const findings = [];
+  if (!sources || typeof sources !== 'object') return findings;
+  for (const [fieldKey, srcArr] of Object.entries(sources)) {
+    if (!Array.isArray(srcArr) || srcArr.length === 0) continue;
+    if (SIDEBAR_FIELDS_SET.has(fieldKey)) continue;
+    if (SAL_PROTECTED_FIELDS_ZZZZ.has(fieldKey)) continue;
+    const urlCount = srcArr.filter(s => s && typeof s === 'object' && s.url).length;
+    if (urlCount === 0) continue;
+
+    // detailReady.{sub} array — items 검사
+    if (fieldKey.startsWith('detailReady.')) {
+      const sub = fieldKey.slice('detailReady.'.length);
+      const items = detailReady && Array.isArray(detailReady[sub]) ? detailReady[sub] : [];
+      const itemsLen = items.length;
+      const nonEmpty = items.filter(it => {
+        const t = typeof it === 'string' ? it : (it && typeof it === 'object' ? (it.text || it.title || '') : '');
+        return t && t.trim().length > 0;
+      }).length;
+      if (itemsLen === 0 || nonEmpty === 0) {
+        findings.push({
+          rule: 'orphanSources',
+          area: 'detailReady-empty',
+          field: fieldKey,
+          srcsCount: urlCount,
+          itemsLen,
+          severity: 'FAIL',
+        });
+      }
+      continue;
+    }
+
+    // prose 영역 — _proseRaw 우선, 없으면 top-level getNested
+    let body = null;
+    if (proseRaw && typeof proseRaw === 'object' && typeof proseRaw[fieldKey] === 'string') {
+      body = proseRaw[fieldKey];
+    } else if (apiData) {
+      const v = _getNestedZZZZ(apiData, fieldKey);
+      if (typeof v === 'string') body = v;
+      else if (Array.isArray(v)) {
+        // array 항목 join
+        body = v.map(x => typeof x === 'string' ? x : (x && typeof x === 'object' ? (x.text || x.title || '') : '')).join(' ').trim();
+      }
+    }
+    if (body == null) {
+      // 본문 자체가 미존재 (API top-level에도 없는 영역 — detailGrowth.growth, detailWork.workDetail 등)
+      findings.push({
+        rule: 'orphanSources',
+        area: 'body-missing',
+        field: fieldKey,
+        srcsCount: urlCount,
+        bodyLen: 0,
+        severity: 'FAIL',
+      });
+      continue;
+    }
+    if (typeof body === 'string' && body.trim().length < MIN_BODY_LEN_FOR_NON_ORPHAN) {
+      findings.push({
+        rule: 'orphanSources',
+        area: 'body-too-short',
+        field: fieldKey,
+        srcsCount: urlCount,
+        bodyLen: body.trim().length,
+        severity: 'FAIL',
+      });
+    }
+  }
+  return findings;
+}
+
+// ── 룰 ZZZ (2026-05-11 — Sources Without Markers FAIL) ─────────────────────────
+//
+// 사용자 발견 사고 (경찰관, 2026-05-11): "_sources 14개 등록되어 있는데 본문 [N]
+// 인라인 각주에 안 박혀 있다". 사용자 관점 즉시 누락 사고.
+//
+// Rule ZZ (bodyWithoutSources)는 body 100+ AND _sources 0 케이스를 잡지만,
+// _sources >= 1 인데 [N] 마커가 본문에 1개도 없는 케이스 (정반대 사고)는 silent.
+//
+// Rule ZZZ 정의:
+//   - prose 8 필드 (way / overviewProspect.main / trivia / detailWlb.wlbDetail /
+//     detailWlb.socialDetail / overviewWork.main / summary / overviewAbilities.technKnow)
+//   - body.length >= 100 AND _sources[field].url 수 >= 1 AND body 안 /\[\d+\]/g = 0
+//   - → FAIL (사용자 시각 누락 사고)
+//
+// 레벨: FAIL (WARN 아님). 사용자가 곧바로 본문에서 발견하는 사고.
+//
+// proseRaw 우선 (PR 1, 2026-05-08). detail* / Growth.growth 등 _proseRaw 미노출
+// 필드의 orphan 사고는 별도 (detectOrphanSourceIdx에서 처리해야 하지만 BODY_FIELDS
+// 미포함으로 silent — 추후 별도 보강 영역).
+//
+// sal-protection: overviewSalary.sal 제외 (proseFields list에서 빼놓음).
+//
+// @param {object} proseRaw - data._proseRaw (산문 fieldKey raw string)
+// @param {object} detailReady - data.detailReady (선택 — 현재 detector는 prose만)
+// @param {object} sources - data._sources
+// @returns {Array} findings (빈 배열이면 통과). 각 finding: { rule, area, field, bodyLen, srcsCount, severity }
+function detectSourcesWithoutMarkers(proseRaw, detailReady, sources) {
+  const findings = [];
+  const proseFields = [
+    'way',
+    'overviewProspect.main',
+    'trivia',
+    'detailWlb.wlbDetail',
+    'detailWlb.socialDetail',
+    'overviewWork.main',
+    'summary',
+    'overviewAbilities.technKnow',
+  ];
+  if (!proseRaw || typeof proseRaw !== 'object') return findings;
+  for (const f of proseFields) {
+    const body = typeof proseRaw[f] === 'string' ? proseRaw[f] : '';
+    if (body.length < 100) continue;
+    const srcArr = sources && Array.isArray(sources[f]) ? sources[f] : [];
+    const srcsCount = srcArr.filter(s => s && typeof s === 'object' && s.url).length;
+    if (srcsCount === 0) continue; // Rule ZZ 영역
+    const markerCount = (body.match(/\[\d+\]/g) || []).length;
+    if (markerCount === 0) {
+      findings.push({
+        rule: 'sourcesWithoutMarkers',
+        area: 'prose',
+        field: f,
+        bodyLen: body.length,
+        srcsCount,
+        severity: 'FAIL',
+      });
+    }
+  }
+  return findings;
+}
+
 function detectSourcePositionCluster(detailReady, sources) {
   if (!detailReady || typeof detailReady !== 'object') return [];
   if (!sources || typeof sources !== 'object') return [];
@@ -966,4 +1136,8 @@ module.exports = {
   detectUrlCountInsufficient,
   // 룰 ZZ (2026-05-10 — Body Without Sources WARN)
   detectBodyWithoutSources,
+  // 룰 ZZZ (2026-05-11 — Sources Without Markers FAIL)
+  detectSourcesWithoutMarkers,
+  // 룰 ZZZZ (2026-05-11 — Orphan Sources FAIL — 본문 없는 영역에 _sources만 잔존)
+  detectOrphanSources,
 };

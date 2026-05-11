@@ -33,6 +33,8 @@ const {
   detectSourcePositionCluster,
   detectUrlCountInsufficient,
   detectBodyWithoutSources,
+  detectSourcesWithoutMarkers,
+  detectOrphanSources,
   SELF_DOMAINS,
   PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -105,6 +107,8 @@ function analyze(slug, data, opts = {}) {
     sourcePositionCluster: [], // 2026-05-09 룰 Y — WARN level
     urlCountInsufficient: null, // 2026-05-10 룰 Z — WARN level
     bodyWithoutSources: [], // 2026-05-10 룰 ZZ — WARN level (사용자 발견 사고)
+    sourcesWithoutMarkers: [], // 2026-05-11 룰 ZZZ — FAIL level (경찰관 사고)
+    orphanSources: [], // 2026-05-11 룰 ZZZZ — FAIL level (본문 없는 영역에 _sources만 잔존)
   };
 
   const flatSources = [];
@@ -253,6 +257,18 @@ function analyze(slug, data, opts = {}) {
   // proseRaw + detailReady 기반 검사 (sal 영역 자동 제외 — proseFields list에서 빼놓음)
   findings.bodyWithoutSources = detectBodyWithoutSources(data._proseRaw || {}, data.detailReady || {}, sources);
 
+  // 룰 ZZZ (2026-05-11): Sources Without Markers (FAIL level — _sources 있는데 본문 [N] 0개)
+  // 2026-05-11 사용자 발견 사고: 경찰관 "출처 14개 있는데 인라인 각주 안 박힘"
+  // ZZ의 정반대 케이스 — body 100+ AND srcs>=1 AND markers=0
+  // sal 영역 detector 내부에서 제외 (proseFields list에서 빼놓음)
+  findings.sourcesWithoutMarkers = detectSourcesWithoutMarkers(data._proseRaw || {}, data.detailReady || {}, sources);
+
+  // 룰 ZZZZ (2026-05-11): Orphan Sources (FAIL level — 본문 미존재 영역에 _sources만 잔존)
+  // 2026-05-11 경찰관 사고: detailGrowth.growth / detailWork.workDetail 본문 미노출인데 _sources 4건 등록
+  // ZZZ는 _proseRaw 9 필드만 검사. 그 외 fieldKey의 orphan은 ZZZZ가 검출.
+  // sal-protection + sidebar* skip (detector 내부에서 처리)
+  findings.orphanSources = detectOrphanSources(data._proseRaw || {}, data.detailReady || {}, sources, data);
+
   return findings;
 }
 
@@ -264,7 +280,9 @@ function isFail(j) {
     j.sourcesNull || j.idxGap || j.arrayBrokenRef.length > 0 || j.orderViolation ||
     (j.sidebarSources && j.sidebarSources.length > 0) ||
     (j.rootURL && j.rootURL.length > 0) ||
-    (j.wikiQuota && j.wikiQuota.level === 'FAIL')
+    (j.wikiQuota && j.wikiQuota.level === 'FAIL') ||
+    (j.sourcesWithoutMarkers && j.sourcesWithoutMarkers.length > 0) ||
+    (j.orphanSources && j.orphanSources.length > 0)
   );
 }
 
@@ -315,6 +333,18 @@ function isFail(j) {
     if (f.bodyWithoutSources && f.bodyWithoutSources.length) {
       const fields = f.bodyWithoutSources.map(b => b.field).join(',');
       flags.push(`bodyWithoutSources(${f.bodyWithoutSources.length}: ${fields})`);
+    }
+    // 룰 ZZZ (2026-05-11) — FAIL level (_sources 있는데 본문 [N] 0개)
+    // 형식: `sourcesWithoutMarkers(N: f1,f2,...)`
+    if (f.sourcesWithoutMarkers && f.sourcesWithoutMarkers.length) {
+      const fields = f.sourcesWithoutMarkers.map(b => `${b.field}(${b.bodyLen}/${b.srcsCount})`).join(',');
+      flags.push(`sourcesWithoutMarkers(${f.sourcesWithoutMarkers.length}: ${fields})`);
+    }
+    // 룰 ZZZZ (2026-05-11) — FAIL level (본문 미존재 영역에 _sources만 잔존)
+    // 형식: `orphanSources(N: f1[area]/srcs,...)`
+    if (f.orphanSources && f.orphanSources.length) {
+      const fields = f.orphanSources.map(b => `${b.field}[${b.area}/${b.srcsCount}]`).join(',');
+      flags.push(`orphanSources(${f.orphanSources.length}: ${fields})`);
     }
     console.log(`${status} ${slug.padEnd(30)} ${flags.join(', ') || 'clean'}`);
     f.arrayBrokenRef.forEach(b =>

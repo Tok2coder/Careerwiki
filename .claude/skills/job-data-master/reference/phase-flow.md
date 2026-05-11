@@ -224,6 +224,9 @@ stdout flag 파싱:
 | `arrayItemPeriod(N)` | X | detailReady array 항목 마침표 (WARN) |
 | `sourcePositionCluster(N)` | Y | detailReady cluster (WARN) |
 | `urlCountInsufficient(N<X)` | **Z (2026-05-10)** | 글로벌 URL count 부족 (WARN) |
+| `bodyWithoutSources(N)` | **ZZ (2026-05-10)** | 본문 충실 but _sources 부재 (WARN) |
+| `sourcesWithoutMarkers(N)` | **ZZZ (2026-05-11)** | _sources 있는데 본문 [N] 0개 (**FAIL**) |
+| `orphanSources(N)` | **ZZZZ (2026-05-11)** | 본문 미존재 영역에 _sources 잔존 (**FAIL**) |
 
 **proseBodyOrphan** (PR 14, 2026-05-08): 산문 9 BODY_FIELDS (`way` / `summary` / `trivia` / `overviewWork.main` / `overviewProspect.main` / `overviewAbilities.technKnow` / `overviewSalary.sal` / `detailWlb.wlbDetail` / `detailWlb.socialDetail`) 본문 [N] vs `_sources[fieldKey]` 정합 — `_proseRaw` namespace 활용.
 
@@ -484,6 +487,53 @@ node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal | grep bodyWitho
 - 1건+ → **RETRY** (Phase 2 재진입, 표시된 fieldKey 모두 _sources 등록 + 본문 [N] 마커 추가)
 
 **제외 영역**: overviewWork.main / overviewAbilities.technKnow / summary는 CareerNet API 원본 — 룰 ZZ 자동 제외.
+
+### 6-F. **sourcesWithoutMarkers 검증 (룰 ZZZ, 2026-05-11 신규 — FAIL)**
+
+force-enhance 사이클 종료 직전 marker 부재 영역 검증:
+
+```bash
+node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal | grep sourcesWithoutMarkers
+# clean 또는 비어있으면 PASS
+# sourcesWithoutMarkers(N: f1(bodyLen/srcsCount),...) 표시되면 → RETRY (Phase 2 재진입, 본문 [N] 마커 추가)
+```
+
+**판정**:
+- sourcesWithoutMarkers 0건 → PASS
+- 1건+ → **RETRY 또는 STOP** — body 100자+이고 _sources 등록 영역인데 본문에 [N] 마커 0개. 출처를 등록했으면 본문에 1개 이상 [N] 박혀야 함. fact가 본문에 안 등장하면 출처 자체 부적격(제거 + 룰 ZZ 재발) → 출처 적격이면 본문 [N] 추가 또는 본문 보강.
+
+**검사 대상 8 영역**: `way` / `overviewProspect.main` / `trivia` / `detailWlb.wlbDetail` / `detailWlb.socialDetail` / `overviewWork.main` / `summary` / `overviewAbilities.technKnow`.
+
+**ZZZ vs ZZ 비교** (정반대 사고):
+- 룰 ZZ: body 충실 + _sources 0개 → 출처 발굴해서 등록 + [N] 박기
+- 룰 ZZZ: body 충실 + _sources 1+ + 본문 [N] 0개 → 본문 [N] 추가 (또는 출처 부적격이면 제거)
+
+**사고 사례 (2026-05-11 사용자 발견)**: 경찰관 "출처 14개 있는데 인라인 각주 안 박힘". 362 master 직업 audit 8건 발견 (abilities 5건 / way 2건 / socialDetail 1건).
+
+### 6-G. **orphanSources 검증 (룰 ZZZZ, 2026-05-11 신규 — FAIL)**
+
+force-enhance 사이클 종료 직전 본문 미존재 영역 검증:
+
+```bash
+node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal | grep orphanSources
+# clean 또는 비어있으면 PASS
+# orphanSources(N: f1[area/srcs],...) 표시되면 → RETRY (Phase 2 재진입, _sources fieldKey 제거 또는 본문 생성)
+```
+
+**판정**:
+- orphanSources 0건 → PASS
+- 1건+ → **RETRY 또는 STOP** — 본문이 _proseRaw에도 detailReady에도 API top-level에도 없거나 너무 짧은데 _sources만 잔존. 두 가지 fix:
+  - (a) 해당 fieldKey가 유효 영역이면 본문 작성 (산문 50자+ 또는 detailReady array 항목 추가)
+  - (b) 유효 영역 아니면 _sources에서 fieldKey 자체 제거
+
+**area 종류**:
+- `body-missing`: API 응답에 fieldKey 자체 미존재 (예: 경찰관 detailGrowth/detailWork)
+- `body-too-short`: 본문 존재하지만 trim 후 50자 미만
+- `detailReady-empty`: detailReady array가 빈 배열 또는 모든 항목 empty
+
+**사고 사례 (2026-05-11 사용자 발견)**: 경찰관 `_sources.detailGrowth.growth`(2건) + `_sources.detailWork.workDetail`(2건) — API top-level에 detailGrowth/detailWork 자체 없는데 _sources 잔존 (4 출처 silent orphan). 362 master 직업 audit 10건 발견 (detailGrowth.growth 5 / detailWork.workDetail 5 / summary 2 / abilities 1 / overviewSalary.prospects 1 / overviewProspect.main 1).
+
+**핵심 차단**: enhance 시 **존재하지 않는 fieldKey에 _sources 등록 금지**. detailGrowth.growth / detailWork.workDetail 영역은 master skill이 작성 대상 아니면 _sources 키 자체 생성 X.
 
 ---
 

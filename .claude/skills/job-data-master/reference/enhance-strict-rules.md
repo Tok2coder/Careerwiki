@@ -53,6 +53,8 @@
 | **본문 [N] = field-local 번호** ⚠️ | 본문 `[N]`은 항상 **필드별 1부터 시작하는 로컬 번호**다. 렌더러가 `_sources[fieldKey][N-1]`로 매핑 후 footnoteMap을 통해 글로벌 번호로 변환. **본문 [N] = _sources[fieldKey] 배열의 (N-1)번째 항목**. _sources의 글로벌 `id` 필드는 페이지 통합 출처 카운트용일 뿐 본문 매핑과 무관 |
 | **brokenRef 금지** | 산문 필드 본문에 `[N]` 마커가 있는데 `_sources[fieldKey]` 길이가 N보다 작으면 매핑 실패. validate `[brokenRef]` FAIL. 본문 마커는 1..N 연속 필수 |
 | **orphanSrc 자제** | `_sources[fieldKey]`에 등록만 하고 본문에서 `[N]` 마커로 인용하지 않으면 의미 없음 — validate `[orphanSrc]` WARN. 등록한 모든 출처를 본문에서 1회 이상 인용하거나 _sources에서 제거 |
+| **🚫 sourcesWithoutMarkers (룰 ZZZ, 2026-05-11)** ⚠️ | 산문 8 영역 (`way` / `overviewProspect.main` / `trivia` / `detailWlb.wlbDetail` / `detailWlb.socialDetail` / `overviewWork.main` / `summary` / `overviewAbilities.technKnow`) 본문 100자+ AND `_sources[field]` URL 1+ 인데 본문에 `[N]` 마커 0개 → **FAIL**. 출처를 등록했으면 본문에 반드시 [N] 박혀야 함. fact 미등장이면 출처 부적격(제거). audit `sourcesWithoutMarkers(N: field(bodyLen/srcsCount))` FAIL. 경찰관 사고 (2026-05-11) 후속 |
+| **🚫 orphanSources (룰 ZZZZ, 2026-05-11)** ⚠️ | `_sources` fieldKey 중 본문이 _proseRaw에도 detailReady에도 API top-level에도 없거나 trim 후 50자 미만인 영역에 출처 등록 → **FAIL**. 차단 정책: **존재하지 않는 fieldKey에 _sources 등록 금지** (예: detailGrowth.growth / detailWork.workDetail 영역은 master skill이 작성 대상 아니면 _sources 키 자체 생성 X). audit `orphanSources(N: field[area/srcs])` FAIL. area: `body-missing` / `body-too-short` / `detailReady-empty`. 경찰관 사고 (2026-05-11) 후속 |
 
 ---
 
