@@ -58,8 +58,9 @@ export interface JobEqualizeItem {
   urlSourceCount: number // URL이 포함된 출처 수
   uniqueUrlCount: number | null // UCJ._sources 의 unique URL 수 (UCJ._sources 없으면 null)
   youtubeCount: number
-  skillApplied: boolean // page_revisions.change_summary에 스킬 마커 존재 여부
-  skillLastAppliedAt: string | null // 최근 스킬 적용 시각 ('YYYY-MM-DD HH:MM:SS' or null)
+  skillApplied: boolean // page_revisions.change_summary에 마커(master OR enhance) 존재 여부 — 기존 의미 유지
+  skillLastAppliedAt: string | null // 최근 스킬 적용 시각 ('YYYY-MM-DD HH:MM:SS' or null) — master/enhance 중 max
+  skillType: 'master' | 'enhance' | 'none' // 2026-05-10 분리 — master 우선, master 없고 enhance만 → 'enhance', 둘 다 없음 → 'none'
   // 품질 플래그
   wayIsArray: boolean     // way가 배열 형식 (위험)
   imageUrlBad: boolean    // image_url 포맷 오류 (경고)
@@ -91,7 +92,9 @@ export interface AdminJobEqualizeProps {
   avgJsonSize: number
   items: JobEqualizeItem[]
   qualityAlerts: QualityAlerts
-  skillAppliedCount: number    // 스킬 적용된 엔티티 수
+  skillAppliedCount: number    // 스킬 적용된 엔티티 수 (master OR enhance)
+  masterAppliedCount: number   // master 스킬 마커 보유 엔티티 수 (jobs 탭만, major=0)
+  enhanceOnlyCount: number     // 예전 스킬만 (master 없고 enhance만) 엔티티 수
   userVerifiedCount: number    // 관리자 수동 검증 완료 엔티티 수
 }
 
@@ -190,8 +193,10 @@ export function parseSources(sources: any): {
 }
 
 export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
-  const { tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts, skillAppliedCount, userVerifiedCount } = props
+  const { tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize, items, qualityAlerts, skillAppliedCount, masterAppliedCount, enhanceOnlyCount, userVerifiedCount } = props
   const skillAppliedPct = totalJobs > 0 ? ((skillAppliedCount / totalJobs) * 100).toFixed(1) : '0.0'
+  const masterAppliedPct = totalJobs > 0 ? ((masterAppliedCount / totalJobs) * 100).toFixed(1) : '0.0'
+  const enhanceOnlyPct = totalJobs > 0 ? ((enhanceOnlyCount / totalJobs) * 100).toFixed(1) : '0.0'
   const userVerifiedPct = totalJobs > 0 ? ((userVerifiedCount / totalJobs) * 100).toFixed(1) : '0.0'
 
   const isJob = tab === 'job'
@@ -199,6 +204,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
   const entityUrlPrefix = isJob ? '/job/' : '/major/'
   const entityType = isJob ? 'job' : 'major'
   const skillName = isJob ? 'job-data-enhance' : 'major-data-enhance'
+  const masterSkillName = isJob ? 'job-data-master' : null
 
   const itemsJson = JSON.stringify(items)
 
@@ -277,22 +283,32 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         </div>
         <div class="text-xl font-bold text-white">${totalJobs.toLocaleString()}</div>
       </div>
-      <div class="glass-card rounded-xl p-4 stat-card" title="change_summary에 [${skillName}] 마커가 있는 ${entityLabel} (스킬 돌린 수)">
+      <div class="glass-card rounded-xl p-4 stat-card" title="${masterSkillName ? `change_summary에 [${masterSkillName}] 마커가 있는 ${entityLabel} (현행 master 스킬)` : 'master 스킬 — major 탭은 미정'}">
         <div class="flex items-center gap-2 mb-2">
-          <div class="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center">
-            <i class="fas fa-wand-magic-sparkles text-cyan-400 text-xs"></i>
+          <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-wand-magic-sparkles text-emerald-400 text-xs"></i>
           </div>
-          <span class="text-[11px] text-slate-400">스킬 적용</span>
+          <span class="text-[11px] text-slate-400">master</span>
         </div>
-        <div class="text-xl font-bold text-cyan-400">${skillAppliedCount.toLocaleString()}</div>
-        <div class="text-[10px] text-slate-500">${skillAppliedPct}%</div>
+        <div class="text-xl font-bold text-emerald-400">${masterAppliedCount.toLocaleString()}</div>
+        <div class="text-[10px] text-slate-500">${masterAppliedPct}%</div>
       </div>
-      <div class="glass-card rounded-xl p-4 stat-card" title="[${skillName}] 마커가 없는 ${entityLabel} (스킬 안 돌린 수)">
+      <div class="glass-card rounded-xl p-4 stat-card" title="[${skillName}] 마커만 있고 master 마커는 없는 ${entityLabel} (예전 스킬)">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-clock-rotate-left text-amber-400 text-xs"></i>
+          </div>
+          <span class="text-[11px] text-slate-400">예전 스킬</span>
+        </div>
+        <div class="text-xl font-bold text-amber-400">${enhanceOnlyCount.toLocaleString()}</div>
+        <div class="text-[10px] text-slate-500">${enhanceOnlyPct}%</div>
+      </div>
+      <div class="glass-card rounded-xl p-4 stat-card" title="어떤 스킬 마커도 없는 ${entityLabel} (스킬 안 돌린 수)">
         <div class="flex items-center gap-2 mb-2">
           <div class="w-8 h-8 bg-slate-500/20 rounded-lg flex items-center justify-center">
             <i class="fas fa-circle-xmark text-slate-400 text-xs"></i>
           </div>
-          <span class="text-[11px] text-slate-400">스킬 미적용</span>
+          <span class="text-[11px] text-slate-400">미적용</span>
         </div>
         <div class="text-xl font-bold text-slate-300">${(totalJobs - skillAppliedCount).toLocaleString()}</div>
         <div class="text-[10px] text-slate-500">${(100 - parseFloat(skillAppliedPct)).toFixed(1)}%</div>
@@ -382,8 +398,11 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           <option value="perfect">완벽 12/12 (${perfectCount})</option>
           <option value="good">양호 6~11 (${contributedCount - perfectCount - poorCount})</option>
           <option value="poor">부실 &lt;6 (${poorCount})</option>
-          <optgroup label="── 스킬 적용 ──">
-            <option value="skillApplied">스킬 적용됨</option>
+          <optgroup label="── 스킬 종류 ──">
+            <option value="skillTypeMaster">master 스킬 (${masterAppliedCount})</option>
+            <option value="skillTypeEnhance">예전 스킬 (${enhanceOnlyCount})</option>
+            <option value="skillTypeNone">미적용 (${(totalJobs - skillAppliedCount).toLocaleString()})</option>
+            <option value="skillApplied">스킬 적용됨 (master+예전)</option>
             <option value="skillNotApplied">스킬 미적용</option>
           </optgroup>
           <optgroup label="── 사람 검증 ──">
@@ -591,6 +610,9 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           if (filter === 'poor' && item.fieldCount >= 6) return false;
           if (filter === 'skillApplied' && !item.skillApplied) return false;
           if (filter === 'skillNotApplied' && item.skillApplied) return false;
+          if (filter === 'skillTypeMaster' && item.skillType !== 'master') return false;
+          if (filter === 'skillTypeEnhance' && item.skillType !== 'enhance') return false;
+          if (filter === 'skillTypeNone' && item.skillType !== 'none') return false;
           if (filter === 'userVerified' && !item.userVerified) return false;
           if (filter === 'userNotVerified' && item.userVerified) return false;
           if (filter === 'quality' && !(item.wayIsArray || item.imageUrlBad || item.wayTrunc || item.srcOrderBad || item.ytLow)) return false;
@@ -761,9 +783,11 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
           }
           html += '</td>';
           html += '<td class="px-2 py-2 text-center">';
-          if (item.skillApplied) {
-            var tipAt = item.skillLastAppliedAt ? ' · 최근 ' + item.skillLastAppliedAt : '';
-            html += '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-400 text-[10px]" title="스킬 적용됨' + tipAt + '"><i class="fas fa-wand-magic-sparkles text-[9px]"></i>적용</span>';
+          var tipAt = item.skillLastAppliedAt ? ' · 최근 ' + item.skillLastAppliedAt : '';
+          if (item.skillType === 'master') {
+            html += '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px]" title="master 스킬 (현행)' + tipAt + '"><i class="fas fa-wand-magic-sparkles text-[9px]"></i>master</span>';
+          } else if (item.skillType === 'enhance') {
+            html += '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 text-[10px]" title="예전 스킬 ([job-data-enhance]만)' + tipAt + '"><i class="fas fa-clock-rotate-left text-[9px]"></i>예전</span>';
           } else {
             html += '<span class="text-slate-600 text-[10px]" title="스킬 미적용">—</span>';
           }
