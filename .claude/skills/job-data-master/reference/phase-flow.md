@@ -465,3 +465,74 @@ node scripts/skill-runs-stats.cjs --since=2026-05-08
 ```
 
 p50/p90 시간 + 누적 토큰 + 결과별 count 보고.
+
+---
+
+## Phase 8 — DEPLOY ⚠️ **PR 머지 후 즉시 (2026-05-10 신규)**
+
+**원칙**: skill 또는 코드 변경 PR 머지 후 즉시 main worktree에서 `npm run deploy` 실행. main HEAD = prod state 동기화 보장. **"auto-deploy 대기" 가정 절대 X**.
+
+**Why**: 2026-05-10 사고 — PR #18~24 (7개) 머지됐지만 1일 동안 prod deploy 안 됨. 본 프로젝트는 Cloudflare GitHub auto-deploy 미구성 (`package.json`의 `"deploy": "node scripts/safe-deploy.cjs"` 수동 실행 방식). 사용자가 admin 페이지에서 master/예전 분리 UI 안 보여 발견.
+
+`feedback_pr_merge_includes_deploy.md` 룰 박힘.
+
+### 8-A. main worktree로 이동 후 deploy
+
+```bash
+# Windows PowerShell
+Set-Location C:\Users\user\Careerwiki
+git pull origin main   # 최신 HEAD 확인
+npm run deploy         # safe-deploy.cjs: tsc → vite build → wrangler pages deploy
+```
+
+`safe-deploy.cjs` exit 0 + deployment URL 반환 확인. 예: `Deployment complete! Take a peek over at https://519fade2.careerwiki-phase1.pages.dev`.
+
+### 8-B. prod 검증
+
+```bash
+# 1. 직업 page (인증 X)
+node -e "fetch('https://careerwiki.org/job/<slug>').then(r=>console.log('HTTP',r.status))"
+# 기대: 200
+
+# 2. admin page (인증 X anonymous fetch는 401 정상)
+node -e "fetch('https://careerwiki.org/admin/job-equalize').then(r=>console.log('HTTP',r.status))"
+# 기대: 401 (인증 page 도달 OK)
+
+# 3. wrangler deployment list로 새 commit hash 반영 확인
+npx wrangler pages deployment list --project-name=careerwiki | head -8
+# 기대: 가장 최근 row의 Source = main HEAD commit hash
+```
+
+### 8-C. 보고 의무 항목
+
+PR 머지 보고 끝에 다음 명시 의무:
+- ✅ PR 머지 (PR # + main HEAD)
+- ✅ **deploy 완료 / preview URL: `https://<id>.careerwiki-phase1.pages.dev`**
+- ✅ wrangler deployment list 새 commit 반영 확인
+- ✅ prod URL ping 응답 (직업 200 / admin 401)
+
+### 8-D. 보호 영역 (deploy 시)
+
+- **worktree에서 deploy 절대 X** — CLAUDE.md `Worktree 배포 롤백` 룰 (worktree 코드 → 다음 main 배포 시 롤백됨)
+- **pre-commit hook 우회 (`--no-verify`) 절대 X** — `scripts/check-secrets.cjs`가 비밀키 차단
+- **main 외 branch에서 deploy 절대 X**
+
+### 8-E. deploy 실패 시
+
+- 즉시 STOP + 사고 보고 (root cause + 시도한 deploy 출력)
+- 코드 변경 새 PR로 fix (예: tsc error / build error)
+- 사용자 결정 받기 전 추가 retry X
+
+### 8-F. cleanup-only / DB-only 작업은 deploy 불필요
+
+force-enhance 사이클은 DB 직접 작업 (POST /api/job/{id}/edit) — 코드 변경 없으면 deploy 불필요. 본 Phase 8은 **코드 PR 머지 시에만** 적용.
+
+직업당 force-enhance (Phase 0~7) → DB rev 변경 → prod 페이지에 즉시 반영 (deploy 무관).
+
+---
+
+## See Also
+
+- `feedback_pr_merge_includes_deploy.md` — 본 룰의 사용자 영구 메모리 룰
+- CLAUDE.md `## CareerWiki-Specific Rules` 배포 섹션
+- `scripts/safe-deploy.cjs` — 본 deploy 명령
