@@ -253,6 +253,35 @@ sparse fieldKey list: [overviewProspect.main, detailWlb.wlbDetail, detailWlb.soc
 - 패턴 A: cleanup으로 broken 5건 + rootURL 3건 제거 → _sources 8건 줄어든 상태로 종료. 신규 보강 X. → 2026-05-09 대학교수 (URL=4)
 - 패턴 B: way 글자수만 늘림 / careerTree만 추가, detailReady·sidebar 출처 추가 X. → 2026-05-09 기업고위임원 (URL=2), 리포터 (URL=7)
 
+### 1-A-3. **zero-registration fieldKey 식별 의무 (룰 ZZ, 2026-05-10 신규)**
+
+`_sources`에 등록 안 된 영역 (zero-registration)도 별도 식별. sparse fieldKey 식별 (1-A-2)이 _sources 등록된 fieldKey만 점검하므로, 본문은 충실한데 _sources에 fieldKey 자체 부재인 케이스 silent 통과.
+
+**검사 대상**:
+- 산문 5 영역: `way` / `trivia` / `overviewProspect.main` / `detailWlb.wlbDetail` / `detailWlb.socialDetail`
+- detailReady array 3 영역: `curriculum` / `recruit` / `training`
+
+**판정**:
+- 산문: `_proseRaw[fieldKey].length >= 100` AND `_sources[fieldKey]` 부재 또는 url 0건 → zero-registration
+- detailReady array: 항목 2+ AND 모든 항목 [N] 마커 0 AND `_sources["detailReady.{sub}"]` 부재 또는 url 0건 → zero-registration
+
+**보고 형식**:
+```
+[직업명] zero-registration fieldKey list:
+  detailWlb.wlbDetail: body 157자 / _sources 부재 ← 보강 의무
+  detailWlb.socialDetail: body 115자 / _sources 부재 ← 보강 의무
+  detailReady.curriculum: 3 항목 모두 [N] 0 / _sources 부재 ← 보강 의무
+  detailReady.training: 3 항목 모두 [N] 0 / _sources 부재 ← 보강 의무
+```
+
+**Phase 2 PATCH 의무**: zero-registration 영역 모두 보강 (_sources 신규 등록 + 산문은 본문 [N] 마커 추가, array는 항목별 [N]).
+
+**사고 사례 (2026-05-10 사용자 발견)**: 경찰관 detailWlb.wlbDetail(157자)/socialDetail(115자)/curriculum(3)/training(3) 본문 충실 but [N]+_sources 모두 0. master force-enhance가 detailReady.recruit만 처리. 103 직업 sample 결과 42% 영향.
+
+**audit 자동 검출**: `audit-via-api.cjs --exclude-sal`에서 `bodyWithoutSources(N: f1,f2,...)` WARN. 다음 cycle 트리거.
+
+**제외 영역**: `overviewWork.main` / `overviewAbilities.technKnow` / `summary` — CareerNet API 원본 데이터 영역. UCJ 출처 의무 X (false positive 회피).
+
 ### 1-B. 본문 fact 정확성 사전 검증 (NEW)
 
 `reference/fact-verification.md` 참조. 본문 통계/숫자/회사명 → WebSearch cross-check. mismatch 발견 시 fact 정정 작업 범위에 포함 (CLEANUP + fact 정정 모드).
@@ -283,9 +312,9 @@ sparse fieldKey list: [overviewProspect.main, detailWlb.wlbDetail, detailWlb.soc
 
 `reference/fact-verification.md` 절차. 본문 통계/숫자/회사명 정정 + 새 출처 등록.
 
-### 2-4. **sparse fieldKey 보강 의무 (룰 Z, 2026-05-10 신규)**
+### 2-4. **sparse + zero-registration fieldKey 보강 의무 (룰 Z + ZZ, 2026-05-10 신규)**
 
-Phase 1-A-2에서 식별한 sparse fieldKey list **모두** 보강 의무. cleanup-only force-enhance 사고 차단.
+Phase 1-A-2 (sparse) + 1-A-3 (zero-registration) 식별 영역 **모두** 보강 의무. cleanup-only / 부분-처리 force-enhance 사고 차단.
 
 **원칙**:
 - 영역당 최소 1개 deep URL, 평균 2~3개 목표
@@ -440,9 +469,50 @@ fetch('https://careerwiki.org/api/jobs/<slug>').then(r=>r.json()).then(j=>{
 
 audit-via-api.cjs 출력에서 `urlCountInsufficient(N<X)` flag로 자동 검출.
 
+### 6-E. **bodyWithoutSources 검증 (룰 ZZ, 2026-05-10 신규)**
+
+force-enhance 사이클 종료 직전 zero-registration 영역 부재 검증:
+
+```bash
+node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal | grep bodyWithoutSources
+# clean 또는 비어있으면 PASS
+# bodyWithoutSources(N: f1,f2,...) 표시되면 → RETRY (Phase 2 재진입, 해당 영역 보강)
+```
+
+**판정**:
+- bodyWithoutSources 0건 → PASS
+- 1건+ → **RETRY** (Phase 2 재진입, 표시된 fieldKey 모두 _sources 등록 + 본문 [N] 마커 추가)
+
+**제외 영역**: overviewWork.main / overviewAbilities.technKnow / summary는 CareerNet API 원본 — 룰 ZZ 자동 제외.
+
 ---
 
 ## Phase 7 — REPORT
+
+### 7-A. changeSummary 양식 강제 (2026-05-10 신규)
+
+force-enhance 사이클의 changeSummary는 **모든 처리 영역 list 의무**:
+
+```
+✅ 올바른 형식:
+[job-data-master] enhance — force-enhance: way + trivia + overviewProspect + detailWlb.wlbDetail +
+  detailWlb.socialDetail + detailReady.curriculum + detailReady.recruit + detailReady.training +
+  sidebarOrgs (각 N건 출처 보강)
+
+❌ 잘못된 형식 (사고 패턴):
+[job-data-master] enhance — force-enhance: detailReady.recruit (출처 0→3)
+  → 다른 영역 처리 안 했으면 changeSummary에 명시 X — silent 부분 처리 사고
+```
+
+부분 처리 의도면 명시:
+```
+[job-data-master] enhance — force-enhance: detailReady.recruit only
+  (sparse: way/trivia 처리됨; zero-registration 잔존: detailWlb / curriculum / training — 4단계 인정 또는 다음 cycle)
+```
+
+**경찰관 사고 (2026-05-10)**: rev 14306 changeSummary "force-enhance: detailReady.recruit (출처 0→3)" — 다른 영역 무시하고 종료. 본 룰로 차단.
+
+
 
 DONE / RETRY 형식 (SKILL.md 참조). 
 
