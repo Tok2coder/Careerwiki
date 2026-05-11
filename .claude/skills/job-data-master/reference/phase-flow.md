@@ -385,6 +385,15 @@ errors 0. 산문 영역 게이트 (PROSE_BODY_FIELDS 9 필드 orphan / brokenRef
 
 (sal-readonly 호환 — `_jobSlug` 포함하면 `validateAsync`가 prod에서 prev sal sources fetch하여 strict 검증.)
 
+### 4-A. 룰 ZZZ/ZZZZ 차단 룰 (2026-05-11 신규)
+
+validate-job-edit.cjs가 다음 두 룰로 POST 전 차단:
+
+- **`[sourcesWithoutMarkers]` FAIL** (룰 ZZZ): body 100자+ AND _sources url 1+ AND 본문 [N] 0개. 출처 등록과 본문 [N] 박힘이 동반되지 않으면 차단.
+- **`[orphanSources]` FAIL** (룰 ZZZZ): _sources fieldKey가 ALLOWED set 미포함. ALLOWED = PROSE_BODY_FIELDS (산문 9) + detailReady.{curriculum,recruit,training,researchList,certificate}. 미사용 fieldKey (예: detailGrowth.growth, detailWork.workDetail) 등록 차단.
+
+→ 두 룰 FAIL이면 POST 절대 X. 본문 [N] 박는 작업 / fieldKey 교정 / _sources 제거 중 택1 후 재validate.
+
 ---
 
 ## Phase 5 — POST

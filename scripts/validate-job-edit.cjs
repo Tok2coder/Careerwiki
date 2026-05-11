@@ -49,7 +49,27 @@ const {
   calcWikiQuota,
   // 2026-05-08 — 산문 영역 raw fieldKey list (audit-via-api.cjs와 공유 — proseBodyOrphan)
   PROSE_BODY_FIELDS,
+  // 2026-05-11 — 룰 ZZZ/ZZZZ 가드
+  detectSourcesWithoutMarkers,
+  detectOrphanSources,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+
+// ── 룰 ZZZZ allowlist: validate-job-edit.cjs에서만 사용 ────────────────────────
+// _sources에 등록 가능한 fieldKey 화이트리스트. 미포함 키 발견 시 FAIL.
+// (sidebar*는 별도 룰 L로 차단되므로 ALLOWED 리스트엔 미포함)
+//
+// 신규 fieldKey 추가 시:
+//  1) PROSE_BODY_FIELDS (산문 9)는 detect-patterns.cjs에서 관리
+//  2) detailReady 배열 5종 (curriculum/recruit/training/researchList/certificate)
+//  3) 기타 영역 새로 도입 시 본 set 명시 추가
+const ALLOWED_SOURCE_FIELDS = new Set([
+  ...PROSE_BODY_FIELDS,
+  'detailReady.curriculum',
+  'detailReady.recruit',
+  'detailReady.training',
+  'detailReady.researchList',
+  'detailReady.certificate',
+]);
 
 const SIDEBAR_FIELDS_FORBIDDEN_TXT = SIDEBAR_FIELDS_FORBIDDEN.join('/');
 
@@ -1030,6 +1050,24 @@ function validate(data) {
         }
       }
 
+      // 룰 ZZZZ — fieldKey allowlist (2026-05-11 신규)
+      // _sources에 등록 가능한 fieldKey가 ALLOWED set 미포함 → FAIL.
+      // sidebar*는 별도 룰 L (SIDEBAR_FIELDS_FORBIDDEN) 이 차단.
+      // detailGrowth.growth / detailWork.workDetail 등 미사용 fieldKey 등록 차단.
+      //
+      // 단, srcArr 빈 배열이거나 모든 entry가 `delete:true` 인 경우 cleanup 이므로 skip.
+      const hasUrlEntry = srcArr.some(s => s && typeof s === 'object' && (s.url || s.text));
+      if (hasUrlEntry &&
+          !ALLOWED_SOURCE_FIELDS.has(fieldKey) &&
+          !SIDEBAR_FIELDS_FORBIDDEN.includes(fieldKey)) {
+        errors.push(
+          `[orphanSources] sources["${fieldKey}"]는 알려진 필드가 아님 — _sources fieldKey는 산문 9 영역 ` +
+          `(${PROSE_BODY_FIELDS.join('/')}) 또는 detailReady.{curriculum,recruit,training,researchList,certificate} 중 하나여야 함. ` +
+          `미사용 fieldKey에 출처 등록 시 본문 [N] 매핑 불가 → silent orphan 사고 (경찰관 detailGrowth.growth/detailWork.workDetail 사례). ` +
+          `fieldKey 교정 또는 _sources에서 제거 필요`
+        );
+      }
+
       // H·I) 산문 필드만 — orphan/broken 검사
       if (BODY_FIELDS_FOR_FOOTNOTE.includes(fieldKey)) {
         const body = getNestedField(fields, fieldKey);
@@ -1049,6 +1087,20 @@ function validate(data) {
               `[brokenRef] ${fieldKey} 본문에 [${broken.join('], [')}] 마커 있는데 ` +
               `_sources["${fieldKey}"] 길이 ${srcArr.length}개로 부족 — 본문 마커는 field-local 1..N 연속이어야 함. ` +
               `_sources에 누락 항목 추가하거나 본문 마커 정리 필요`
+            );
+          }
+
+          // 룰 ZZZ — sourcesWithoutMarkers (2026-05-11 신규, FAIL)
+          // body 100자+ AND _sources url>=1 AND body 안 [N] 0개 → FAIL.
+          // ZZ의 정반대 사고. 등록만 하고 본문 [N] 미주입한 케이스.
+          // sal-protection: overviewSalary.sal은 검사하되 srcArr 부재 시 skip되어 영향 없음
+          const urlCount = srcArr.filter(s => s && typeof s === 'object' && s.url).length;
+          const markerCount = (body.match(/\[\d+\]/g) || []).length;
+          if (body.length >= 100 && urlCount >= 1 && markerCount === 0) {
+            errors.push(
+              `[sourcesWithoutMarkers] ${fieldKey} 본문 ${body.length}자에 _sources ${urlCount}건 등록됐는데 본문에 [N] 마커 0개 — ` +
+              `출처를 등록했으면 본문에 [N] 1개 이상 박혀야 함. ` +
+              `(a) fact가 본문에 등장하면 해당 위치에 [N] 추가 (b) 출처가 본문 fact를 cover 못 하면 _sources에서 제거`
             );
           }
         }
