@@ -1,7 +1,7 @@
 import type { HowtoGuideDetail } from '../types/howto'
 import type { CommentPolicyAttributes } from './detailTemplateUtils'
 import { renderCommentsPlaceholder, resolveCommentPolicy, renderAdSlot, sanitizeJson } from './detailTemplateUtils'
-import { renderSafetyBannersForText, renderAdDisclosureBanner, autoAffiliateRel } from '../utils/safety'
+import { renderAdDisclosureBanner, autoAffiliateRel } from '../utils/safety'
 import { renderAiLevelBanner, annotateAiImages, type AiContentLevel, renderTrustBox, type TrustBoxData } from '../utils/trust'
 import { renderEntityActionGroup } from './partials/actionMenu'
 
@@ -552,17 +552,8 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
   // 각주 섹션 렌더링 (sourcesCollapsible에서 통합 렌더링하므로 본문 내 섹션은 제거)
   const footnotesSection = ''
 
-  // ── 안전 배너 (정책 community §5, wiki §7): 본문 자살자해/학교폭력 신호 자동 감지
-  const safetyScanText = JSON.stringify({
-    title: guide.title,
-    summary: guide.summary,
-    sampleNote: guide.sampleNote,
-    rawHtml: guide.rawHtml,
-    steps: guide.steps,
-    prerequisites: guide.prerequisites,
-    checkpoints: guide.checkpoints,
-  })
-  const safetyBannersBlock = renderSafetyBannersForText(safetyScanText)
+  // 본문 자동 안전 배너 제거 — 직업·전공 페이지와 동일하게 false positive 발생.
+  // 자살자해 매뉴얼은 댓글 신고 시점 처리에서 유지 (reportComment의 [URGENT-2H-SLA] 태그).
 
   // ── 광고/협찬/제휴 표시 박스 (정책 howto §4 — 공정거래위원회 추천보증 심사지침 강행 규정)
   const disclosureType = (guide as any).adDisclosure?.type as ('ad' | 'sponsored' | 'paid' | 'affiliate' | 'received' | undefined)
@@ -596,9 +587,6 @@ export const renderHowtoGuideDetail = (guide: HowtoGuideDetail, options: HowtoDe
 
       <!-- AI 라벨 박스 (정책 howto §3) -->
       ${aiLevelBannerBlock}
-
-      <!-- 안전 배너 (자살자해·학교폭력 신호 검출 시) -->
-      ${safetyBannersBlock}
 
       <!-- 신뢰 박스 (출처·검수일·AI 비율) -->
       ${trustBoxBlockHowto}
