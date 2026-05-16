@@ -30,7 +30,7 @@ import {
 import type { FootnoteMap } from './detailTemplateUtils'
 import { composeDetailSlug } from '../utils/slug'
 import { getAbilityIcon } from '../utils/abilityIconMapper'
-import { renderSafetyBannersForText, detectSensitiveForMinors, renderSensitiveContentGate } from '../utils/safety'
+import { detectSensitiveForMinors, renderSensitiveContentGate } from '../utils/safety'
 import { renderDataSplitBadge, type TrustBoxData } from '../utils/trust'
 import { renderEntityActionGroup } from './partials/actionMenu'
 
@@ -5100,20 +5100,14 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const adSlotBlock = renderAdSlot({ entityType: 'job' })
   const communityBlock = `<div data-job-community>${commentsPlaceholder}</div>`
 
-  // 안전 배너: 본문에 자살·자해/학교폭력 신호가 있으면 페이지 상단에 109/1393·117/1388 안내
-  // (정책 wiki/job §7, community §5)
+  // 본문 자동 안전 배너 제거 — 직무 설명에 "자살 방지" 같은 키워드가 자연스럽게 등장하는
+  // 직업(교도관·소방관·정신과의사 등)에서 false positive 발생. 정책 community §5의 자살자해
+  // 매뉴얼은 신고 시점 처리(reportComment의 [URGENT-2H-SLA] 태그)에 남아있음.
   const safetyScanText = JSON.stringify({
-    title: profile.heroTitle || profile.name,
-    summary: profile.summary,
-    heroIntro: profile.heroIntro,
     work: profile.work,
     detailWlb: profile.detailWlb,
-    trivia: profile.trivia,
     cons: (profile as any).cons,
-    pros: (profile as any).pros,
-    way: profile.way,
   })
-  const safetyBannersBlock = renderSafetyBannersForText(safetyScanText)
 
   // B9 미성년 민감 콘텐츠 게이트 (정책 community §7-B):
   // 본문에 갑질·성희롱·괴롭힘 키워드가 있으면 본문 위에 "민감한 내용 안내" 게이트
@@ -5162,7 +5156,6 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
 
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
-      ${safetyBannersBlock}
       ${sensitiveBannerBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">

@@ -2652,7 +2652,7 @@ const EditSystem = {
                   if (diff.added.length > 0) summaryParts.push('<span class="text-green-400"><i class="fas fa-plus mr-1"></i>' + diff.added.length + '개 추가</span>');
                   if (diff.removed.length > 0) summaryParts.push('<span class="text-red-400"><i class="fas fa-minus mr-1"></i>' + diff.removed.length + '개 삭제</span>');
                   if (diff.kept.length > 0) summaryParts.push('<span class="text-wiki-muted">' + diff.kept.length + '개 유지</span>');
-                  const summary = summaryParts.join(' 쨌 ');
+                  const summary = summaryParts.join(' · ');
                   
                   return `
                   <div class="border border-wiki-border/40 rounded-xl overflow-hidden">
@@ -3304,7 +3304,7 @@ const updateSourceFilterStatus = (elementId, sources) => {
           : 'text-wiki-muted';
       return `<span class="inline-flex items-center gap-1 ${stateClass}"><i class="fas fa-database"></i>${label}${countBadge}</span>`;
     })
-    .join('<span class="text-wiki-border">쨌</span>');
+    .join('<span class="text-wiki-border">·</span>');
 };
 
 const updateHydrationStatus = (elementId, meta, sortKey, sortLabels) => {
@@ -3323,7 +3323,7 @@ const updateHydrationStatus = (elementId, meta, sortKey, sortLabels) => {
   if (meta?.cacheState?.cachedAt) {
     parts.push(`캐시 시각: ${formatDateTime(meta.cacheState.cachedAt)}`);
   }
-  el.textContent = parts.length ? parts.join(' 쨌 ') : '';
+  el.textContent = parts.length ? parts.join(' · ') : '';
 };
 
 const Hydration = (() => {
@@ -5210,7 +5210,7 @@ const DetailComments = (() => {
                 <span class="font-bold text-wiki-text text-sm">${escapeHtml(displayNickname)}</span>
                 ${adminBadge}
                 ${displayIpTag}
-                ${createdAt ? `<span class="text-wiki-muted select-none mx-1" aria-hidden="true">쨌</span><time class="text-wiki-muted text-[11px]" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
+                ${createdAt ? `<span class="text-wiki-muted select-none mx-1" aria-hidden="true">·</span><time class="text-wiki-muted text-[11px]" datetime="${escapeHtml(comment.createdAt)}">${escapeHtml(createdAt)}</time>` : ''}
                 ${srStatusText}
               </div>
               ${badges.length ? `<div class="flex flex-wrap gap-1 mt-1">${badges.join('')}</div>` : ''}
@@ -7957,7 +7957,7 @@ const updateHeaderUserIcon = (user) => {
     if (user && user.id) {
       const pictureUrl = user.pictureUrl || user.picture_url || user.custom_picture_url;
       if (pictureUrl) {
-        btn.innerHTML = `<img src="${pictureUrl}" alt="?ъ슜?? class="w-full h-full object-cover rounded-full">`;
+        btn.innerHTML = `<img src="${pictureUrl}" alt="사용자" class="w-full h-full object-cover rounded-full">`;
       } else {
         btn.innerHTML = `<i class="fas fa-user-circle text-base"></i>`;
       }

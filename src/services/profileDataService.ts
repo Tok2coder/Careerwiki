@@ -1849,8 +1849,8 @@ export const getUnifiedMajorDetail = async (
           } catch (error) {
           }
           
-          // 병합 적용 (admin > user > merged 우선순위) - 깊은 병합 사용
-          merged = deepMergeProfile(deepMergeProfile(merged, userData), adminData) as UnifiedMajorDetail
+          // 병합 적용 (user > admin > merged 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+          merged = deepMergeProfile(deepMergeProfile(merged, adminData), userData) as UnifiedMajorDetail
           
           // 🆕 DB에서 직접 조회한 image_url, image_alt 추가
           if (mergedMajorRow.image_url) {
@@ -2034,7 +2034,7 @@ export const getUnifiedMajorDetail = async (
               } catch (error) {
               }
               
-              enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, userData), adminData) as UnifiedMajorDetail
+              enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, adminData), userData) as UnifiedMajorDetail
               
               return {
                 profile: enhancedProfile,
@@ -2282,8 +2282,8 @@ export const getUnifiedMajorDetail = async (
           } catch (error) {
           }
           
-          // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
-          const enhancedProfile = deepMergeProfile(deepMergeProfile(merged, userData), adminData) as UnifiedMajorDetail
+          // 병합 적용 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+          const enhancedProfile = deepMergeProfile(deepMergeProfile(merged, adminData), userData) as UnifiedMajorDetail
           
           return {
             profile: enhancedProfile,
@@ -2435,8 +2435,8 @@ export const getUnifiedMajorDetail = async (
         } catch (error) {
         }
         
-        // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
-        merged = deepMergeProfile(deepMergeProfile(merged, userData), adminData) as UnifiedMajorDetail
+        // 병합 적용 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+        merged = deepMergeProfile(deepMergeProfile(merged, adminData), userData) as UnifiedMajorDetail
         
       } else {
       }
@@ -2551,8 +2551,8 @@ export const getUnifiedJobDetail = async (
           } catch (error) {
           }
           
-          // 병합 적용 (admin > user > merged 우선순위) - 깊은 병합 사용
-          merged = deepMergeProfile(deepMergeProfile(merged, userData), adminData) as UnifiedJobDetail
+          // 병합 적용 (user > admin > merged 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+          merged = deepMergeProfile(deepMergeProfile(merged, adminData), userData) as UnifiedJobDetail
           
           // 🖼️ DB에서 직접 가져온 필드 추가 (이미지, slug)
           if (mergedJobRow.slug) {
@@ -2754,8 +2754,8 @@ export const getUnifiedJobDetailWithRawData = async (
           } catch (error) {
           }
           
-          // 병합 적용 (admin > user > merged 우선순위) - 깊은 병합 사용
-          merged = deepMergeProfile(deepMergeProfile(merged, userData), adminData) as UnifiedJobDetail
+          // 병합 적용 (user > admin > merged 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+          merged = deepMergeProfile(deepMergeProfile(merged, adminData), userData) as UnifiedJobDetail
           
           sourcesStatus.CAREERNET.attempted = !!mergedJobRow.careernet_id
           sourcesStatus.CAREERNET.count = mergedJobRow.careernet_id ? 1 : 0
@@ -2857,7 +2857,7 @@ export const getUnifiedJobDetailWithRawData = async (
             }
             let enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
             
-            // 🆕 user_contributed_json과 admin_data_json 병합 (admin > user > api 우선순위)
+            // 🆕 user_contributed_json과 admin_data_json 병합 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.)
             // 첫 번째 레코드의 user_contributed_json과 admin_data_json 사용
             const firstRow = allJobRows.results[0]
             let userData = {}
@@ -2877,8 +2877,8 @@ export const getUnifiedJobDetailWithRawData = async (
             } catch (error) {
             }
             
-            // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
-            enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, userData), adminData) as UnifiedJobDetail
+            // 병합 적용 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+            enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, adminData), userData) as UnifiedJobDetail
             
             // 🆕 병합된 데이터의 name 사용 (mergeJobProfiles에서 이미 고용24 우선 처리됨)
             // 첫 번째 레코드의 name을 fallback으로 사용
@@ -2985,7 +2985,7 @@ export const getUnifiedJobDetailWithRawData = async (
               }
               let enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
               
-              // 🆕 user_contributed_json과 admin_data_json 병합 (admin > user > api 우선순위)
+              // 🆕 user_contributed_json과 admin_data_json 병합 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.)
               let userData = {}
               let adminData = {}
               
@@ -3003,8 +3003,8 @@ export const getUnifiedJobDetailWithRawData = async (
               } catch (error) {
               }
               
-              // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
-              enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, userData), adminData) as UnifiedJobDetail
+              // 병합 적용 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+              enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, adminData), userData) as UnifiedJobDetail
               
               if (!enhancedProfile.name || !enhancedProfile.name.trim()) {
                 if (jobRow.name && jobRow.name.trim()) {
@@ -3125,7 +3125,7 @@ export const getUnifiedJobDetailWithRawData = async (
               }
               let enhancedProfile = applyJobDetailOverrides(merged, partialsRecord)
               
-              // 🆕 user_contributed_json과 admin_data_json 병합 (admin > user > api 우선순위)
+              // 🆕 user_contributed_json과 admin_data_json 병합 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.)
               let userData = {}
               let adminData = {}
               
@@ -3143,8 +3143,8 @@ export const getUnifiedJobDetailWithRawData = async (
               } catch (error) {
               }
               
-              // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
-              enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, userData), adminData) as UnifiedJobDetail
+              // 병합 적용 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+              enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, adminData), userData) as UnifiedJobDetail
               
               if (!enhancedProfile.name || !enhancedProfile.name.trim()) {
                 if (jobRow.name && jobRow.name.trim()) {
@@ -3335,8 +3335,8 @@ export const getUnifiedJobDetailWithRawData = async (
         } catch (error) {
         }
         
-        // 병합 적용 (admin > user > api 우선순위) - 깊은 병합 사용
-        enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, userData), adminData) as UnifiedJobDetail
+        // 병합 적용 (user > admin > api 우선순위 — admin_data_json은 ETL 시점 stub만 채우고 활성 admin write 경로 없음. user POST가 최신.) - 깊은 병합 사용
+        enhancedProfile = deepMergeProfile(deepMergeProfile(enhancedProfile, adminData), userData) as UnifiedJobDetail
       }
     } catch (dbError) {
       // DB 조회 실패는 조용히 처리 (로컬 개발 환경 등)

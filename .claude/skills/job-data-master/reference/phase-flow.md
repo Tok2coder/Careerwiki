@@ -237,8 +237,69 @@ stdout flag 파싱:
 | `brokenRef(N)` | I | 본문 [N] > srcLen (산문) |
 | `dup(N)` | — | 한 필드 같은 [N] 2회+ |
 | `orphan(N)` | H **+ proseBodyOrphan** | 산문 (PR 14 활성화) |
+| `arrayItemPeriod(N)` | X | detailReady array 항목 마침표 (WARN) |
+| `sourcePositionCluster(N)` | Y | detailReady cluster (WARN) |
+| `urlCountInsufficient(N<X)` | **Z (2026-05-10)** | 글로벌 URL count 부족 (WARN) |
+| `bodyWithoutSources(N)` | **ZZ (2026-05-10)** | 본문 충실 but _sources 부재 (WARN) |
+| `sourcesWithoutMarkers(N)` | **ZZZ (2026-05-11)** | _sources 있는데 본문 [N] 0개 (**FAIL**) |
+| `orphanSources(N)` | **ZZZZ (2026-05-11)** | 본문 미존재 영역에 _sources 잔존 (**FAIL**) |
 
 **proseBodyOrphan** (PR 14, 2026-05-08): 산문 9 BODY_FIELDS (`way` / `summary` / `trivia` / `overviewWork.main` / `overviewProspect.main` / `overviewAbilities.technKnow` / `overviewSalary.sal` / `detailWlb.wlbDetail` / `detailWlb.socialDetail`) 본문 [N] vs `_sources[fieldKey]` 정합 — `_proseRaw` namespace 활용.
+
+**urlCountInsufficient (룰 Z, 2026-05-10)**: force-enhance 후 직업당 _sources URL count < `max(12, fieldsCount × 1.5)`이면 WARN. 다음 cycle 자동 트리거 역할 (FAIL X — patch 차단 X). 2026-05-09 사고 (6 직업 URL <10) 재발 방지.
+
+### 1-A-2. **sparse fieldKey 식별 의무 (룰 Z, 2026-05-10 신규)**
+
+baseline `_sources` 가져온 후 fieldKey별 count 보고:
+
+```
+[직업명] _sources baseline:
+  way: 3
+  trivia: 2
+  overviewProspect.main: 0  ← sparse (보강 대상)
+  detailWlb.wlbDetail: 1   ← sparse (보강 대상)
+  detailWlb.socialDetail: 0 ← sparse (보강 대상)
+  detailReady.curriculum: 5
+  detailReady.recruit: 3
+  detailReady.training: 0  ← sparse (보강 대상)
+total URL: 14, fields: 5/8
+sparse fieldKey list: [overviewProspect.main, detailWlb.wlbDetail, detailWlb.socialDetail, detailReady.training]
+```
+
+**기준**: count 0 또는 1인 fieldKey = sparse. Phase 2 PATCH에서 모두 보강 의무.
+
+**누락 영역 cleanup-only force-enhance 사고 패턴**:
+- 패턴 A: cleanup으로 broken 5건 + rootURL 3건 제거 → _sources 8건 줄어든 상태로 종료. 신규 보강 X. → 2026-05-09 대학교수 (URL=4)
+- 패턴 B: way 글자수만 늘림 / careerTree만 추가, detailReady·sidebar 출처 추가 X. → 2026-05-09 기업고위임원 (URL=2), 리포터 (URL=7)
+
+### 1-A-3. **zero-registration fieldKey 식별 의무 (룰 ZZ, 2026-05-10 신규)**
+
+`_sources`에 등록 안 된 영역 (zero-registration)도 별도 식별. sparse fieldKey 식별 (1-A-2)이 _sources 등록된 fieldKey만 점검하므로, 본문은 충실한데 _sources에 fieldKey 자체 부재인 케이스 silent 통과.
+
+**검사 대상**:
+- 산문 5 영역: `way` / `trivia` / `overviewProspect.main` / `detailWlb.wlbDetail` / `detailWlb.socialDetail`
+- detailReady array 3 영역: `curriculum` / `recruit` / `training`
+
+**판정**:
+- 산문: `_proseRaw[fieldKey].length >= 100` AND `_sources[fieldKey]` 부재 또는 url 0건 → zero-registration
+- detailReady array: 항목 2+ AND 모든 항목 [N] 마커 0 AND `_sources["detailReady.{sub}"]` 부재 또는 url 0건 → zero-registration
+
+**보고 형식**:
+```
+[직업명] zero-registration fieldKey list:
+  detailWlb.wlbDetail: body 157자 / _sources 부재 ← 보강 의무
+  detailWlb.socialDetail: body 115자 / _sources 부재 ← 보강 의무
+  detailReady.curriculum: 3 항목 모두 [N] 0 / _sources 부재 ← 보강 의무
+  detailReady.training: 3 항목 모두 [N] 0 / _sources 부재 ← 보강 의무
+```
+
+**Phase 2 PATCH 의무**: zero-registration 영역 모두 보강 (_sources 신규 등록 + 산문은 본문 [N] 마커 추가, array는 항목별 [N]).
+
+**사고 사례 (2026-05-10 사용자 발견)**: 경찰관 detailWlb.wlbDetail(157자)/socialDetail(115자)/curriculum(3)/training(3) 본문 충실 but [N]+_sources 모두 0. master force-enhance가 detailReady.recruit만 처리. 103 직업 sample 결과 42% 영향.
+
+**audit 자동 검출**: `audit-via-api.cjs --exclude-sal`에서 `bodyWithoutSources(N: f1,f2,...)` WARN. 다음 cycle 트리거.
+
+**제외 영역**: `overviewWork.main` / `overviewAbilities.technKnow` / `summary` — CareerNet API 원본 데이터 영역. UCJ 출처 의무 X (false positive 회피).
 
 ### 1-B. 본문 fact 정확성 사전 검증 (NEW)
 
@@ -269,6 +330,24 @@ stdout flag 파싱:
 ### 2-3. fact 정정 (CLEANUP + fact 정정 모드)
 
 `reference/fact-verification.md` 절차. 본문 통계/숫자/회사명 정정 + 새 출처 등록.
+
+### 2-4. **sparse + zero-registration fieldKey 보강 의무 (룰 Z + ZZ, 2026-05-10 신규)**
+
+Phase 1-A-2 (sparse) + 1-A-3 (zero-registration) 식별 영역 **모두** 보강 의무. cleanup-only / 부분-처리 force-enhance 사고 차단.
+
+**원칙**:
+- 영역당 최소 1개 deep URL, 평균 2~3개 목표
+- 산문 영역 (way / trivia / overviewProspect.main / detailWlb.wlbDetail / detailWlb.socialDetail / overviewAbilities.technKnow): 본문 fact마다 출처 등록
+- detailReady array (curriculum / recruit / training): 항목별 1:1 출처 매핑 (룰 Y와 정합)
+- sidebar 영역은 sidebar* 항목 자체 url로 보강 (`_sources["sidebar*"]` 등록 X — 룰 L)
+
+**금지 패턴**:
+- way 글자수만 늘리고 새 출처 발굴 X (기업고위임원 사고)
+- careerTree 신규에만 집중 + detailReady 영역 출처 1씩만 (리포터 사고)
+- cleanup 후 sources 8건 줄어든 채 종료 (대학교수 사고)
+- wiki cleanup 후 1차 출처 1:1 교체로 끝 (간호조무사 — 수 비슷)
+
+**target**: URL count ≥ `max(12, fieldsCount × 1.5)`. Phase 6 VERIFY에서 검증.
 
 ---
 
@@ -321,6 +400,15 @@ errors 0. 산문 영역 게이트 (PROSE_BODY_FIELDS 9 필드 orphan / brokenRef
 `_sources["overviewSalary.sal"]` 변경 포함 시 즉시 FAIL — 절대 포함 X.
 
 (sal-readonly 호환 — `_jobSlug` 포함하면 `validateAsync`가 prod에서 prev sal sources fetch하여 strict 검증.)
+
+### 4-A. 룰 ZZZ/ZZZZ 차단 룰 (2026-05-11 신규)
+
+validate-job-edit.cjs가 다음 두 룰로 POST 전 차단:
+
+- **`[sourcesWithoutMarkers]` FAIL** (룰 ZZZ): body 100자+ AND _sources url 1+ AND 본문 [N] 0개. 출처 등록과 본문 [N] 박힘이 동반되지 않으면 차단.
+- **`[orphanSources]` FAIL** (룰 ZZZZ): _sources fieldKey가 ALLOWED set 미포함. ALLOWED = PROSE_BODY_FIELDS (산문 9) + detailReady.{curriculum,recruit,training,researchList,certificate}. 미사용 fieldKey (예: detailGrowth.growth, detailWork.workDetail) 등록 차단.
+
+→ 두 룰 FAIL이면 POST 절대 X. 본문 [N] 박는 작업 / fieldKey 교정 / _sources 제거 중 택1 후 재validate.
 
 ---
 
@@ -381,9 +469,125 @@ node scripts/full-quality-audit.cjs --slug=<slug>
 
 Gate 1 (각주) PASS 확인. Gate 4 ID 역전 WARN은 editService 구조적 동작 — 정상.
 
+### 6-D. **URL count 검증 (룰 Z, 2026-05-10 신규)**
+
+force-enhance 사이클 종료 직전 URL count target 도달 검증:
+
+```bash
+node -e "
+fetch('https://careerwiki.org/api/jobs/<slug>').then(r=>r.json()).then(j=>{
+  const s = (j.data||j)._sources || {};
+  const urls = Object.values(s).reduce((n,a)=>n+(Array.isArray(a)?a.filter(x=>x.url).length:0),0);
+  const fields = Object.keys(s).length;
+  const target = Math.max(12, Math.ceil(fields*1.5));
+  console.log('URL count:', urls, '/ target:', target, '/ fields:', fields);
+  if (urls < target) console.log('⚠️ urlCountInsufficient — RETRY (Phase 2 재진입, sparse fieldKey 보강)');
+  else console.log('✅ PASS');
+})"
+```
+
+**판정**:
+- URL count ≥ `max(12, fieldsCount × 1.5)` → PASS
+- 미달 → **RETRY** (Phase 2 재진입, 추가 sparse fieldKey 보강)
+- 가구조립원 시범 (URL 23, fields 9, target 14) reference 패턴
+
+**RETRY 횟수 1회 후도 미달**:
+- (a) 4단계 인정 (deep URL 발굴 실패 영역만 인정 + pending 기록)
+- (b) STOP + 사용자 보고 (사고 가능성)
+
+audit-via-api.cjs 출력에서 `urlCountInsufficient(N<X)` flag로 자동 검출.
+
+### 6-E. **bodyWithoutSources 검증 (룰 ZZ, 2026-05-10 신규)**
+
+force-enhance 사이클 종료 직전 zero-registration 영역 부재 검증:
+
+```bash
+node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal | grep bodyWithoutSources
+# clean 또는 비어있으면 PASS
+# bodyWithoutSources(N: f1,f2,...) 표시되면 → RETRY (Phase 2 재진입, 해당 영역 보강)
+```
+
+**판정**:
+- bodyWithoutSources 0건 → PASS
+- 1건+ → **RETRY** (Phase 2 재진입, 표시된 fieldKey 모두 _sources 등록 + 본문 [N] 마커 추가)
+
+**제외 영역**: overviewWork.main / overviewAbilities.technKnow / summary는 CareerNet API 원본 — 룰 ZZ 자동 제외.
+
+### 6-F. **sourcesWithoutMarkers 검증 (룰 ZZZ, 2026-05-11 신규 — FAIL)**
+
+force-enhance 사이클 종료 직전 marker 부재 영역 검증:
+
+```bash
+node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal | grep sourcesWithoutMarkers
+# clean 또는 비어있으면 PASS
+# sourcesWithoutMarkers(N: f1(bodyLen/srcsCount),...) 표시되면 → RETRY (Phase 2 재진입, 본문 [N] 마커 추가)
+```
+
+**판정**:
+- sourcesWithoutMarkers 0건 → PASS
+- 1건+ → **RETRY 또는 STOP** — body 100자+이고 _sources 등록 영역인데 본문에 [N] 마커 0개. 출처를 등록했으면 본문에 1개 이상 [N] 박혀야 함. fact가 본문에 안 등장하면 출처 자체 부적격(제거 + 룰 ZZ 재발) → 출처 적격이면 본문 [N] 추가 또는 본문 보강.
+
+**검사 대상 8 영역**: `way` / `overviewProspect.main` / `trivia` / `detailWlb.wlbDetail` / `detailWlb.socialDetail` / `overviewWork.main` / `summary` / `overviewAbilities.technKnow`.
+
+**ZZZ vs ZZ 비교** (정반대 사고):
+- 룰 ZZ: body 충실 + _sources 0개 → 출처 발굴해서 등록 + [N] 박기
+- 룰 ZZZ: body 충실 + _sources 1+ + 본문 [N] 0개 → 본문 [N] 추가 (또는 출처 부적격이면 제거)
+
+**사고 사례 (2026-05-11 사용자 발견)**: 경찰관 "출처 14개 있는데 인라인 각주 안 박힘". 362 master 직업 audit 8건 발견 (abilities 5건 / way 2건 / socialDetail 1건).
+
+### 6-G. **orphanSources 검증 (룰 ZZZZ, 2026-05-11 신규 — FAIL)**
+
+force-enhance 사이클 종료 직전 본문 미존재 영역 검증:
+
+```bash
+node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal | grep orphanSources
+# clean 또는 비어있으면 PASS
+# orphanSources(N: f1[area/srcs],...) 표시되면 → RETRY (Phase 2 재진입, _sources fieldKey 제거 또는 본문 생성)
+```
+
+**판정**:
+- orphanSources 0건 → PASS
+- 1건+ → **RETRY 또는 STOP** — 본문이 _proseRaw에도 detailReady에도 API top-level에도 없거나 너무 짧은데 _sources만 잔존. 두 가지 fix:
+  - (a) 해당 fieldKey가 유효 영역이면 본문 작성 (산문 50자+ 또는 detailReady array 항목 추가)
+  - (b) 유효 영역 아니면 _sources에서 fieldKey 자체 제거
+
+**area 종류**:
+- `body-missing`: API 응답에 fieldKey 자체 미존재 (예: 경찰관 detailGrowth/detailWork)
+- `body-too-short`: 본문 존재하지만 trim 후 50자 미만
+- `detailReady-empty`: detailReady array가 빈 배열 또는 모든 항목 empty
+
+**사고 사례 (2026-05-11 사용자 발견)**: 경찰관 `_sources.detailGrowth.growth`(2건) + `_sources.detailWork.workDetail`(2건) — API top-level에 detailGrowth/detailWork 자체 없는데 _sources 잔존 (4 출처 silent orphan). 362 master 직업 audit 10건 발견 (detailGrowth.growth 5 / detailWork.workDetail 5 / summary 2 / abilities 1 / overviewSalary.prospects 1 / overviewProspect.main 1).
+
+**핵심 차단**: enhance 시 **존재하지 않는 fieldKey에 _sources 등록 금지**. detailGrowth.growth / detailWork.workDetail 영역은 master skill이 작성 대상 아니면 _sources 키 자체 생성 X.
+
 ---
 
 ## Phase 7 — REPORT
+
+### 7-A. changeSummary 양식 강제 (2026-05-10 신규)
+
+force-enhance 사이클의 changeSummary는 **모든 처리 영역 list 의무**:
+
+```
+✅ 올바른 형식:
+[job-data-master] enhance — force-enhance: way + trivia + overviewProspect + detailWlb.wlbDetail +
+  detailWlb.socialDetail + detailReady.curriculum + detailReady.recruit + detailReady.training +
+  sidebarOrgs (각 N건 출처 보강)
+
+❌ 잘못된 형식 (사고 패턴):
+[job-data-master] enhance — force-enhance: detailReady.recruit (출처 0→3)
+  → 다른 영역 처리 안 했으면 changeSummary에 명시 X — silent 부분 처리 사고
+```
+
+부분 처리 의도면 명시:
+```
+[job-data-master] enhance — force-enhance: detailReady.recruit only
+  (sparse: way/trivia 처리됨; zero-registration 잔존: detailWlb / curriculum / training — 4단계 인정 또는 다음 cycle)
+```
+
+**경찰관 사고 (2026-05-10)**: rev 14306 changeSummary "force-enhance: detailReady.recruit (출처 0→3)" — 다른 영역 무시하고 종료. 본 룰로 차단.
+
+
 
 DONE / RETRY 형식 (SKILL.md 참조). 
 
@@ -406,3 +610,74 @@ node scripts/skill-runs-stats.cjs --since=2026-05-08
 ```
 
 p50/p90 시간 + 누적 토큰 + 결과별 count 보고.
+
+---
+
+## Phase 8 — DEPLOY ⚠️ **PR 머지 후 즉시 (2026-05-10 신규)**
+
+**원칙**: skill 또는 코드 변경 PR 머지 후 즉시 main worktree에서 `npm run deploy` 실행. main HEAD = prod state 동기화 보장. **"auto-deploy 대기" 가정 절대 X**.
+
+**Why**: 2026-05-10 사고 — PR #18~24 (7개) 머지됐지만 1일 동안 prod deploy 안 됨. 본 프로젝트는 Cloudflare GitHub auto-deploy 미구성 (`package.json`의 `"deploy": "node scripts/safe-deploy.cjs"` 수동 실행 방식). 사용자가 admin 페이지에서 master/예전 분리 UI 안 보여 발견.
+
+`feedback_pr_merge_includes_deploy.md` 룰 박힘.
+
+### 8-A. main worktree로 이동 후 deploy
+
+```bash
+# Windows PowerShell
+Set-Location C:\Users\user\Careerwiki
+git pull origin main   # 최신 HEAD 확인
+npm run deploy         # safe-deploy.cjs: tsc → vite build → wrangler pages deploy
+```
+
+`safe-deploy.cjs` exit 0 + deployment URL 반환 확인. 예: `Deployment complete! Take a peek over at https://519fade2.careerwiki-phase1.pages.dev`.
+
+### 8-B. prod 검증
+
+```bash
+# 1. 직업 page (인증 X)
+node -e "fetch('https://careerwiki.org/job/<slug>').then(r=>console.log('HTTP',r.status))"
+# 기대: 200
+
+# 2. admin page (인증 X anonymous fetch는 401 정상)
+node -e "fetch('https://careerwiki.org/admin/job-equalize').then(r=>console.log('HTTP',r.status))"
+# 기대: 401 (인증 page 도달 OK)
+
+# 3. wrangler deployment list로 새 commit hash 반영 확인
+npx wrangler pages deployment list --project-name=careerwiki | head -8
+# 기대: 가장 최근 row의 Source = main HEAD commit hash
+```
+
+### 8-C. 보고 의무 항목
+
+PR 머지 보고 끝에 다음 명시 의무:
+- ✅ PR 머지 (PR # + main HEAD)
+- ✅ **deploy 완료 / preview URL: `https://<id>.careerwiki-phase1.pages.dev`**
+- ✅ wrangler deployment list 새 commit 반영 확인
+- ✅ prod URL ping 응답 (직업 200 / admin 401)
+
+### 8-D. 보호 영역 (deploy 시)
+
+- **worktree에서 deploy 절대 X** — CLAUDE.md `Worktree 배포 롤백` 룰 (worktree 코드 → 다음 main 배포 시 롤백됨)
+- **pre-commit hook 우회 (`--no-verify`) 절대 X** — `scripts/check-secrets.cjs`가 비밀키 차단
+- **main 외 branch에서 deploy 절대 X**
+
+### 8-E. deploy 실패 시
+
+- 즉시 STOP + 사고 보고 (root cause + 시도한 deploy 출력)
+- 코드 변경 새 PR로 fix (예: tsc error / build error)
+- 사용자 결정 받기 전 추가 retry X
+
+### 8-F. cleanup-only / DB-only 작업은 deploy 불필요
+
+force-enhance 사이클은 DB 직접 작업 (POST /api/job/{id}/edit) — 코드 변경 없으면 deploy 불필요. 본 Phase 8은 **코드 PR 머지 시에만** 적용.
+
+직업당 force-enhance (Phase 0~7) → DB rev 변경 → prod 페이지에 즉시 반영 (deploy 무관).
+
+---
+
+## See Also
+
+- `feedback_pr_merge_includes_deploy.md` — 본 룰의 사용자 영구 메모리 룰
+- CLAUDE.md `## CareerWiki-Specific Rules` 배포 섹션
+- `scripts/safe-deploy.cjs` — 본 deploy 명령

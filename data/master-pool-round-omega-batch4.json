@@ -1,0 +1,409 @@
+{
+  "timestamp": "2026-05-16T08:51:24.969Z",
+  "batch_index": 4,
+  "slug_count": 50,
+  "slugs": [
+    "간판제작설치원",
+    "간호조무사",
+    "개인브랜드매니저",
+    "건축가건축설계사",
+    "건축감리기술자",
+    "건축공학기술자",
+    "건축설비기술자",
+    "게임-그래픽-디자이너",
+    "게임-기획자",
+    "경리사무원",
+    "경영기획사무원",
+    "고객상담원",
+    "금융상품개발자",
+    "기상연구원",
+    "대학교수",
+    "데이터베이스-관리자",
+    "도로운송사무원",
+    "드라마작가",
+    "드론-개발자",
+    "디지털크리에이터",
+    "로봇공학기술자",
+    "마취병리과의사",
+    "마케팅전문가",
+    "미디어콘텐츠창작자크리에이터",
+    "바리스타",
+    "반도체공학기술자-및-연구원",
+    "방사선과의사",
+    "방송기자",
+    "버스운전기사",
+    "법무사-및-집행관",
+    "법원공무원",
+    "비뇨기과의사",
+    "사회학연구원",
+    "산부인과의사",
+    "산업공학기술자",
+    "상품기획자",
+    "섬유제조기계조작원",
+    "소믈리에",
+    "소아청소년과의사",
+    "쇼핑호스트",
+    "수상운송사무원",
+    "수의사보조원",
+    "스포츠에이전트",
+    "신약개발연구원",
+    "약사-및-한약사",
+    "여행상품개발자",
+    "연구관리자",
+    "연기자",
+    "외교관",
+    "외환딜러"
+  ],
+  "detail": [
+    {
+      "slug": "간판제작설치원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "간호조무사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "개인브랜드매니저",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "건축가건축설계사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "건축감리기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "건축공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "건축설비기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "게임-그래픽-디자이너",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "게임-기획자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "경리사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "경영기획사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "고객상담원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "금융상품개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "기상연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "대학교수",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "데이터베이스-관리자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "도로운송사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "드라마작가",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "드론-개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "detailWlb.wlbDetail"
+    },
+    {
+      "slug": "디지털크리에이터",
+      "failCount": 1,
+      "warnCount": 3,
+      "rules": "bodyWithoutSources",
+      "fields": "detailWlb.socialDetail"
+    },
+    {
+      "slug": "로봇공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "마취병리과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "마케팅전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "미디어콘텐츠창작자크리에이터",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "바리스타",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "반도체공학기술자-및-연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "방사선과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "방송기자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "버스운전기사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "법무사-및-집행관",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "법원공무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "비뇨기과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "사회학연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "산부인과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "산업공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "상품기획자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "섬유제조기계조작원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "소믈리에",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "소아청소년과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "쇼핑호스트",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "수상운송사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "수의사보조원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "스포츠에이전트",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "신약개발연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "약사-및-한약사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "여행상품개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "연구관리자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "연기자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "외교관",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "외환딜러",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    }
+  ]
+}

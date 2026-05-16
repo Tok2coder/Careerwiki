@@ -1,0 +1,385 @@
+{
+  "timestamp": "2026-05-16T08:51:24.969Z",
+  "batch_index": 5,
+  "slug_count": 47,
+  "slugs": [
+    "요양보호사-및-간병인",
+    "우편물집배원",
+    "운동감독",
+    "운동선수",
+    "웨딩플래너",
+    "웹-개발자",
+    "유리부착원",
+    "유리유리제품생산기계조작원",
+    "유전공학연구원",
+    "유치원-원장-및-원감",
+    "유치원교사",
+    "은행사무원",
+    "의료-기기-개발-전문가",
+    "의료장비기사",
+    "의료정보시스템개발자",
+    "의학연구원",
+    "이비인후과의사",
+    "일식조리사",
+    "재료공학기술자",
+    "전기가스수도관리자",
+    "전문의사",
+    "전자공학기술자",
+    "정신과의사",
+    "제품광고영업원",
+    "조각가",
+    "조선공학기술자",
+    "중식조리사",
+    "지리정보시스템전문가",
+    "지적-및-측량기술자",
+    "직업군인",
+    "집배원",
+    "철도지하철운송사무원",
+    "총무사무원",
+    "카피라이터",
+    "택시운전기사",
+    "토목감리기술자",
+    "토목공학기술자",
+    "통신장비기사",
+    "판사",
+    "패션코디네이터",
+    "피부관리사",
+    "항공공학기술자",
+    "항공기정비원",
+    "항공기조종사",
+    "해양경찰관",
+    "호스피스전문간호사",
+    "화학공학기술자"
+  ],
+  "detail": [
+    {
+      "slug": "요양보호사-및-간병인",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "우편물집배원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "운동감독",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "운동선수",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "웨딩플래너",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "웹-개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "유리부착원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "유리유리제품생산기계조작원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "유전공학연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "유치원-원장-및-원감",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "유치원교사",
+      "failCount": 1,
+      "warnCount": 1,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "은행사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "의료-기기-개발-전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "의료장비기사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "의료정보시스템개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "의학연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "이비인후과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "일식조리사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "재료공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "전기가스수도관리자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "전문의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "전자공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "정신과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "제품광고영업원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "조각가",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "조선공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "중식조리사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "지리정보시스템전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "지적-및-측량기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "직업군인",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "집배원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "철도지하철운송사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "총무사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "카피라이터",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "택시운전기사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "토목감리기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "토목공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "통신장비기사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "판사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "패션코디네이터",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "피부관리사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "항공공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "항공기정비원",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "항공기조종사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "해양경찰관",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow"
+    },
+    {
+      "slug": "호스피스전문간호사",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    },
+    {
+      "slug": "화학공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList"
+    }
+  ]
+}

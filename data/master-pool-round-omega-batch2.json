@@ -1,0 +1,409 @@
+{
+  "timestamp": "2026-05-16T08:51:24.969Z",
+  "batch_index": 2,
+  "slug_count": 50,
+  "slugs": [
+    "애니메이션작가",
+    "연극연출가",
+    "영양사",
+    "웹-기획자",
+    "응급구조사",
+    "응용-소프트웨어-개발자",
+    "일반공무원",
+    "자동차정비원",
+    "전기공학기술자",
+    "조경기술자",
+    "조경원",
+    "조사전문가",
+    "직업상담사",
+    "푸드스타일리스트",
+    "플랜트기계공학기술자",
+    "한약사",
+    "항공기객실승무원",
+    "gis전문가",
+    "it-컨설턴트",
+    "가구조립-및-검사원",
+    "가상현실전문가",
+    "가수",
+    "가축사육자",
+    "간호사",
+    "건설견적원",
+    "건설공사품질관리원",
+    "건축사",
+    "경영-컨설턴트",
+    "경제학연구원",
+    "고객관리시스템crm전문가",
+    "공업기계설치-및-정비원",
+    "관세사",
+    "광고모델",
+    "교도관",
+    "교육학연구원",
+    "국제회의전문가",
+    "기업고위임원",
+    "네일아티스트",
+    "대중가수",
+    "드라마프로듀서",
+    "리포터",
+    "만화가",
+    "물류관리사",
+    "물리치료사",
+    "반려동물미용사",
+    "방송연출가",
+    "번역가",
+    "변리사",
+    "변호사",
+    "병원코디네이터"
+  ],
+  "detail": [
+    {
+      "slug": "애니메이션작가",
+      "failCount": 3,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "detailWlb.wlbDetail,detailReady.curriculum,detailReady.researchList"
+    },
+    {
+      "slug": "연극연출가",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "way,overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "영양사",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "way,overviewAbilities.technKnow,detailWlb.socialDetail"
+    },
+    {
+      "slug": "웹-기획자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "trivia,overviewAbilities.technKnow,detailWlb.wlbDetail"
+    },
+    {
+      "slug": "응급구조사",
+      "failCount": 3,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "응용-소프트웨어-개발자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,sourcesWithoutMarkers",
+      "fields": "overviewAbilities.technKnow,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "일반공무원",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "detailReady.curriculum,detailReady.recruit,detailReady.researchList"
+    },
+    {
+      "slug": "자동차정비원",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "전기공학기술자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "조경기술자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "조경원",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "조사전문가",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail"
+    },
+    {
+      "slug": "직업상담사",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail"
+    },
+    {
+      "slug": "푸드스타일리스트",
+      "failCount": 3,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "detailWlb.socialDetail,detailReady.recruit,detailReady.researchList"
+    },
+    {
+      "slug": "플랜트기계공학기술자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "way,overviewProspect.main,overviewAbilities.technKnow"
+    },
+    {
+      "slug": "한약사",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "way,overviewProspect.main,overviewAbilities.technKnow"
+    },
+    {
+      "slug": "항공기객실승무원",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "gis전문가",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "it-컨설턴트",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "가구조립-및-검사원",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "가상현실전문가",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "가수",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "가축사육자",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "간호사",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "건설견적원",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "건설공사품질관리원",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "건축사",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "경영-컨설턴트",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "경제학연구원",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "고객관리시스템crm전문가",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "공업기계설치-및-정비원",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "관세사",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "광고모델",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBrokenRef",
+      "fields": "detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "교도관",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "교육학연구원",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "국제회의전문가",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "기업고위임원",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.certificate"
+    },
+    {
+      "slug": "네일아티스트",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "대중가수",
+      "failCount": 2,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "detailWlb.wlbDetail,detailReady.training"
+    },
+    {
+      "slug": "드라마프로듀서",
+      "failCount": 2,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "detailWlb.socialDetail,detailReady.curriculum"
+    },
+    {
+      "slug": "리포터",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "만화가",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "물류관리사",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "물리치료사",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "반려동물미용사",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "방송연출가",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "번역가",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "변리사",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "변호사",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    },
+    {
+      "slug": "병원코디네이터",
+      "failCount": 2,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList"
+    }
+  ]
+}

@@ -31,6 +31,11 @@ const {
   calcWikiQuota,
   detectArrayItemPeriod,
   detectSourcePositionCluster,
+  detectUrlCountInsufficient,
+  detectBodyWithoutSources,
+  detectSourcesWithoutMarkers,
+  detectOrphanSources,
+  detectAllBodySourceMarkerMismatch,
   SELF_DOMAINS,
   PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -101,6 +106,11 @@ function analyze(slug, data, opts = {}) {
     wikiQuota: null,      // 2026-05-07 룰 14
     arrayItemPeriod: [],  // 2026-05-09 룰 X — WARN level
     sourcePositionCluster: [], // 2026-05-09 룰 Y — WARN level
+    urlCountInsufficient: null, // 2026-05-10 룰 Z — WARN level
+    bodyWithoutSources: [], // 2026-05-10 룰 ZZ — WARN level (사용자 발견 사고)
+    sourcesWithoutMarkers: [], // 2026-05-11 룰 ZZZ — FAIL level (경찰관 사고)
+    orphanSources: [], // 2026-05-11 룰 ZZZZ — FAIL level (본문 없는 영역에 _sources만 잔존)
+    omegaFindings: [], // 2026-05-15 룰 OMEGA — 통합 자동 스캔 (화이트리스트 폐기)
   };
 
   const flatSources = [];
@@ -231,6 +241,48 @@ function analyze(slug, data, opts = {}) {
   // 룰 Y (2026-05-09): detailReady array 출처 위치 cluster 검출 (WARN level)
   findings.sourcePositionCluster = detectSourcePositionCluster(dr, sources);
 
+  // 룰 Z (2026-05-10): URL count insufficient (WARN level — 다음 사이클 트리거)
+  // sal 영역 제외 시 sources에서 sal 빼고 검사
+  if (excludeSal) {
+    const filteredZ = {};
+    for (const [k, v] of Object.entries(sources)) {
+      if (SAL_PROTECTED_FIELDS.includes(k)) continue;
+      filteredZ[k] = v;
+    }
+    findings.urlCountInsufficient = detectUrlCountInsufficient(filteredZ);
+  } else {
+    findings.urlCountInsufficient = detectUrlCountInsufficient(sources);
+  }
+
+  // 룰 ZZ (2026-05-10): Body Without Sources (WARN level — 본문 충실 but _sources 부재)
+  // 2026-05-10 사용자 발견 사고: 경찰관 detailWlb / curriculum / training 본문은 있는데 [N]+_sources 0
+  // proseRaw + detailReady 기반 검사 (sal 영역 자동 제외 — proseFields list에서 빼놓음)
+  findings.bodyWithoutSources = detectBodyWithoutSources(data._proseRaw || {}, data.detailReady || {}, sources);
+
+  // 룰 ZZZ (2026-05-11): Sources Without Markers (FAIL level — _sources 있는데 본문 [N] 0개)
+  // 2026-05-11 사용자 발견 사고: 경찰관 "출처 14개 있는데 인라인 각주 안 박힘"
+  // ZZ의 정반대 케이스 — body 100+ AND srcs>=1 AND markers=0
+  // sal 영역 detector 내부에서 제외 (proseFields list에서 빼놓음)
+  findings.sourcesWithoutMarkers = detectSourcesWithoutMarkers(data._proseRaw || {}, data.detailReady || {}, sources);
+
+  // 룰 ZZZZ (2026-05-11): Orphan Sources (FAIL level — 본문 미존재 영역에 _sources만 잔존)
+  // 2026-05-11 경찰관 사고: detailGrowth.growth / detailWork.workDetail 본문 미노출인데 _sources 4건 등록
+  // ZZZ는 _proseRaw 9 필드만 검사. 그 외 fieldKey의 orphan은 ZZZZ가 검출.
+  // sal-protection + sidebar* skip (detector 내부에서 처리)
+  findings.orphanSources = detectOrphanSources(data._proseRaw || {}, data.detailReady || {}, sources, data);
+
+  // 룰 OMEGA (2026-05-15): 통합 body-source-marker mismatch 자동 스캔
+  // 화이트리스트 폐기 — _proseRaw/detailReady/_sources 모든 키 enumerate.
+  // ZZ/ZZZ/ZZZZ는 일부 필드만 검사. OMEGA는 abilities/summary/duties 등 모든 prose 영역 자동 검출.
+  {
+    const filteredSrcs = sources;
+    let omega = detectAllBodySourceMarkerMismatch(data._proseRaw || {}, data.detailReady || {}, filteredSrcs);
+    if (excludeSal) {
+      omega = omega.filter(f => !SAL_PROTECTED_FIELDS.includes(f.field));
+    }
+    findings.omegaFindings = omega;
+  }
+
   return findings;
 }
 
@@ -242,7 +294,10 @@ function isFail(j) {
     j.sourcesNull || j.idxGap || j.arrayBrokenRef.length > 0 || j.orderViolation ||
     (j.sidebarSources && j.sidebarSources.length > 0) ||
     (j.rootURL && j.rootURL.length > 0) ||
-    (j.wikiQuota && j.wikiQuota.level === 'FAIL')
+    (j.wikiQuota && j.wikiQuota.level === 'FAIL') ||
+    (j.sourcesWithoutMarkers && j.sourcesWithoutMarkers.length > 0) ||
+    (j.orphanSources && j.orphanSources.length > 0) ||
+    (j.omegaFindings && j.omegaFindings.some(f => f.severity === 'FAIL'))
   );
 }
 
@@ -282,6 +337,42 @@ function isFail(j) {
     // 사용자 spec: 결과 line `arrayItemPeriod(N)` / `sourcePositionCluster(N)`
     if (f.arrayItemPeriod && f.arrayItemPeriod.length) flags.push(`arrayItemPeriod(${f.arrayItemPeriod.length})`);
     if (f.sourcePositionCluster && f.sourcePositionCluster.length) flags.push(`sourcePositionCluster(${f.sourcePositionCluster.length})`);
+    // 룰 Z (2026-05-10) — WARN level (다음 사이클 트리거 역할, isFail 미포함)
+    // 형식: `urlCountInsufficient(N<X)` — N=현재 URL 수, X=target
+    if (f.urlCountInsufficient) {
+      const z = f.urlCountInsufficient;
+      flags.push(`urlCountInsufficient(${z.count}<${z.target})`);
+    }
+    // 룰 ZZ (2026-05-10) — WARN level (본문 충실 but _sources 부재)
+    // 형식: `bodyWithoutSources(N: f1,f2,...)` — N=영역 수
+    if (f.bodyWithoutSources && f.bodyWithoutSources.length) {
+      const fields = f.bodyWithoutSources.map(b => b.field).join(',');
+      flags.push(`bodyWithoutSources(${f.bodyWithoutSources.length}: ${fields})`);
+    }
+    // 룰 ZZZ (2026-05-11) — FAIL level (_sources 있는데 본문 [N] 0개)
+    // 형식: `sourcesWithoutMarkers(N: f1,f2,...)`
+    if (f.sourcesWithoutMarkers && f.sourcesWithoutMarkers.length) {
+      const fields = f.sourcesWithoutMarkers.map(b => `${b.field}(${b.bodyLen}/${b.srcsCount})`).join(',');
+      flags.push(`sourcesWithoutMarkers(${f.sourcesWithoutMarkers.length}: ${fields})`);
+    }
+    // 룰 ZZZZ (2026-05-11) — FAIL level (본문 미존재 영역에 _sources만 잔존)
+    // 형식: `orphanSources(N: f1[area]/srcs,...)`
+    if (f.orphanSources && f.orphanSources.length) {
+      const fields = f.orphanSources.map(b => `${b.field}[${b.area}/${b.srcsCount}]`).join(',');
+      flags.push(`orphanSources(${f.orphanSources.length}: ${fields})`);
+    }
+    // 룰 OMEGA (2026-05-15) — 통합 자동 스캔 결과 (ZZ/ZZZ/ZZZZ superset)
+    // 형식: `OMEGA-FAIL(N: rule:field,...)` + `OMEGA-WARN(M)`
+    if (f.omegaFindings && f.omegaFindings.length) {
+      const fail = f.omegaFindings.filter(o => o.severity === 'FAIL');
+      const warn = f.omegaFindings.filter(o => o.severity === 'WARN');
+      if (fail.length) {
+        const summary = fail.slice(0, 5).map(o => `${o.rule}:${o.field}`).join(',');
+        const more = fail.length > 5 ? `,+${fail.length - 5}` : '';
+        flags.push(`OMEGA-FAIL(${fail.length}: ${summary}${more})`);
+      }
+      if (warn.length) flags.push(`OMEGA-WARN(${warn.length})`);
+    }
     console.log(`${status} ${slug.padEnd(30)} ${flags.join(', ') || 'clean'}`);
     f.arrayBrokenRef.forEach(b =>
       console.log(`         ${b.field}: broken=[${b.broken.join(',')}] srcLen=${b.srcLen}`));

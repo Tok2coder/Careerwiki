@@ -21,7 +21,8 @@ import {
 import { composeDetailSlug } from '../utils/slug'
 import { renderKoreaMap, normalizeRegionName, type RegionData } from '../components/koreaMap'
 import { inferRegionFromUniversityName } from '../utils/universityRegionMapper'
-import { renderSafetyBannersForText } from '../utils/safety'
+// renderSafetyBannersForText는 본문 false positive 발생으로 위키 영역에서는 사용 안 함
+// (정책 community §5 자살자해 매뉴얼은 댓글 신고 시점 처리에 남아있음 — reportComment의 [URGENT-2H-SLA] 태그)
 import { type TrustBoxData } from '../utils/trust'
 import { renderEntityActionGroup } from './partials/actionMenu'
 
@@ -2743,20 +2744,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       `
     : `<div class="space-y-6" data-major-layout>${tabLayout}</div>`
 
-  // 안전 배너: 본문에 자살·자해/학교폭력 신호가 있으면 페이지 상단에 109/1393·117/1388 안내
-  // (정책 wiki/major §7, community §5/§7-C)
-  const safetyScanText = JSON.stringify({
-    name: profile.name,
-    summary: (profile as any).summary,
-    overview: (profile as any).overview,
-    curriculum: (profile as any).curriculum,
-    career: (profile as any).career,
-  })
-  const safetyBannersBlock = renderSafetyBannersForText(safetyScanText)
+  // 본문 자동 안전 배너 제거 — 사회복지·심리학 등 학과에서 자연스럽게 등장하는 키워드로
+  // false positive 발생. 자살자해 매뉴얼은 신고 시점 처리에서 유지.
 
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-major-id="${escapeHtml(profile.id)}">
-      ${safetyBannersBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
           ${classificationData?.large_category
