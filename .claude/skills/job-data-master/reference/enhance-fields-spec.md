@@ -1,33 +1,94 @@
-# Enhance Fields Spec — 12 필드 + Resume Safety + careerTree + 각주 수선
+# Enhance Fields Spec — 21+ 영역 (WL-KILL 자동 enumerate) + careerTree + 각주 수선
 
-> ENHANCE 모드 진입 시 12 필드 작성 spec + Phase 3.6 careerTree + Phase 5 각주 수선 절차.
+> ENHANCE 모드 진입 시 21+ 영역 작성 spec + Phase 3.6 careerTree + Phase 5 각주 수선 절차.
 > 본 doc은 reference 전용 — enhance 사이클 실행 시 참조.
+> **2026-05-16 WL-KILL 강화**: 화이트리스트 17필드 폐기 → 21+ 영역 자동 enumerate 강제.
 
 ---
 
-## 12 필드 요약 (Self-Report 17필드 체크리스트)
+## 21+ 영역 요약 (Self-Report 자동 enumerate, WL-KILL 룰)
+
+**핵심**: 진단·Self-Report·patch 계획은 화이트리스트 enumerate 금지. `merged_profile_json`의 모든 prose body + sidebar + 보조 영역을 자동 enumerate.
+
+### Prose Body 14 영역 (audit-via-api OMEGA가 자동 검출)
 
 | # | 필드 | 분량/형식 | 우선순위 |
 |---|---|---|---|
-| 1 | `way` | 200~500자, **string** (배열 X) | 항상 새로 작성 |
-| 2 | `detailReady.curriculum` | 5개+ plain string 배열 | 항상 새로 작성 |
-| 3 | `detailReady.recruit` | 3개+ plain string 배열 | 항상 새로 작성 |
-| 4 | `detailReady.training` | 2개+ plain string 배열 | 항상 새로 작성 |
-| 5 | `trivia` | 출처 있는 팩트 1개 (마지막 sentence 끝 [N]) | 항상 새로 작성 |
-| 6 | `detailWlb.wlbDetail` | 130~200자 | 항상 새로 작성 |
-| 7 | `detailWlb.socialDetail` | 100~160자 | 항상 새로 작성 |
-| 8 | `detailWlb.wlb` (등급) | "높음" / "보통 이상" / "보통" / "보통 이하" / "낮음" | 항상 새로 작성 |
-| 9 | `detailWlb.social` (등급) | 동일 | 항상 새로 작성 |
-| 10 | `overviewProspect.main` | 기존 있으면 유지, 없으면 보강 | 보강 가능 |
-| 11 | `sidebarJobs` | 7~12개 plain string, **DB 실존 확인** | 보강 가능 |
-| 12 | `sidebarMajors` | 3~8개 plain string, **DB 실존 확인** | 보강 가능 |
-| 13 | `sidebarCerts` | 2~5개 `[{name, url}]` object 배열 | 보강 가능 |
-| 14 | `sidebarOrgs` | 1~3개 `[{name, url}]` object 배열 | 보강 가능 |
-| 15 | `heroTags` | 4~8개 plain string | 항상 새로 작성 |
-| 16 | `youtubeLinks` | 1~3개 `[{url, title}]` object 배열 (한국어만) | 항상 새로 작성 |
-| 17 | `careerTree` | 한국인 공인 인물 (없으면 `null` + `_careerTreeNote`) | 보강 가능 |
+| 1 | `way` | 200~500자, **string** (배열 X) | 항상 작성 |
+| 2 | `summary` | 80~200자 string (admin 영역 있으면 보존) | 보강 가능 |
+| 3 | `trivia` | 출처 있는 팩트 1개 (마지막 sentence 끝 [N]) | 항상 작성 |
+| 4 | `overviewWork.main` | 100~300자 string (careernet 원본 있으면 보존) | 보강 가능 |
+| 5 | `overviewProspect.main` | 기존 있으면 유지, 없으면 보강 | 보강 가능 |
+| 6 | `overviewAbilities.technKnow` | 100~250자 string (NULL이면 신규 작성 의무) | **항상 작성** ⚠️ 신규 강화 |
+| 7 | `detailWlb.wlbDetail` | 130~200자 | 항상 작성 |
+| 8 | `detailWlb.socialDetail` | 100~160자 | 항상 작성 |
+| 9 | `detailReady.curriculum` | 5개+ plain string 배열 | 항상 작성 |
+| 10 | `detailReady.recruit` | 3개+ plain string 배열 | 항상 작성 |
+| 11 | `detailReady.training` | 2개+ plain string 배열 | 항상 작성 |
+| 12 | `detailReady.researchList` | 기존 보존 (CareerNet 원본) | 수정 X |
+| 13 | `detailReady.certificate` | 기존 보존 | 수정 X |
+| 14 | `detailReady.pathExplore` | 기존 보존 | 수정 X |
 
-> ⚠️ **🔒 절대 수정 금지**: `overviewSalary` (sal/wage/wageSource 전체) — `[sal-readonly]` strict 차단.
+> ⚠️ **🔒 절대 수정 금지**: `overviewSalary.sal` (sal/wage/wageSource 전체) — `[sal-readonly]` strict 차단. 진단 단계에서도 sal 영역은 skip.
+
+### Sidebar 4 영역
+
+| # | 필드 | 분량/형식 |
+|---|---|---|
+| 15 | `sidebarJobs` | 7~12개 plain string, **DB 실존 확인** |
+| 16 | `sidebarMajors` | 3~8개 plain string, **DB 실존 확인** |
+| 17 | `sidebarCerts` | 2~5개 `[{name, url}]` object 배열 |
+| 18 | `sidebarOrgs` | 1~3개 `[{name, url}]` object 배열 |
+
+### 등급 + 보조 영역
+
+| # | 필드 | 형식 |
+|---|---|---|
+| 19 | `detailWlb.wlb` (등급) | "높음" / "보통 이상" / "보통" / "보통 이하" / "낮음" |
+| 20 | `detailWlb.social` (등급) | 동일 |
+| 21 | `heroTags` | 4~8개 plain string |
+| 22 | `youtubeLinks` | 1~3개 `[{url, title}]` object 배열 (한국어만) |
+| 23 | `careerTree` | 한국인 공인 인물 (없으면 `null` + `_careerTreeNote`) |
+
+### WL-KILL 자동 진단 SQL (Phase 0-DIAG 의무)
+
+```sql
+SELECT
+  -- Prose body 14 영역 (sal 제외)
+  json_type(merged_profile_json,'$.way') AS way_t, length(json_extract(merged_profile_json,'$.way')) AS way_l,
+  json_type(merged_profile_json,'$.summary') AS summary_t, length(json_extract(merged_profile_json,'$.summary')) AS summary_l,
+  json_type(merged_profile_json,'$.trivia') AS trivia_t, length(json_extract(merged_profile_json,'$.trivia')) AS trivia_l,
+  json_type(merged_profile_json,'$.overviewWork.main') AS duties_t, length(json_extract(merged_profile_json,'$.overviewWork.main')) AS duties_l,
+  json_type(merged_profile_json,'$.overviewProspect.main') AS prospect_t, length(json_extract(merged_profile_json,'$.overviewProspect.main')) AS prospect_l,
+  json_type(merged_profile_json,'$.overviewAbilities.technKnow') AS abil_t, length(json_extract(merged_profile_json,'$.overviewAbilities.technKnow')) AS abil_l,
+  json_type(merged_profile_json,'$.detailWlb.wlbDetail') AS wlb_t, length(json_extract(merged_profile_json,'$.detailWlb.wlbDetail')) AS wlb_l,
+  json_type(merged_profile_json,'$.detailWlb.socialDetail') AS social_t, length(json_extract(merged_profile_json,'$.detailWlb.socialDetail')) AS social_l,
+  -- Sidebar 4 영역
+  json_array_length(merged_profile_json,'$.sidebarJobs') AS sb_jobs,
+  json_array_length(merged_profile_json,'$.sidebarMajors') AS sb_majors,
+  json_array_length(merged_profile_json,'$.sidebarCerts') AS sb_certs,
+  json_array_length(merged_profile_json,'$.sidebarOrgs') AS sb_orgs,
+  -- 보조 영역
+  json_array_length(merged_profile_json,'$.heroTags') AS hero,
+  json_array_length(merged_profile_json,'$.youtubeLinks') AS yt,
+  -- _sources 보유 키
+  json_extract(user_contributed_json,'$._sources') AS sources_json
+FROM jobs WHERE slug=?;
+```
+
+→ 각 영역의 length=0 또는 NULL이면 force-enhance 작성 의무. patch 계획에 누락 시 WL-KILL 위반.
+
+### Self-Report 자동 enumerate 보고 형식
+
+```
+[직업명] WL-KILL Self-Report (21+ 영역):
+[1] way 248자 ✅ / [2] summary 0자 ❌ (작성 필요) / [3] trivia 104자 ✅ / [4] duties 0자 ❌ (작성 필요)
+[5] prospect 240자 ✅ / [6] abilities 0자 ❌ (작성 필요 — 사고 잔존 영역) / [7] wlb 137자 ✅ ...
+[patch 계획] way (skip — 충실) / abilities (작성) / summary (작성) / duties (보존 — careernet 원본 있음) / ...
+[skip 사유] researchList/certificate/pathExplore (careernet 원본 보존)
+```
+
+→ 21+ 영역 중 patch도 skip도 없으면 WL-KILL 위반 자동 차단.
 
 ---
 

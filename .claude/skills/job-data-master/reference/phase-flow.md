@@ -157,14 +157,30 @@ WHERE is_active=1
 ORDER BY popularity DESC LIMIT N;
 ```
 
-### 0-B. ENHANCE 모드 — 12 필드 진단
+### 0-B. ENHANCE 모드 — 21+ 영역 자동 enumerate 진단 (WL-KILL 강화, 2026-05-16)
 
-`reference/enhance-fields-spec.md` 참조. `merged_profile_json` 기준 12 필드 점검:
-- way / detailReady (curriculum/recruit/training) / trivia / detailWlb (wlb/social/wlbDetail/socialDetail) / overviewProspect.main / sidebarJobs / sidebarMajors / sidebarCerts / sidebarOrgs / heroTags / youtubeLinks / careerTree
+🔥 **2026-05-16 WL-KILL 강화** — 화이트리스트 12필드 진단 폐기. 21+ 영역 자동 enumerate 강제.
 
-각 필드별 권장 임계치 (text length, array count) 점검 + 부실 / 누락 분류.
+`reference/enhance-fields-spec.md` 참조. `merged_profile_json` 기준 21+ 영역 점검:
+
+**Prose Body 14 영역**:
+- `way` / `summary` / `trivia` / `overviewWork.main` (duties) / `overviewProspect.main` / `overviewAbilities.technKnow` (abilities) / `detailWlb.wlbDetail` / `detailWlb.socialDetail` / `detailReady.curriculum` / `detailReady.recruit` / `detailReady.training` / `detailReady.researchList` / `detailReady.certificate` / `detailReady.pathExplore`
+- (sal-protection: `overviewSalary.sal`은 진단도 skip)
+
+**Sidebar 4 영역**: `sidebarJobs` / `sidebarMajors` / `sidebarCerts` / `sidebarOrgs`
+
+**보조 영역**: `detailWlb.wlb` (등급) / `detailWlb.social` (등급) / `heroTags` / `youtubeLinks` / `careerTree`
+
+각 영역별 권장 임계치 (text length, array count) 점검 + 부실 / 누락 분류.
+
+⚠️ **WL-KILL 룰 강제**: 진단 후 Self-Report 21+ 영역 enumerate 의무 (`enhance-phase-procedures.md`). 1개라도 patch도 skip도 없는 영역 잔존 시 Phase 3 진행 차단.
 
 ⚠️ **`merged_profile_json` 기준 진단 강제** — `user_contributed_json` 단독 금지 (api 측 채움 false positive 발생).
+
+⚠️ **사고 잔존 영역 알림** (PR #31 OMEGA 전수 재감사 기준):
+- `overviewAbilities.technKnow` — Round 1~9 누락 빈도 1위 (조각가/모바일앱/양식조리 등 abilities 본문 350~500자 / _sources 0)
+- `summary` — careernet 원본 충실로 자주 skip되나 zero-reg 케이스 다수
+- `overviewWork.main` (duties) — careernet 원본 보존 후 _sources 매핑 누락
 
 ### 0-C. CLEANUP 모드 — Phase 1 audit으로 직접
 

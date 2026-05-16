@@ -431,33 +431,69 @@ curl -s "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=VIDE
 
 ---
 
-## Self-Report: 17필드 완료 체크리스트
+## Self-Report: 21+ 영역 자동 enumerate (WL-KILL 강화, 2026-05-16)
 
-**Phase 1-2 완료 후, Phase 3 진행 전에 아래 17개 필드 상태를 직접 보고한다.**
+**🔥 화이트리스트 17필드 체크리스트 폐기**: 2026-05 PR #31 OMEGA + 362 master pool 전수 재감사 결과 137건(70%) 사고 잔존 — 원인은 abilities/summary/duties 영역 invisible. 이제 21+ 영역 자동 enumerate 강제.
+
+**Phase 1-2 완료 후, Phase 3 진행 전에 아래 21+ 영역 상태를 자동 enumerate로 직접 보고한다.**
 
 ```
+[직업명] WL-KILL Self-Report:
+
+== Prose Body 14 영역 (audit OMEGA 자동 검출) ==
 필드 | 상태 (✅완료/⚠️부분/❌미작업/🔒스킵) | 비고
 -----|------|----
 1. way | | 200자+ string
-2. detailReady.curriculum | | 5개+ plain string
-3. detailReady.recruit | | 3개+ plain string
-4. detailReady.training | | 2개+ plain string
-5. trivia | | 출처 있는 팩트
-6. detailWlb.wlbDetail | | 130~200자
-7. detailWlb.socialDetail | | 100~160자
-8. detailWlb.wlb (등급) | | 높음/보통 이상/보통/보통 이하/낮음
-9. detailWlb.social (등급) | | 동일
-10. overviewProspect.main | | 기존 있으면 유지, 없으면 보강
-11. sidebarJobs | | 7~12개, DB 실존 확인
-12. sidebarMajors | | 3~8개, DB 실존 확인
-13. sidebarCerts | | 2~5개
-14. sidebarOrgs | | 1~3개 (협회/기관)
-15. heroTags | | 4~8개
-16. youtubeLinks | | oembed 확인. 없으면 ✅ + _youtubeSearchNote 필수
-17. careerTree | | 한국인 공인. 없으면 ✅ + _careerTreeNote 필수
+2. summary | | 80~200자 (admin 영역이면 보존)
+3. trivia | | 출처 있는 팩트 1개 (마지막 sentence 끝 [N])
+4. overviewWork.main (duties) | | 100~300자 (careernet 원본 있으면 보존)
+5. overviewProspect.main | | 기존 있으면 유지, 없으면 보강
+6. overviewAbilities.technKnow | | 100~250자 ⚠️ **신규 강화 — NULL이면 작성 의무**
+7. detailWlb.wlbDetail | | 130~200자
+8. detailWlb.socialDetail | | 100~160자
+9. detailReady.curriculum | | 5개+ plain string
+10. detailReady.recruit | | 3개+ plain string
+11. detailReady.training | | 2개+ plain string
+12. detailReady.researchList | | careernet 원본 보존 (수정 X)
+13. detailReady.certificate | | 기존 보존 (수정 X)
+14. detailReady.pathExplore | | 기존 보존 (수정 X)
+
+== Sidebar 4 영역 ==
+15. sidebarJobs | | 7~12개, DB 실존 확인
+16. sidebarMajors | | 3~8개, DB 실존 확인
+17. sidebarCerts | | 2~5개
+18. sidebarOrgs | | 1~3개 (협회/기관)
+
+== 등급 + 보조 영역 ==
+19. detailWlb.wlb (등급) | | 높음/보통 이상/보통/보통 이하/낮음
+20. detailWlb.social (등급) | | 동일
+21. heroTags | | 4~8개
+22. youtubeLinks | | oembed 확인. 없으면 ✅ + _youtubeSearchNote 필수
+23. careerTree | | 한국인 공인. 없으면 ✅ + _careerTreeNote 필수
+
+== patch 계획 (의무) ==
+[patch] way / abilities / summary / ... (수정 영역 명시)
+[skip] researchList / certificate / pathExplore (careernet 원본 보존 사유)
+[skip] sal (sal-protection 영구)
+
+== WL-KILL 자가 검증 ==
+- 21+ 영역 중 patch도 skip도 없는 영역: ___개 (0이어야 통과)
+- changeSummary에 patch 영역 명시: YES/NO
+- changeSummary에 skip 사유 명시: YES/NO
 ```
 
-> ⚠️ **audit Gate 5(k)**는 _careerTreeNote 미기재 시 WARN을 발생시킨다 — 17번 필드 처리 증거 없이 제출 금지.
+> ⚠️ **WL-KILL 자동 차단**: 21+ 영역 중 1개라도 patch/skip 명시 없으면 Phase 3 진행 차단. 사용자 보고 후 재시작.
+> ⚠️ **audit OMEGA self-audit 강제**: Phase 4.5 `audit-via-api.cjs --exclude-sal`에서 `OMEGA-FAIL` 발견 시 즉시 차단. server-side guard와 별개로 client에서도 검증.
+> ⚠️ **audit Gate 5(k)**는 _careerTreeNote 미기재 시 WARN을 발생시킨다 — careerTree 처리 증거 없이 제출 금지.
+
+### 사고 사례 — Round 1~9 / 137건 잔존
+
+**잔존 사고 패턴** (PR #31 OMEGA 전수 재감사):
+- 조각가·모바일앱·양식조리사 abilities 본문 347~494자 / _sources 0개 (force-enhance 보고는 17필드 화이트리스트만 patch — abilities invisible)
+- 국악인 7 영역 zero-reg (way/wlb/social/curriculum/recruit/training/abilities) — Round 5에서 careerTree만 등록·body skip
+- 금융관리자 way 281→370자 force-enhance — abilities/summary/duties 모두 미언급 skip
+
+**WL-KILL 도입 후 검증**: 137건 잔존 → 자동 enumerate로 모두 검출. patch 또는 skip 사유 명시 강제 → 사고 0건 목표.
 
 ---
 
