@@ -1,0 +1,409 @@
+{
+  "timestamp": "2026-05-16T08:51:24.969Z",
+  "batch_index": 1,
+  "slug_count": 50,
+  "slugs": [
+    "치과기공사",
+    "스포츠트레이너",
+    "비행기조종사",
+    "언어치료사",
+    "영화감독",
+    "국악인",
+    "스포츠강사",
+    "심리상담전문가",
+    "인공지능연구원",
+    "초등학교교사",
+    "치과위생사",
+    "방사선사",
+    "인공지능서비스개발자",
+    "작업치료사",
+    "증권외환딜러",
+    "지질학연구원",
+    "캐디",
+    "특수교육교사",
+    "행정사",
+    "헬스트레이너",
+    "성악가",
+    "세라믹소재연구원",
+    "역사학연구원",
+    "영화배우-및-탤런트",
+    "인공지능서비스기획자",
+    "정치학연구원",
+    "제화원",
+    "중고등학교교사",
+    "지휘자",
+    "출판편집자",
+    "필라테스강사",
+    "항공교통관제사",
+    "감정평가사",
+    "검사",
+    "검침원",
+    "경찰관",
+    "금융관리자",
+    "노무사",
+    "데이터분석가빅데이터분석가",
+    "동물조련사",
+    "방송작가",
+    "병원관리자",
+    "보건의료관리자",
+    "보험인수심사원언더라이터",
+    "사진기자",
+    "서예가",
+    "성직자",
+    "숏폼크리에이터",
+    "스마트-팜-구축가",
+    "시인"
+  ],
+  "detail": [
+    {
+      "slug": "치과기공사",
+      "failCount": 9,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "trivia,overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail"
+    },
+    {
+      "slug": "스포츠트레이너",
+      "failCount": 8,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.curriculum"
+    },
+    {
+      "slug": "비행기조종사",
+      "failCount": 7,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "trivia,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "언어치료사",
+      "failCount": 7,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.curriculum"
+    },
+    {
+      "slug": "영화감독",
+      "failCount": 7,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "way,trivia,overviewAbilities.technKnow,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "국악인",
+      "failCount": 6,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailReady.curriculum,detailReady.recruit,detailReady.training"
+    },
+    {
+      "slug": "스포츠강사",
+      "failCount": 6,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "심리상담전문가",
+      "failCount": 6,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "인공지능연구원",
+      "failCount": 6,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,sourcesWithoutMarkers",
+      "fields": "way,trivia,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail"
+    },
+    {
+      "slug": "초등학교교사",
+      "failCount": 6,
+      "warnCount": 3,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "치과위생사",
+      "failCount": 6,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "trivia,overviewAbilities.technKnow,detailWlb.wlbDetail,detailReady.recruit,detailReady.training"
+    },
+    {
+      "slug": "방사선사",
+      "failCount": 5,
+      "warnCount": 3,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "인공지능서비스개발자",
+      "failCount": 5,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "작업치료사",
+      "failCount": 5,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.socialDetail,detailReady.curriculum,detailReady.researchList"
+    },
+    {
+      "slug": "증권외환딜러",
+      "failCount": 5,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,sourcesWithoutMarkers,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailReady.curriculum,detailReady.recruit,detailReady.training"
+    },
+    {
+      "slug": "지질학연구원",
+      "failCount": 5,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.curriculum,detailReady.recruit,detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "캐디",
+      "failCount": 5,
+      "warnCount": 3,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "way,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "특수교육교사",
+      "failCount": 5,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "행정사",
+      "failCount": 5,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.recruit,detailReady.training"
+    },
+    {
+      "slug": "헬스트레이너",
+      "failCount": 5,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.curriculum"
+    },
+    {
+      "slug": "성악가",
+      "failCount": 4,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "세라믹소재연구원",
+      "failCount": 4,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailReady.curriculum,detailReady.training"
+    },
+    {
+      "slug": "역사학연구원",
+      "failCount": 4,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "영화배우-및-탤런트",
+      "failCount": 4,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.curriculum"
+    },
+    {
+      "slug": "인공지능서비스기획자",
+      "failCount": 4,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "trivia,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.curriculum"
+    },
+    {
+      "slug": "정치학연구원",
+      "failCount": 4,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "제화원",
+      "failCount": 4,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "중고등학교교사",
+      "failCount": 4,
+      "warnCount": 3,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail"
+    },
+    {
+      "slug": "지휘자",
+      "failCount": 4,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "출판편집자",
+      "failCount": 4,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.curriculum,detailReady.researchList"
+    },
+    {
+      "slug": "필라테스강사",
+      "failCount": 4,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.recruit"
+    },
+    {
+      "slug": "항공교통관제사",
+      "failCount": 4,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailReady.curriculum,detailReady.researchList"
+    },
+    {
+      "slug": "감정평가사",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "검사",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "검침원",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "trivia,overviewProspect.main,detailWlb.wlbDetail"
+    },
+    {
+      "slug": "경찰관",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "금융관리자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,sourcesWithoutMarkers",
+      "fields": "overviewAbilities.technKnow,detailReady.recruit,detailReady.training"
+    },
+    {
+      "slug": "노무사",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailReady.researchList,detailReady.certificate"
+    },
+    {
+      "slug": "데이터분석가빅데이터분석가",
+      "failCount": 3,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources",
+      "fields": "trivia,overviewAbilities.technKnow,detailWlb.wlbDetail"
+    },
+    {
+      "slug": "동물조련사",
+      "failCount": 3,
+      "warnCount": 3,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "방송작가",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailWlb.socialDetail"
+    },
+    {
+      "slug": "병원관리자",
+      "failCount": 3,
+      "warnCount": 1,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailReady.curriculum,detailReady.recruit"
+    },
+    {
+      "slug": "보건의료관리자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "overviewAbilities.technKnow,detailWlb.wlbDetail,detailReady.recruit"
+    },
+    {
+      "slug": "보험인수심사원언더라이터",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources",
+      "fields": "overviewProspect.main,overviewAbilities.technKnow,detailWlb.wlbDetail"
+    },
+    {
+      "slug": "사진기자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "서예가",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "성직자",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    },
+    {
+      "slug": "숏폼크리에이터",
+      "failCount": 3,
+      "warnCount": 2,
+      "rules": "bodyWithoutSources,arrayBrokenRef",
+      "fields": "trivia,detailWlb.wlbDetail,detailReady.training"
+    },
+    {
+      "slug": "스마트-팜-구축가",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "arrayBodyWithoutSources",
+      "fields": "detailReady.curriculum,detailReady.training,detailReady.researchList"
+    },
+    {
+      "slug": "시인",
+      "failCount": 3,
+      "warnCount": 0,
+      "rules": "bodyWithoutSources,arrayBodyWithoutSources",
+      "fields": "detailWlb.wlbDetail,detailWlb.socialDetail,detailReady.researchList"
+    }
+  ]
+}

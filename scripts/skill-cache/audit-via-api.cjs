@@ -35,6 +35,7 @@ const {
   detectBodyWithoutSources,
   detectSourcesWithoutMarkers,
   detectOrphanSources,
+  detectAllBodySourceMarkerMismatch,
   SELF_DOMAINS,
   PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -109,6 +110,7 @@ function analyze(slug, data, opts = {}) {
     bodyWithoutSources: [], // 2026-05-10 룰 ZZ — WARN level (사용자 발견 사고)
     sourcesWithoutMarkers: [], // 2026-05-11 룰 ZZZ — FAIL level (경찰관 사고)
     orphanSources: [], // 2026-05-11 룰 ZZZZ — FAIL level (본문 없는 영역에 _sources만 잔존)
+    omegaFindings: [], // 2026-05-15 룰 OMEGA — 통합 자동 스캔 (화이트리스트 폐기)
   };
 
   const flatSources = [];
@@ -269,6 +271,18 @@ function analyze(slug, data, opts = {}) {
   // sal-protection + sidebar* skip (detector 내부에서 처리)
   findings.orphanSources = detectOrphanSources(data._proseRaw || {}, data.detailReady || {}, sources, data);
 
+  // 룰 OMEGA (2026-05-15): 통합 body-source-marker mismatch 자동 스캔
+  // 화이트리스트 폐기 — _proseRaw/detailReady/_sources 모든 키 enumerate.
+  // ZZ/ZZZ/ZZZZ는 일부 필드만 검사. OMEGA는 abilities/summary/duties 등 모든 prose 영역 자동 검출.
+  {
+    const filteredSrcs = sources;
+    let omega = detectAllBodySourceMarkerMismatch(data._proseRaw || {}, data.detailReady || {}, filteredSrcs);
+    if (excludeSal) {
+      omega = omega.filter(f => !SAL_PROTECTED_FIELDS.includes(f.field));
+    }
+    findings.omegaFindings = omega;
+  }
+
   return findings;
 }
 
@@ -282,7 +296,8 @@ function isFail(j) {
     (j.rootURL && j.rootURL.length > 0) ||
     (j.wikiQuota && j.wikiQuota.level === 'FAIL') ||
     (j.sourcesWithoutMarkers && j.sourcesWithoutMarkers.length > 0) ||
-    (j.orphanSources && j.orphanSources.length > 0)
+    (j.orphanSources && j.orphanSources.length > 0) ||
+    (j.omegaFindings && j.omegaFindings.some(f => f.severity === 'FAIL'))
   );
 }
 
@@ -345,6 +360,18 @@ function isFail(j) {
     if (f.orphanSources && f.orphanSources.length) {
       const fields = f.orphanSources.map(b => `${b.field}[${b.area}/${b.srcsCount}]`).join(',');
       flags.push(`orphanSources(${f.orphanSources.length}: ${fields})`);
+    }
+    // 룰 OMEGA (2026-05-15) — 통합 자동 스캔 결과 (ZZ/ZZZ/ZZZZ superset)
+    // 형식: `OMEGA-FAIL(N: rule:field,...)` + `OMEGA-WARN(M)`
+    if (f.omegaFindings && f.omegaFindings.length) {
+      const fail = f.omegaFindings.filter(o => o.severity === 'FAIL');
+      const warn = f.omegaFindings.filter(o => o.severity === 'WARN');
+      if (fail.length) {
+        const summary = fail.slice(0, 5).map(o => `${o.rule}:${o.field}`).join(',');
+        const more = fail.length > 5 ? `,+${fail.length - 5}` : '';
+        flags.push(`OMEGA-FAIL(${fail.length}: ${summary}${more})`);
+      }
+      if (warn.length) flags.push(`OMEGA-WARN(${warn.length})`);
     }
     console.log(`${status} ${slug.padEnd(30)} ${flags.join(', ') || 'clean'}`);
     f.arrayBrokenRef.forEach(b =>
