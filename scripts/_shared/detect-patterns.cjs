@@ -1095,6 +1095,12 @@ const OMEGA_PROSE_EXCLUDE = new Set([
   'overviewWork.main',        // careernet 직무 상세
   'overviewWork.detail',      // careernet 직무 세부
 ]);
+// detailReady array 중 careernet 원본 보존 영역 — LLM 출처 등록 불가. OMEGA array 검사 제외.
+const OMEGA_ARRAY_EXCLUDE = new Set([
+  'researchList',
+  'certificate',
+  'pathExplore',
+]);
 
 function detectAllBodySourceMarkerMismatch(proseRaw, detailReady, sources) {
   const findings = [];
@@ -1117,8 +1123,9 @@ function detectAllBodySourceMarkerMismatch(proseRaw, detailReady, sources) {
     }
   }
 
-  // 2. detailReady array 자동 스캔
+  // 2. detailReady array 자동 스캔 (careernet 원본 보존 영역 exclude)
   for (const arrayKey of Object.keys(dr)) {
+    if (OMEGA_ARRAY_EXCLUDE.has(arrayKey)) continue;
     const items = Array.isArray(dr[arrayKey]) ? dr[arrayKey] : null;
     if (!items) continue;
     const norm = items
@@ -1228,4 +1235,5 @@ module.exports = {
   // 룰 OMEGA (2026-05-15 — 통합 자동 스캔, 화이트리스트 폐기)
   detectAllBodySourceMarkerMismatch,
   OMEGA_PROSE_EXCLUDE,
+  OMEGA_ARRAY_EXCLUDE,
 };

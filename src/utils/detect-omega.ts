@@ -48,6 +48,12 @@ const OMEGA_PROSE_EXCLUDE = new Set<string>([
   'overviewWork.main',
   'overviewWork.detail',
 ]);
+// detailReady array 중 careernet 원본 보존 영역.
+const OMEGA_ARRAY_EXCLUDE = new Set<string>([
+  'researchList',
+  'certificate',
+  'pathExplore',
+]);
 
 function countMarkers(s: string): number {
   const m = s.match(/\[\d+\]/g);
@@ -100,8 +106,9 @@ export function detectAllBodySourceMarkerMismatch(
     }
   }
 
-  // 2) detailReady array 자동 스캔
+  // 2) detailReady array 자동 스캔 (careernet 원본 보존 영역 exclude)
   for (const arrayKey of Object.keys(dr)) {
+    if (OMEGA_ARRAY_EXCLUDE.has(arrayKey)) continue;
     const items = Array.isArray((dr as any)[arrayKey]) ? (dr as any)[arrayKey] : null;
     if (!items) continue;
     const norm: string[] = items
