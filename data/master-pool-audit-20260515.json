@@ -1,0 +1,8051 @@
+{
+  "timestamp": "2026-05-16T08:51:24.969Z",
+  "total": 362,
+  "failed": 247,
+  "errors": 0,
+  "elapsed_sec": 24.8,
+  "ruleCounts": {
+    "arrayBodyWithoutSources:array": 171,
+    "bodyWithoutSources:prose": 296,
+    "arrayBrokenRef:array": 52,
+    "sourcesWithoutMarkers:array": 6
+  },
+  "results": [
+    {
+      "slug": "3d-프린팅-전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "3d프린팅모델러",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 394,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "esg-경영-컨설턴트",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "gis전문가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 156,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "iot-보안-전문가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "it-컨설턴트",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 154,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "it기술지원전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 218,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "it테스터-및-it-qa전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 181,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "rpa개발자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "ux-디자인-컨설턴트",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가구조립-및-검사원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가구조립원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 105,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가사관리사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 222,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가사도우미",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "가상현실전문가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 365,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가수",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 258,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가스수도전기-계기-검침원-및-안전점검원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가정의학과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가축사육자",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "가축사육종사원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 292,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "간판제작설치원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 251,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "간호부장",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "간호사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 152,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "간호조무사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "감정평가사",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 611,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "개인브랜드매니저",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "건설견적원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "건설공사품질관리원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "건축가건축설계사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 1326,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "건축감리기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 696,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "건축공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "건축사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 4,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "건축설비기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 298,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "검사",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 261,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "검침원",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 231,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 115,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 127,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "게임-그래픽-디자이너",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 420,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "게임-기획자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "게임-콘셉트-디자이너",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "게임-프로그래머",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "게임개발프로듀서",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "게임시나리오작가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "경리사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 262,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "경마검량원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "경비원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "경영-컨설턴트",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "경영기획사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 404,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "경제학연구원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 182,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "경찰관",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 485,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "고객관리시스템crm전문가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "고객상담원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 208,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "곤충식품연구원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "골프장캐디",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "공업기계설치-및-정비원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 487,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "공예가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "공중보건의사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "관광통역안내원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "관세사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 470,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "광고모델",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "교도관",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 289,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "교육학연구원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 309,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "국가산업보안전문가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "국무총리",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "국악인",
+      "failCount": 6,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 172,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 786,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "국제투자기획원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "국제회의전문가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "금융관리자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 254,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "sourcesWithoutMarkers",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 3,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "sourcesWithoutMarkers",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 3,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "금융상품개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 356,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "기상연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "기상캐스터",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "기악연주자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "기업고위임원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 521,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "김치밑반찬-제조종사원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "나무의사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "내과의사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "내과전문의사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "네일아티스트",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 405,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "네트워크-관리자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "노무사",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 404,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "대중가수",
+      "failCount": 2,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 151,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 1,
+          "coveredItems": 1,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "대학교수",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 229,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "데이터-엔지니어",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "데이터베이스-관리자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "데이터분석가빅데이터분석가",
+      "failCount": 3,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 197,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 613,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 101,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "도로운송사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 277,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "독서지도사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "동물조련사",
+      "failCount": 3,
+      "warnCount": 3,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 130,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 132,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "드라마작가",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "드라마프로듀서",
+      "failCount": 2,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 163,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "드론-개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 200,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "드론조종사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "디지털크리에이터",
+      "failCount": 1,
+      "warnCount": 3,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 132,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "레이싱모델",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "로봇-소프트웨어-개발자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "로봇공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 334,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "리포터",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 403,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "마취병리과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "마케팅전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "만화가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 595,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "메타버스-게임-기획자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "메타버스-크리에이터",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "모바일-앱-개발자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "목사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "물류관리사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 162,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "물리치료사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 244,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "미디어콘텐츠창작자크리에이터",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 292,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "바리스타",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "박물관관리자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "반도체공학기술자-및-연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 273,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "반려동물미용사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 242,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "발전환경연구원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "방사선과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "방사선사",
+      "failCount": 5,
+      "warnCount": 3,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 185,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 297,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 149,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 129,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "방송기자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 676,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "방송아나운서",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "방송연출가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 902,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "방송작가",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 394,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 173,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 123,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "배우",
+      "failCount": 0,
+      "warnCount": 1,
+      "fails": [],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "coveredItems": 2,
+          "srcsCount": 2,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "버스운전기사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "버추얼스트리머",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "번역가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 537,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "법무사-및-집행관",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 416,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "법원공무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 226,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "벤처캐피탈투자심사역",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "변리사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 624,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "변호사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 564,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "병원관리자",
+      "failCount": 3,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 151,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "병원약사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "병원코디네이터",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 123,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "보건교사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 323,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 321,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "보건소장",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "보건위생환경검사원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 367,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 102,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "보건의료관리자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 220,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 110,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "보건의료정보관리사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 186,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "보육교사",
+      "failCount": 2,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 475,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "coveredItems": 4,
+          "srcsCount": 4,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "보험계리사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "보험상품개발자",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 125,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 638,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "보험설계사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "보험인수심사원언더라이터",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 204,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 365,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 118,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "부사관",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 320,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 346,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "분장사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 292,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "블록체인-개발자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "비뇨기과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "비파괴검사원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 362,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "비행기조종사",
+      "failCount": 7,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 296,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 156,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 140,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "빅데이터전문가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "사서",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 898,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "사진기자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 170,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 183,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "사회단체활동가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 373,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "사회복지전담공무원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "사회학연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "산부인과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "산업공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "산업안전원-및-위험관리원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "산업용기계설계기술자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "상업사진작가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "상점판매원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 184,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "상품기획자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 356,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "서예가",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 169,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 133,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "선물큐레이터",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "선박기관사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 381,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 107,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "섬유공학기술자",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 280,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "섬유제조기계조작원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 252,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "성악가",
+      "failCount": 4,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 493,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 176,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 154,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "성직자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 180,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 129,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "세라믹소재연구원",
+      "failCount": 4,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 206,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 161,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "소믈리에",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "소아청소년과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "손해사정사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 389,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "쇼핑호스트",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "숏폼크리에이터",
+      "failCount": 3,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 152,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 117,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "수상운송사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 257,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "수어통역사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "수의사보조원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 202,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "스마트-팜-구축가",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "스타일리스트",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "스포츠강사",
+      "failCount": 6,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 154,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 245,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 112,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 1,
+          "totalMarkers": 1,
+          "coveredItems": 1,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "스포츠마케터",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "스포츠심리상담사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "스포츠에이전트",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "스포츠트레이너",
+      "failCount": 8,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 165,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 295,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 168,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 149,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 3,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "승려",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "시스템-소프트웨어-개발자",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 593,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "시인",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 148,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 146,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "신부",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "신약개발연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "실버로봇서비스기획자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "심리상담전문가",
+      "failCount": 6,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 114,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 254,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 108,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 1,
+          "totalMarkers": 1,
+          "coveredItems": 1,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "심판",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "안경사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 261,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "애널리스트",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "애니메이션작가",
+      "failCount": 3,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 111,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "약국약사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "약사-및-한약사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "양사육사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "양식조리사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "언어치료사",
+      "failCount": 7,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 144,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 507,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 141,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 112,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "여행상품개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 337,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "여행안내원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 829,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "역사학연구원",
+      "failCount": 4,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 300,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 149,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 175,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "연구관리자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 120,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "연극연출가",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "way",
+          "bodyLen": 316,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 316,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "연극제작자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "연기자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "영상편집기자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "영양사",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "way",
+          "bodyLen": 318,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 384,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 138,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "영화감독",
+      "failCount": 7,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "way",
+          "bodyLen": 719,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 173,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 719,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "영화배우-및-탤런트",
+      "failCount": 4,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 560,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 140,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 145,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "영화시나리오작가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 341,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "예능프로그램프로듀서",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "외과의사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "외교관",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "외환딜러",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "요양보호사-및-간병인",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 138,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "우편물집배원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "운동감독",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "운동선수",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "운동처방사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "웨딩플래너",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "웹-개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 405,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "웹-기획자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 202,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 579,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 108,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "웹툰pd",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "웹툰배경작가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "웹툰번역가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "웹툰작가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "위관급-장교",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 323,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 330,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "유리부착원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "유리유리제품생산기계조작원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 508,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "유전공학연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "유치원-원장-및-원감",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 334,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "유치원교사",
+      "failCount": 1,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "은행개인금융상담역",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "은행기업금융상담역",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "은행사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 590,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "음향감독",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "응급구조사",
+      "failCount": 3,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 236,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 128,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "응급의학과전문의사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "응용-소프트웨어-개발자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 249,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "sourcesWithoutMarkers",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 4,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "sourcesWithoutMarkers",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 4,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "의료-기기-개발-전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "의료장비기사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "의료정보시스템개발자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "의료코디네이터",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "의학연구원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 256,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "이비인후과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "이용사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 319,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "인공지능모델개발자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "인공지능서비스개발자",
+      "failCount": 5,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 202,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 198,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 117,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "인공지능서비스기획자",
+      "failCount": 4,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 159,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 199,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 130,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "인공지능연구원",
+      "failCount": 6,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "way",
+          "bodyLen": 375,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 182,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 230,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 202,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 155,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "sourcesWithoutMarkers",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "인포그래픽-디자이너",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "일러스트레이터",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "일반공무원",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 4,
+          "totalMarkers": 4,
+          "coveredItems": 4,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "일반의사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "일식조리사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 494,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "임상-데이터-매니저",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "임상병리사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 385,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "임상시험모니터요원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "임상시험코디네이터",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "입학사정관",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "자동차-디자이너",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "자동차공학기술자",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 459,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "자동차정비원",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 202,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "작사가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "작업치료사",
+      "failCount": 5,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 168,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 237,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 117,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 4,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "잡지기자",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 389,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 102,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "재료공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "재무관리자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "재무설계사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "재활의학과전문의사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "전기가스수도관리자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 236,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "전기공학기술자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 174,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 135,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "전문의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "전자공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "전화교환원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "정신건강의학전문의사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "정신과의사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 580,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "정치학연구원",
+      "failCount": 4,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 182,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 140,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 111,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "제품광고영업원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 170,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "제화원",
+      "failCount": 4,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 336,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 141,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 148,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "조각가",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "조경기술자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 502,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "조경설계사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "조경원",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 510,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "조명감독",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "조명기사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 353,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "조사전문가",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 302,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 122,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 104,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "조산사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "조선공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "주식시장투자전략가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "주얼리-디자이너",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "중고등학교교사",
+      "failCount": 4,
+      "warnCount": 3,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 217,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 360,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 163,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 124,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "중식조리사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 305,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "증권외환딜러",
+      "failCount": 5,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 293,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 109,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "sourcesWithoutMarkers",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "지리정보시스템전문가",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 595,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "지적-및-측량기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 487,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "지질학연구원",
+      "failCount": 5,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 171,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "지휘자",
+      "failCount": 4,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 493,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 128,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 142,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "직업군인",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "직업상담사",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 256,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 150,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 148,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "직업운동선수",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 953,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 608,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "집배원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 138,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "창업기획자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "천문학연구원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "철도여행상품개발원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "철도지하철운송사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 285,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "청소년지도사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 233,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 4,
+          "totalMarkers": 4,
+          "coveredItems": 4,
+          "srcsCount": 3,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "청원경찰",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 235,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "초등학교교사",
+      "failCount": 6,
+      "warnCount": 3,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 141,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 252,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 180,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 159,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "총무사무원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 432,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "총무인사관리자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "촬영감독",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "최고마케팅책임자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "최고재무책임자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "출판편집자",
+      "failCount": 4,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 157,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 122,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "치과기공사",
+      "failCount": 9,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 233,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 188,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 312,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 156,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 131,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 5,
+          "totalMarkers": 5,
+          "coveredItems": 5,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "치과위생사",
+      "failCount": 6,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 176,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 271,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 146,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "치과의사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 887,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "카피라이터",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 4,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "캐디",
+      "failCount": 5,
+      "warnCount": 3,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "way",
+          "bodyLen": 304,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 196,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 178,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 122,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 4,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 2,
+          "srcsCount": 2,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "컴퓨터애니메이션감독",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "퀵배달원",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "클라우드-시스템-엔지니어",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "클라우드시스템정보보안전문가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "택배원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "trivia",
+          "bodyLen": 132,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 216,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "택시운전기사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "토목감리기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 830,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "토목공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "통신장비기사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "통역가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 691,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "특수교육교사",
+      "failCount": 5,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 116,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 220,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 113,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "특수학교교사",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "판사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "패션모델",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 143,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 131,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "패션어드바이저",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "패션코디네이터",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "편집-디자이너",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "편집기자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "평론가",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "푸드-브로커",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "푸드스타일리스트",
+      "failCount": 3,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 132,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "품질관리사무원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 372,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 100,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "플랜트기계공학기술자",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "way",
+          "bodyLen": 280,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 423,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 280,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "피부관리사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "필라테스강사",
+      "failCount": 4,
+      "warnCount": 1,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 232,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 150,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 135,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 1,
+          "totalMarkers": 1,
+          "coveredItems": 1,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 2,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "하역적재종사원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 440,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 100,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "한식조리사",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 166,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 381,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "한약사",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "way",
+          "bodyLen": 316,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 321,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 316,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "항공공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 302,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "항공교통관제사",
+      "failCount": 4,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 472,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 162,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "항공기객실승무원",
+      "failCount": 3,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 736,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 2,
+          "totalMarkers": 2,
+          "coveredItems": 2,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "항공기정비원",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "항공기조종사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 730,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "해양경찰관",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 463,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "행사기획자",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 303,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "행정사",
+      "failCount": 5,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 117,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 143,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 141,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 2,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 1,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "헬스트레이너",
+      "failCount": 5,
+      "warnCount": 2,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewProspect.main",
+          "bodyLen": 167,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 233,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.wlbDetail",
+          "bodyLen": 140,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "detailWlb.socialDetail",
+          "bodyLen": 133,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBrokenRef",
+          "area": "array",
+          "field": "detailReady.curriculum",
+          "itemCount": 3,
+          "totalMarkers": 3,
+          "coveredItems": 3,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": [
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.recruit",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        },
+        {
+          "rule": "arrayCluster",
+          "area": "array",
+          "field": "detailReady.training",
+          "itemCount": 3,
+          "coveredItems": 1,
+          "srcsCount": 1,
+          "severity": "WARN"
+        }
+      ]
+    },
+    {
+      "slug": "호스피스전문간호사",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "호텔지배인",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.certificate",
+          "itemCount": 1,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "화가",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 318,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 4,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "화학공학기술자",
+      "failCount": 1,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 3,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "화학연구원",
+      "failCount": 2,
+      "warnCount": 0,
+      "fails": [
+        {
+          "rule": "bodyWithoutSources",
+          "area": "prose",
+          "field": "overviewAbilities.technKnow",
+          "bodyLen": 433,
+          "markerCount": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        },
+        {
+          "rule": "arrayBodyWithoutSources",
+          "area": "array",
+          "field": "detailReady.researchList",
+          "itemCount": 2,
+          "totalMarkers": 0,
+          "srcsCount": 0,
+          "severity": "FAIL"
+        }
+      ],
+      "warns": []
+    },
+    {
+      "slug": "회계감사관리자",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    },
+    {
+      "slug": "희극배우",
+      "failCount": 0,
+      "warnCount": 0,
+      "fails": [],
+      "warns": []
+    }
+  ]
+}

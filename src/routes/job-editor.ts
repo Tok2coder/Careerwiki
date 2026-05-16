@@ -617,6 +617,45 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
 
       const updatedMerged = deepMergeForUpdate(currentMerged, updatedUserData)
 
+      // ── 룰 OMEGA (2026-05-15) server-side guard ──────────────────────────
+      // patch가 만진 fieldKey + sources 영역의 통합 body-source-marker mismatch FAIL 검출 시 reject.
+      // 기존 prod 잔존 FAIL은 통과 (patch 안 보낸 영역). 화이트리스트 폐기 — abilities·summary 등 자동 검사.
+      try {
+        const { detectAllBodySourceMarkerMismatch, filterPatchTouchedFindings } = await import('../utils/detect-omega')
+        // merged result에서 _proseRaw 평탄화 — 산문 영역 raw string 추출
+        const proseRaw: Record<string, any> = {}
+        const proseKeys = ['summary', 'way', 'overviewWork.main', 'overviewProspect.main', 'trivia',
+          'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'overviewAbilities.technKnow']
+        for (const k of proseKeys) {
+          const parts = k.split('.')
+          let v: any = updatedMerged
+          for (const p of parts) { v = v?.[p] }
+          if (typeof v === 'string') proseRaw[k] = v
+        }
+        const detailReady = updatedMerged.detailReady || {}
+        const omegaFindings = detectAllBodySourceMarkerMismatch(proseRaw, detailReady, updatedUserData._sources || {})
+
+        // patch가 만진 fieldKey 한정 — fields + sources keys
+        const touchedKeys = new Set<string>()
+        for (const k of Object.keys(fields)) touchedKeys.add(k)
+        if (sources) for (const k of Object.keys(sources)) touchedKeys.add(k.replace(/_sources$/, ''))
+        const patchScoped = filterPatchTouchedFindings(omegaFindings, Array.from(touchedKeys))
+        const patchFails = patchScoped.filter(f => f.severity === 'FAIL')
+
+        if (patchFails.length > 0) {
+          return c.json({
+            success: false,
+            error: 'OMEGA_VALIDATION_FAILED',
+            message: 'patch 영역에 body-source-marker mismatch FAIL 검출 — 통합 룰 OMEGA',
+            findings: patchFails,
+            touchedFields: Array.from(touchedKeys),
+          }, 400)
+        }
+      } catch (e) {
+        // detect-omega import 실패 등 — guard 자체 오류는 patch 차단하지 않음 (안전 fallback)
+        console.warn('[omega-guard] error:', e instanceof Error ? e.message : String(e))
+      }
+
       const { createRevision, getCurrentRevision } = await import('../services/revisionService')
 
       // ① 초기 리비전 생성 (첫 편집인 경우)

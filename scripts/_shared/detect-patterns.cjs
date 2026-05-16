@@ -1082,6 +1082,91 @@ function detectSourcePositionCluster(detailReady, sources) {
   return hits;
 }
 
+// ──────────────────────────────────────────────────────────────────────
+// 룰 OMEGA (2026-05-15) — 통합 body-source-marker mismatch 자동 스캔
+// 화이트리스트 폐기: _proseRaw/detailReady/_sources 키 자동 enumerate.
+// abilities·duties 등 새 영역도 별도 룰 추가 없이 검출.
+//
+// 단, careernet 원본 영역 (사용자 편집 X, 출처 등록 의무 약)은 prose 검사 제외.
+// 이 영역은 audit 노이즈 무한 양산 — 사용자 편집 영역만 검사 대상.
+// ──────────────────────────────────────────────────────────────────────
+const OMEGA_PROSE_EXCLUDE = new Set([
+  'summary',                  // careernet 직무 정의 — 원본 데이터
+  'overviewWork.main',        // careernet 직무 상세
+  'overviewWork.detail',      // careernet 직무 세부
+]);
+
+function detectAllBodySourceMarkerMismatch(proseRaw, detailReady, sources) {
+  const findings = [];
+  const pr = proseRaw && typeof proseRaw === 'object' ? proseRaw : {};
+  const dr = detailReady && typeof detailReady === 'object' ? detailReady : {};
+  const srcs = sources && typeof sources === 'object' ? sources : {};
+
+  // 1. _proseRaw 전체 키 자동 스캔 (화이트리스트 X — careernet 원본 영역만 minimal exclude)
+  for (const fieldKey of Object.keys(pr)) {
+    if (OMEGA_PROSE_EXCLUDE.has(fieldKey)) continue;
+    const body = pr[fieldKey];
+    if (typeof body !== 'string' || body.length < 100) continue;
+    const arr = Array.isArray(srcs[fieldKey]) ? srcs[fieldKey].filter(s => s && s.url) : [];
+    const markerCount = (body.match(/\[\d+\]/g) || []).length;
+
+    if (arr.length === 0) {
+      findings.push({ rule: 'bodyWithoutSources', area: 'prose', field: fieldKey, bodyLen: body.length, markerCount, srcsCount: 0, severity: 'FAIL' });
+    } else if (markerCount === 0) {
+      findings.push({ rule: 'sourcesWithoutMarkers', area: 'prose', field: fieldKey, bodyLen: body.length, markerCount: 0, srcsCount: arr.length, severity: 'FAIL' });
+    }
+  }
+
+  // 2. detailReady array 자동 스캔
+  for (const arrayKey of Object.keys(dr)) {
+    const items = Array.isArray(dr[arrayKey]) ? dr[arrayKey] : null;
+    if (!items) continue;
+    const norm = items
+      .map(i => (typeof i === 'string' ? i : (i && (i.text || i.title)) || ''))
+      .filter(t => t && t.length >= 30);
+    if (norm.length === 0) continue;
+    const fieldKey = 'detailReady.' + arrayKey;
+    const arr = Array.isArray(srcs[fieldKey]) ? srcs[fieldKey].filter(s => s && s.url) : [];
+    const markerCounts = norm.map(t => (t.match(/\[\d+\]/g) || []).length);
+    const totalMarkers = markerCounts.reduce((a, b) => a + b, 0);
+    const coveredItems = markerCounts.filter(c => c > 0).length;
+
+    if (arr.length === 0 && totalMarkers === 0 && norm.some(t => t.length >= 50)) {
+      findings.push({ rule: 'arrayBodyWithoutSources', area: 'array', field: fieldKey, itemCount: norm.length, totalMarkers: 0, srcsCount: 0, severity: 'FAIL' });
+    } else if (totalMarkers > 0 && arr.length < coveredItems) {
+      findings.push({ rule: 'arrayBrokenRef', area: 'array', field: fieldKey, itemCount: norm.length, totalMarkers, coveredItems, srcsCount: arr.length, severity: 'FAIL' });
+    } else if (coveredItems > 0 && coveredItems < norm.length) {
+      findings.push({ rule: 'arrayCluster', area: 'array', field: fieldKey, itemCount: norm.length, coveredItems, srcsCount: arr.length, severity: 'WARN' });
+    } else if (arr.length > 0 && totalMarkers === 0) {
+      findings.push({ rule: 'sourcesWithoutMarkers', area: 'array', field: fieldKey, itemCount: norm.length, totalMarkers: 0, srcsCount: arr.length, severity: 'FAIL' });
+    }
+  }
+
+  // 3. _sources 키 자동 스캔 — body 미존재 시 orphan
+  const sidebarOrphanForbidden = new Set(SIDEBAR_FIELDS_FORBIDDEN || []);
+  for (const srcKey of Object.keys(srcs)) {
+    if (sidebarOrphanForbidden.has(srcKey)) continue; // sidebar는 별도 룰 L에서 처리
+    if (srcKey === 'overviewSalary.sal') continue; // sal 영역은 별도 보호
+    const arr = Array.isArray(srcs[srcKey]) ? srcs[srcKey].filter(s => s && s.url) : [];
+    if (arr.length === 0) continue;
+    let bodyExists = false;
+    if (Object.prototype.hasOwnProperty.call(pr, srcKey)) {
+      const v = pr[srcKey];
+      if (typeof v === 'string' && v.length >= 30) bodyExists = true;
+    }
+    if (!bodyExists && srcKey.startsWith('detailReady.')) {
+      const sub = srcKey.slice('detailReady.'.length);
+      const items = Array.isArray(dr[sub]) ? dr[sub] : null;
+      if (items && items.length > 0) bodyExists = true;
+    }
+    if (!bodyExists) {
+      findings.push({ rule: 'orphanSources', area: 'meta', field: srcKey, srcsCount: arr.length, severity: 'FAIL' });
+    }
+  }
+
+  return findings;
+}
+
 module.exports = {
   detectMultipleUrlsInSourceText,
   detectMergedOrgLabel,
@@ -1140,4 +1225,7 @@ module.exports = {
   detectSourcesWithoutMarkers,
   // 룰 ZZZZ (2026-05-11 — Orphan Sources FAIL — 본문 없는 영역에 _sources만 잔존)
   detectOrphanSources,
+  // 룰 OMEGA (2026-05-15 — 통합 자동 스캔, 화이트리스트 폐기)
+  detectAllBodySourceMarkerMismatch,
+  OMEGA_PROSE_EXCLUDE,
 };

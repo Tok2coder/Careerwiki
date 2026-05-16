@@ -178,6 +178,27 @@ node scripts/validate-job-edit.cjs payload.json
 
 errors 0 + 모든 적용 룰 PASS. 산문 영역 게이트 (`PROSE_BODY_FIELDS` 9 필드 orphan/brokenRef/dup) 자동 통과 확인.
 
+### Phase 4.5 — OMEGA SELF-AUDIT (2026-05-15 신설, skip 금지) ⚠️
+
+POST 직전, **patch + 기존 merged 결과를 통합 룰 OMEGA로 self-audit**. 화이트리스트 폐기 — `_proseRaw`·`detailReady`·`_sources` 모든 키 자동 enumerate. ZZ/ZZZ/ZZZZ는 일부 필드만 검사하지만 OMEGA는 abilities·summary·duties 등 모든 산문 영역 자동 검출.
+
+```bash
+# patch JSON에 _omegaSelfAudit: true 추가하면 validate-job-edit.cjs가 자동 실행
+node scripts/validate-job-edit.cjs payload.json
+
+# 또는 별도 호출
+node -e "const {detectAllBodySourceMarkerMismatch} = require('./scripts/_shared/detect-patterns.cjs'); ..."
+```
+
+**FAIL 검출 시 처리**:
+- patch가 만진 fieldKey에 OMEGA FAIL → patch에 추가 fix 포함 강제 (skip 금지)
+- 잔존 prod FAIL (patch 안 보낸 영역) → 다음 사이클로 분리 (본 patch 통과)
+- server-side guard (job-editor.ts)도 동일 룰 검사 — client validate 우회해도 400 reject
+
+**Self-Report 추가 항목**: 통합 룰 검사 결과 FAIL/WARN count + 영역 목록 기록.
+
+force-enhance 모드는 모든 prose 영역 (화이트리스트 폐기) 자동 인지 — abilities·summary 등 누락 영역도 force-enhance 풀 사이클 대상.
+
 ### Phase 5 — POST
 
 ```bash
@@ -194,14 +215,15 @@ curl -X POST "https://careerwiki.org/api/job/{id}/edit" \
 ### Phase 6 — VERIFY
 
 ```bash
-# 1. audit 재실행
+# 1. audit 재실행 (OMEGA 통합 룰 포함, 2026-05-15)
 node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal
+# 결과 line에 OMEGA-FAIL(N: rule:field,...) / OMEGA-WARN(M) 표시
 
 # 2. prod 페이지 fetch + 키워드 매칭
 curl -s "https://careerwiki.org/job/<slug>" | grep -o "키워드"
 ```
 
-audit CLEAN (또는 4단계 인정만 잔존) + prod 200 + 본문 키워드 매칭.
+audit CLEAN (또는 4단계 인정만 잔존) + prod 200 + 본문 키워드 매칭 + OMEGA-FAIL 0건 (patch 영역).
 
 ### Phase 7 — REPORT
 
