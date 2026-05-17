@@ -575,13 +575,30 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
       }
 
       // ── 각주 경고: 본문에 [N]이 있는데 해당 필드 sources가 없으면 응답에 경고 포함 ──
+      // 2026-05-12: trivia 등이 array로 저장되는 케이스에서 옛 `typeof === 'string'`만
+      // 체크하던 로직이 silent skip 발생 → array 본문도 join 후 [N] 검사하도록 normalize.
+      // R1 B4 금융상품개발자 사고 후속 (audit-via-api.cjs / detect-patterns.cjs와 일관).
       const footnoteWarnings: string[] = []
       const footnoteFieldKeys = ['way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia', 'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'summary']
+      const fieldValToString = (v: any): string => {
+        if (typeof v === 'string') return v
+        if (Array.isArray(v)) {
+          return v.map((x: any) => {
+            if (typeof x === 'string') return x
+            if (x && typeof x === 'object') {
+              return (x.text || x.title || x.list_content || x.value || '') as string
+            }
+            return ''
+          }).filter((s: string) => s.length > 0).join('\n')
+        }
+        return ''
+      }
       for (const fk of footnoteFieldKeys) {
         const parts = fk.split('.')
         let fieldVal: any = updatedUserData
         for (const p of parts) { fieldVal = fieldVal?.[p] }
-        if (typeof fieldVal === 'string' && /\[\d+\]/.test(fieldVal)) {
+        const bodyStr = fieldValToString(fieldVal)
+        if (bodyStr && /\[\d+\]/.test(bodyStr)) {
           // 본문에 [N] 각주가 있음 → sources 확인
           const hasSources = updatedUserData._sources?.[fk] && Array.isArray(updatedUserData._sources[fk]) && updatedUserData._sources[fk].length > 0
           if (!hasSources) {
@@ -621,8 +638,12 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
       // patch가 만진 fieldKey + sources 영역의 통합 body-source-marker mismatch FAIL 검출 시 reject.
       // 기존 prod 잔존 FAIL은 통과 (patch 안 보낸 영역). 화이트리스트 폐기 — abilities·summary 등 자동 검사.
       try {
-        const { detectAllBodySourceMarkerMismatch, filterPatchTouchedFindings } = await import('../utils/detect-omega')
+        const { detectAllBodySourceMarkerMismatch, filterPatchTouchedFindings, normalizeProseBody } = await import('../utils/detect-omega')
         // merged result에서 _proseRaw 평탄화 — 산문 영역 raw string 추출
+        // 2026-05-12 fix (R1 B4 금융상품개발자): trivia 등이 array로 저장된 케이스에서
+        // 옛 `typeof v === 'string'` 조건이 proseRaw[k] = undefined로 만들어
+        // detect-omega의 bodyExists 검사가 false → orphanSources FAIL 오판 → POST 차단.
+        // normalizeProseBody로 array → joined string 통일.
         const proseRaw: Record<string, any> = {}
         const proseKeys = ['summary', 'way', 'overviewWork.main', 'overviewProspect.main', 'trivia',
           'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'overviewAbilities.technKnow']
@@ -630,7 +651,8 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
           const parts = k.split('.')
           let v: any = updatedMerged
           for (const p of parts) { v = v?.[p] }
-          if (typeof v === 'string') proseRaw[k] = v
+          const norm = normalizeProseBody(v)
+          if (norm) proseRaw[k] = norm
         }
         const detailReady = updatedMerged.detailReady || {}
         const omegaFindings = detectAllBodySourceMarkerMismatch(proseRaw, detailReady, updatedUserData._sources || {})

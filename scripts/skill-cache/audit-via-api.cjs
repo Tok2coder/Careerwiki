@@ -36,6 +36,7 @@ const {
   detectSourcesWithoutMarkers,
   detectOrphanSources,
   detectAllBodySourceMarkerMismatch,
+  normalizeProseBody,
   SELF_DOMAINS,
   PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
@@ -61,17 +62,21 @@ function getNested(obj, p) {
 // skip 발생 → 9 BODY_FIELDS 중 4개만 실제 검사. PR 1 (a43ac7)에서 _proseRaw namespace
 // 추가하여 9 필드 raw string 노출. 본 함수는 _proseRaw 우선 사용 후 getNested fallback.
 //
+// 2026-05-12 fix (R1 B4 금융상품개발자 사고): proseRaw[fieldKey]가 array로 노출되거나
+// fallback getNested가 array를 반환하는 케이스에서 옛 `typeof === 'string'`만 받던
+// 검사가 빈 본문으로 잘못 판정 → orphanSources false positive. normalizeProseBody로
+// array → joined string 통일.
+//
 // @param {object} data - /edit-data 응답의 data 객체
 // @param {string} fieldKey - 'way', 'trivia', 'detailWlb.wlbDetail' 등
-// @returns {string} raw body string ('' if not present or non-string)
+// @returns {string} raw body string ('' if not present or non-string-like)
 function getProseBody(data, fieldKey) {
   const proseRaw = data && data._proseRaw;
-  if (proseRaw && typeof proseRaw === 'object' && typeof proseRaw[fieldKey] === 'string') {
-    return proseRaw[fieldKey];
+  if (proseRaw && typeof proseRaw === 'object' && proseRaw[fieldKey] !== undefined) {
+    return normalizeProseBody(proseRaw[fieldKey]);
   }
-  // fallback — _proseRaw 미배포 환경 (옛 prod 응답 호환)
-  const v = getNested(data, fieldKey);
-  return typeof v === 'string' ? v : '';
+  // fallback — _proseRaw 미배포 환경 (옛 prod 응답 호환) 또는 fieldKey 누락
+  return normalizeProseBody(getNested(data, fieldKey));
 }
 
 async function fetchJob(slug) {
