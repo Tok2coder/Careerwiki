@@ -924,6 +924,40 @@ function _getNestedZZZZ(obj, p) {
   return cur;
 }
 
+// ── normalizeProseBody: prose 필드 값을 audit용 raw string으로 통일 ────────────
+//
+// 배경: trivia / overviewWork.main 등 일부 prose 필드는 DB에 string 또는 array로
+// 저장될 수 있다 (편집 UI / 사용자 POST 형식에 따라). 옛 detector가 `typeof v
+// === 'string'`만 받아들이면 array 케이스에서 빈 본문으로 잘못 판정 → orphanSources
+// false positive (R1 B4 금융상품개발자 2026-05-12 사고).
+//
+// 본 헬퍼는 array일 때 element 텍스트(string / .text / .title / .list_content
+// / .value)를 join하여 server-side `pickString` (src/routes/api-data.ts)과
+// 동일한 normalization을 detector layer에도 적용한다.
+//
+// @param {unknown} v - prose 필드 raw 값 (string | array | object | undefined)
+// @returns {string} normalized body string (없으면 '')
+function normalizeProseBody(v) {
+  if (typeof v === 'string') return v;
+  if (Array.isArray(v)) {
+    return v
+      .map((x) => {
+        if (typeof x === 'string') return x;
+        if (x && typeof x === 'object') {
+          const o = x;
+          if (typeof o.text === 'string') return o.text;
+          if (typeof o.title === 'string') return o.title;
+          if (typeof o.list_content === 'string') return o.list_content;
+          if (typeof o.value === 'string') return o.value;
+        }
+        return '';
+      })
+      .filter((s) => s && s.length > 0)
+      .join('\n');
+  }
+  return '';
+}
+
 function detectOrphanSources(proseRaw, detailReady, sources, apiData) {
   const findings = [];
   if (!sources || typeof sources !== 'object') return findings;
@@ -956,17 +990,16 @@ function detectOrphanSources(proseRaw, detailReady, sources, apiData) {
       continue;
     }
 
-    // prose 영역 — _proseRaw 우선, 없으면 top-level getNested
+    // prose 영역 — _proseRaw 우선 (array도 normalize), 없으면 top-level getNested
+    // proseRaw[fieldKey]가 string/array 어느 쪽이든 normalizeProseBody가 처리.
     let body = null;
-    if (proseRaw && typeof proseRaw === 'object' && typeof proseRaw[fieldKey] === 'string') {
-      body = proseRaw[fieldKey];
+    if (proseRaw && typeof proseRaw === 'object' && proseRaw[fieldKey] !== undefined) {
+      body = normalizeProseBody(proseRaw[fieldKey]); // '' 가능
     } else if (apiData) {
       const v = _getNestedZZZZ(apiData, fieldKey);
-      if (typeof v === 'string') body = v;
-      else if (Array.isArray(v)) {
-        // array 항목 join
-        body = v.map(x => typeof x === 'string' ? x : (x && typeof x === 'object' ? (x.text || x.title || '') : '')).join(' ').trim();
-      }
+      const norm = normalizeProseBody(v);
+      if (norm) body = norm;
+      else if (v !== undefined) body = ''; // 존재하지만 빈 array/object
     }
     if (body == null) {
       // 본문 자체가 미존재 (API top-level에도 없는 영역 — detailGrowth.growth, detailWork.workDetail 등)
@@ -1109,10 +1142,12 @@ function detectAllBodySourceMarkerMismatch(proseRaw, detailReady, sources) {
   const srcs = sources && typeof sources === 'object' ? sources : {};
 
   // 1. _proseRaw 전체 키 자동 스캔 (화이트리스트 X — careernet 원본 영역만 minimal exclude)
+  // 2026-05-12: array trivia 등 normalize — string만 받으면 array body는 silent skip되어
+  // bodyWithoutSources / sourcesWithoutMarkers false negative + section 3 orphan false positive.
   for (const fieldKey of Object.keys(pr)) {
     if (OMEGA_PROSE_EXCLUDE.has(fieldKey)) continue;
-    const body = pr[fieldKey];
-    if (typeof body !== 'string' || body.length < 100) continue;
+    const body = normalizeProseBody(pr[fieldKey]);
+    if (body.length < 100) continue;
     const arr = Array.isArray(srcs[fieldKey]) ? srcs[fieldKey].filter(s => s && s.url) : [];
     const markerCount = (body.match(/\[\d+\]/g) || []).length;
 
@@ -1157,9 +1192,11 @@ function detectAllBodySourceMarkerMismatch(proseRaw, detailReady, sources) {
     const arr = Array.isArray(srcs[srcKey]) ? srcs[srcKey].filter(s => s && s.url) : [];
     if (arr.length === 0) continue;
     let bodyExists = false;
+    // 2026-05-12: array trivia 등 normalize — 옛 `typeof v === 'string'`만 받던 검사가
+    // array body를 false 판정 → orphanSources false positive (R1 B4 금융상품개발자 사고).
     if (Object.prototype.hasOwnProperty.call(pr, srcKey)) {
-      const v = pr[srcKey];
-      if (typeof v === 'string' && v.length >= 30) bodyExists = true;
+      const norm = normalizeProseBody(pr[srcKey]);
+      if (norm.length >= 30) bodyExists = true;
     }
     if (!bodyExists && srcKey.startsWith('detailReady.')) {
       const sub = srcKey.slice('detailReady.'.length);
@@ -1236,4 +1273,6 @@ module.exports = {
   detectAllBodySourceMarkerMismatch,
   OMEGA_PROSE_EXCLUDE,
   OMEGA_ARRAY_EXCLUDE,
+  // prose 본문 normalize 헬퍼 (2026-05-12 — array trivia 등 false positive 차단)
+  normalizeProseBody,
 };

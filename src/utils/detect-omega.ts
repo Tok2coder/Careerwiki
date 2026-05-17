@@ -64,6 +64,34 @@ function isValidSource(s: unknown): s is { url?: string; text?: string } {
   return !!s && typeof s === 'object' && typeof (s as any).url === 'string' && (s as any).url.length > 0;
 }
 
+/**
+ * prose 필드 값을 audit용 raw string으로 통일.
+ * scripts/_shared/detect-patterns.cjs의 normalizeProseBody와 동일 로직 (TS port).
+ *
+ * 배경: trivia 등 일부 prose 필드는 array로 저장될 수 있다 (사용자 POST 형식에 따라).
+ * 옛 `typeof v === 'string'`만 받던 검사가 array body를 false 판정 →
+ * orphanSources / bodyWithoutSources false positive (R1 B4 금융상품개발자 2026-05-12 사고).
+ */
+export function normalizeProseBody(v: unknown): string {
+  if (typeof v === 'string') return v;
+  if (Array.isArray(v)) {
+    return v
+      .map((x: any) => {
+        if (typeof x === 'string') return x;
+        if (x && typeof x === 'object') {
+          if (typeof x.text === 'string') return x.text;
+          if (typeof x.title === 'string') return x.title;
+          if (typeof x.list_content === 'string') return x.list_content;
+          if (typeof x.value === 'string') return x.value;
+        }
+        return '';
+      })
+      .filter((s: string) => s && s.length > 0)
+      .join('\n');
+  }
+  return '';
+}
+
 export function detectAllBodySourceMarkerMismatch(
   proseRaw: Record<string, any> | null | undefined,
   detailReady: Record<string, any> | null | undefined,
@@ -75,11 +103,12 @@ export function detectAllBodySourceMarkerMismatch(
   const srcs = sources && typeof sources === 'object' ? sources : {};
 
   // 1) _proseRaw 전체 키 자동 스캔 (careernet 원본 minimal exclude)
+  // 2026-05-12: array trivia 등 normalize — string만 받으면 array body silent skip 발생.
   for (const fieldKey of Object.keys(pr)) {
     if (SAL_PROTECTED.has(fieldKey)) continue;
     if (OMEGA_PROSE_EXCLUDE.has(fieldKey)) continue;
-    const body = pr[fieldKey];
-    if (typeof body !== 'string' || body.length < 100) continue;
+    const body = normalizeProseBody(pr[fieldKey]);
+    if (body.length < 100) continue;
     const raw = (srcs as any)[fieldKey];
     const arr = Array.isArray(raw) ? raw.filter(isValidSource) : [];
     const markerCount = countMarkers(body);
@@ -175,9 +204,11 @@ export function detectAllBodySourceMarkerMismatch(
       : [];
     if (arr.length === 0) continue;
     let bodyExists = false;
+    // 2026-05-12: array trivia 등 normalize — string만 받던 옛 검사가 array body false 판정 →
+    // orphanSources false positive (R1 B4 금융상품개발자 사고). normalizeProseBody로 통일.
     if (Object.prototype.hasOwnProperty.call(pr, srcKey)) {
-      const v = pr[srcKey];
-      if (typeof v === 'string' && v.length >= 30) bodyExists = true;
+      const norm = normalizeProseBody(pr[srcKey]);
+      if (norm.length >= 30) bodyExists = true;
     }
     if (!bodyExists && srcKey.startsWith('detailReady.')) {
       const sub = srcKey.slice('detailReady.'.length);
