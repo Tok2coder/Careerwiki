@@ -1,6 +1,6 @@
-# Safety Rules — 13 안전 룰 + 보호 영역 + 블랙리스트 + 화이트리스트
+# Safety Rules — 24 안전 룰 + 보호 영역 + 블랙리스트 + 화이트리스트
 
-> SKILL.md Safety Rules 13개의 확장본. 본 doc은 reference 전용 — 실행 중 의문 발생 시 참조.
+> SKILL.md Safety Rules 24개의 확장본. 본 doc은 reference 전용 — 실행 중 의문 발생 시 참조.
 
 ---
 
@@ -261,6 +261,82 @@ grep -E "overviewSalary|wageSource" payload.json && echo "FAIL: sal 영역" && e
 **잘못 vs 올바른 예**: `reference/fix-patterns.md` `[sourcePositionCluster]` 섹션 코드 참조.
 
 **현재**: SKILL 명시 룰. validate 자동 검사 X (다음 phase에서 audit gate 추가). cleanup 시 수동 검사 + 4단계 fallback 적용.
+
+---
+
+## 16. URL count 최소 ≥ 18 — distinct URL (룰 Z — 2026-05-10, 2026-05-18 강화)
+
+**원칙**: force-enhance 후 직업당 **distinct URL count** ≥ `max(18, fieldsCount × 1.5)`. cleanup으로 broken/wiki/root sources 제거한 만큼 신규 1차 출처 발굴 의무. **같은 URL N번 재사용으로 ref count 부풀리기 차단** (distinct Set 기반).
+
+**2026-05-18 강화**:
+- target 12 → 18 (사용자 명시: "URL count: target ≥ 18 미달 시 추가 deep sources 등록 의무")
+- count는 distinct URL Set (옛 totalUrls는 refCount로만 사용)
+
+**Why**: 2026-05-09 사고 (103 직업 중 6 직업 URL <10) → 2026-05-18 사고 (R1 25/25 모두 target 미달). 원인:
+- 패턴 A — cleanup 후 신규 보강 안 함 (sparse fieldKey 다수)
+- 패턴 B — way 글자수만 / careerTree만 집중
+- 패턴 C — 같은 URL 5-6번 등록해서 ref count는 채우나 distinct 부족 (R1 25 직업 중 11개)
+
+**target 계산** (2026-05-18 강화):
+- fields ≤ 12 → target 18
+- fields ≥ 13 → ceil(fields × 1.5)
+- 예: 5 fields → 18, 9 fields → 18, 14 fields → 21
+
+**fix 옵션 (우선순위 순)**:
+1. **sparse fieldKey 발굴** — sources 0~1 영역 (overviewAbilities/socialDetail/wlbDetail/prospect 등)에 deep URL 추가
+2. **distinct host 다양화** — 같은 URL 반복 대신 다른 신뢰 host 발굴
+3. **detailReady 항목별 1:1 매핑** — array item N개에 같은 URL 1개 대신 N개 다른 deep URL
+
+**관련 코드**: `detectUrlCountInsufficient(sources)` — `scripts/_shared/detect-patterns.cjs`. audit-via-api `urlCountInsufficient(N<X)` WARN level.
+
+---
+
+## 17. WL-FULL-CYCLE — 풀 사이클 100% 적용 (룰 24 — 2026-05-18)
+
+**원칙**: 배치 모드 force-enhance 시 모든 enhance 가능 영역을 본 사이클에서 100% 처리. minimal patch / "별도 사이클 위탁" / detailReady 마커 갯수 감소 모두 금지.
+
+**Why**: 2026-05-18 사고. R1 B3 (5 직업) 처리 시 minimal patch (rootURL/cluster fix만, sources 보강 누락). 결과 R1 25/25 직업 URL count target 미달. 사용자 핵심 지적: "배치 모드는 풀 사이클 무조건 다 돌리게끔 해야 한다".
+
+**절대 금지 패턴**:
+- ❌ "시간 부담"으로 minimal patch (sources 발굴 시간 부담은 패치 회피 핑계 안 됨)
+- ❌ "별도 사이클 위탁" / "다음 라운드에서" / "다음 batch에서" 같은 미루기
+- ❌ detailReady 본문 [N] 마커 제거 (이미 박힌 마커 보존 — `detectArrayMarkerCountDecrease`)
+- ❌ prose body 100자+에 [N] 마커 없이 sources 등록 또는 본문 그대로 두기
+
+**강제 처리 영역** (모두 의무):
+| 영역 | 처리 의무 |
+|---|---|
+| prose body: way · summary · duties · prospect · trivia · abilities · wlb · social · overviewWork | body 100자+이면 [N] 마커 + sources 필수 |
+| detailReady array: curriculum · recruit · training | 모든 항목 [N] + sources 1:1 매핑 |
+| sidebar: sidebarOrgs · sidebarJobs · sidebarCerts | root URL → deep 교체 + 보강 |
+| distinct URL count | target ≥ 18 (룰 Z) |
+| 마커 갯수 | 감소 금지 — patch detailReady 마커 수 ≥ prod 마커 수 |
+
+**정당한 skip 사유** (이것만 허용):
+1. **careernet canonical 보존 영역** — `researchList` / `certificate` / `pathExplore` / `summary` / `duties` / `overviewWork.main/detail` (CareerNet 원본 영역, 사용자 편집 금지)
+2. **정치 risk careerTree** — 정치 활동 가능 인물 검증 비용 큼
+3. **본문 길이 100자 미만** — source 1건 보강만 (마커 0건은 OK)
+
+**Self-Report 강제 형식** (batch 끝):
+```
+직업명: <slug>
+patch 영역: [way, trivia, abilities, ...]
+skip 영역 + 사유: [researchList(careernet canonical), ...]
+distinct URL count after: N (target 18)
+detailReady 마커 갯수: 처음 N → 끝 M (M < N이면 자동 FAIL)
+careerTree INSERT: 0/1+ (사유)
+```
+
+**위반 시 처리**:
+- minimal patch 보고 시 사고로 간주 → STOP + 사용자 보고
+- "시간 부담" / "별도 사이클" 보고 시 사용자 STOP 메시지 즉시 적용
+- 룰 24 (마커 감소) 검출 시 server-side guard reject (향후)
+
+**관련 메모리**: `feedback_full_cycle_no_minimal_patch.md` 의무 참조.
+
+**관련 검출 함수**:
+- `detectUrlCountInsufficient(sources)` — target ≥ 18 + distinct count (룰 Z 강화)
+- `detectArrayMarkerCountDecrease(prodDr, patchDr)` — patch가 마커 갯수 줄이는 경우 검출
 
 ---
 

@@ -868,20 +868,76 @@ function detectBodyWithoutSources(proseRaw, detailReady, sources) {
 //
 // fieldsCount: _sources 객체의 키 수 (sidebar* 제외 권장이지만 단순화 위해 모든 fieldKey 포함)
 //
+// **2026-05-18 강화** (Rule WL-FULL-CYCLE 후속):
+//   - count는 **distinct URL count** (Set 기반) — 같은 URL N번 재사용 사고 차단
+//   - target minimum 12 → 18 강화 (사용자 명시 — 풀 사이클 force-enhance target)
+//   - 옛 totalUrls (단순 합산)는 ref count로만 사용, count는 distinct
+//
 // @param {object} sources - _sources 객체 ({ "way": [...], "trivia": [...] })
-// @returns {object|null} 부족 시 { rule, count, target, fieldsCount }, 충분 시 null
+// @returns {object|null} 부족 시 { rule, count, target, fieldsCount, refCount }, 충분 시 null
 function detectUrlCountInsufficient(sources) {
   if (!sources || typeof sources !== 'object') return null;
   const fieldKeys = Object.keys(sources).filter(k => Array.isArray(sources[k]));
   const fieldsCount = fieldKeys.length;
-  const totalUrls = fieldKeys.reduce((n, fk) => {
-    return n + sources[fk].filter(s => s && typeof s === 'object' && s.url).length;
-  }, 0);
-  const minTarget = Math.max(12, Math.ceil(fieldsCount * 1.5));
-  if (totalUrls < minTarget) {
-    return { rule: 'urlCountInsufficient', count: totalUrls, target: minTarget, fieldsCount };
+  const distinctUrls = new Set();
+  let refCount = 0;
+  for (const fk of fieldKeys) {
+    for (const s of sources[fk]) {
+      if (s && typeof s === 'object' && typeof s.url === 'string' && s.url.length > 0) {
+        distinctUrls.add(s.url);
+        refCount += 1;
+      }
+    }
+  }
+  const count = distinctUrls.size;
+  const minTarget = Math.max(18, Math.ceil(fieldsCount * 1.5));
+  if (count < minTarget) {
+    return { rule: 'urlCountInsufficient', count, refCount, target: minTarget, fieldsCount };
   }
   return null;
+}
+
+// ── 룰 24 (WL-FULL-CYCLE): detailReady array 마커 갯수 감소 검출 ─────────
+//
+// 사용자 사고 2026-05-18:
+// 풀 사이클 force-enhance 시 detailReady 본문 [N] 마커 제거하면서 sources 보강 핑계 회피.
+// 마커 갯수 감소는 곧 cover 영역 축소 — 데이터 가치 하락.
+//
+// patch.fields.detailReady[sub].items[*] 본문의 [N] 마커 갯수가
+// prod merged_profile_json.detailReady[sub].items[*] 의 [N] 마커 갯수보다 적으면 사고.
+//
+// 사용법: server-side guard 또는 client validate에서
+//   detectArrayMarkerCountDecrease(prodDetailReady, patchDetailReady)
+//   → 감소 array 목록 반환
+//
+// @param {object} prodDr - prod merged_profile_json.detailReady
+// @param {object} patchDr - patch.fields.detailReady (없으면 미적용)
+// @returns {Array<{field, prodCount, patchCount, gap}>}
+function detectArrayMarkerCountDecrease(prodDr, patchDr) {
+  if (!prodDr || typeof prodDr !== 'object') return [];
+  if (!patchDr || typeof patchDr !== 'object') return [];
+  const hits = [];
+  for (const sub of ARRAY_FIELDS_FOR_PERIOD) {
+    if (!Array.isArray(patchDr[sub])) continue; // patch 영역 안 만진 경우 skip
+    const prodItems = Array.isArray(prodDr[sub]) ? prodDr[sub] : [];
+    const patchItems = patchDr[sub];
+    const cntMarkers = (items) => items.reduce((acc, it) => {
+      const t = typeof it === 'string' ? it : (it && typeof it === 'object' ? (it.text || '') : '');
+      const m = t.match(/\[\d+\]/g);
+      return acc + (m ? m.length : 0);
+    }, 0);
+    const prodCount = cntMarkers(prodItems);
+    const patchCount = cntMarkers(patchItems);
+    if (prodCount > 0 && patchCount < prodCount) {
+      hits.push({
+        field: `detailReady.${sub}`,
+        prodCount,
+        patchCount,
+        gap: prodCount - patchCount,
+      });
+    }
+  }
+  return hits;
 }
 
 // ── 룰 ZZZZ (2026-05-11 — Orphan Sources FAIL) ────────────────────────────────
@@ -1275,4 +1331,6 @@ module.exports = {
   OMEGA_ARRAY_EXCLUDE,
   // prose 본문 normalize 헬퍼 (2026-05-12 — array trivia 등 false positive 차단)
   normalizeProseBody,
+  // 룰 24 WL-FULL-CYCLE (2026-05-18 — array 마커 갯수 감소 검출)
+  detectArrayMarkerCountDecrease,
 };
