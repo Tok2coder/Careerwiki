@@ -337,6 +337,28 @@ careerTree INSERT: 0/1+ (사유)
 **관련 검출 함수**:
 - `detectUrlCountInsufficient(sources)` — target ≥ 18 + distinct count (룰 Z 강화)
 - `detectArrayMarkerCountDecrease(prodDr, patchDr)` — patch가 마커 갯수 줄이는 경우 검출
+- `detectFullCycleCompliance(findings)` — Rule 17 절충 조건 (pool-limited 포함) 모두 체크
+
+### 🆕 pool-limited 절충 (2026-05-18 추가)
+
+한국 1차 deep URL pool이 한정된 도메인 (의료/상담/법무/희소 직업)에서 distinct ≥ 18 발굴 불가 시 **distinct ≥ 10 허용**. 단 다음 6개 절충 조건 **모두** 충족 시:
+
+| # | 조건 | 검증 |
+|---|---|---|
+| 1 | 강제 처리 영역 100% 완료 (prose body 9 + detailReady array 3) | self-report + audit |
+| 2 | wikiQuota ≤ 30% (FAIL threshold) | `calcWikiQuota` level !== 'FAIL' |
+| 3 | detailReady 마커 갯수 보존 (감소 X) | `detectArrayMarkerCountDecrease` empty |
+| 4 | audit Summary 0/1 FAIL (OMEGA·rootURL·brokenRef 등 통과) | `detectFullCycleCompliance.hardFail === false` |
+| 5 | 본문 fact 보존 (mismatch 정정 외 변경 X) | Self-Report 본문 변경 영역 명시 |
+| 6 | Self-Report에 "distinct N (pool 한정)" + 시도한 발굴 URL list (404 등 실패 사유) | LLM 시간 부담은 pool-limited 사유 X |
+
+**판정 함수**: `detectFullCycleCompliance(findings)` — audit findings 받아 PASS/FAIL 판정.
+- 반환: `{ passed, reason, ruleChecks }`
+- `passed: true` + `reason: 'PASS'` — distinct ≥ 18 + 모든 조건 통과
+- `passed: true` + `reason: 'PASS (pool-limited)'` — 10 ≤ distinct < 18 + 절충 조건 모두 통과
+- `passed: false` — distinct < 10 또는 hardFail (rootURL/brokenRef 등) 또는 wikiQuota FAIL
+
+**LLM 시간 부담은 pool-limited 사유 X** — WebFetch 시도 list (404, ECONNREFUSED, socket closed 등 실패 사유 명시)가 의무.
 
 ---
 
