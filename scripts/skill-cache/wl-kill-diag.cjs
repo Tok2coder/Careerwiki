@@ -51,7 +51,11 @@ const AUX_FIELDS = [
   { key: 'detailWlb.social', label: 'social 등급' },
   { key: 'heroTags', minCount: 4, label: 'heroTags' },
   { key: 'youtubeLinks', minCount: 1, label: 'youtubeLinks' },
-  { key: 'careerTree', label: 'careerTree' },
+  // careerTree는 별도 테이블 (career_trees + career_tree_job_links)로 저장됨.
+  // merged_profile_json.careerTree만 보면 ETL 미반영 케이스에서 false negative 발생.
+  // 2026-05-12 사고 (건축사·경제학연구원·CRM): prod 페이지에 careerTree 정상 렌더되지만
+  // diag가 "NULL" 표시. DB 진실은 career_tree_job_links.job_slug = j.slug JOIN으로 검사.
+  // → AUX_FIELDS에서 분리. 아래 careerTreeLinkCount로 별도 출력.
 ];
 
 // SQL 자동 생성
@@ -67,7 +71,13 @@ function buildSelectClauses(fields) {
   return parts.join(', ');
 }
 
+// 메인 SQL — jobs row + JSON path 추출
 const sql = `SELECT j.id, j.slug, j.name, ${buildSelectClauses([...PROSE_BODY_FIELDS, ...SIDEBAR_FIELDS, ...AUX_FIELDS])}, json_extract(user_contributed_json,'$._sources') AS sources_json FROM jobs j WHERE slug='${slug}';`;
+
+// careerTree 진실 SQL — 별도 테이블 JOIN (2026-05-12 fix).
+// merged_profile_json.careerTree는 ETL 미반영 시 NULL이지만 실제 페이지엔 노출됨.
+// career_trees + career_tree_job_links.job_slug = slug 로 진실 link 카운트 조회.
+const careerTreeSql = `SELECT COUNT(*) AS link_count FROM career_tree_job_links ctjl JOIN career_trees ct ON ct.id = ctjl.career_tree_id WHERE ctjl.job_slug='${slug}' AND ct.is_active = 1;`;
 
 const r = spawnSync('cmd.exe', ['/c', 'npx', 'wrangler', 'd1', 'execute', 'careerwiki-kr', '--remote', '--command', sql, '--json'], { encoding: 'utf8' });
 
@@ -82,6 +92,18 @@ try {
 if (!data) {
   console.error(`Job not found: ${slug}`);
   process.exit(1);
+}
+
+// careerTree 진실 link_count 조회 (선택적 — 실패해도 진단 계속)
+let careerTreeLinkCount = null;
+try {
+  const ctr = spawnSync('cmd.exe', ['/c', 'npx', 'wrangler', 'd1', 'execute', 'careerwiki-kr', '--remote', '--command', careerTreeSql, '--json'], { encoding: 'utf8' });
+  const ctParsed = JSON.parse(ctr.stdout)[0].results[0];
+  if (ctParsed && typeof ctParsed.link_count === 'number') {
+    careerTreeLinkCount = ctParsed.link_count;
+  }
+} catch (e) {
+  // careerTree 조회 실패는 fatal X — null로 표시
 }
 
 const sources = data.sources_json ? JSON.parse(data.sources_json) : {};
@@ -144,6 +166,14 @@ AUX_FIELDS.forEach((f, i) => {
   if (status.startsWith('❌')) missingCount++;
   console.log(`  ${i + 19}. ${f.label}: ${status}`);
 });
+
+// careerTree — 별도 테이블 진실 (2026-05-12 fix; AUX_FIELDS에서 분리)
+let ctStatus;
+if (careerTreeLinkCount === null) ctStatus = '⚠️ (DB 조회 실패 — career_trees 테이블 접근 불가)';
+else if (careerTreeLinkCount === 0) ctStatus = '❌ 0건';
+else ctStatus = `✅ ${careerTreeLinkCount}건 (career_tree_job_links)`;
+if (ctStatus.startsWith('❌')) missingCount++;
+console.log(`  ${AUX_FIELDS.length + 19}. careerTree (별도 테이블 진실): ${ctStatus}`);
 
 console.log('\n== _sources 등록 키 ==');
 console.log(`  ${[...sourceKeys].join(', ') || '(none)'}`);
