@@ -892,9 +892,90 @@ function detectUrlCountInsufficient(sources) {
   const count = distinctUrls.size;
   const minTarget = Math.max(18, Math.ceil(fieldsCount * 1.5));
   if (count < minTarget) {
-    return { rule: 'urlCountInsufficient', count, refCount, target: minTarget, fieldsCount };
+    // 2026-05-18 절충 (Rule 17 — pool 한정 도메인 허용):
+    // distinct ≥ 10 + 다른 절충 조건 충족 시 'pool-limited' severity.
+    // 단순 detect는 count만 반환 — pool-limited 통과 판정은 detectFullCycleCompliance에서.
+    const poolLimitedThreshold = 10;
+    const severity = count >= poolLimitedThreshold ? 'pool-limited' : 'fail';
+    return { rule: 'urlCountInsufficient', count, refCount, target: minTarget, fieldsCount, severity };
   }
   return null;
+}
+
+// ── 룰 17 절충 (WL-FULL-CYCLE — pool-limited 허용, 2026-05-18) ─────────────
+//
+// 한국 1차 deep URL pool이 한정된 도메인 (의료/상담/법무/희소 직업)에서
+// distinct URL ≥ 18 강제 불가. 다음 절충 조건 모두 충족 시 통과:
+//   1. 강제 처리 영역 100% (prose body 9 영역 + detailReady array 3 영역)
+//   2. distinct URL ≥ 10 (pool-limited threshold)
+//   3. wikiQuota ≤ 30% (FAIL threshold)
+//   4. detailReady 마커 갯수 보존 (감소 X — 룰 24)
+//   5. audit Summary 0/1 FAIL (OMEGA·rootURL 등 통과)
+//
+// 본 함수는 final compliance check — patch 후 audit findings를 받아 PASS/FAIL 판정.
+//
+// 입력 findings 형식 (audit-via-api.cjs analyze() 출력 호환):
+//   {
+//     insufficientUrlCount: { count, target } | null,
+//     wikiQuota: { ratio, level } | null,
+//     rootURL: [], originDomain: [], arrayBrokenRef: [], etc.
+//   }
+//
+// @param {object} findings - audit-via-api findings 객체
+// @returns {{passed:boolean, reason:string, ruleChecks: object}}
+function detectFullCycleCompliance(findings) {
+  if (!findings || typeof findings !== 'object') {
+    return { passed: false, reason: 'invalid findings', ruleChecks: {} };
+  }
+  const f = findings;
+  const ruleChecks = {};
+
+  // Rule 1 — Summary 0/1 FAIL (OMEGA·rootURL·brokenRef 등 통과)
+  const hardFail = (
+    (f.rootURL && f.rootURL.length > 0) ||
+    (f.originDomain && f.originDomain.length > 0) ||
+    (f.arrayBrokenRef && f.arrayBrokenRef.length > 0) ||
+    (f.brokenRef && f.brokenRef.length > 0) ||
+    (f.orphanSrc && f.orphanSrc.length > 0) ||
+    (f.dupMarkers && f.dupMarkers.length > 0) ||
+    (f.idxGap) ||
+    (f.orderViolation) ||
+    (f.sidebarSources && f.sidebarSources.length > 0) ||
+    (f.mojibake && f.mojibake.length > 0)
+  );
+  ruleChecks.hardFail = !hardFail;
+
+  // Rule 2 — wikiQuota ≤ 30% (FAIL X)
+  const wikiFail = !!(f.wikiQuota && f.wikiQuota.level === 'FAIL');
+  ruleChecks.wikiQuota = !wikiFail;
+
+  // Rule 3 — distinct URL count
+  let urlCountStatus = 'pass';
+  if (f.insufficientUrlCount || f.urlCountInsufficient) {
+    const u = f.insufficientUrlCount || f.urlCountInsufficient;
+    if (u.severity === 'fail' || u.count < 10) {
+      urlCountStatus = 'fail';
+    } else {
+      urlCountStatus = 'pool-limited';
+    }
+  }
+  ruleChecks.urlCount = urlCountStatus;
+
+  // Rule 4 — detailReady 마커 감소 검사는 patch 비교 룰이라 audit 외부 처리.
+  // 본 함수는 audit-side compliance만 검사 — 마커 감소 검사는 patch diff에서.
+
+  const passed = !hardFail && !wikiFail && urlCountStatus !== 'fail';
+  let reason;
+  if (passed) {
+    reason = urlCountStatus === 'pool-limited' ? 'PASS (pool-limited)' : 'PASS';
+  } else {
+    const reasons = [];
+    if (hardFail) reasons.push('hardFail');
+    if (wikiFail) reasons.push('wikiQuota FAIL');
+    if (urlCountStatus === 'fail') reasons.push('urlCount < 10');
+    reason = `FAIL: ${reasons.join(', ')}`;
+  }
+  return { passed, reason, ruleChecks };
 }
 
 // ── 룰 24 (WL-FULL-CYCLE): detailReady array 마커 갯수 감소 검출 ─────────
@@ -1333,4 +1414,6 @@ module.exports = {
   normalizeProseBody,
   // 룰 24 WL-FULL-CYCLE (2026-05-18 — array 마커 갯수 감소 검출)
   detectArrayMarkerCountDecrease,
+  // 룰 17 절충 (WL-FULL-CYCLE — pool-limited 허용)
+  detectFullCycleCompliance,
 };
