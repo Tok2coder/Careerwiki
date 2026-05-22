@@ -4200,16 +4200,24 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   }
 
   // 워라밸 & 사회적 기여도 (ETL 구조화 필드 detailWlb 사용) - 소개 탭
+  // 2026-05-22 fix: careernet/work24 등급(wlb/social) NULL인 미가공·신기술 직업
+  //   (전체 6939 중 5734=83%)에서 등급 박스 자체 미렌더 사고.
+  //   본문(wlbDetail/socialDetail) 있으면 등급 NULL이어도 카드 표시 + 등급 자리 "—" placeholder.
   const detailWlb = profile.detailWlb
   const wlb = detailWlb?.wlb
   const social = detailWlb?.social
   const wlbDetail = (detailWlb as any)?.wlbDetail
   const socialDetail = (detailWlb as any)?.socialDetail
-  if (wlb || social || (typeof wlbDetail === 'string' && wlbDetail.trim()) || (typeof socialDetail === 'string' && socialDetail.trim())) {
+  const hasWlbBody = typeof wlbDetail === 'string' && wlbDetail.trim().length > 0
+  const hasSocialBody = typeof socialDetail === 'string' && socialDetail.trim().length > 0
+  const showWlbCard = !!wlb || hasWlbBody
+  const showSocialCard = !!social || hasSocialBody
+  if (showWlbCard || showSocialCard) {
     const wlbCards = []
 
-    // 워라밸 카드 (짧은 등급만)
-    if (wlb) {
+    // 워라밸 카드: 등급 있으면 등급 표시, 본문만 있으면 "—" placeholder
+    if (showWlbCard) {
+      const wlbLabel = wlb ? escapeHtml(wlb) : '<span class="text-wiki-muted">—</span>'
       wlbCards.push(`
         <div class="flex items-center gap-4 p-5 rounded-2xl border border-purple-500/30 bg-purple-500/5">
           <div class="flex-shrink-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/30">
@@ -4217,14 +4225,15 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           </div>
           <div class="flex-1 min-w-0">
             <h3 class="content-heading" style="border:none; padding:0; margin-bottom:8px;">워라밸 지수</h3>
-            <p class="content-text text-white leading-relaxed">${escapeHtml(wlb)}</p>
+            <p class="content-text text-white leading-relaxed">${wlbLabel}</p>
           </div>
         </div>
       `)
     }
 
-    // 사회적 기여도 카드 (짧은 등급만)
-    if (social) {
+    // 사회적 기여도 카드: 등급 있으면 등급 표시, 본문만 있으면 "—" placeholder
+    if (showSocialCard) {
+      const socialLabel = social ? escapeHtml(social) : '<span class="text-wiki-muted">—</span>'
       wlbCards.push(`
         <div class="flex items-center gap-4 p-5 rounded-2xl border border-green-500/30 bg-green-500/5">
           <div class="flex-shrink-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-500/10 border border-green-500/30">
@@ -4232,7 +4241,7 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
           </div>
           <div class="flex-1 min-w-0">
             <h3 class="content-heading" style="border:none; padding:0; margin-bottom:8px;">사회적 기여도</h3>
-            <p class="content-text text-white leading-relaxed">${escapeHtml(social)}</p>
+            <p class="content-text text-white leading-relaxed">${socialLabel}</p>
           </div>
         </div>
       `)
