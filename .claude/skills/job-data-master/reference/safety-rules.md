@@ -399,6 +399,116 @@ careerTree INSERT: 0/1+ (사유)
 
 ---
 
+## Rule 26 — `_sources[].text` 한글 제목 필수 (2026-05-22 신규)
+
+### 사고 사례 (2026-05-22 사용자 발견)
+
+R1 B1+B2 5 직업의 sources `text` 필드에 raw URL이 그대로 저장됨:
+
+| 직업 | sources | text=URL |
+|---|---|---|
+| AI신뢰성검증전문가 | 26 | 25 (96%) |
+| ar기획자 | 22 | 22 (100%) |
+| cam-프로그래머 | 21 | 21 (100%) |
+| cctv통합관제요원 | 21 | 21 (100%) |
+| cfx아티스트 | 20 | 20 (100%) |
+
+예시:
+```
+{ id: 1, text: "https://v.daum.net/v/20250706133633852", url: "https://v.daum.net/v/20250706133633852" }
+```
+
+사이드바 렌더 (`unifiedJobDetail.ts:2686`)는 `source.text`만 사용:
+```ts
+const cleanText = source.text.replace(/^\[\d+\]\s*/, '');
+```
+
+→ 사이드바에 raw URL이 그대로 노출 (사용자 시각 사고).
+
+### 근본 원인
+
+서버 `src/routes/job-editor.ts:557`:
+```ts
+return { id: nextId++, text: text || url, ...(url ? { url } : {}) }
+```
+
+patch에서 `text` 누락 시 url을 text로 silent fallback. master skill이 patch 작성 시
+text를 생략하고 url만 보내면 사이드바에 URL이 그대로 표시됨.
+
+### 차단 방법
+
+1. **client validate** — `scripts/_shared/detect-patterns.cjs` 의 `detectSourceTextIsUrl(text)` 호출
+   - `text` 가 `^https?://` 으로 시작하면 FAIL
+   - `text === url` 동일 검사
+2. **server-side guard** — `job-editor.ts` `text: text || url` fallback 제거
+   - text 누락이면 reject (4xx)
+3. **master skill self-audit** — patch 작성 직후 text 검증 의무
+
+### `text` 작성 가이드
+
+- **형식**: "기관명 — 페이지 제목"
+- **언어**: 한글 (영문/숫자 포함 가능)
+- **길이**: 최소 5자, 권장 20~80자
+- **금지**: `http(s)://` 시작 / url 동일 / 한글 0자
+- **권장 패턴**:
+  - 정부/공공: `"한국공간정보산업협회 — 측량기술자 경력신고·학력 인정 학과"`
+  - 미디어 deep: `"e4ds 뉴스 — 정밀지도 시장 2025년 4,153억 전망"`
+  - 채용 페이지: `"HYBE — A&R 기획자 채용 공고"`
+  - 위키: `"위키백과 — CFX 아티스트"`
+  - 학술: `"KOCCA — AI 기반 콘텐츠 산업 동향 보고서"`
+
+### validate `[sourceTextIsUrl]` 발생 시 처리
+
+1. 실제 페이지 fetch (WebFetch) → `<title>` 추출 + decoded 한글 변환
+2. 길이 80자 초과 시 trim + `…`
+3. 기관명 prefix 추가 (host → 기관명 매핑 — 예 `daum.net → 다음 뉴스`, `kjob.news → KJob 뉴스`)
+4. patch 재작성 후 validate 재실행
+
+---
+
+## Rule 27 — summary 본문 길이 (2026-05-22 신규)
+
+### 사고 사례 (2026-05-22)
+
+신규 직업 master force-enhance 시 summary 본문 폭주:
+
+| 직업 | summary 길이 |
+|---|---|
+| 3d지도개발자 (careernet 원본) | 60자 |
+| 3d프린터설치정비원 (원본) | 62자 |
+| 3d프린팅운영기사 (원본) | 56자 |
+| AI신뢰성검증전문가 (master 작성) | **212자** |
+| ar기획자 (master 작성) | **237자** |
+| cam-프로그래머 (master 작성) | **261자** |
+| cctv통합관제요원 (master 작성) | 119자 |
+| cfx아티스트 (master 작성) | **284자** |
+
+원본 (careernet API) 약 60~80자 / master 작성 200~300자 — 4배 격차.
+
+### 권장 길이
+
+| 영역 | 길이 |
+|---|---|
+| summary (한 문장 정의) | 50~120자 권장, ≤150자 안전 |
+| trivia | 200~500자 |
+| way | 200~500자 |
+| overviewProspect.main | 200~500자 |
+
+summary 는 **무엇을 하는 직업인지만 한 문장으로 정의**. 상세 fact·통계·회사명·연도는
+trivia / way / overviewProspect.main 으로 분리.
+
+### validate `[summaryTooLong]` WARN
+
+- ≥200자 WARN (FAIL X — 기존 데이터 보호)
+- ≥300자 강한 WARN
+
+### master skill self-audit
+
+신규 작성 (force-enhance new) 시 summary 길이 ≤ 150자 의무. 초과 시 핵심 정의만 남기고
+세부는 trivia/way로 이동.
+
+---
+
 ## 보호 영역 명시
 
 | 영역 | 정책 | 비고 |
