@@ -62,8 +62,12 @@ const {
 //  1) PROSE_BODY_FIELDS (산문 9)는 detect-patterns.cjs에서 관리
 //  2) detailReady 배열 5종 (curriculum/recruit/training/researchList/certificate)
 //  3) 기타 영역 새로 도입 시 본 set 명시 추가
+// 2026-05-22 PR #43: careernet canonical 영역 (사용자 편집 불가) sources 등록 금지.
+// summary / overviewWork.main 본문은 careernet 원본이라 본문 [N] 마커가 careernet 측에 등장 →
+// 사용자 sources 등록 시 매핑 부정확 ("직업 설명 출처가 사이드바엔 보이는데 본문 안 보임" 사고).
+const CAREERNET_CANONICAL_FIELDS = new Set(['summary', 'overviewWork.main', 'overviewWork.detail']);
 const ALLOWED_SOURCE_FIELDS = new Set([
-  ...PROSE_BODY_FIELDS,
+  ...PROSE_BODY_FIELDS.filter(f => !CAREERNET_CANONICAL_FIELDS.has(f)),
   'detailReady.curriculum',
   'detailReady.recruit',
   'detailReady.training',

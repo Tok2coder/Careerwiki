@@ -978,6 +978,31 @@ function detectFullCycleCompliance(findings) {
   return { passed, reason, ruleChecks };
 }
 
+// ── 룰 25 (2026-05-22 PR #43): 자격증 카탈로그 URL 검출 ─────────────────────
+//
+// 사용자 spot check 2026-05-22:
+// q-net.or.kr/crf005.do?id=crf00505&jmCd=... 자격증 카테고리 페이지가 _sources에 등록됨.
+// 본문은 "관련부처·시행기관·기타사항" 3줄 + 자격증 명만 표시 → main content < 200자 + fact cover 약함.
+// 대안: 자격증 시험 안내 deep URL (q-net.or.kr/cst006.do?...artlSeq=N) 또는 위키 deep.
+//
+// 검출 패턴:
+//   - q-net.or.kr/crf005.do (id=crf00503/crf00505) — 직무 분야 카탈로그 / 자격증 카탈로그
+//   - hrdkorea.or.kr/N/N/N/N (단순 카탈로그 경로)
+//
+// 사용법: validate-job-edit에서 patch.sources 등록 URL이 본 룰에 매치되면 WARN (FAIL은
+// 회귀 위험 + 기존 등록 URL 호환).
+//
+// @param {string} url
+// @returns {boolean} true면 카탈로그 URL (reject 권장)
+function detectCatalogUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  // q-net 자격증 카탈로그 (관련부처·시행기관 메타페이지)
+  if (/q-net\.or\.kr\/crf005\.do\?id=crf005\d+/i.test(url)) return true;
+  // q-net 직무 분야 카탈로그
+  if (/q-net\.or\.kr\/crf005\.do\?id=crf003\d+/i.test(url)) return true;
+  return false;
+}
+
 // ── 룰 24 (WL-FULL-CYCLE): detailReady array 마커 갯수 감소 검출 ─────────
 //
 // 사용자 사고 2026-05-18:
@@ -1416,4 +1441,6 @@ module.exports = {
   detectArrayMarkerCountDecrease,
   // 룰 17 절충 (WL-FULL-CYCLE — pool-limited 허용)
   detectFullCycleCompliance,
+  // 룰 25 (2026-05-22 PR #43 — 자격증 카탈로그 URL reject)
+  detectCatalogUrl,
 };
