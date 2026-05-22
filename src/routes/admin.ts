@@ -1045,24 +1045,19 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     const isJob = tab === 'job'
     const tableName = isJob ? 'jobs' : 'majors'
     const entityType = isJob ? 'job' : 'major'
-    // 두 마커 분리 — 2026-05-10
-    //   [job-data-master]  → master 스킬 (현행, archive enhance 본문 풀 통합)
-    //   [job-data-enhance] → 예전 스킬 (archive 보존, 더 이상 신규 작업 X)
-    // major 탭은 [major-data-enhance]만 — major-data-master 미정.
-    // skillType 결정: master 마커 보유 → 'master', master 없고 enhance만 → 'enhance', 둘 다 없음 → 'none'
+    // 2026-05-12 WL-FULL: 옛 [job-data-enhance] 분기 완전 제거.
+    //   [job-data-master]  → 현행 master 스킬 (단독 KPI 기준)
+    // major 탭은 master-data-* 미정이라 0 카운트 — major-data-master 추가 시 분기 추가.
+    // skillType 결정: master 마커 보유 → 'master', 없으면 'none'
     const masterMarker = isJob ? '[job-data-master]' : null
-    const enhanceMarker = isJob ? '[job-data-enhance]' : '[major-data-enhance]'
     const masterMarkerLike = masterMarker ? `%${masterMarker}%` : null
-    const enhanceMarkerLike = `%${enhanceMarker}%`
-    // 통계용 — skillApplied (any 마커) 기존 의미 유지
-    const skillMarker = enhanceMarker
-    const skillMarkerLike = enhanceMarkerLike
 
     // 1. 전체 활성 수 + 품질 경보 카운트 + 스킬 적용 수 — 병렬 조회
     // 정책: production-accurate — 대부분 검사는 merged_profile_json 기준 (사용자 페이지 노출 데이터).
     //   - wayIsArray: UCJ 데이터 무결성 버그 (UCJ에서 way가 array면 API fail) — UCJ 검사 유지
     //   - imageUrlBad: image_url 컬럼 — 변경 없음
     //   - wayTrunc / srcOrderBad / ytLow: production 노출 기준 → merged 검사
+    // skillApplied (2026-05-12 WL-FULL): [job-data-master] 단독 기준. major 탭은 0.
     const [
       totalResult,
       alertWayIsArrayResult,
@@ -1071,7 +1066,6 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       alertSrcOrderBadResult,
       alertYtLowResult,
       skillAppliedResult,
-      masterAppliedResult,
       userVerifiedResult,
     ] = await Promise.all([
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active = 1`).first<{ count: number }>(),
@@ -1080,12 +1074,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$.way') IS NOT NULL AND length(json_extract(merged_profile_json,'$.way')) > 20 AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세]' AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세][[]*[]]'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(merged_profile_json,'$._sources')) > 0 AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND (json_extract(merged_profile_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(merged_profile_json,'$.youtubeLinks')) = 0) AND (json_extract(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)`).first<{ count: number }>(),
-      // skillApplied = master OR enhance (any 마커) — 기존 의미 유지
-      // jobs 탭은 master + enhance 둘 중 하나라도 있으면 카운트, major 탭은 enhance만
-      isJob
-        ? db.prepare(`SELECT COUNT(DISTINCT entity_id) as count FROM page_revisions WHERE entity_type = ? AND (change_summary LIKE ? OR change_summary LIKE ?)`).bind(entityType, masterMarkerLike, enhanceMarkerLike).first<{ count: number }>()
-        : db.prepare(`SELECT COUNT(DISTINCT entity_id) as count FROM page_revisions WHERE entity_type = ? AND change_summary LIKE ?`).bind(entityType, enhanceMarkerLike).first<{ count: number }>(),
-      // masterAppliedCount = master 마커 보유 entity (jobs 탭만, major 탭은 0)
+      // skillApplied = [job-data-master] 단독 (jobs 탭만, major 탭은 0)
       isJob && masterMarkerLike
         ? db.prepare(`SELECT COUNT(DISTINCT entity_id) as count FROM page_revisions WHERE entity_type = ? AND change_summary LIKE ?`).bind(entityType, masterMarkerLike).first<{ count: number }>()
         : Promise.resolve({ count: 0 } as { count: number }),
@@ -1101,18 +1090,11 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       ytLow: alertYtLowResult?.count || 0,
     }
     const skillAppliedCount = skillAppliedResult?.count || 0
-    const masterAppliedCount = masterAppliedResult?.count || 0
-    // 예전 스킬만 (master 보유 X) entity 수 = enhance 마커 보유 수에서 master 보유분 빼는 게 아니라,
-    // master 마커가 enhance와 별개 마커라 enhance만 카운트해서 -master 보유분 반환 X.
-    // 진짜 정확한 "예전만" 카운트는 entity-level skillType 결정 후 집계 (3-A 단계에서).
-    // skillApplied = master OR enhance (any 마커) 의미 그대로 유지.
     const userVerifiedCount = userVerifiedResult?.count || 0
 
-    // 2. 스킬 적용된 entity_id → 최근 적용 시각 맵 조회 (skillApplied + 정렬용)
-    //    두 마커 분리 — masterAppliedMap (master 마커) + enhanceAppliedMap (enhance 마커)
-    //    skillType 결정: master 마커 보유 → 'master', master 없고 enhance만 → 'enhance', 둘 다 없음 → 'none'
-    //    skillLastAppliedAt = master 시각 OR enhance 시각 중 최근값 (사용자 노출 — 가장 최근 작업)
-    //    created_at은 'YYYY-MM-DD HH:MM:SS' 포맷이라 문자열 비교로 시간순 정렬 가능
+    // 2. [job-data-master] 마커 보유 entity_id → 최근 적용 시각 맵 (skillApplied + 정렬용)
+    //    2026-05-12 WL-FULL: 옛 enhanceAppliedMap 제거. master 단독 기준.
+    //    created_at은 'YYYY-MM-DD HH:MM:SS' 포맷이라 문자열 비교로 시간순 정렬 가능.
     async function loadMarkerMap(markerLike: string | null): Promise<Map<string, string>> {
       const map = new Map<string, string>()
       if (!markerLike) return map
@@ -1134,21 +1116,9 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       return map
     }
 
-    // 두 맵 병렬 로드
-    const [masterAppliedMap, enhanceAppliedMap] = await Promise.all([
-      loadMarkerMap(masterMarkerLike),
-      loadMarkerMap(enhanceMarkerLike),
-    ])
-
-    // 통합 skillAppliedMap = master + enhance 합집합. 시각은 max(master, enhance).
-    // 기존 skillApplied / skillLastAppliedAt 의미 유지 (UI 호환).
-    const skillAppliedMap = new Map<string, string>()
-    for (const [id, at] of enhanceAppliedMap) skillAppliedMap.set(id, at)
-    for (const [id, at] of masterAppliedMap) {
-      const prev = skillAppliedMap.get(id) ?? ''
-      if (at > prev) skillAppliedMap.set(id, at)
-      else if (!prev) skillAppliedMap.set(id, at)
-    }
+    // master 마커 맵만 로드 (major 탭은 markerLike=null → 빈 맵)
+    const masterAppliedMap = await loadMarkerMap(masterMarkerLike)
+    const skillAppliedMap = masterAppliedMap
 
     // 3. 엔티티 목록 — D1 SQL이 12-field 카운팅·quality flag 모두 계산해 scalar로 반환
     //    Worker CPU 한도 회피: merged_profile_json bulk JSON.parse 제거.
@@ -1264,12 +1234,8 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
 
       const skillLastAppliedAt = skillAppliedMap.get(row.id) ?? null
       const skillApplied = skillLastAppliedAt !== null
-      // skillType 결정 — master 우선
-      // master 마커 보유 → 'master' (현행 스킬). master 없고 enhance만 → 'enhance' (예전 스킬).
-      // 둘 다 없음 → 'none' (미적용). major 탭은 master 마커 부재라 master/none만 가능.
-      const skillType: 'master' | 'enhance' | 'none' = masterAppliedMap.has(row.id)
-        ? 'master'
-        : enhanceAppliedMap.has(row.id) ? 'enhance' : 'none'
+      // 2026-05-12 WL-FULL: skillType 'master' | 'none' 단순화 — enhance 분기 제거.
+      const skillType: 'master' | 'none' = masterAppliedMap.has(row.id) ? 'master' : 'none'
 
       if (fieldCount === 12) perfectCount++
       if (fieldCount < 6) poorCount++
@@ -1299,16 +1265,10 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     const contributedCount = items.length
     const avgJsonSize = contributedCount > 0 ? Math.round(totalJsonSize / contributedCount) : 0
 
-    // 예전 스킬 only entity 수 = enhance 마커 보유 - master 마커 보유 (둘 다 보유는 master 우선)
-    // 단, enhance 마커 보유인데 master 마커도 보유한 entity는 master로 분류 → enhance only count는 (enhance map - master map)
-    let enhanceOnlyCount = 0
-    for (const id of enhanceAppliedMap.keys()) {
-      if (!masterAppliedMap.has(id)) enhanceOnlyCount++
-    }
-
+    // 2026-05-12 WL-FULL: enhanceOnlyCount / masterAppliedCount props 제거 — skillAppliedCount(=master) 단독 KPI.
     return c.html(renderAdminJobEqualize({
       tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize,
-      items, qualityAlerts, skillAppliedCount, masterAppliedCount, enhanceOnlyCount, userVerifiedCount,
+      items, qualityAlerts, skillAppliedCount, userVerifiedCount,
     }))
   } catch (error: any) {
     console.error('Job equalize page error:', error)
