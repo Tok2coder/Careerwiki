@@ -99,6 +99,44 @@ const safeTrim = (value: any): string => {
 }
 
 /**
+ * Prose body 영역 (way / summary / wlbDetail / socialDetail 등) array → string normalize.
+ *
+ * 2026-05-22 PR #42: PR #39/#40에서 abilities array silent skip fix 후 다른 prose 영역도
+ * 동일 패턴 잔존 발견. detect-patterns.cjs `normalizeProseBody`와 동일 로직.
+ */
+const normalizeRenderProseBody = (value: any): string => {
+  if (typeof value === 'string') return value
+  if (Array.isArray(value)) {
+    return (value as any[])
+      .map((x: any) => {
+        if (typeof x === 'string') return x
+        if (x && typeof x === 'object') {
+          if (typeof x.text === 'string') return x.text
+          if (typeof x.title === 'string') return x.title
+          if (typeof x.list_content === 'string') return x.list_content
+          if (typeof x.value === 'string') return x.value
+        }
+        return ''
+      })
+      .filter((s: string) => s && s.length > 0)
+      .join('\n')
+  }
+  return ''
+}
+
+/**
+ * Prose body가 array 형식인지 검사 (bullet UI 렌더 여부 결정).
+ */
+const isArrayBody = (value: any): boolean =>
+  Array.isArray(value) && (value as any[]).some((x: any) => {
+    if (typeof x === 'string') return safeTrim(x).length > 0
+    if (x && typeof x === 'object') {
+      return !!(x.text || x.title || x.list_content || x.value)
+    }
+    return false
+  })
+
+/**
  * 배열 항목에서 표시 텍스트 안전 추출
  * 객체인 경우 주요 키를 우선순위대로 시도하여 문자열 반환
  * DB에 저장된 "[object Object]" 문자열도 필터링
@@ -3431,12 +3469,13 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
 
   const heroTitle = profile.heroTitle || profile.name
   // heroDescription: ETL 데이터(heroIntro)는 첫 줄만, 사용자 편집 데이터(summary)는 전체 사용
+  // 2026-05-22 PR #42: summary array → normalize로 string 통일.
   const heroDescription =
-    profile.heroIntro?.split('\n')[0]?.trim() ||
-    (profile.summary ? safeTrim(profile.summary).replace(/\n+/g, ' ') : null) ||  // 줄바꿈 → 공백
-    profile.work?.summary?.split('\n')[0]?.trim() ||
-    profile.duties?.split('\n')[0]?.trim() ||
-    profile.heroIntro?.trim()
+    (typeof profile.heroIntro === 'string' ? profile.heroIntro.split('\n')[0]?.trim() : '') ||
+    (profile.summary ? normalizeRenderProseBody(profile.summary).replace(/\n+/g, ' ').trim() : null) ||
+    (typeof profile.work?.summary === 'string' ? profile.work.summary.split('\n')[0]?.trim() : '') ||
+    (typeof profile.duties === 'string' ? profile.duties.split('\n')[0]?.trim() : '') ||
+    (typeof profile.heroIntro === 'string' ? profile.heroIntro.trim() : '')
 
   // normalizeBracketLabel 제거됨: ETL에서 이미 정제된 데이터 사용
   const renderWorkMetaCard = (title: string, icon: string, value: string): string => {
@@ -4208,8 +4247,9 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   const social = detailWlb?.social
   const wlbDetail = (detailWlb as any)?.wlbDetail
   const socialDetail = (detailWlb as any)?.socialDetail
-  const hasWlbBody = typeof wlbDetail === 'string' && wlbDetail.trim().length > 0
-  const hasSocialBody = typeof socialDetail === 'string' && socialDetail.trim().length > 0
+  // 2026-05-22 PR #42: wlbDetail/socialDetail array도 hasBody true 처리.
+  const hasWlbBody = (typeof wlbDetail === 'string' && wlbDetail.trim().length > 0) || isArrayBody(wlbDetail)
+  const hasSocialBody = (typeof socialDetail === 'string' && socialDetail.trim().length > 0) || isArrayBody(socialDetail)
   const showWlbCard = !!wlb || hasWlbBody
   const showSocialCard = !!social || hasSocialBody
   if (showWlbCard || showSocialCard) {
@@ -4252,10 +4292,27 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
 
     // 상세 설명이 있으면 카드 아래에 표시
     const detailBlocks: string[] = []
-    if (typeof wlbDetail === 'string' && wlbDetail.trim()) {
+    // 2026-05-22 PR #42: wlbDetail/socialDetail array silent skip 차단 — bullet UI 렌더.
+    if (isArrayBody(wlbDetail)) {
+      const bullets = (wlbDetail as any[])
+        .map((x: any) => normalizeRenderProseBody([x]))
+        .filter((s: string) => s.trim().length > 0)
+      if (bullets.length > 0) {
+        const items = bullets.map((b: string) => `<li>${formatRichText(b, 'detailWlb.wlbDetail', footnoteMap, sourceTextMap)}</li>`).join('')
+        detailBlocks.push(`<div><h4 class="content-heading">워라밸</h4><ul class="content-text leading-relaxed text-wiki-text list-disc pl-5 space-y-1.5">${items}</ul></div>`)
+      }
+    } else if (typeof wlbDetail === 'string' && wlbDetail.trim()) {
       detailBlocks.push(`<div><h4 class="content-heading">워라밸</h4>${formatRichText(wlbDetail, 'detailWlb.wlbDetail', footnoteMap, sourceTextMap)}</div>`)
     }
-    if (typeof socialDetail === 'string' && socialDetail.trim()) {
+    if (isArrayBody(socialDetail)) {
+      const bullets = (socialDetail as any[])
+        .map((x: any) => normalizeRenderProseBody([x]))
+        .filter((s: string) => s.trim().length > 0)
+      if (bullets.length > 0) {
+        const items = bullets.map((b: string) => `<li>${formatRichText(b, 'detailWlb.socialDetail', footnoteMap, sourceTextMap)}</li>`).join('')
+        detailBlocks.push(`<div><h4 class="content-heading">사회적 기여</h4><ul class="content-text leading-relaxed text-wiki-text list-disc pl-5 space-y-1.5">${items}</ul></div>`)
+      }
+    } else if (typeof socialDetail === 'string' && socialDetail.trim()) {
       detailBlocks.push(`<div><h4 class="content-heading">사회적 기여</h4>${formatRichText(socialDetail, 'detailWlb.socialDetail', footnoteMap, sourceTextMap)}</div>`)
     }
     if (detailBlocks.length > 0) {
@@ -4378,9 +4435,20 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
     const readyBlocks: string[] = []
 
     // 사용자 기여 way 텍스트 (인라인 각주 포함) — 맨 위에 표시
-    const userWay = (profile as any).way as string | undefined
-    if (userWay && safeTrim(userWay)) {
-      readyBlocks.push(`<div><h3 class="content-heading">되는 방법</h3>${formatRichText(userWay, 'way', footnoteMap, sourceTextMap)}</div>`)
+    // 2026-05-22 PR #42: way array silent skip 차단 — bullet UI 렌더.
+    const userWayRaw: any = (profile as any).way
+    if (isArrayBody(userWayRaw)) {
+      const bullets = (userWayRaw as any[])
+        .map((x: any) => normalizeRenderProseBody([x]))
+        .filter((s: string) => s.trim().length > 0)
+      if (bullets.length > 0) {
+        const items = bullets
+          .map((b: string) => `<li>${formatRichText(b, 'way', footnoteMap, sourceTextMap)}</li>`)
+          .join('')
+        readyBlocks.push(`<div><h3 class="content-heading">되는 방법</h3><ul class="content-text leading-relaxed text-wiki-text list-disc pl-5 space-y-1.5">${items}</ul></div>`)
+      }
+    } else if (typeof userWayRaw === 'string' && safeTrim(userWayRaw)) {
+      readyBlocks.push(`<div><h3 class="content-heading">되는 방법</h3>${formatRichText(userWayRaw, 'way', footnoteMap, sourceTextMap)}</div>`)
     }
 
     // 헬퍼: 객체 또는 문자열에서 텍스트 추출
@@ -4989,7 +5057,8 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
 
   const entitySlug = composeDetailSlug('job', profile.name, profile.id)
   const detailPath = `/job/${encodeURIComponent(entitySlug)}`
-  const summarySnippet = heroDescription ?? (profile.summary ? safeTrim(profile.summary).slice(0, 400) : null)
+  // 2026-05-22 PR #42: summary array 형식 normalize.
+  const summarySnippet = heroDescription ?? (profile.summary ? normalizeRenderProseBody(profile.summary).slice(0, 400) : null)
   const detailMetaExtra: Record<string, unknown> = {
     sharePath: detailPath
   }
