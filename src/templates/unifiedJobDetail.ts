@@ -3928,8 +3928,29 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   // 정규교육과정 - 상세정보 탭의 직업 준비하기 섹션으로 이동 (중복 제거)
   
   // 활용 기술 (overviewAbilities.technKnow)
-  const technKnow = overviewAbilities?.technKnow
-  if (typeof technKnow === 'string' && technKnow?.trim()) {
+  // 2026-05-22 fix: technKnow가 array of bullets로 저장된 미가공 직업(예: 3d지도개발자 등 5건)에서
+  // string 검사만 통과시켜 본문 silent skip 발생 → 사이드바 출처는 보이는데 본문 헤더+본문 미렌더.
+  // array 형식이면 줄바꿈으로 join하여 string으로 통일 후 렌더.
+  const technKnowRaw: any = overviewAbilities?.technKnow
+  let technKnow = ''
+  if (typeof technKnowRaw === 'string') {
+    technKnow = technKnowRaw
+  } else if (Array.isArray(technKnowRaw)) {
+    technKnow = (technKnowRaw as any[])
+      .map((x: any) => {
+        if (typeof x === 'string') return x
+        if (x && typeof x === 'object') {
+          if (typeof x.text === 'string') return x.text
+          if (typeof x.title === 'string') return x.title
+          if (typeof x.list_content === 'string') return x.list_content
+          if (typeof x.value === 'string') return x.value
+        }
+        return ''
+      })
+      .filter((s: string) => s && s.length > 0)
+      .join('\n')
+  }
+  if (technKnow?.trim()) {
     abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">활용 기술</h3>${formatRichText(technKnow, 'overviewAbilities.technKnow', footnoteMap, sourceTextMap)}</div>`)
   }
 
