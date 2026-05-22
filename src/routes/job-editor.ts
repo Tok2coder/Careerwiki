@@ -540,6 +540,34 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
         })
         let nextId = Math.max(0, ...existingIds) + 1
 
+        // Rule 26 guard (2026-05-22): text=URL silent fallback 차단.
+        // 사이드바 렌더는 source.text만 사용하므로 raw URL이 노출되면 사용자 시각 사고.
+        // text 누락 또는 text가 URL 패턴이면 즉시 reject.
+        for (const [key, source] of Object.entries(normalizedSources)) {
+          if ((source as any)?.delete) continue
+          const sourceArray = Array.isArray(source) ? source : [source]
+          for (let i = 0; i < sourceArray.length; i++) {
+            const s: any = sourceArray[i]
+            if (!s || typeof s !== 'object') continue
+            const text = (s.text || '').trim()
+            const url = (s.url || '').trim()
+            if (!text && !url) continue
+            const cleanText = text.replace(/^\[\d+\]\s*/, '')
+            if (url && !cleanText) {
+              return c.json({
+                success: false,
+                error: `[sourceTextMissing] sources["${key}"][${i}] text 누락 — 한글 제목 명시 필수 (Rule 26). URL: "${url.slice(0, 80)}"`
+              }, 400)
+            }
+            if (/^https?:\/\//i.test(cleanText) || (url && cleanText === url)) {
+              return c.json({
+                success: false,
+                error: `[sourceTextIsUrl] sources["${key}"][${i}].text가 URL — 한글 제목 명시 필수 (Rule 26): "${cleanText.slice(0, 60)}"`
+              }, 400)
+            }
+          }
+        }
+
         for (const [key, source] of Object.entries(normalizedSources)) {
           if ((source as any)?.delete) {
             delete updatedUserData._sources[key]
@@ -554,7 +582,9 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
               const text = (s?.text || '').trim()
               const url = (s?.url || '').trim()
               if (!text && !url) return null
-              return { id: nextId++, text: text || url, ...(url ? { url } : {}) }
+              // Rule 26 (2026-05-22): text fallback to url 제거 — 위 guard에서 차단됨.
+              // text가 보장됨 (guard 통과).
+              return { id: nextId++, text, ...(url ? { url } : {}) }
             })
             .filter(Boolean)
 

@@ -52,6 +52,9 @@ const {
   // 2026-05-11 — 룰 ZZZ/ZZZZ 가드
   detectSourcesWithoutMarkers,
   detectOrphanSources,
+  // 2026-05-22 — 룰 26/27
+  detectSourceTextIsUrl,
+  detectSummaryTooLong,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 룰 ZZZZ allowlist: validate-job-edit.cjs에서만 사용 ────────────────────────
@@ -1153,6 +1156,44 @@ function validate(data) {
         `idx ${firstMismatch}: expected ${gap.expected[firstMismatch]}, got ${gap.actual[firstMismatch]}. ` +
         `평탄화 순서: [${gap.actual.slice(0, 20).join(',')}${gap.actual.length > 20 ? ',...' : ''}]. ` +
         `_sources 등록 순서 + id 번호를 페이지 표시 순서대로 1,2,3,... 재정렬 필요`
+      );
+    }
+  }
+
+  // ── 10-G2. _sources[].text URL 자기복제 (2026-05-22 룰 26) ──────────────────
+  //
+  // text 필드가 raw URL (`^https?://`) 이거나 url과 동일하면 FAIL.
+  // 사이드바 렌더는 source.text만 사용 → URL이 그대로 노출되는 사고.
+  // 근본 원인: server-side `text: text || url` silent fallback.
+  {
+    for (const [fieldKey, srcArr] of Object.entries(sources)) {
+      if (!Array.isArray(srcArr)) continue;
+      for (let i = 0; i < srcArr.length; i++) {
+        const src = srcArr[i];
+        if (detectSourceTextIsUrl(src)) {
+          const txt = (src.text || '').slice(0, 60);
+          errors.push(
+            `[sourceTextIsUrl] sources["${fieldKey}"][${i}].text가 URL — "${txt}". ` +
+            `사이드바 렌더는 source.text만 사용하므로 raw URL이 그대로 노출됨. ` +
+            `한글 제목 (예: "기관명 — 페이지 제목") 명시 필수. ` +
+            `Rule 26 (job-data-master SKILL.md / safety-rules.md) 참조.`
+          );
+        }
+      }
+    }
+  }
+
+  // ── 10-G3. summary 본문 과길이 (2026-05-22 룰 27) ───────────────────────────
+  //
+  // summary는 한 문장 직업 정의 (50~120자 권장). master skill LLM 폭주 차단.
+  // ≥200자 WARN, ≥300자 강한 WARN. FAIL X — 기존 데이터 보호.
+  if (typeof fields.summary === 'string') {
+    const sumCheck = detectSummaryTooLong(fields.summary);
+    if (sumCheck && sumCheck.level !== 'OK') {
+      warnings.push(
+        `[summaryTooLong] summary 본문 ${sumCheck.length}자 (권장 50~150자) — ` +
+        `summary는 한 문장 직업 정의. 200자+ 인 경우 상세 fact·통계는 trivia/way/overviewProspect.main으로 분리 권장. ` +
+        `Rule 27 (job-data-master SKILL.md) 참조.`
       );
     }
   }

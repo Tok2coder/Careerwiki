@@ -978,6 +978,56 @@ function detectFullCycleCompliance(findings) {
   return { passed, reason, ruleChecks };
 }
 
+// ── 룰 26 (2026-05-22): _sources[].text URL 자기복제 검출 ──────────────────
+//
+// 사용자 사고 2026-05-22:
+// R1 B1+B2 5 직업 (AI신뢰성검증전문가·ar기획자·cam-프로그래머·cctv통합관제요원·cfx아티스트)
+// 총 109 sources 중 ~108건이 text 필드에 raw URL 저장.
+//
+// 사이드바 렌더 (`unifiedJobDetail.ts:2686 cleanText = source.text.replace(/^\[\d+\]\s*/, '')`)는
+// `source.text`만 사용하므로 raw URL이 그대로 사이드바에 노출됨 (사용자 시각 사고).
+//
+// 근본 원인: 서버 `job-editor.ts:557 text: text || url` silent fallback —
+// patch에서 text 누락 시 url을 text로 복사.
+//
+// 차단:
+//   - text가 `^https?://` 시작 패턴이면 FAIL
+//   - text가 url과 동일 string이면 FAIL
+//
+// @param {object} src - { text, url, id } source entry
+// @returns {boolean} true면 text=URL (FAIL)
+function detectSourceTextIsUrl(src) {
+  if (!src || typeof src !== 'object') return false;
+  const text = (src.text || '').replace(/^\[\d+\]\s*/, '').trim();
+  if (!text) return false;
+  if (/^https?:\/\//i.test(text)) return true;
+  if (src.url && typeof src.url === 'string' && text === src.url.trim()) return true;
+  return false;
+}
+
+// ── 룰 27 (2026-05-22): summary 본문 길이 과길이 검출 ───────────────────────
+//
+// 사용자 사고 2026-05-22:
+// 신규 직업 master force-enhance 시 summary 본문 폭주 (212~284자, 원본 60~80자 4배).
+//
+// careernet API 원본 summary는 보통 60~150자 한 문장 정의. master skill이 신규 작성 시
+// LLM이 trivia 수준 (200~300자) 까지 늘려 summary 영역 본질 (직업 한 줄 정의) 흐트러짐.
+//
+// Threshold:
+//   - ≥ 200자 WARN
+//   - ≥ 300자 강한 WARN
+//   - FAIL X — 기존 데이터 보호
+//
+// @param {string} summary - summary 본문 string
+// @returns {{level:'OK'|'WARN'|'WARN-STRONG', length:number}|null}
+function detectSummaryTooLong(summary) {
+  if (typeof summary !== 'string') return null;
+  const len = summary.length;
+  if (len < 200) return { level: 'OK', length: len };
+  if (len < 300) return { level: 'WARN', length: len };
+  return { level: 'WARN-STRONG', length: len };
+}
+
 // ── 룰 25 (2026-05-22 PR #43): 자격증 카탈로그 URL 검출 ─────────────────────
 //
 // 사용자 spot check 2026-05-22:
@@ -1443,4 +1493,8 @@ module.exports = {
   detectFullCycleCompliance,
   // 룰 25 (2026-05-22 PR #43 — 자격증 카탈로그 URL reject)
   detectCatalogUrl,
+  // 룰 26 (2026-05-22 — _sources[].text URL 자기복제 reject)
+  detectSourceTextIsUrl,
+  // 룰 27 (2026-05-22 — summary 본문 길이 과길이 WARN)
+  detectSummaryTooLong,
 };
