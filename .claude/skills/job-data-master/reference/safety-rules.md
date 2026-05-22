@@ -362,6 +362,43 @@ careerTree INSERT: 0/1+ (사유)
 
 ---
 
+## 18. summary fieldKey sources 등록 절대 금지 (2026-05-22 PR #43)
+
+**원칙**: `_sources["summary"]`에 URL 등록 절대 X. summary는 careernet/work24 canonical 영역 (`OMEGA_PROSE_EXCLUDE`), 사용자 편집 불가. 사이드바 사용자 출처 섹션에 등록되어도 본문 [N] 마커는 careernet 원본에 등장하므로 매핑 부정확 + 사용자 시각 사고 ("직업 설명 출처가 사이드바엔 보이는데 본문에 안 보임").
+
+**Why**: 2026-05-22 사용자 spot check. 3d프린터설치정비원 `_sources.summary[id1] = q-net.or.kr/crf005.do?id=crf00505&jmCd=7785` 등록. summary 본문은 careernet 원본 62자 + [1] 마커. URL은 자격증 카탈로그 페이지(관련부처/시행기관 3줄)로 fact cover 약함. summary canonical 영역이라 본문도 수정 불가 → 영구 부정합.
+
+**적용**:
+- patch.sources["summary"] 절대 금지 (validate-job-edit gate 추가)
+- 기존 등록된 summary sources 일괄 제거 — 다음 master 사이클에서 진단
+- summary 영역 본문은 careernet 원본 유지
+
+**같은 정책 적용 fieldKey** (careernet canonical, 사용자 편집 불가):
+- `summary`
+- `overviewWork.main`
+- `overviewWork.detail`
+- `duties` (별칭)
+
+---
+
+## 19. 자격증 카탈로그 URL reject (2026-05-22 PR #43)
+
+**원칙**: 다음 URL 패턴은 자격증/카탈로그 메타페이지로 fact cover 약함 — patch sources 등록 절대 금지:
+- `q-net.or.kr/crf005.do?id=crf00505` — 자격증 카테고리 (관련부처/시행기관 3줄+링크)
+- `q-net.or.kr/crf005.do?id=crf00503` — 직무 분야 카테고리
+- `hrdkorea.or.kr/1/2/2/N` (level 카탈로그)
+- 자격증 메타페이지 (시험 안내·합격률 deep URL은 OK)
+
+**대안**:
+- 자격증 정보가 필요하면 시험 일정 deep URL (`q-net.or.kr/cst006.do?id=cst00602&...artlSeq=N`) 또는 합격률 통계 deep URL
+- 자격증 명만 본문에 cover하려면 위키피디아 deep URL 사용
+
+**Why**: 자격증 카테고리 URL은 main content 30~100자 (관련부처/시행기관/링크 5개 정도). 본문 fact 직접 cover X → 사용자 spot check 시 "부실 출처" 사고.
+
+**검출 가이드**: WebFetch 시 main content text length < 200자 + "관련부처" / "시행기관" 키워드 매칭 → reject 후 다른 URL 발굴.
+
+---
+
 ## 보호 영역 명시
 
 | 영역 | 정책 | 비고 |
