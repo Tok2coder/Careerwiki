@@ -3928,30 +3928,32 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
   // 정규교육과정 - 상세정보 탭의 직업 준비하기 섹션으로 이동 (중복 제거)
   
   // 활용 기술 (overviewAbilities.technKnow)
-  // 2026-05-22 fix: technKnow가 array of bullets로 저장된 미가공 직업(예: 3d지도개발자 등 5건)에서
-  // string 검사만 통과시켜 본문 silent skip 발생 → 사이드바 출처는 보이는데 본문 헤더+본문 미렌더.
-  // array 형식이면 줄바꿈으로 join하여 string으로 통일 후 렌더.
+  // 2026-05-22 fix #1 (PR #39): array 형식 silent skip 차단 — string으로 normalize.
+  // 2026-05-22 fix #2 (PR #40): array 형식은 <ul><li> bullet list로 렌더 (사용자 요청).
+  //   인라인 [N] 마커 보존 + sources 매핑 그대로.
   const technKnowRaw: any = overviewAbilities?.technKnow
-  let technKnow = ''
-  if (typeof technKnowRaw === 'string') {
-    technKnow = technKnowRaw
-  } else if (Array.isArray(technKnowRaw)) {
-    technKnow = (technKnowRaw as any[])
-      .map((x: any) => {
-        if (typeof x === 'string') return x
-        if (x && typeof x === 'object') {
-          if (typeof x.text === 'string') return x.text
-          if (typeof x.title === 'string') return x.title
-          if (typeof x.list_content === 'string') return x.list_content
-          if (typeof x.value === 'string') return x.value
-        }
-        return ''
-      })
-      .filter((s: string) => s && s.length > 0)
-      .join('\n')
+  const extractTechItem = (x: any): string => {
+    if (typeof x === 'string') return x
+    if (x && typeof x === 'object') {
+      if (typeof x.text === 'string') return x.text
+      if (typeof x.title === 'string') return x.title
+      if (typeof x.list_content === 'string') return x.list_content
+      if (typeof x.value === 'string') return x.value
+    }
+    return ''
   }
-  if (technKnow?.trim()) {
-    abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">활용 기술</h3>${formatRichText(technKnow, 'overviewAbilities.technKnow', footnoteMap, sourceTextMap)}</div>`)
+  if (Array.isArray(technKnowRaw)) {
+    const bullets = (technKnowRaw as any[])
+      .map(extractTechItem)
+      .filter((s: string) => s && s.trim().length > 0)
+    if (bullets.length > 0) {
+      const items = bullets
+        .map((b: string) => `<li>${formatRichText(b, 'overviewAbilities.technKnow', footnoteMap, sourceTextMap)}</li>`)
+        .join('')
+      abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">활용 기술</h3><ul class="content-text leading-relaxed text-wiki-text list-disc pl-5 space-y-1.5">${items}</ul></div>`)
+    }
+  } else if (typeof technKnowRaw === 'string' && technKnowRaw.trim()) {
+    abilityBlocks.push(`<div class="mt-6"><h3 class="content-heading">활용 기술</h3>${formatRichText(technKnowRaw, 'overviewAbilities.technKnow', footnoteMap, sourceTextMap)}</div>`)
   }
 
   const trainingMetaCards: string[] = []

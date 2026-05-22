@@ -649,10 +649,32 @@ apiDataRoutes.get('/api/job/:id/edit-data', async (c) => {
       },
       
       // 개요 - 핵심 능력·자격
+      // 2026-05-22 (PR #40): technKnow가 array 형식인 미가공 직업에서 편집 UI textarea가
+      //   [object Object] 같은 깨진 텍스트 표시 → 줄바꿈 join string으로 변환해 textarea
+      //   친화 형식 노출. 저장 시 string으로 영구 저장됨 (사용자 편집 → string 일관 형식).
       overviewAbilities: {
-        abilityList: extractListItems(profile.overviewAbilities?.abilityList) 
+        abilityList: extractListItems(profile.overviewAbilities?.abilityList)
           || extractListItems(profile.abilityList),
-        technKnow: profile.overviewAbilities?.technKnow || profile.technKnow || '',
+        technKnow: (() => {
+          const v: any = profile.overviewAbilities?.technKnow ?? (profile as any).technKnow
+          if (typeof v === 'string') return v
+          if (Array.isArray(v)) {
+            return (v as any[])
+              .map((x: any) => {
+                if (typeof x === 'string') return x
+                if (x && typeof x === 'object') {
+                  if (typeof x.text === 'string') return x.text
+                  if (typeof x.title === 'string') return x.title
+                  if (typeof x.list_content === 'string') return x.list_content
+                  if (typeof x.value === 'string') return x.value
+                }
+                return ''
+              })
+              .filter((s: string) => s && s.length > 0)
+              .join('\n')
+          }
+          return ''
+        })(),
         eduLevel: profile.overviewAbilities?.eduLevel || profile.eduLevel || '',
         skillYear: profile.overviewAbilities?.skillYear || profile.skillYear || ''
       },
