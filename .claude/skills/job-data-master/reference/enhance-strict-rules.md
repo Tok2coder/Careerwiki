@@ -44,6 +44,7 @@
 | `career_tree_job_links.stage_index` | **입직 스테이지에만 설정** — `order` 기준 sorted 배열의 마지막 스테이지(거장·회장·전직) 금지. `job_slug`는 해당 직업에 처음 진입하는 스테이지에만 설정. 마지막 스테이지에 설정 시 validate `[careerTree-자기강조]` FAIL |
 | `career_tree_job_links` 중복 금지 | 같은 career_tree_id + job_slug 조합이 2개 이상이면 `[careerTree-자기강조]` FAIL — 반드시 하나만 존재 |
 | `_youtubeSearchNote` | youtubeLinks를 빈 배열 `[]`로 제출할 때 **필수** — 탐색어 ≥6개 OR 카테고리(현직자·인터뷰/직무·실무/강의·교육/진로·면접) ≥3개 커버 필수. 미달 시 `[YouTubeNote얕음]` FAIL |
+| **🚫 `youtubeLinks` 영역 omit 금지** ⚠️ | master enhance patch는 `youtubeLinks` 영역을 **반드시 patch에 포함** — 적합 한국어 영상 있으면 `[{url,title}]` (1~3개), 없으면 `[]` + `_youtubeSearchNote`. **영역 자체를 빼버리면 validate 통과 후 ytLow 잔존** (2026-05-26 신규, 5/23~26 dispatch 171건 사고 후속). validate `[YouTube-영역누락]` FAIL. 면제: `yt-fill` / `cleanup` / `--field-only=` 모드 |
 | `_careerTreeNote` | careerTree를 `null`로 제출할 때 **필수** — 후보 ≥5명(이름(이유) 형식) OR 카테고리(재벌·대기업/컨설팅/공공·정부/학계·연구/스타트업·CxO) ≥3개 커버. 미달 시 `[CareerTreeNote얕음]` FAIL |
 | **UCJ 배열 각주 필수** | `detailReady.{curriculum,recruit,training}` 각 항목에 `[N]` 필수. 누락 시 `[UCJ각주항목누락]` FAIL. **`detailReady.researchList`는 CareerNet 원본 — 각주 면제** |
 | **한글 인코딩 — Mojibake 금지** | API 전송 시 **Node.js `fetch()` 필수** — Windows `curl -d`로 한글 JSON 전송 시 CP949 인코딩 오류로 한글이 아랍·키릴·라틴확장 문자로 깨짐. validate `[Mojibake]` FAIL, audit `[Gate5/Mojibake]` FAIL |
