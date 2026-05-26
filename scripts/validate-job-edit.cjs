@@ -799,6 +799,16 @@ function validate(data) {
     errors.push('[sal-readonly] sources["overviewSalary.sal"] must not be sent by job-data-enhance. Salary annotations and salary sources are read-only here.');
   }
 
+  // ── 9b-OMIT. master enhance patch는 youtubeLinks 영역 omit 금지 (2026-05-26 신규) ──
+  // 5/23~26 dispatch 171건 사고 root cause: master 적용 patch가 youtubeLinks 영역 자체를
+  // 빼버려도 validate 통과 → merged_profile_json 빈값 그대로 잔존 → ytLow=1 노란색.
+  // 면제: --field-only= / yt-fill / cleanup 명시 모드 (부분 보강 patch).
+  const isMasterMarker = typeof changeSummary === 'string' && /\[(job|major)-data-master\]/.test(changeSummary);
+  const isPartialMode = typeof changeSummary === 'string' && /(yt-fill|cleanup|--field-only=)/i.test(changeSummary);
+  if (isMasterMarker && !isPartialMode && !('youtubeLinks' in fields)) {
+    errors.push('[YouTube-영역누락] master enhance patch는 youtubeLinks 영역 필수. 한국어 영상 있으면 [{url,title}], 없으면 []+_youtubeSearchNote. 영역 omit 금지 (2026-05-26 신규, 171건 사고 후속).');
+  }
+
   // ── 9b. youtubeLinks 개수 검증 + 무언 스킵 금지 (2026-04-15 강화) ──
 
   // youtubeLinks가 draft에 포함된 경우에만 검사 (미포함 시 이번 저장에서 변경 없음 → 검사 생략)
