@@ -78,6 +78,20 @@ v3 변경 (v2 대비):
     - validate `[YouTube-영역누락]` FAIL — omit 시 차단됨.
     - 면제: change_summary에 `yt-fill` / `cleanup` / `--field-only=` 명시 부분 보강 모드만.
 
+15. **🚨 totalEntries ≥ 19 강제** (2026-05-27 신규, SR cycle 사후):
+    - `_sources` 총 entry 수 (모든 fieldKey의 entry 합산) **≥ 19** 필수.
+    - distinct URL ≥ 18과 별개로, 본문 [N] 인용 위치 수 자체를 늘리거나 새 출처 항목 추가로 ≥19 달성.
+    - minimal patch (totalEntries 변동 없음) 금지.
+    - 보강 패턴: (a) distinct URL 추가 (1차) (b) 본문 [N] 마커 추가 인용 (1 URL → 2-3 위치 분산) (c) detailReady array 항목 추가 시 항목별 [N] (d) 9 prose 영역 본문 expand + [N] 추가.
+
+16. **🚨 AskUser tool 호출 절대 금지** (2026-05-28 신규, R11_B2 사고 후속):
+    - 작업 규모 클 거라고 우려 보고 X
+    - "단일 응답 안에서 안전한지" 평가 X — 그냥 직진 처리
+    - 5 직업 단일 응답으로 안되면 multi-turn으로 처리하되 AskUser는 절대 X
+    - 진행 방식 결정 X — prompt 지시 그대로 따름
+    - 위반 시 dispatcher 재지시 받기 전까지 batch fail로 간주
+    - 2026-05-28 사고: R11_B2 sub-agent (건축 5 직업) 가 "작업 규모 크다"고 AskUser 호출 → 다른 4 batch는 같은 분량 잘 처리 중. dispatcher 재지시 30분 지체 후 정상 완료.
+
 ---
 
 # 처리 대상 5 직업
