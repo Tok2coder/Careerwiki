@@ -1,0 +1,214 @@
+{
+  "fields": {
+    "way": "보건의료정보관리사(2018년 12월 의무기록사에서 명칭이 바뀐 국가면허)는 의료기관에서 의무기록과 보건의료정보의 분류·확인·유지·관리를 담당한다.[1] 면허를 취득하려면 교육과정 인증을 받은 대학·전문대학의 보건의료정보 관련 학과를 졸업하고 보건복지부령으로 정한 교과목을 이수한 뒤, 국시원이 시행하는 국가시험에 합격해 보건복지부 장관의 면허를 받아야 한다.[2] 의무기록관리자는 이 면허를 보유하고 통상 10년 이상의 실무 경력을 쌓은 뒤 의료기관 의무기록·의료정보팀의 업무를 총괄·기획하고 소속 보건의료정보관리사를 관리·감독하는 관리직이다.[3]",
+    "trivia": "의무기록을 다루는 이 직종은 본래 '의무기록사'로 불렸으나, 2017년 의료기사 등에 관한 법률 개정과 2018년 입법 절차를 거쳐 2018년 12월 20일부터 '보건의료정보관리사'로 면허 명칭이 바뀌었다. 의료기록 전산화와 의료정보 관리 영역 확대를 반영한 변화로, 교과목·시험과목과 보수교육 기준도 함께 강화되었다.[1]",
+    "overviewProspect.main": "보건의료정보관리사는 정부가 육성·지원하는 신직업으로, 의료데이터와 분석기술을 갖춘 융합인력에 대한 수요가 늘어날 전망이다.[1] 전자의무기록(EMR) 시스템 인증제가 2020년 시행된 이후 의료기관의 의료정보 표준화와 상호운용성·보안 관리가 강화되면서 관련 전문 인력의 역할이 커지고 있다.[2] 의료 빅데이터·인공지능을 활용한 정밀의료·진단예측이 확대됨에 따라 데이터 거버넌스와 질병분류·통계 역량을 갖춘 인력의 수요가 늘고, 병원 외에 보험사·연구소·EMR 개발 업체로의 진출도 확대되고 있다.[3] 협회도 보건의료정보관리사가 의료정보 분석 전문가로 역할을 확장하도록 보건정보분석 전문가 제도 도입 등을 추진하고 있다.[4]",
+    "overviewAbilities.technKnow": "보건의료정보관리사는 질병·사인·의료행위의 분류, 진료통계·암등록, 의무기록 품질관리, 개인건강정보 보호 등 보건의료정보 전반에 관한 전문 지식을 활용한다.[1] 질병 분류는 세계보건기구(WHO) 국제질병분류(ICD)를 기반으로 한 한국표준질병사인분류(KCD)에 따라 코드를 부여하며, 의료정보 표준과 통계 분석 역량이 핵심이다.[2]",
+    "detailWlb.wlbDetail": "보건의료정보관리사는 주로 병원 의무기록팀·의료정보팀에서 근무하며, 의무기록의 정확성과 완전성을 다루는 꼼꼼하고 분석적인 사무 중심 업무다.[1] 환자의 민감한 개인건강정보를 취급하므로 높은 윤리의식과 정보보안 준수가 요구된다.[2]",
+    "detailWlb.socialDetail": "정확하고 신뢰할 수 있는 의무기록과 의료통계는 진료의 질 향상, 보건정책 수립, 의학연구의 기반이 되는 공익적 역할을 한다.[1]",
+    "detailWlb.wlb": "보통 이상",
+    "detailWlb.social": "보통 이상",
+    "detailReady": {
+      "curriculum": [
+        "보건의료정보 관련 학과(보건행정·의료정보 등)에서 의무기록정보학·의학용어·질병분류·의료관계법규 등 보건복지부령 지정 교과목 이수 [1]",
+        "한국보건의료정보관리교육평가원의 교육과정 인증을 받은 대학에서 전공·졸업 (국가시험 응시자격 요건) [2]",
+        "국시원이 시행하는 보건의료정보관리사 국가시험 합격 (필기·실기) [3]",
+        "한국표준질병사인분류(KCD)·국제질병분류(ICD) 등 분류체계 실무 학습 [4]",
+        "인증 학과의 국제표준 기반 보건의료정보관리 교과과정(의무기록·원무행정·의료정보 IT) 이수 [5]"
+      ],
+      "recruit": [
+        "의료기관 의무기록팀·의료정보팀 채용 — 대한보건의료정보관리사협회 구인 게시판 등에서 병원 공고 확인 [1]",
+        "병원 외에 건강보험심사·보험회사, 제약회사, 연구기관, EMR 개발·의료정보 업체 등으로 진출 [2]",
+        "실무 경력을 쌓으면 의무기록·의료정보팀 관리자(통상 10년 이상)로 승진 [3]"
+      ],
+      "training": [
+        "보건의료정보 관련 학과 졸업 후 국시원 보건의료정보관리사 국가시험에 합격해 면허 취득 [1]",
+        "6개월 이상 업무 종사 시 매년 정기 보수교육 이수 (질병분류·진료통계·암등록 등) [2]",
+        "최초 면허 후 3년마다 실태·취업상황 면허신고 (미신고 시 면허 효력정지) [3]",
+        "전자의무기록(EMR) 시스템 인증제 등 의료정보 표준화 흐름에 맞춰 EMR·데이터 분석 실무 역량 보강 [4]"
+      ]
+    },
+    "sidebarJobs": [
+      "보건의료정보관리사",
+      "의무기록보조원",
+      "병원행정사무원",
+      "병원코디네이터",
+      "의료코디네이터",
+      "간호조무사"
+    ],
+    "sidebarMajors": [
+      "보건행정학과",
+      "보건행정과",
+      "의료정보공학과",
+      "의료정보시스템과"
+    ],
+    "sidebarCerts": [
+      {
+        "name": "보건의료정보관리사",
+        "url": "https://www.kuksiwon.or.kr/subcnt/c_2018/1/view.do?seq=7&itm_seq=14"
+      }
+    ],
+    "sidebarOrgs": [
+      {
+        "name": "대한보건의료정보관리사협회",
+        "url": "https://www.khima.or.kr/"
+      },
+      {
+        "name": "한국보건의료정보원",
+        "url": "https://www.khis.kr/"
+      }
+    ],
+    "heroTags": [
+      "의무기록관리자",
+      "보건의료정보관리사",
+      "의무기록",
+      "의료정보관리",
+      "관리자"
+    ],
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=qoQkaVinuuY",
+        "title": "[진로채널W : 보건의료정보관리사편 | 최신버전]"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=xIVjnvkQ1Qw",
+        "title": "의무기록사 [ 직업 - 의약계열 ]"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {
+        "text": "대한보건의료정보관리사협회 — 보건의료정보관리사란(정의·업무)",
+        "url": "https://www.khima.or.kr/contents/content.php?doc=health_manager"
+      },
+      {
+        "text": "대한보건의료정보관리사협회 — 보건의료정보관리사 면허취득 절차",
+        "url": "https://www.khima.or.kr/contents/content.php?doc=acquisition"
+      },
+      {
+        "text": "연세대학교 보건행정학부 — 보건의료정보관리사 자격·진로",
+        "url": "https://white.yonsei.ac.kr/white/advancement/certificate03.do"
+      }
+    ],
+    "trivia": [
+      {
+        "text": "간호조무사신문 — 의무기록사→보건의료정보관리사 명칭 변경",
+        "url": "https://klpnnews.co.kr/610"
+      }
+    ],
+    "overviewProspect.main": [
+      {
+        "text": "에듀진 — 정부 육성 신직업 보건의료정보관리사(수요 전망)",
+        "url": "https://www.edujin.co.kr/news/articleView.html?idxno=19211"
+      },
+      {
+        "text": "한국보건의료정보원 — 전자의무기록(EMR) 시스템 인증제",
+        "url": "https://www.khis.kr/menu.es?mid=a10201010100"
+      },
+      {
+        "text": "에듀진 — 보건의료정보관리사, 보건의료와 데이터의 융합직업",
+        "url": "https://www.edujin.co.kr/news/articleView.html?idxno=19227"
+      },
+      {
+        "text": "라포르시안 — 보건의료정보관리사 명칭 변경·역할 확대",
+        "url": "https://www.rapportian.com/news/articleView.html?idxno=108066"
+      }
+    ],
+    "overviewAbilities.technKnow": [
+      {
+        "text": "경기과학기술대학교 보건의료행정학과 — 보건의료정보관리사 역할·면허요건",
+        "url": "https://www.gtec.ac.kr/health/cms/FrCon/index.do?MENU_ID=240"
+      },
+      {
+        "text": "질병분류정보센터(KOICD) — 한국표준질병사인분류(KCD) 소개",
+        "url": "https://www.koicd.kr/kcd/kcds.do"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "text": "에듀진 — 보건의료정보관리사, 보건의료와 데이터의 융합직업",
+        "url": "https://www.edujin.co.kr/news/articleView.html?idxno=19227"
+      },
+      {
+        "text": "대한보건의료정보관리사협회 — 보건의료정보관리사란(정의·업무)",
+        "url": "https://www.khima.or.kr/contents/content.php?doc=health_manager"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "text": "대한보건의료정보관리사협회 — 보건의료정보관리사란(정의·업무)",
+        "url": "https://www.khima.or.kr/contents/content.php?doc=health_manager"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "text": "백석문화대학교 보건의료행정과 — 보건의료정보관리사 교과목·진로",
+        "url": "https://www.bscu.ac.kr/health/1611/subview.do"
+      },
+      {
+        "text": "경기과학기술대학교 보건의료행정학과 — 보건의료정보관리사 역할·면허요건",
+        "url": "https://www.gtec.ac.kr/health/cms/FrCon/index.do?MENU_ID=240"
+      },
+      {
+        "text": "한국보건의료인국가시험원 — 보건의료정보관리사 시험정보(KCD·ICD)",
+        "url": "https://www.kuksiwon.or.kr/subcnt/c_2018/1/view.do?seq=7&itm_seq=14"
+      },
+      {
+        "text": "질병분류정보센터(KOICD) — KCD 질병분류기호 검색",
+        "url": "https://www.koicd.kr/kcd/kcd.do"
+      },
+      {
+        "text": "용인예술과학대학교 보건의료행정과 — 보건의료정보관리 교과과정",
+        "url": "https://dept.ysc.ac.kr/yscmedis/CMS/Contents/Contents.do?mCode=MN046"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "text": "대한보건의료정보관리사협회 — 구인(병원 의료정보팀 채용공고)",
+        "url": "https://www.khima.or.kr/board/board.php?bo_table=job"
+      },
+      {
+        "text": "에듀진 — 정부 육성 신직업 보건의료정보관리사(수요 전망)",
+        "url": "https://www.edujin.co.kr/news/articleView.html?idxno=19211"
+      },
+      {
+        "text": "연세대학교 보건행정학부 — 보건의료정보관리사 자격·진로",
+        "url": "https://white.yonsei.ac.kr/white/advancement/certificate03.do"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "text": "한국보건의료인국가시험원 — 보건의료정보관리사 시험정보(KCD·ICD)",
+        "url": "https://www.kuksiwon.or.kr/subcnt/c_2018/1/view.do?seq=7&itm_seq=14"
+      },
+      {
+        "text": "대한보건의료정보관리사협회 — 보수교육·면허신고 안내",
+        "url": "https://www.khima.or.kr/contents/content.php?doc=apply"
+      },
+      {
+        "text": "대한보건의료정보관리사협회 — 면허신고 대상자 안내(3년 주기)",
+        "url": "https://www.khima.or.kr/board/board.php?bo_table=01notice&wr_id=1284"
+      },
+      {
+        "text": "보건복지부 EMR 인증 — 전자의무기록시스템 인증기준",
+        "url": "https://emrcert.mohw.go.kr/menu.es?mid=a10102020000"
+      }
+    ]
+  },
+  "youtubeLinks": [
+    {
+      "url": "https://www.youtube.com/watch?v=qoQkaVinuuY",
+      "title": "[진로채널W : 보건의료정보관리사편 | 최신버전]"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=xIVjnvkQ1Qw",
+      "title": "의무기록사 [ 직업 - 의약계열 ]"
+    }
+  ],
+  "careerTree": null,
+  "_careerTreeNote": "보건의료정보관리사(의무기록사)는 의료기관 후방 행정 전문직으로 위키피디아·나무위키 등재 공인 인물이 거의 없음. 조사 카테고리 — [학계·연구] 강성홍(인제대 보건행정학부 교수·전 대한의무기록협회장; 본업 교수로 직접 경력 부적합), 보건의료정보관리 전공 교수진(위키 등재 부재); [공공·정부] 한국보건의료정보원·보건복지부 의료정보정책 담당 인사(직업 본업 아님); [스타트업·CxO] 이지케어텍·평화이즈 등 EMR·의료정보 기업 임원 중 보건의료정보관리사 출신 공개 프로필 부재; [대기업] 건강보험심사평가원·대형병원 의무기록 책임자(위키 등재 공인 인물 없음). 적합 공인 인물 없음.",
+  "changeSummary": "[job-data-master] enhance — 풀 enhance(마커 미보유): way·trivia·prospect·abilities·wlbDetail·socialDetail·detailReady(curriculum/recruit/training)·sidebar(Jobs/Majors/Certs/Orgs)·heroTags·youtubeLinks 신규 작성, wlb/social 등급 설정, distinct URL 18(협회·국시원·KOICD·khis·emrcert·대학·전문지). overviewWork.main·summary careernet 보존, sal·careerTree 미설정(_careerTreeNote).",
+  "_jobSlug": "의무기록관리자",
+  "_omegaSelfAudit": true
+}
