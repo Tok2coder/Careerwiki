@@ -1007,7 +1007,7 @@ jobEditorRoutes.post('/api/admin/job', requireAdmin, async (c) => {
 // Group L: Data refresh
 // ============================================================================
 
-jobEditorRoutes.post('/api/job/:id/refetch-api-data', authMiddleware, async (c) => {
+jobEditorRoutes.post('/api/job/:id/refetch-api-data', requireAdmin, async (c) => {
   try {
     const jobIdParam = c.req.param('id')
 
@@ -1117,7 +1117,7 @@ jobEditorRoutes.post('/api/job/:id/refetch-api-data', authMiddleware, async (c) 
   }
 })
 
-jobEditorRoutes.post('/api/job/:id/reset-contributions', authMiddleware, async (c) => {
+jobEditorRoutes.post('/api/job/:id/reset-contributions', requireAdmin, async (c) => {
   try {
     const jobIdParam = c.req.param('id')
 
@@ -1191,6 +1191,224 @@ jobEditorRoutes.post('/api/job/:id/reset-contributions', authMiddleware, async (
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'failed to reset contributions'
+    return c.json({ success: false, error: message }, 500)
+  }
+})
+
+// ============================================================================
+// Group R: Rollback (2026-05-24) — P1~P5 fake corruption 롤백 전용
+// ============================================================================
+// 기존 /edit는 deepMerge라서 UCJ 통째 교체 불가. 본 endpoint는 UCJ 완전 교체.
+// X-Admin-Secret 인증 + page_revisions audit trail + sal protection.
+// mode='restore'는 server-side reconstruct: targetRev=page_revisions.id 입력 →
+// 그 시점 revisionNumber까지 모든 prior revisions deep-merge로 UCJ 통째 reconstruct.
+jobEditorRoutes.post('/api/job/:id/rollback', requireAdmin, async (c) => {
+  try {
+    const jobId = c.req.param('id')
+    let body: any
+    try {
+      body = await c.req.json()
+    } catch {
+      return c.json({ success: false, error: 'invalid json body' }, 400)
+    }
+
+    const mode = body.mode
+    if (mode !== 'null' && mode !== 'restore' && mode !== 'replace' && mode !== 'unmark') {
+      return c.json({ success: false, error: 'mode must be "null", "restore", "replace", or "unmark"' }, 400)
+    }
+
+    const originalRev = typeof body.originalRev === 'number' ? body.originalRev : null
+    const targetRev = typeof body.targetRev === 'number' ? body.targetRev : null
+    const replaceUcj = body.replaceUcj  // mode='replace' 전용: UCJ object 통째 교체
+
+    if (mode === 'restore' && targetRev === null) {
+      return c.json({ success: false, error: 'targetRev (number=page_revisions.id) required for mode=restore' }, 400)
+    }
+    if (mode === 'replace' && (!replaceUcj || typeof replaceUcj !== 'object' || Array.isArray(replaceUcj))) {
+      return c.json({ success: false, error: 'replaceUcj (object) required for mode=replace' }, 400)
+    }
+
+    const job = await c.env.DB.prepare('SELECT * FROM jobs WHERE id = ?').bind(jobId).first()
+    if (!job) {
+      return c.json({ success: false, error: 'JOB_NOT_FOUND' }, 404)
+    }
+
+    // mode='unmark': UCJ/merged 변경 X. page_revisions에 [unmark] revision만 추가.
+    // → latest revision의 change_summary가 [unmark]가 되어 admin KPI에서 master 카운트 제외.
+    // 추후 master skill 재처리 시 정상 [job-data-master] 적용으로 latest 갱신.
+    if (mode === 'unmark') {
+      const { createRevision: cr } = await import('../services/revisionService')
+      const now = Date.now()
+      const revision = await cr(c.env.DB, {
+        entityType: 'job',
+        entityId: jobId,
+        dataSnapshot: { _unmark: true, originalRev: originalRev ?? null, note: 'master marker removed for re-cycle' },
+        previousValues: {},
+        editorId: null,
+        editorType: 'admin',
+        editorName: 'rollback-unmark',
+        ipHash: null,
+        changeType: 'edit',
+        changeSummary: `[unmark] remove master marker (rollback for re-cycle${originalRev ? ` rev>${originalRev}` : ''})`,
+        changedFields: [],
+        storeFullSnapshot: false,
+      })
+      return c.json({
+        success: true,
+        mode: 'unmark',
+        revisionId: revision.id,
+        message: 'Master marker removed via [unmark] revision (UCJ/merged unchanged)',
+      })
+    }
+
+    // 현재 UCJ에서 sal 보존 (sal protection)
+    let currentUcj: any = {}
+    try { currentUcj = job.user_contributed_json ? JSON.parse(job.user_contributed_json as string) : {} } catch {}
+    const preservedSal = currentUcj?.overviewSalary?.sal
+
+    const { reconstructFullData, createRevision } = await import('../services/revisionService')
+
+    let newUcjStr: string | null
+    let newUcjObj: any = {}
+    let resolvedRevisionNumber: number | null = null
+
+    if (mode === 'null') {
+      newUcjStr = null
+      newUcjObj = {}
+    } else if (mode === 'replace') {
+      // body.replaceUcj 통째 SET — _ prefix/id/name 제외 (restoreRevision 패턴)
+      for (const [k, v] of Object.entries(replaceUcj)) {
+        if (!k.startsWith('_') && k !== 'id' && k !== 'name') {
+          newUcjObj[k] = v
+        }
+      }
+      // _sources 는 보존 (replaceUcj 의 _sources 통째 포함)
+      if (replaceUcj._sources && typeof replaceUcj._sources === 'object') {
+        newUcjObj._sources = replaceUcj._sources
+      }
+      // sal protection
+      if (preservedSal !== undefined) {
+        if (!newUcjObj.overviewSalary || typeof newUcjObj.overviewSalary !== 'object') {
+          newUcjObj.overviewSalary = {}
+        }
+        newUcjObj.overviewSalary.sal = preservedSal
+      }
+      newUcjStr = JSON.stringify(newUcjObj)
+    } else {
+      const targetRow = await c.env.DB.prepare(
+        'SELECT revision_number FROM page_revisions WHERE id = ? AND entity_type = ? AND entity_id = ?'
+      ).bind(targetRev, 'job', jobId).first<{ revision_number: number }>()
+
+      if (!targetRow) {
+        return c.json({ success: false, error: `targetRev ${targetRev} not found for entity ${jobId}` }, 400)
+      }
+      resolvedRevisionNumber = targetRow.revision_number
+
+      let fullData: any
+      try {
+        fullData = await reconstructFullData(c.env.DB, 'job', jobId, resolvedRevisionNumber)
+      } catch (recErr) {
+        const msg = recErr instanceof Error ? recErr.message : String(recErr)
+        return c.json({ success: false, error: `reconstruct failed: ${msg}` }, 500)
+      }
+
+      // _ prefix 키 + id/name 제외 (restoreRevision 패턴 동일, line 547-552)
+      for (const [k, v] of Object.entries(fullData)) {
+        if (!k.startsWith('_') && k !== 'id' && k !== 'name') {
+          newUcjObj[k] = v
+        }
+      }
+
+      // sal protection: 현재 sal 보존 (reconstructed의 sal 무시)
+      if (preservedSal !== undefined) {
+        if (!newUcjObj.overviewSalary || typeof newUcjObj.overviewSalary !== 'object') {
+          newUcjObj.overviewSalary = {}
+        }
+        newUcjObj.overviewSalary.sal = preservedSal
+      }
+
+      newUcjStr = JSON.stringify(newUcjObj)
+    }
+
+    let apiData: any = {}
+    let adminData: any = {}
+    try { apiData = job.api_data_json ? JSON.parse(job.api_data_json as string) : {} } catch {}
+    try { adminData = job.admin_data_json ? JSON.parse(job.admin_data_json as string) : {} } catch {}
+
+    const deepMergeLocal = (target: any, source: any): any => {
+      if (!source) return target
+      if (!target) return source
+      const result = { ...target }
+      for (const key of Object.keys(source)) {
+        if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+          result[key] = deepMergeLocal(result[key] || {}, source[key])
+        } else if (source[key] !== undefined) {
+          result[key] = source[key]
+        }
+      }
+      return result
+    }
+
+    const baseMerged = deepMergeLocal({ ...apiData }, adminData)
+    const newMerged = deepMergeLocal(baseMerged, newUcjObj)
+
+    // sal final guard: base sal 있으면 무조건 우선
+    if (baseMerged?.overviewSalary?.sal !== undefined) {
+      if (!newMerged.overviewSalary || typeof newMerged.overviewSalary !== 'object') {
+        newMerged.overviewSalary = {}
+      }
+      newMerged.overviewSalary.sal = baseMerged.overviewSalary.sal
+    }
+
+    const now = Date.now()
+
+    const changeSummary = mode === 'null'
+      ? `[rollback] reset UCJ to NULL (revert fake corruption${originalRev ? ` rev>${originalRev}` : ''})`
+      : mode === 'replace'
+      ? `[rollback] replace UCJ from backup (re-apply master skill result post-PITR)`
+      : `[rollback] restore UCJ from rev${targetRev}${originalRev ? ` (revert fake rev>${originalRev})` : ''}`
+
+    const revision = await createRevision(c.env.DB, {
+      entityType: 'job',
+      entityId: jobId,
+      dataSnapshot: { _rollback: true, mode, originalRev, targetRev, resolvedRevisionNumber, newUcj: newUcjObj },
+      previousValues: {},
+      editorId: null,
+      editorType: 'admin',
+      editorName: 'rollback-script',
+      ipHash: null,
+      changeType: 'restore',
+      changeSummary,
+      changedFields: ['user_contributed_json'],
+      storeFullSnapshot: true,
+      fullDataForCheckpoint: newMerged
+    })
+
+    try {
+      await c.env.DB.prepare(`
+        UPDATE jobs SET user_contributed_json = ?, merged_profile_json = ?, user_last_updated_at = ?
+        WHERE id = ?
+      `).bind(newUcjStr, JSON.stringify(newMerged), now, jobId).run()
+    } catch (updateError) {
+      try {
+        await c.env.DB.prepare('DELETE FROM page_revisions WHERE id = ?').bind(revision.id).run()
+      } catch { /* 로그만 */ }
+      throw updateError
+    }
+
+    await invalidatePageCache(c.env.DB, { jobId, pageType: 'job' })
+
+    return c.json({
+      success: true,
+      mode,
+      revisionId: revision.id,
+      ucjLength: newUcjStr ? newUcjStr.length : 0,
+      resolvedRevisionNumber,
+      newTimestamp: now,
+      message: `Rollback complete: ${mode}`
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'rollback failed'
     return c.json({ success: false, error: message }, 500)
   }
 })
