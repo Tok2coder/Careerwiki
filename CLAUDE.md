@@ -10,6 +10,25 @@
 - **데이터**: 608 majors / 6,945 jobs
 - **Repo**: `C:\Users\user\Careerwiki`
 
+## 🚨 dispatcher 새 세션 진입 시 (직업 데이터 보완/배치 — 절대 첫 단계)
+
+> **이 섹션은 메모리 시스템 작동 여부와 무관하게 git-tracked 파일로 100% 보장된다.**
+> Cowork dispatcher 메모리(`agent/memory/`)는 새 세션 system prompt에 자동 inject 되지 **않으므로**, 진행 상태는 반드시 아래 git-tracked 자산으로 복구한다. (2026-05-28 새 세션이 작업 못 찾은 사고 후속)
+
+dispatcher가 **"현재 진행 상황/현황 확인하고 master 스킬로 배치 이어서 진행"** 류 prompt를 받으면:
+
+1. **이 CLAUDE.md 전체 읽기** (repo 진입 시 자동 로드 — 현재 단계)
+2. **`node scripts/master-cycle-helper.cjs --status`** 실행 → 현재 master 카운트(A/B) + 마지막 처리 cycle + 다음 cycle 시작 위치 (DB 진리값)
+3. **`data/cycle/_dispatcher_manual.md` 읽기** → ENTRY POINT 6 step 실행 매뉴얼 (self-contained, 메모리 불필요)
+4. **`data/cycle/_dispatch_template_v3.md` 읽기** → sub-session prompt STRICT 16 룰
+5. (보조) dispatcher 메모리 `agent/memory/project_careerwiki_cycle_progress.md` 접근되면 추가로 읽기 — 단 위 1~4로 이미 충분
+6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) batch 생성 → `start_code_task` × 5 → 결과 수집 → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
+
+진행 상태 요약 (자세한 건 `--status` + 매뉴얼이 진리):
+- 마지막 완료: **R11** (검침사무원까지). SR cycle(totalE<19 보강) 89직업 완료.
+- **다음: R12** (검표원 + 게임 series). batch/prompt 생성됨 또는 `--cycle=12`로 재생성.
+- master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업).
+
 ## Tech Stack
 
 - **Runtime**: Cloudflare Workers (Pages)

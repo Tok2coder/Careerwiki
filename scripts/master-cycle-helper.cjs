@@ -200,28 +200,40 @@ function generateCycle(cycleNum, opts = {}) {
   console.log(`\n완료 후: 25 직업 rev 수집 + audit + R${cycleNum}_report.md + 메모리 갱신 (project_careerwiki_cycle_progress.md).`);
 }
 
+// ─── 마지막 완료 cycle + 다음 미처리 cycle 계산 (DB processed Set 기반) ───
+function computeCyclePosition(processed) {
+  const byCycle = loadCycles();
+  const cycleNums = Object.keys(byCycle)
+    .map((k) => parseInt(k.slice(1), 10))
+    .sort((a, b) => a - b);
+  let lastDone = null;
+  let next = null;
+  for (const n of cycleNums) {
+    const jobs = byCycle[`R${n}`].flat();
+    const doneCount = jobs.filter((j) => processed.has(String(j.id))).length;
+    if (doneCount >= jobs.length / 2) {
+      lastDone = { n, doneCount, total: jobs.length, lastSlug: jobs[jobs.length - 1]?.slug };
+    } else if (next === null) {
+      next = { n, doneCount, total: jobs.length, firstSlug: jobs[0]?.slug };
+    }
+  }
+  return { lastDone, next };
+}
+
 // ─── --next-cycle: 처리 안 된 다음 cycle 자동 결정 ───
 function findNextCycle() {
-  const byCycle = loadCycles();
   const processed = fetchProcessedSlugs();
   if (!processed) {
     console.error('[error] DB 쿼리 실패 — --cycle=N 명시 사용 권장.');
     process.exit(1);
   }
-  // R7부터 순서대로, 25 직업 중 과반(13+) 미처리인 첫 cycle 반환
-  const cycleNums = Object.keys(byCycle)
-    .map((k) => parseInt(k.slice(1), 10))
-    .sort((a, b) => a - b);
-  for (const n of cycleNums) {
-    const jobs = byCycle[`R${n}`].flat();
-    const doneCount = jobs.filter((j) => processed.has(String(j.id))).length;
-    if (doneCount < jobs.length / 2) {
-      console.log(`[next-cycle] R${n} 결정 (${doneCount}/${jobs.length} 처리됨 → 미처리 cycle)`);
-      return n;
-    }
+  const { next } = computeCyclePosition(processed);
+  if (!next) {
+    console.error('[info] 모든 cycle 처리 완료된 것으로 보임.');
+    process.exit(0);
   }
-  console.error('[info] 모든 cycle 처리 완료된 것으로 보임.');
-  process.exit(0);
+  console.log(`[next-cycle] R${next.n} 결정 (${next.doneCount}/${next.total} 처리됨 → 미처리 cycle, 시작=${next.firstSlug})`);
+  return next.n;
 }
 
 // ─── --status ───
@@ -231,8 +243,19 @@ function showStatus() {
   console.log(`A. 모든 master 마커 (yt-fill/cleanup 포함, DISTINCT 직업): ${a ?? 'DB 쿼리 실패'}   ← 메모리 "누적 진행" 정의`);
   console.log(`B. enhance 풀 사이클만 (yt-fill 제외, DISTINCT 직업):    ${b ?? 'DB 쿼리 실패'}   ← 실제 보강 완료`);
   if (a != null && b != null) console.log(`   차이 ${a - b} = yt-fill/cleanup만 적용 (풀 enhance 미완)`);
-  console.log(`\n메모리 entry point: agent/memory/project_careerwiki_cycle_progress.md`);
-  console.log(`이 값(A)과 메모리의 "누적 진행" 표를 비교 — drift 있으면 메모리 갱신 필요.`);
+
+  // 마지막 처리 / 다음 cycle 위치 (DB 진리값)
+  const processed = fetchProcessedSlugs();
+  if (processed) {
+    const { lastDone, next } = computeCyclePosition(processed);
+    console.log(`\n=== cycle 위치 (DB 기준) ===`);
+    if (lastDone) console.log(`마지막 처리 cycle: R${lastDone.n} (${lastDone.doneCount}/${lastDone.total}, 끝=${lastDone.lastSlug})`);
+    if (next) console.log(`다음 cycle:        R${next.n} (시작=${next.firstSlug})  → 'node scripts/master-cycle-helper.cjs --cycle=${next.n}' 또는 '--next-cycle'`);
+    else console.log(`다음 cycle:        없음 (전체 처리 완료)`);
+  }
+
+  console.log(`\n다음 단계: data/cycle/_dispatcher_manual.md 의 ENTRY POINT 6 step 따라 진행.`);
+  console.log(`(보조 메모리: agent/memory/project_careerwiki_cycle_progress.md — drift 시 A 값으로 갱신)`);
 }
 
 // ─── main ───

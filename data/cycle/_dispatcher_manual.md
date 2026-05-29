@@ -2,6 +2,17 @@
 
 2026-05-25 신규 (per-spawn 4 step) / 2026-05-29 보강 (entry-point 6 step + helper script 연결).
 
+> 📌 **이 파일은 self-contained** — 메모리 시스템 접근 불가해도 이 파일 + helper script만으로 진행 가능. (2026-05-28 새 세션이 메모리 못 읽어 작업 못 찾은 사고 후속)
+
+## 📊 현재 진행 상태 (스냅샷 — 라이브 진리값은 `--status`)
+
+- 마지막 완료: **R11** (검침사무원까지) + SR cycle 89직업(totalE<19 보강)
+- **다음: R12** (검표원 + 게임 series 24개)
+- 누적 master: A=679(전체 마커) / B=609(enhance 풀 사이클) — 2026-05-29 기준
+- master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업, R7~R229 사전할당)
+
+> ⚠️ 위 숫자는 스냅샷. **항상 `node scripts/master-cycle-helper.cjs --status` 로 라이브 확인** (DB 진리값 — 마지막 cycle/다음 cycle 자동 탐지).
+
 ---
 
 # ⭐ ENTRY POINT — 사용자 prompt → 6 step action
@@ -13,10 +24,11 @@
 - "다음 cycle 진행", "R{N} 진행", "배치 이어서", "직업 데이터 보완 이어가"
 - "cycle 돌려", "master 배치 진행"
 
-## Step 1 — 메모리 entry point 읽기
+## Step 1 — 현황 파악 (메모리 의존 X)
 
+먼저 `node scripts/master-cycle-helper.cjs --status` 실행 (Step 2와 동일 — 라이브 DB 진리값). 보조로 메모리 접근되면 읽되, **없어도 됨**:
 ```
-agent/memory/project_careerwiki_cycle_progress.md   (dispatcher 메모리)
+(보조, optional) agent/memory/project_careerwiki_cycle_progress.md   (dispatcher 메모리 — 자동 inject 안 될 수 있음)
 ```
 
 여기서 파악: 마지막 완료 cycle (예: R11), 다음 시작 위치 (예: R12=검표원·게임 series), 누적 master 카운트 (A 정의 679), 잔존 부실 직업, 자산 경로.
