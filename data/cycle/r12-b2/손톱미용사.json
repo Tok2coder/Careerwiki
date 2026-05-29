@@ -1,0 +1,81 @@
+{
+  "_jobSlug": "손톱미용사",
+  "_omegaSelfAudit": true,
+  "fields": {
+    "overviewProspect.main": "향후 5년간 네일아티스트(손톱미용사)의 고용은 다소 증가할 것으로 전망되며, 외모에 대한 관심 증가와 네일아트 대중화로 대도시를 중심으로 네일 전문점이 꾸준히 늘고 있으나, 점포가 대도시에 집중되고 배출 인력이 많아 입직 경쟁은 치열할 수 있다.[1]",
+    "detailWlb.wlbDetail": "네일아티스트는 네일아트 전문점, 호텔·웨딩·뷰티 업체, 개인 네일숍 등에서 근무하며, 고객 예약 중심으로 운영되어 방문이 몰리는 주말·저녁에 업무가 집중되고 정밀한 시술을 위해 오래 앉아 손을 많이 쓰는 작업이 많다.[1]",
+    "detailWlb.socialDetail": "네일아티스트는 고객의 손끝을 아름답게 가꿔 만족과 자신감을 주고 디자인 감각을 발휘할 수 있다는 점에서 보람이 크지만, 고객과 가까이서 장시간 응대하므로 소통 능력과 함께 손목·어깨 등 근골격계 건강 관리가 필요하다.[1]",
+    "trivia": "미용사(네일) 자격은 2014년 국가기술자격으로 신설되었고, 2015년 4월부터 손톱·발톱 미용업(네일숍) 영업신고를 하려면 미용사(네일) 자격 취득자가 있어야 한다.[1] 미용사(네일) 필기시험은 네일개론, 공중위생관리학, 네일미용기술 과목으로 치러지고 실기시험은 네일미용실무를 평가한다.[2]",
+    "overviewAbilities.technKnow": "네일아티스트가 되려면 네일아트 민간학원이나 전문대학·특성화고의 미용(네일) 관련 학과에서 3~6개월 이상 네일 이론과 실기를 배우는 것이 일반적이다.[1] 손톱·발톱 미용업에 종사하려면 공중위생관리법에 따라 미용사(네일) 국가기술자격을 취득하고 미용사 면허를 받아야 한다.[2] 미용사(네일) 시행기관은 한국산업인력공단이며 보건복지부가 소관 부처다.[3]",
+    "way": "네일아티스트가 되는 일반적인 경로는 네일 전문학원이나 전문대학·특성화고의 미용 관련 학과에서 네일 기술을 익히는 것이다.[1] 이후 국가기술자격 미용사(네일) 시험에 합격하고 시·군·구청에 미용사 면허를 신청해 발급받는다.[2] 면허 취득 후에는 네일숍에 취업해 경력을 쌓은 뒤 실장으로 성장하거나 소자본으로 개인 네일숍을 창업하는 경우가 많다.[3]",
+    "detailReady.curriculum": [
+      "네일 관련 특성화고등학교나 미용 고등학교에서 기초 네일 이론과 실기를 배울 수 있다 [1]",
+      "전문대학·대학의 미용(네일)과에 진학하면 네일아트, 위생관리, 화장품학 등을 심화 학습할 수 있다 [2]",
+      "네일 전문 사설학원에서 보통 3~6개월 과정으로 미용사(네일) 자격시험 대비 교육을 받는다 [3]",
+      "미용사(네일) 필기 과목은 네일개론, 공중위생관리학, 네일미용기술이며 실기는 네일미용실무다 [4]"
+    ],
+    "detailReady.recruit": [
+      "네일아트 전문점(네일숍)이 주요 취업처이며, 호텔·웨딩홀·뷰티 업체의 네일 부서에도 취업할 수 있다 [1]",
+      "손톱·발톱 미용업으로 창업하려면 미용사(네일) 자격과 미용사 면허를 갖춰 시·군·구청에 영업신고를 해야 한다 [2]",
+      "경력을 쌓은 뒤 소자본으로 개인 네일숍을 창업하거나 프리랜서 네일아티스트로 활동할 수 있다 [3]"
+    ],
+    "detailReady.certificate": [
+      "미용사(네일) — 손톱·발톱 미용업 영업신고에 필요한 국가기술자격으로, 응시자격 제한이 없다 [1]",
+      "미용장 — 미용사 자격 취득 후 7년 이상 실무경력자가 응시하는 최상위 국가기술자격이다 [2]"
+    ],
+    "detailReady.training": [
+      "네일 전문학원에서 네일아트 실무와 위생관리를 배우며, 숙련 네일아티스트를 보조하면서 현장 기술을 익힐 수 있다 [1]",
+      "미용업 영업자와 종사자는 공중위생관리법에 따라 매년 위생교육을 이수해야 한다 [2]"
+    ],
+    "heroTags": ["네일아티스트", "페디큐어리스트", "손톱미용사", "네일리스트", "네일미용", "네일아트"],
+    "youtubeLinks": [
+      { "url": "https://www.youtube.com/watch?v=VpGjHxn3na4", "title": "[알고잡스] 9년차 네일 아티스트가 말하는 네일 아티스트가 되는 법", "description": "" },
+      { "url": "https://www.youtube.com/watch?v=6ccZNMVjbss", "title": "[V-log] 네일 국가 자격증 취득 브이로그 - 네일아트 학원·큐넷 실기 접수", "description": "" }
+    ]
+  },
+  "sources": {
+    "overviewProspect.main": [
+      { "id": 1, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 네일아티스트 직업 전망" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "id": 2, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 네일아티스트 근무처·근무 환경" }
+    ],
+    "detailWlb.socialDetail": [
+      { "id": 3, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 네일아티스트 직업 특성" }
+    ],
+    "trivia": [
+      { "id": 4, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 미용사(네일) 영업신고 자격 강화(2015)" },
+      { "id": 5, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7957", "text": "Q-net — 미용사(네일) 종목 정보" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "id": 6, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 네일아티스트 교육 과정" },
+      { "id": 7, "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1009&ccfNo=1&cciNo=2&cnpClsNo=1", "text": "찾기쉬운 생활법령정보 — 미용사 면허 취득 요건" },
+      { "id": 8, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7957", "text": "Q-net — 미용사(네일) 시행기관" }
+    ],
+    "way": [
+      { "id": 9, "url": "https://ko.wikipedia.org/wiki/미용사", "text": "위키백과 — 미용사 교육 과정" },
+      { "id": 10, "url": "https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A09006&CappBizCD=14600000027", "text": "정부24 — 이용사 및 미용사 면허발급 신청" },
+      { "id": 11, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 네일아티스트 진출·창업" }
+    ],
+    "detailReady.curriculum": [
+      { "id": 12, "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1009&ccfNo=1&cciNo=2&cnpClsNo=1", "text": "찾기쉬운 생활법령정보 — 미용사 면허(미용 학과)" },
+      { "id": 13, "url": "https://ko.wikipedia.org/wiki/미용사", "text": "위키백과 — 미용 교육 과정" },
+      { "id": 14, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 네일 학원 교육(3~6개월)" },
+      { "id": 15, "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=7957", "text": "Q-net — 미용사(네일) 실기 과목" }
+    ],
+    "detailReady.recruit": [
+      { "id": 16, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 네일아티스트 취업처" },
+      { "id": 17, "url": "https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A09006&CappBizCD=14600000027", "text": "정부24 — 미용업 영업신고·면허" },
+      { "id": 18, "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1009&ccfNo=1&cciNo=2&cnpClsNo=1", "text": "찾기쉬운 생활법령정보 — 미용사 면허·창업" }
+    ],
+    "detailReady.certificate": [
+      { "id": 19, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7957", "text": "Q-net — 미용사(네일) 종목 정보" },
+      { "id": 20, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7927", "text": "Q-net — 미용장 자격 정보" }
+    ],
+    "detailReady.training": [
+      { "id": 21, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%84%A4%EC%9D%BC%EC%95%84%ED%8B%B0%EC%8A%A4%ED%8A%B8/", "text": "직업백과 — 네일아티스트 실무 훈련" },
+      { "id": 22, "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=3&cciNo=1&cnpClsNo=2&csmSeq=1009&popMenu=ov", "text": "찾기쉬운 생활법령정보 — 미용업 위생교육 의무" }
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — 스텁 풀 보강: way·prospect·abilities·trivia·wlbDetail·socialDetail 신규 + detailReady curriculum/recruit/certificate/training [N]+sources + youtubeLinks 2 + heroTags 확장. distinct URL 0→8 (personal-service pool: 미용사(네일) q-net 7957·easylaw·직업백과·gov.kr·위키)"
+}
