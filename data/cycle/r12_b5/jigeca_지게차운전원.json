@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "way": "지게차운전원이 되려면 국가기술자격인 지게차운전기능사를 취득하는 것이 일반적이다. 자격시험은 한국산업인력공단(Q-net)이 시행하며 필기 60문항(60분)과 작업형 실기로 구성되고 상시검정으로 치러진다.[1] 또한 「건설기계관리법」 제26조에 따라 지게차를 조종하려면 시장·군수·구청장이 발급하는 건설기계조종사면허를 받아야 하는데, 국가기술자격 취득과 적성검사 합격이 전제되며 3톤 미만 소형 지게차는 시·도지사가 지정한 교육기관의 소정 교육으로 자격을 갈음할 수 있다.[2] 면허 취득 후에도 「건설기계관리법」에 따라 3년마다 건설기계조종사 안전교육(지게차는 하역운반 등 기타 건설기계 과정, 4시간)을 이수해야 한다.[3] 자격과 면허를 갖추면 연 매출 약 160조 원·종사자 85만 명 규모의 물류산업을 중심으로 물류창고·항만·제조공장 등에 취업하며, 경력을 쌓아 기중기·타워크레인 등으로 면허를 확장하거나 현장 반장·관리직으로 성장할 수 있다.[4]",
+    "trivia": "지게차의 원형은 1917년 미국 클라크(Clark)社가 공장용 동력 운반·승강 트랙터를 개발하면서 등장했으며, 2013년 기준 글로벌 상위 20개 제조사 판매량이 94만 4,405대(매출 304억 달러)에 이를 만큼 세계적으로 보편화된 물류 장비다.[1] 국내에서 지게차운전기능사는 2024년 실기 접수가 13만 건을 넘을 정도로 응시자가 많은 대표적 국가기술자격으로, 필기 합격률 74.6%, 실기 합격률 46.8% 수준이다.[2] 지게차는 「건설기계관리법」상 등록·검사 대상으로 사용연수 20년 미만은 2년마다 정기검사를 받아야 한다.[3] 2025년 3월 기준 등록 건설기계 55만여 대 가운데 노후 등으로 한 해 말소된 지게차도 1,590대에 이른다.[4]",
+    "overviewProspect": {
+      "main": "이커머스 확대로 물류창고와 풀필먼트센터 운영이 늘면서 지게차운전원 수요는 꾸준히 유지된다. 2024년 생활물류 업계는 택배 물량 증가와 마이크로 풀필먼트 확산이 이어졌고, 2025년에는 초개인화·자율배송이 핵심 키워드로 부상했다.[1] 국내 물류 자동화 시장은 2024년 15억 6,470만 달러에서 2033년 34억 8,630만 달러로 연평균 9.31% 성장할 전망이어서, 자동화 설비와 사람이 협업하는 형태로 작업 환경이 바뀌고 있다.[2] 다만 저출산·고령화로 물류 노동인구가 줄어드는 가운데 소규모 창고나 불규칙 적재 환경에서는 숙련 지게차운전원이 여전히 필수적이다.[3]"
+    },
+    "overviewAbilities": {
+      "technKnow": "지게차운전원으로 일하기 위해서는 장비를 조종·운전하는 법을 배워야 하는데, 고등학교 관련 학과·직업전문학교·사설학원 등에서 건설기계·기중기·지게차 관련 이론과 실습을 배울 수 있다. 이들 교육과정을 이수한 후 기종별로 관련 자격을 취득해야 운전원으로 종사할 수 있으며, 3톤 미만 지게차는 소정의 교육을 이수하면 3톤 미만 건설기계조종사 면허를 발급받을 수 있다.[1] 면허 취득 이후에도 건설기계 구조·작업안전·재해사례를 다루는 조종사 안전교육(4시간, 약 3만 2천 원)을 정기적으로 이수해 안전 운전 역량을 유지해야 한다.[2]"
+    },
+    "detailWlb": {
+      "wlbDetail": "물류창고나 제조공장은 교대근무가 많아 주·야간 근무가 발생하며, 실외 작업이나 냉동창고 등 특수 환경에서는 체력적 부담이 따른다. 특히 지게차는 제조업 사망사고의 주요 기인물로 꼽히는 고위험 장비여서, 2024년 산업재해 사고사망자 589명 중 제조업에서만 175명(29.7%)이 발생했고 끼임·부딪힘이 주요 유형이었다.[1] 이 때문에 사업장은 후방감지센서·작업자 접근경보장치 설치와 보행자 통로 분리 등 안전관리에 비중을 두며, 운전원도 3년 주기 안전교육과 작업 전 점검을 일상적으로 수행한다.[2]",
+      "socialDetail": "지게차운전원은 연 매출 160조 원대, 종사자 약 85만 명에 이르는 물류산업의 핵심 운영 인력으로 꾸준한 수요가 있다.[1] 다만 단순 기능직이라는 사회적 인식이 남아 위상은 평균 수준에 머무르지만, 이커머스 성장과 물류 자동화로 장비 운용·안전관리 전문성이 강조되면서 직무 전문성에 대한 인식도 점차 높아지고 있다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "지게차운전기능사 필기·실기시험 준비 — 한국산업인력공단 상시검정 응시 [1]",
+        "「건설기계관리법」에 따른 건설기계조종사면허 발급 신청(시·군·구) [2]",
+        "건설기계조종사 안전교육 이수 — 하역운반 등 기타 건설기계 과정(4시간) [3]",
+        "물류·하역 현장 실무 적응 — 종사자 약 85만 명 규모의 물류산업 진입 [4]"
+      ],
+      "recruit": [
+        "물류창고·이커머스 풀필먼트센터의 적재·하역 인력 채용 [1]",
+        "항만·하역업체 및 제조공장 생산현장의 지게차운전원 채용 [2]",
+        "건설기계조종사면허 보유자를 찾는 건설현장 자재운반 채용 [3]",
+        "파견업체 통한 단기직 입사 후 정규직 전환 — 물류 자동화 확대로 숙련 인력 선호 [4]"
+      ],
+      "training": [
+        "기중기·타워크레인 등 다른 건설기계조종사면허 추가 취득으로 직무 확장 [1]",
+        "3년 주기 건설기계조종사 안전교육 이수로 면허 유지 [2]",
+        "물류관리사 등 자격 취득 후 물류센터 운영·관리직 전환 [3]"
+      ]
+    },
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "탐색어 7개: 지게차운전기능사 실기, 지게차운전원 직업, 지게차 운전 방법, 물류창고 지게차, 지게차 안전교육, 건설기계조종사면허, 지게차 자격증 취업. 카테고리 4개 커버: 현직자·인터뷰(지게차운전원 직업), 직무·실무(지게차 운전 방법·물류창고 지게차), 강의·교육(지게차운전기능사 실기·지게차 안전교육), 진로·면접(지게차 자격증 취업·건설기계조종사면허). oembed 200 + 한국어 매칭 검증 통과 영상 미확보 — 다음 사이클 재탐색."
+  },
+  "sources": {
+    "way": [
+      { "url": "https://www.invione.com/jobs/certificate/7875", "text": "인비원 자격정보 — 지게차운전기능사 시험구성·상시검정" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계관리법 제26조 건설기계조종사면허" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 건설기계조종사 안전교육(하역운반 4시간)" },
+      { "url": "https://www.mobiinside.co.kr/2025/12/24/logistics-automation-4/", "text": "모비인사이드 — 국내 물류산업 매출 160조·종사자 85만" }
+    ],
+    "trivia": [
+      { "url": "https://en.wikipedia.org/wiki/Forklift", "text": "Wikipedia — Forklift 역사·글로벌 판매량" },
+      { "url": "https://www.invione.com/jobs/certificate/7875", "text": "인비원 — 지게차운전기능사 합격률 추이" },
+      { "url": "https://www.kcesi.or.kr/home/mainBusiness/ctcqInspct/fdrmInspct/fdrmInspct01.jsp", "text": "대한건설기계안전관리원 — 건설기계 정기검사 유효기간" },
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 2025년 건설기계 등록·말소 현황" }
+    ],
+    "overviewProspect.main": [
+      { "url": "https://www.klnews.co.kr/news/articleView.html?idxno=314438", "text": "물류신문 — 2024 생활물류 리뷰·2025 키워드" },
+      { "url": "https://www.globalresearch.co.kr/insight/logistics-automation-market-imarc/", "text": "글로벌리서치 — 한국 물류 자동화 시장 전망" },
+      { "url": "https://www.mobiinside.co.kr/2025/12/24/logistics-automation-4/", "text": "모비인사이드 — 물류 노동인구 감소·자동화 대응" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계관리법 제26조 소형건설기계 교육" },
+      { "url": "https://kocema.org/page/business06_01.php", "text": "한국건설기계산업협회 — 건설기계조종사 안전교육 과정" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "url": "https://www.anjunj.com/news/articleView.html?idxno=40305", "text": "안전저널 — 2024년 사고사망 현황(제조업 175명)" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 건설기계조종사 안전교육" }
+    ],
+    "detailWlb.socialDetail": [
+      { "url": "https://www.mobiinside.co.kr/2025/12/24/logistics-automation-4/", "text": "모비인사이드 — 국내 물류산업 규모" },
+      { "url": "https://www.klnews.co.kr/news/articleView.html?idxno=314438", "text": "물류신문 — 이커머스·물류 자동화 동향" }
+    ],
+    "detailReady.curriculum": [
+      { "url": "https://www.invione.com/jobs/certificate/7875", "text": "인비원 — 지게차운전기능사 상시검정" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계조종사면허 발급" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 건설기계조종사 안전교육" },
+      { "url": "https://www.mobiinside.co.kr/2025/12/24/logistics-automation-4/", "text": "모비인사이드 — 물류산업 종사자 규모" }
+    ],
+    "detailReady.recruit": [
+      { "url": "https://www.klnews.co.kr/news/articleView.html?idxno=314438", "text": "물류신문 — 풀필먼트센터 운영 동향" },
+      { "url": "https://www.mobiinside.co.kr/2025/12/24/logistics-automation-4/", "text": "모비인사이드 — 물류·제조 현장 인력" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계조종사면허 요건" },
+      { "url": "https://www.globalresearch.co.kr/insight/logistics-automation-market-imarc/", "text": "글로벌리서치 — 물류 자동화에 따른 숙련 인력 수요" }
+    ],
+    "detailReady.training": [
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계조종사면허 종류" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 건설기계조종사 안전교육" },
+      { "url": "https://www.klnews.co.kr/news/articleView.html?idxno=314438", "text": "물류신문 — 물류센터 운영·관리직" }
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewProspect·overviewAbilities·detailWlb(wlbDetail+socialDetail)·detailReady(curriculum+recruit+training)·youtubeLinks. 기존 origin self-cite(career/wagework)·q-net crf005 카탈로그 출처를 한국 1차 deep 출처로 교체. industry=minor(건설기계 operator/물류 기능직). distinct URL 11 / totalEntries 28. pool-limited: KOSHA·law.go.kr·moel 직접 fetch 차단(Jina 폴백), namu 403, q-net crf005 Rule25 reject. sal·summary·overviewWork·sidebar·careerTree 미접촉.",
+  "_jobSlug": "지게차운전원",
+  "_omegaSelfAudit": true
+}
