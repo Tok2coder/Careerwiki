@@ -1,0 +1,84 @@
+{
+  "_jobSlug": "피부미용사",
+  "_omegaSelfAudit": true,
+  "fields": {
+    "overviewProspect.main": "한국직업전망에 따르면 피부미용사 및 체형관리사의 고용은 향후 10년간 다소 증가할 것으로 전망되며, 종사자 수는 2015년 약 9만 8천 명에서 2025년 약 11만 3천 명으로 연평균 1.5% 늘고, 피부미용업 사업체 수도 2008년 10,181개에서 2014년 15,618개로 꾸준히 증가했다.[1] 생활·소득 수준 향상과 외모·건강에 대한 관심 증가, 남성 고객층 확대가 일자리에 긍정적이나, 경기 변동에 민감하고 관련 인력 배출이 늘어 안정적인 업체 취업 경쟁은 치열한 편이다.[2]",
+    "detailWlb.wlbDetail": "피부미용사는 일반 피부관리실(에스테틱)과 피부과 부설 관리실, 스파, 체형관리실, 화장품·미용기기 업체 등 다양한 곳에서 근무한다.[1] 고객 예약을 기반으로 일하기 때문에 방문이 몰리는 저녁 시간과 주말에 업무가 집중되는 편이며, 시술 중 오래 서 있어 체력 관리가 필요하다.[2]",
+    "detailWlb.socialDetail": "피부미용사는 고객의 피부 고민을 함께 관리하며 자신감 회복을 돕는다는 점에서 보람을 느낄 수 있다.[1] 다만 고객과 밀착해 장시간 응대하므로 친절한 소통 능력과 함께 감정노동·체력 관리가 요구된다.[2]",
+    "trivia": "미용사(피부) 자격은 2008년에 신설되어 기존 미용사 자격에서 분리되었으며, 현재 국가기술자격 미용사는 일반·피부·네일·메이크업 4개 종목으로 운영된다.[1] 미용사(피부)의 필기시험은 피부미용학, 피부학 및 해부생리학, 피부미용기기학, 화장품학, 공중위생관리학 과목으로 치러지고 실기시험은 피부미용실무를 평가하며, 각 시험에서 100점 만점에 60점 이상이면 합격한다.[2]",
+    "overviewAbilities.technKnow": "피부미용사가 되려면 미용 관련 고등학교·특성화고등학교나 전문대학·대학의 피부미용 관련 학과, 또는 직업전문학교·사설 학원에서 피부미용 이론과 실기를 배우는 것이 유리하다.[1] 피부관리실 등에서 일하려면 공중위생관리법에 따라 미용사(피부) 국가기술자격을 취득한 뒤 미용사 면허를 받아야 한다.[2] 미용사(피부) 필기시험은 피부미용학, 피부학 및 해부생리학, 피부미용기기학, 화장품학, 공중위생관리학으로 구성되고 실기시험은 피부미용실무를 평가한다.[3]",
+    "way": "피부미용사가 되는 일반적인 경로는 전문대학·대학의 피부미용 관련 학과나 특성화고등학교, 사설 미용학원에서 피부미용 이론과 실기를 익히는 것이다.[1] 이후 국가기술자격 미용사(피부) 시험에 합격하고 시·군·구청에 미용사 면허를 신청해 발급받으면 피부미용 업무를 수행할 수 있다.[2] 면허 취득 후에는 피부관리실(에스테틱)에 취업해 경력을 쌓은 뒤 실장·원장으로 성장하거나 개인 피부관리실을 창업하며, 화장품·미용기기 업체나 스파로도 진출할 수 있다.[3]",
+    "detailReady.curriculum": [
+      "피부미용 관련 특성화고등학교에 진학하면 고교 과정부터 피부미용 이론과 실기를 배울 수 있다 [1]",
+      "전문대학·대학의 피부미용과(에스테틱과)에 진학하면 피부관리, 피부미용기기, 화장품학 등을 심화 학습할 수 있다 [2]",
+      "직업전문학교와 사설 피부미용학원에서도 미용사(피부) 자격시험 대비 교육과정을 운영한다 [3]",
+      "미용사(피부) 필기 과목은 피부미용학, 피부학 및 해부생리학, 피부미용기기학, 화장품학, 공중위생관리학이며 실기는 피부미용실무다 [4]"
+    ],
+    "detailReady.recruit": [
+      "일반 피부관리실(에스테틱), 피부과 부설 피부관리실, 스파, 체형관리실 등에 취업할 수 있다 [1]",
+      "화장품 업체나 미용기기 업체의 교육·시연 담당으로도 진출할 수 있다 [2]",
+      "경력을 쌓은 뒤 개인 피부관리실을 창업하거나 프리랜서 피부관리사로 활동할 수 있다 [3]"
+    ],
+    "detailReady.certificate": [
+      "미용사(피부) — 피부미용 업무에 필요한 국가기술자격으로, 응시자격 제한 없이 취득할 수 있다 [1]",
+      "미용장 — 미용사 자격 취득 후 7년 이상 실무경력자가 응시하는 최상위 국가기술자격이다 [2]"
+    ],
+    "detailReady.training": [
+      "직업전문학교와 사설 피부미용학원에서 피부관리 실무와 기기 사용법을 배우며, 숙련 피부미용사를 보조하면서 현장 기술을 익힐 수 있다 [1]",
+      "미용업 영업자와 종사자는 공중위생관리법에 따라 매년 위생교육을 이수해야 한다 [2]"
+    ],
+    "heroTags": ["피부관리사", "피부미용사", "에스테틱", "에스테티션", "피부미용", "뷰티테라피"],
+    "youtubeLinks": [
+      { "url": "https://www.youtube.com/watch?v=roOozRGC_zA", "title": "피부 미용사 자격증 필기 하루만에 합격하기 - 이기적 피부 키워드 특강 [권쌤tv]", "description": "" },
+      { "url": "https://www.youtube.com/watch?v=sSJezVEgZHI", "title": "[피부미용사필기] 피부미용학 1강 - 피부 국가자격증 이론강의", "description": "" }
+    ]
+  },
+  "sources": {
+    "overviewProspect.main": [
+      { "id": 1, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%A0%84%EB%A7%9D/%ED%94%BC%EB%B6%80%EB%AF%B8%EC%9A%A9%EC%82%AC-%EB%B0%8F-%EC%B2%B4%ED%98%95%EA%B4%80%EB%A6%AC%EC%82%AC/", "text": "직업백과 — 피부미용사 및 체형관리사 직업전망" },
+      { "id": 2, "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19056", "text": "잡코리아 — 피부관리사 직업사전(전망)" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "id": 3, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%A0%84%EB%A7%9D/%ED%94%BC%EB%B6%80%EB%AF%B8%EC%9A%A9%EC%82%AC-%EB%B0%8F-%EC%B2%B4%ED%98%95%EA%B4%80%EB%A6%AC%EC%82%AC/", "text": "직업백과 — 피부미용사 근무처" },
+      { "id": 4, "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19056", "text": "잡코리아 — 피부관리사 근무 환경" }
+    ],
+    "detailWlb.socialDetail": [
+      { "id": 5, "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19056", "text": "잡코리아 — 피부관리사 직업사전" },
+      { "id": 6, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%A0%84%EB%A7%9D/%ED%94%BC%EB%B6%80%EB%AF%B8%EC%9A%A9%EC%82%AC-%EB%B0%8F-%EC%B2%B4%ED%98%95%EA%B4%80%EB%A6%AC%EC%82%AC/", "text": "직업백과 — 피부미용사 근무 특성" }
+    ],
+    "trivia": [
+      { "id": 7, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7947", "text": "Q-net — 미용사(피부) 종목 정보" },
+      { "id": 8, "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=7947", "text": "Q-net — 미용사(피부) 실기 시험 안내" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "id": 9, "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19056", "text": "잡코리아 — 피부관리사 자격·교육" },
+      { "id": 10, "url": "https://www.easylaw.go.kr/CSP/CnpClsMainBtr.laf?popMenu=ov&csmSeq=1012&ccfNo=1&cciNo=2&cnpClsNo=1", "text": "찾기쉬운 생활법령정보 — 미용사(피부) 면허 취득 요건" },
+      { "id": 11, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7947", "text": "Q-net — 미용사(피부) 시험과목" }
+    ],
+    "way": [
+      { "id": 12, "url": "https://ko.wikipedia.org/wiki/미용사", "text": "위키백과 — 미용사 교육 과정" },
+      { "id": 13, "url": "https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A09006&CappBizCD=14600000027", "text": "정부24 — 이용사 및 미용사 면허발급 신청" },
+      { "id": 14, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%A0%84%EB%A7%9D/%ED%94%BC%EB%B6%80%EB%AF%B8%EC%9A%A9%EC%82%AC-%EB%B0%8F-%EC%B2%B4%ED%98%95%EA%B4%80%EB%A6%AC%EC%82%AC/", "text": "직업백과 — 피부미용사 진출 분야" }
+    ],
+    "detailReady.curriculum": [
+      { "id": 15, "url": "https://www.easylaw.go.kr/CSP/CnpClsMainBtr.laf?popMenu=ov&csmSeq=1012&ccfNo=1&cciNo=2&cnpClsNo=1", "text": "찾기쉬운 생활법령정보 — 미용사(피부) 면허(미용 학과)" },
+      { "id": 16, "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19056", "text": "잡코리아 — 피부관리사 교육 과정" },
+      { "id": 17, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7947", "text": "Q-net — 미용사(피부) 자격 정보" },
+      { "id": 18, "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=7947", "text": "Q-net — 미용사(피부) 실기 과목" }
+    ],
+    "detailReady.recruit": [
+      { "id": 19, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%A0%84%EB%A7%9D/%ED%94%BC%EB%B6%80%EB%AF%B8%EC%9A%A9%EC%82%AC-%EB%B0%8F-%EC%B2%B4%ED%98%95%EA%B4%80%EB%A6%AC%EC%82%AC/", "text": "직업백과 — 피부미용사 취업처" },
+      { "id": 20, "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19056", "text": "잡코리아 — 피부관리사 진출 분야" },
+      { "id": 21, "url": "https://www.easylaw.go.kr/CSP/CnpClsMainBtr.laf?popMenu=ov&csmSeq=1012&ccfNo=1&cciNo=2&cnpClsNo=1", "text": "찾기쉬운 생활법령정보 — 피부관리실 창업·면허" }
+    ],
+    "detailReady.certificate": [
+      { "id": 22, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7947", "text": "Q-net — 미용사(피부) 종목 정보" },
+      { "id": 23, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7927", "text": "Q-net — 미용장 자격 정보" }
+    ],
+    "detailReady.training": [
+      { "id": 24, "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19056", "text": "잡코리아 — 피부관리사 실무 훈련" },
+      { "id": 25, "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=3&cciNo=1&cnpClsNo=2&csmSeq=1009&popMenu=ov", "text": "찾기쉬운 생활법령정보 — 미용업 위생교육 의무" }
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — 스텁 풀 보강: way·prospect·abilities·trivia·wlbDetail·socialDetail 신규 작성 + detailReady curriculum/recruit/certificate/training [N]+sources + youtubeLinks 2 + heroTags 확장. distinct URL 0→9 (personal-service pool: 미용사(피부) q-net 종목·easylaw 면허/위생·직업사전·전망·gov.kr)"
+}
