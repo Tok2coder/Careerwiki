@@ -402,7 +402,7 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
       }
     },
     c
-  ).catch((error) => {
+  ).catch(async (error) => {
     // Error handling
 
     // Try sample fallback
@@ -422,10 +422,41 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
       }
     }
 
-    // 404 for missing profiles -> 검색 페이지로 리다이렉트
+    // 2026-05-24 v4: PROFILE_NOT_FOUND 처리 — jobs row 있으면 minimal stub 200, 없으면 검색 302.
+    // - 옛 v3 (검색 redirect)는 검색 결과 카드 클릭 시 다시 검색으로 무한 루프 발생
+    // - jobs row 살아있으나 UCJ NULL + base 비어있는 직업은 minimal stub 페이지로 200 응답
+    // - 진짜 jobs row 없는 경우 (404)만 검색 redirect
     if (error.message === 'PROFILE_NOT_FOUND') {
-      const searchQuery = decodeURIComponent(slug).replace(/-/g, ' ')
-      return c.redirect(`/search?q=${encodeURIComponent(searchQuery)}`)
+      const decodedName = decodeURIComponent(slug).replace(/-/g, ' ')
+      let jobRow: { name: string } | null = null
+      if (c.env?.DB) {
+        try {
+          jobRow = await c.env.DB.prepare(
+            'SELECT name FROM jobs WHERE slug = ? OR id = ? LIMIT 1'
+          ).bind(slug, resolvedId).first<{ name: string }>()
+        } catch { /* DB error → fallthrough to search */ }
+      }
+      if (jobRow?.name) {
+        const jobName = jobRow.name
+        const stubBody = renderDetailFallback({
+          icon: 'fa-clock',
+          iconColor: 'text-amber-400',
+          title: jobName,
+          description: '이 직업의 상세 정보는 아직 등록되지 않았습니다.',
+          note: '데이터 보완이 진행되면 이 페이지에 자동으로 반영됩니다.',
+          ctaHref: `/search?q=${encodeURIComponent(jobName)}`,
+          ctaLabel: '비슷한 직업 검색하기'
+        })
+        return c.html(
+          renderLayoutWithContext(c,
+            stubBody,
+            `${jobName} - CareerWiki`,
+            `${jobName} 직업 정보`
+          )
+        )
+      }
+      // jobs row 자체 없음 → 검색 redirect
+      return c.redirect(`/search?q=${encodeURIComponent(decodedName)}`, 302)
     }
 
     // 500 for other errors

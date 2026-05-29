@@ -325,6 +325,16 @@ next: <Phase 1 재시작 / 4단계 인정 + pending 기록 / STOP + 사용자 �
 
 27. **summary 본문 길이 과길이 WARN** (2026-05-22 신규) — `summary` (직업 설명) 본문은 careernet API 원본 영역 — 한국 직업정보 표준에 따라 60~150자 권장. master skill이 신규 작성 시 LLM이 폭주하는 사고 패턴 (`AI신뢰성검증전문가` 212자 / `cam-프로그래머` 261자 / `cfx아티스트` 284자) 차단. 작성 가이드: **summary는 한 문장 (50~120자) — 무엇을 하는 직업인지만 정의**. trivia/way/overviewProspect.main에 상세 풀어쓰기. validate `[summaryTooLong]` WARN level (≥200자). FAIL 아님 — 기존 데이터 보호. 신규 작성 시 master skill self-audit summary 길이 의무.
 
+28. **🚨 Cycle 단위 호출 — 자기 batch 외 직업 절대 X** (2026-05-25 신규, 사용자 명시) — master skill은 호출자(dispatcher 또는 사용자)가 명시한 직업 list만 처리. **NULL 풀에서 가나다순 다음 직업 자동 SELECT 절대 X**. 자기 batch (보통 5 직업) 처리 끝나면 즉시 종료. 2026-05-24 사고 (P1/R8 sub-agent 자동 cycle 위반 80+ rev): R8 spawn 시 명시 5 직업 외 강·갱·거·소 60+ 직업 자동 박힘 → unmark 정리 + 재처리. 위반 시 즉시 abort + 보고 (Phase X+1 진입 X).
+
+29. **🚨 PowerShell 절대 금지** (2026-05-25 신규, 사용자 명시) — Windows 환경에서도 `Bash` (Git Bash, WSL) 만 사용. PowerShell / pwsh / Invoke-RestMethod 절대 X. 2026-05-24 사고 (sub-agent가 Windows default shell 선택 → 사용자 prompt 막힘). 모든 shell 호출 = Bash tool. `.claude/hooks/powershell-block.cjs` (PreToolUse) 가 차단.
+
+30. **🚨 산업 분류 + pool-limited 절충 기준 명시** (2026-05-25 신규, 사용자 명시) — 룰 17 pool-limited 절충은 명백한 niche 직업에만 적용. 메이저 산업 (금융·IT·법조·항공·항만·반도체·자동차·통신·에너지·의료·교육 등) 직업은 **distinct ≥ 18 발굴 의무. lazy 절충 X**.
+    - **niche 절충 기준 (모두 충족)**: (a) 단일 회사·공장·공정 직업 (예: KT&G 가향기조작원, 단일 공장 화학물질 처리원) (b) 한국 1차 deep URL pool 발굴 시도 8~10개 후 추가 없음 (c) jmCd 부재 / 폐지 자격증 / 단일 학원·협회만 존재
+    - **메이저 산업 절대 절충 X**: 금융(FPSB Korea, 금융감독원, KAFA), IT/보안(KISA, PIPC, NIA), 항공(인천공항공사, 대한항공, 아시아나, ICAO), 항만(부산항만공사, 인천항만공사, KMOU, HMM), 광업(KIGAM, 광물공사), 의료(보건복지부, 의료기관, 학회), 교육(교육부, 학회), 통신(KCC, KTOA), 에너지(한전, 한수원, KOMIPO) 등
+    - **distinct < 18 보고 시 industry classification 명시 의무**: `niche (단일 공정)` / `minor (소규모 산업)` / `major (광범위)` 중 택. major + distinct < 18 = 실패 (재처리 또는 추가 발굴).
+    - **2026-05-25 사고**: Rpri1_B3 5 직업 (개인자산관리사·개인정보보호전문가·객실물품보급반장·갠트리크레인조종원·갱내탐사원) 모두 메이저 산업인데 distinct 6-7로 종료 → 재처리.
+
 ---
 
 ## Examples

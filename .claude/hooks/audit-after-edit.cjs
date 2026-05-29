@@ -25,14 +25,15 @@ if (!fs.existsSync(auditScript)) {
 
 let slug = jobIdOrSlug;
 if (/^\d+$/.test(jobIdOrSlug)) {
+  // 2026-05-24: --json flag 제거 (wrangler 버전 호환 / Windows 환경 fail 사고 후속).
+  // plain stdout에서 regex로 slug 추출.
   try {
     const out = execSync(
-      `wrangler d1 execute careerwiki-kr --remote --json --command "SELECT slug FROM jobs WHERE id=${jobIdOrSlug} LIMIT 1"`,
+      `wrangler d1 execute careerwiki-kr --remote --command "SELECT slug FROM jobs WHERE id=${jobIdOrSlug} LIMIT 1"`,
       { cwd, encoding: 'utf8', timeout: 30000 }
     );
-    const j = JSON.parse(out);
-    const found = j?.[0]?.results?.[0]?.slug;
-    if (found) slug = found;
+    const m = out.match(/"slug":\s*"([^"]+)"/);
+    if (m && m[1]) slug = m[1];
   } catch (e) {
     console.log(`[audit-after-edit] slug 조회 실패: ${e.message?.split('\n')[0]} — id ${jobIdOrSlug}로 시도`);
   }

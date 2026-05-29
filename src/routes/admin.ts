@@ -1075,8 +1075,11 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(merged_profile_json,'$._sources')) > 0 AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND (json_extract(merged_profile_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(merged_profile_json,'$.youtubeLinks')) = 0) AND (json_extract(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)`).first<{ count: number }>(),
       // skillApplied = [job-data-master] 단독 (jobs 탭만, major 탭은 0)
+      // 2026-05-24 rollback v2: 옛 "마커 존재" 카운트는 fake revisions가 page_revisions에 살아있어
+      // RESTORE/정당인용 직업까지 master로 잡혀 over-count (1,324 vs 진짜 ~484).
+      // → 각 entity의 LATEST revision이 [job-data-master] 마커인 경우만 카운트.
       isJob && masterMarkerLike
-        ? db.prepare(`SELECT COUNT(DISTINCT entity_id) as count FROM page_revisions WHERE entity_type = ? AND change_summary LIKE ?`).bind(entityType, masterMarkerLike).first<{ count: number }>()
+        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN jobs j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL`).bind(entityType, masterMarkerLike).first<{ count: number }>()
         : Promise.resolve({ count: 0 } as { count: number }),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND skill_verified_by_user=1`).first<{ count: number }>(),
     ])
@@ -1099,12 +1102,19 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       const map = new Map<string, string>()
       if (!markerLike) return map
       let offset = 0
+      // 2026-05-24 rollback v2: latest revision이 [job-data-master] 인 경우만 master로 표시.
+      // (fake revisions가 page_revisions에 그대로 살아있어도, latest가 [rollback]이면 master 아님)
       while (true) {
         const batch = await db.prepare(
-          `SELECT entity_id, MAX(created_at) as last_at FROM page_revisions
-           WHERE entity_type = ? AND change_summary LIKE ?
-           GROUP BY entity_id
-           ORDER BY entity_id LIMIT 500 OFFSET ?`
+          `WITH latest AS (
+             SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? GROUP BY entity_id
+           )
+           SELECT pr.entity_id, pr.created_at AS last_at FROM page_revisions pr
+           JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id
+           JOIN jobs j ON j.id = pr.entity_id
+           WHERE pr.change_summary LIKE ?
+             AND j.user_contributed_json IS NOT NULL
+           ORDER BY pr.entity_id LIMIT 500 OFFSET ?`
         ).bind(entityType, markerLike, offset).all<{ entity_id: string; last_at: string }>()
         const rows = batch.results || []
         for (const r of rows) {
