@@ -1,0 +1,21 @@
+{
+  "_jobSlug": "이용사",
+  "_omegaSelfAudit": true,
+  "fields": {
+    "detailReady.certificate": [
+      "이용사 — 이발·면도 등 남성 이용 서비스에 필요한 국가기술자격으로, 응시자격 제한 없이 누구나 도전할 수 있다 [1]",
+      "이용사 면허 — 국가기술자격 이용사를 취득한 뒤 관할 시·군·구청에서 이용사 면허를 발급받아야 이용업소를 개설·운영할 수 있다 [2]"
+    ],
+    "youtubeLinks": [
+      { "url": "https://www.youtube.com/watch?v=EBHVJFTgbek", "title": "이발소 NO! 이제는 바버샵으로 간다. / YTN (Yes! Top News)", "description": "" },
+      { "url": "https://www.youtube.com/watch?v=0WSXbL3CGaI", "title": "[서울이용학원, 바버샵엉클부스] 진민준 원장 - 이용사자격증, 이용과 미용의 차이", "description": "" }
+    ]
+  },
+  "sources": {
+    "detailReady.certificate": [
+      { "id": 1, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7908", "text": "Q-net — 이용사 국가기술자격 종목 정보" },
+      { "id": 2, "url": "https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A09006&CappBizCD=14600000027", "text": "정부24 — 이용사 및 미용사 면허발급 신청" }
+    ]
+  },
+  "changeSummary": "[job-data-master] groom — detailReady.certificate 신규(이용사 자격·이용사 면허) [N]+sources 1:1. distinct URL 12→13. 기존 audit OK 영역 전부 보존(덮어쓰기 X)"
+}
