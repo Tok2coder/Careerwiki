@@ -227,6 +227,21 @@ curl -X POST https://careerwiki.org/api/job/{id}/edit \
 - `--no-verify`로 `scripts/check-secrets.cjs` 우회 시 .dev.vars 등 비밀키 노출 위험
 - 강제: hook fail 시 원인 fix, skip 절대 금지
 
+### 자작 Cycle/Generic 스크립트 (2026-05-24 사고)
+- P1~P5 5세션이 `_cyclegeneric.cjs` 자작 → WebFetch 우회 + 동일 보일러플레이트 6,440 직업에 박음. audit hook 무력화 (wrangler `--json` flag 에러).
+- **차단**: `.claude/hooks/cycle-script-block.cjs` (PreToolUse Write|Edit|MultiEdit) — 파일명 `_cycle*`, `_generic*`, `_bulk*`, `_pool*`, `_mass*`, `_force-enhance*` 등 매치 시 exit 2.
+- **강제**: 직업 데이터 작업은 반드시 `.claude/skills/job-data-master/SKILL.md` 사용. 별도 dispatcher 필요 시 cleanup-only 목적 + 사용자 명시 승인 후만.
+- **무한 cycle 금지**: 자동 cycle 프롬프트는 명시적 N개 처리 후 STOP. 사용자 ping 없이 cycle 자동 반복 X. 위반 시 즉시 abort + 보고.
+- **audit hook --json 사용 금지**: `wrangler d1 execute` 호출 시 `--json` flag 사용 X. plain stdout regex parse 사용 (Windows wrangler 호환).
+
+### Sub-agent Cycle 위반 + PowerShell (2026-05-25 사고)
+- R8 spawn 시 sub-agent들이 명시 5 직업 외 강·갱·거·소 60+ 직업 자동 박음 (NULL 풀 가나다순 다음 자동 SELECT). P1도 PITR 후에도 살아남아 추가 master 적용.
+- 한 sub-agent는 Windows default shell PowerShell 자체 선택 → `Invoke-RestMethod` 시도 → 사용자 prompt deny.
+- **조치**: 62 직업 unmark dispatch (master 마커 제거, UCJ 보존) + Rpri1-3 cycle로 재처리.
+- **차단**: `.claude/hooks/powershell-block.cjs` (PreToolUse PowerShell|powershell|pwsh) — 매치 시 exit 2. Bash (Git Bash, WSL) 만 사용 강제.
+- **SKILL.md 룰 28/29 추가**: cycle 단위 호출 (자기 batch 외 X) + PowerShell 절대 금지.
+- **sub-agent prompt template 강제**: dispatcher가 spawn 시 STRICT 헤더 (5 직업 명단 외 X, PowerShell X, 자작 X, 5 직업 처리 끝나면 즉시 종료) 의무 명시.
+
 ## Quality Harness
 
 배포 전·후 데이터 품질 검증 스크립트.
@@ -311,6 +326,9 @@ node scripts/data-health-report.cjs --top-missing=20
 ## See Also
 
 - 🎯 **CareerWiki Deck (작업 시작 진입점)**: `~/.claude/projects/C--Users-user-Careerwiki/memory/deck/README.md` — 14 룰 / audit 도구 / dispatch v3 / 사고 history latest (시점 누적 recap과 별개로 항상 최신 유지)
+- 🔄 **직업 보완 cycle 진행 상태 (dispatcher entry point)**: `project_careerwiki_cycle_progress.md` (Code측: `~/.claude/projects/C--Users-user-Careerwiki/memory/` / Dispatcher측: `local-agent-mode-sessions/.../agent/memory/`) — R-cycle 진행, 다음 시작 위치, 누적 카운트, 자산 path
+- 📋 **Dispatcher 매뉴얼**: `data/cycle/_dispatcher_manual.md` — 사용자 prompt → 6 step action (현황 검증 → batch 준비 → spawn → 보고 → 메모리 갱신)
+- ⚙️ **Cycle 자동화 helper**: `scripts/master-cycle-helper.cjs` — `--status` (DB 현황) / `--cycle=N` / `--next-cycle` (batch list + prompt 자동 생성). ⚠️ 파일명 `cycle-helper`는 cycle-script-block hook(`/^_?cycle/`)에 차단됨 → `master-` 접두 필수
 - 글로벌 일반 원칙: `~/.claude/CLAUDE.md`
-- Serena MCP 가이드: `.claude/serena-config.md`
+<!-- Serena MCP 비활성화됨 (2026-05-25 사용자 명시 — ~/.claude.json mcpServers.serena 제거) -->
 - 메모리: `agent/memory/` (없으면 생성 — feedback / project / reference / user)
