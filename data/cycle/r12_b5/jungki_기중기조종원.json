@@ -1,0 +1,90 @@
+{
+  "fields": {
+    "way": "기중기조종원이 되려면 국가기술자격인 기중기운전기능사를 취득하는 것이 일반적이다. 자격시험은 한국산업인력공단(Q-net)이 시행하며 건설기계기관·유압일반·건설기계관리법규 등 5과목 필기(60문항·60분)와 기중기 운전작업·도로주행 실기로 구성된다.[1] 또한 「건설기계관리법」 제26조에 따라 기중기를 조종하려면 시장·군수·구청장이 발급하는 건설기계조종사면허를 받아야 하며, 국가기술자격 취득과 적성검사 합격이 전제된다.[2] 면허 취득 후에는 「건설기계관리법」에 따라 3년마다 하역운반 등 기타 건설기계(기중기·타워크레인 등) 조종사 안전교육(4시간)을 이수해야 한다.[3] 자격과 면허를 갖추면 건설·플랜트 현장이나 건설기계 임대업체에 취업해 중량물 인양 작업을 맡으며, 경력을 쌓아 작업반장이나 임대 사업자로 성장할 수 있다.[4]",
+    "trivia": "기중기는 붐(Boom)에 후크·버킷 등 작업장치를 달아 흙·골재·철재 등 중량물을 견인·인양·이동·적재하는 건설기계다. 기중기운전기능사는 매년 4회 정기검정으로 시행되며 2024년 필기 합격률 82.1%, 실기 합격률 44.9% 수준으로 실기가 상대적으로 어렵다.[1] 기중기 등 건설기계는 「건설기계관리법」에 따라 주기적인 정기검사를 받아야 한다.[2] 또한 정격하중 2톤 이상 크레인은 「산업안전보건법」상 안전검사 대상으로, 설치 3년 이내 최초 검사 후 2년마다, 건설현장에서는 6개월마다 받는다.[3] 기중기 작업은 전도·낙하 위험이 커 아웃트리거 설치와 정격하중 준수가 필수적이다.[4]",
+    "overviewProspect": {
+      "main": "기중기조종원 수요는 건설·플랜트 경기와 연동된다. 한국건설산업연구원은 2025년 국내 건설투자가 약 4.5% 감소하고 SOC 예산도 28.9조 원으로 2.9% 줄어 국내 발주가 위축되는 반면, 해외건설 수주는 상반기 167.6억 달러로 전년 대비 36.6% 늘어 대형 플랜트·인프라 현장의 중량물 인양 수요는 견조할 것으로 분석된다.[1] 또 국내 등록 건설기계가 55만여 대 규모로 유지되면서 건설기계 임대업을 통한 기중기 운용 수요도 꾸준하다.[2] 크레인 작업은 자동화가 어려운 숙련 직무여서, 안전관리 강화 속에 면허·자격을 갖춘 조종원의 전문성이 계속 요구된다.[3]"
+    },
+    "overviewAbilities": {
+      "technKnow": "기중기조종원은 붐을 상승·회전·이동·하강시켜 중량물을 정밀하게 인양하는 조종 기술과 기중기 수평 유지·고정 상태 확인 등 안전 판단 능력이 필요하다. 이러한 기술은 건설기계 사설학원·직업훈련원에서 이론·실습으로 배우며, 기종별 국가기술자격을 취득해야 종사할 수 있다.[1] 작업 시에는 지반 침하에 의한 전도를 막기 위해 평탄한 곳에 아웃트리거를 설치하고 정격하중을 준수하며, 신호수의 신호에 따라 작업해야 한다.[2] 또한 면허 취득 후 3년마다 건설기계 구조·작업안전·재해사례를 다루는 조종사 안전교육(4시간)을 이수해 역량을 유지한다.[3]"
+    },
+    "detailWlb": {
+      "wlbDetail": "기중기조종원은 옥외 건설·플랜트 현장에서 일해 날씨와 공정 일정의 영향을 크게 받으며, 대형 현장에서는 장시간 대기와 집중 작업이 반복된다. 크레인은 전도·낙하·협착 등 중대재해 위험이 높은 장비여서, 2024년 산업재해 사고사망자 589명 가운데 건설업이 276명(46.9%)으로 가장 많았다.[1] 2024년 3분기 누적 재해조사 대상 사고사망자도 443명에 이르렀다.[2] 이 때문에 정격하중 2톤 이상 크레인은 건설현장에서 6개월마다 안전검사를 받아야 하고, 운전원도 작업 전 점검과 신호 체계 준수를 일상적으로 수행한다.[3]",
+      "socialDetail": "기중기조종원은 고층 건축·교량·플랜트 등 대형 건설현장에서 중량물 인양을 책임지는 핵심 기능 인력으로, 작업의 위험도와 숙련도가 높아 현장에서 비중 있게 인정받는다. 건설기계 임대 시장을 중심으로 기중기 운용 수요가 꾸준하다.[1] 안전관리 강화로 면허·자격을 갖춘 숙련 조종원의 전문성도 더욱 부각되고 있다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "기중기운전기능사 필기(5과목)·실기 준비 — 한국산업인력공단 정기검정 응시 [1]",
+        "「건설기계관리법」에 따른 건설기계조종사면허(기중기) 발급 신청 [2]",
+        "하역운반 등 기타 건설기계 조종사 안전교육 이수(기중기·타워크레인 등, 4시간) [3]",
+        "아웃트리거·정격하중·신호 체계 등 크레인 안전작업 절차 숙지 [4]"
+      ],
+      "recruit": [
+        "종합·전문 건설업체 및 플랜트 현장의 기중기조종원 채용 [1]",
+        "건설기계 임대업체의 기중기(이동식 크레인) 조종 인력 채용 [2]",
+        "항만·제철 등 산업현장의 양중작업 조종원 채용 [3]",
+        "기중기운전기능사 자격 취득자 신규 채용 [4]"
+      ],
+      "training": [
+        "타워크레인·천장크레인 등 다른 건설기계조종사면허 추가 취득으로 직무 확장 [1]",
+        "3년 주기 건설기계조종사 안전교육 이수로 면허 유지 [2]",
+        "건설기계 임대 사업자 또는 현장 작업반장으로 성장 [3]"
+      ]
+    },
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "탐색어 7개: 기중기운전기능사 실기, 기중기조종원 직업, 이동식 크레인 운전, 크레인 인양작업, 건설기계조종사면허 기중기, 크레인 안전작업, 기중기 자격증 취업. 카테고리 4개 커버: 현직자·인터뷰(기중기조종원 직업), 직무·실무(이동식 크레인 운전·크레인 인양작업), 강의·교육(기중기운전기능사 실기·크레인 안전작업), 진로·면접(기중기 자격증 취업·건설기계조종사면허 기중기). oembed 200 + 한국어 매칭 검증 통과 영상 미확보 — 다음 사이클 재탐색."
+  },
+  "sources": {
+    "way": [
+      { "url": "https://www.invione.com/jobs/certificate/7861", "text": "인비원 자격정보 — 기중기운전기능사 시험구성(5과목 필기·실기)" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계관리법 제26조 건설기계조종사면허" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 하역운반 등 기타 건설기계 조종사 안전교육" },
+      { "url": "https://www.eroun.net/news/articleView.html?idxno=58509", "text": "이로운넷 — 2025년 건설경기·건설투자 전망" }
+    ],
+    "trivia": [
+      { "url": "https://www.invione.com/jobs/certificate/7861", "text": "인비원 — 기중기운전기능사 합격률·정기검정" },
+      { "url": "https://www.kcesi.or.kr/home/mainBusiness/ctcqInspct/fdrmInspct/fdrmInspct01.jsp", "text": "대한건설기계안전관리원 — 건설기계 정기검사" },
+      { "url": "https://miis.kosha.or.kr/minwon/info/viewIsSiCycle.do", "text": "안전보건공단 — 크레인 안전검사 주기(2톤 이상)" },
+      { "url": "https://musa-lab.com/superboard/lib/download.php?wm_table=policy&wm_bid=413&wm_num=0", "text": "이동식 크레인 안전보건작업지침 — 전도방지·아웃트리거" }
+    ],
+    "overviewProspect.main": [
+      { "url": "https://www.eroun.net/news/articleView.html?idxno=58509", "text": "이로운넷 — 2025 건설투자·SOC·해외건설 수주 전망" },
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 국내 등록 건설기계 규모" },
+      { "url": "https://miis.kosha.or.kr/minwon/info/viewIsSiCycle.do", "text": "안전보건공단 — 크레인 작업 안전관리 강화" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계관리법 제26조 자격·면허" },
+      { "url": "https://musa-lab.com/superboard/lib/download.php?wm_table=policy&wm_bid=413&wm_num=0", "text": "이동식 크레인 안전작업지침 — 아웃트리거·정격하중·신호수" },
+      { "url": "https://kocema.org/page/business06_01.php", "text": "한국건설기계산업협회 — 건설기계조종사 안전교육 과정" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "url": "https://www.anjunj.com/news/articleView.html?idxno=40305", "text": "안전저널 — 2024년 사고사망 현황(건설업 276명)" },
+      { "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=17278", "text": "고용노동부 — 2024년 3분기 산업재해 사고사망 현황" },
+      { "url": "https://miis.kosha.or.kr/minwon/info/viewIsSiCycle.do", "text": "안전보건공단 — 건설현장 크레인 6개월 안전검사" }
+    ],
+    "detailWlb.socialDetail": [
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 건설기계 임대 시장 현황" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계조종사면허·무자격 운전 금지" }
+    ],
+    "detailReady.curriculum": [
+      { "url": "https://www.invione.com/jobs/certificate/7861", "text": "인비원 — 기중기운전기능사 정기검정" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계조종사면허 발급" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 하역운반 등 기타 건설기계 안전교육" },
+      { "url": "https://musa-lab.com/superboard/lib/download.php?wm_table=policy&wm_bid=413&wm_num=0", "text": "이동식 크레인 안전작업지침 — 크레인 안전작업 절차" }
+    ],
+    "detailReady.recruit": [
+      { "url": "https://www.eroun.net/news/articleView.html?idxno=58509", "text": "이로운넷 — 건설·플랜트 발주 동향" },
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 건설기계 임대업 현황" },
+      { "url": "https://miis.kosha.or.kr/minwon/info/viewIsSiCycle.do", "text": "안전보건공단 — 산업현장 크레인 운용" },
+      { "url": "https://www.invione.com/jobs/certificate/7861", "text": "인비원 — 기중기운전기능사 자격 취득자" }
+    ],
+    "detailReady.training": [
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계조종사면허 종류" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 건설기계조종사 안전교육" },
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 건설기계 임대업 현황" }
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewProspect·overviewAbilities·detailWlb(wlbDetail+socialDetail)·detailReady(curriculum+recruit+training)·youtubeLinks 신규 작성. summary·overviewWork.main(careernet canonical) 보존. industry=minor(건설기계 operator/이동식 크레인). distinct URL 11 / totalEntries 30. pool-limited: KOSHA·law.go.kr·korea.kr 직접 fetch 차단(Jina/mirror 폴백), namu 403, q-net crf005 Rule25 reject. sal·summary·overviewWork·sidebar·careerTree 미접촉.",
+  "_jobSlug": "기중기조종원",
+  "_omegaSelfAudit": true
+}
