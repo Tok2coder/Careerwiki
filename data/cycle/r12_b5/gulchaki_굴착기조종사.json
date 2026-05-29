@@ -1,0 +1,90 @@
+{
+  "fields": {
+    "way": "굴착기조종사가 되려면 국가기술자격인 굴착기운전기능사를 취득하는 것이 일반적이다. 자격시험은 한국산업인력공단(Q-net)이 시행하며 건설기계기관·유압일반·건설기계관리법규 등 5과목 필기(60문항·60분)와 굴착기 운전작업·도로주행 실기로 구성된다.[1] 또한 「건설기계관리법」 제26조에 따라 굴착기를 조종하려면 시장·군수·구청장이 발급하는 건설기계조종사면허를 받아야 하며, 국가기술자격 취득과 적성검사 합격이 전제되고 3톤 미만 소형 굴착기는 시·도지사 지정 교육기관의 소정 교육으로 자격을 갈음할 수 있다.[2] 면허 취득 후에는 「건설기계관리법」에 따라 3년마다 일반건설기계(굴착기·로더·불도저·롤러) 조종사 안전교육(4시간)을 이수해야 한다.[3] 자격과 면허를 갖추면 종합·전문 건설업체나 건설기계 임대업체에 취업하며, 경력을 쌓아 현장 작업반장이나 건설기계 임대 사업자로 성장할 수 있다.[4]",
+    "trivia": "굴착기는 백호·셔블 등 작업장치를 부착해 토사 굴착·상차·파쇄를 수행하는 대표적 건설기계로, 국내 등록 건설기계 가운데 비중이 가장 크다. 2025년 3월 기준 한 해 말소된 건설기계 9,476대 중 굴착기가 2,919대로 가장 많았고, 이 가운데 1,921대는 수출용으로 자진말소돼 동남아·아프리카 등으로 수출됐다.[1] 굴착기운전기능사는 연 13만 명 이상이 응시하는 인기 자격으로 2024년 필기 합격률 77.9%, 실기 합격률 36.9% 수준이다.[2] 글로벌 건설기계 시장에서는 미국 캐터필러가 점유율 16.8%로 1위이며, 북미 수요 호조에 힘입어 두산밥캣이 3.1%로 처음 톱10에 진입하는 등 국내 건설기계 업체의 위상도 높아지고 있다.[3] 굴착기는 타이어식의 경우 「건설기계관리법」에 따라 1년마다 정기검사를 받아야 한다.[4]",
+    "overviewProspect": {
+      "main": "굴착기조종사 수요는 건설경기와 직결된다. 한국건설산업연구원은 2025년 국내 건설투자가 전년 대비 약 4.5% 감소하고 SOC 예산도 28.9조 원으로 2.9% 줄어 국내 발주가 위축되는 반면, 해외건설 수주는 상반기 167.6억 달러로 전년 대비 36.6% 늘어 해외 현장 수요는 견조할 것으로 분석된다.[1] 중고 굴착기 수출도 활발해 2024~2025년 자진말소된 굴착기 1,921대가 동남아·아프리카 등 개발도상국으로 수출됐다.[2] 글로벌 건설기계 시장은 북미 수요 호조로 두산밥캣이 처음 톱10에 진입하는 등 한국 업체의 위상이 높아지고 있어, 굴착기 운용·정비 숙련 인력의 가치도 유지된다.[3]"
+    },
+    "overviewAbilities": {
+      "technKnow": "굴착기조종사는 붐·암·버킷을 정밀하게 조작해 굴토·상차·평탄·파쇄 작업을 수행하는 조종 기술과 작업장 지형·지반을 판단하는 능력이 필요하다. 이러한 기술은 고등학교 관련 학과나 건설기계 사설학원에서 이론·실습으로 배우며, 기종별 국가기술자격을 취득해야 종사할 수 있다.[1] 작업 안전을 위해 운전자는 후방 협착방지봉·후방감시카메라·경고음 발생장치 등 안전장치의 작동을 확인하고, 지반 침하에 의한 전도사고를 막기 위해 지지력과 이동경로를 사전 점검해야 한다.[2] 또한 면허 취득 후 3년마다 건설기계 구조·작업안전·재해사례를 다루는 조종사 안전교육(4시간)을 이수해 역량을 유지한다.[3]"
+    },
+    "detailWlb": {
+      "wlbDetail": "굴착기조종사는 옥외 건설현장에서 일해 계절·날씨의 영향을 크게 받고, 공사 일정에 따라 작업 강도와 근무 시간이 달라진다. 굴착기는 산업안전보건기준에 관한 규칙상 차량계 건설기계로 분류돼 전도·협착·추락 등 중대재해 위험이 높은 장비이며, 2024년 산업재해 사고사망자 589명 가운데 건설업이 276명(46.9%)으로 가장 많았다.[1] 2024년 3분기 누적 재해조사 대상 사고사망자도 443명에 이르렀다.[2] 이 때문에 작업 전 장비 점검, 작업반경 내 근로자 출입 통제, 신호수 배치 등 안전수칙 준수가 일상적으로 요구된다.[3]",
+      "socialDetail": "굴착기조종사는 도로·주택·플랜트 등 거의 모든 건설현장에 투입되는 필수 기능 인력으로, 건설기계 운용 경험이 쌓일수록 현장에서 인정받는다. 국내 등록 건설기계 55만여 대 중 굴착기 비중이 가장 커 활용 범위가 넓다.[1] 최근에는 무자격 운전 금지와 안전관리 강화로 면허·자격을 갖춘 숙련 조종사의 전문성이 더욱 부각되고 있다.[2]"
+    },
+    "detailReady": {
+      "curriculum": [
+        "굴착기운전기능사 필기(5과목)·실기 준비 — 한국산업인력공단 상시검정 응시 [1]",
+        "「건설기계관리법」에 따른 건설기계조종사면허(굴착기) 발급 신청 [2]",
+        "일반건설기계 조종사 안전교육 이수(굴착기·로더·불도저·롤러, 4시간) [3]",
+        "차량계 건설기계 안전수칙 숙지 및 종합·전문 건설현장 실무 적응 [4]"
+      ],
+      "recruit": [
+        "종합·전문 건설업체의 토목·기초공사 굴착기조종사 채용 [1]",
+        "건설기계 임대업체의 굴착기 보유·조종 인력 채용 [2]",
+        "해외건설 현장 파견 건설기계 운용 인력 모집 [3]",
+        "3톤 미만 소형 굴착기 교육 이수자 대상 소규모 현장 채용 [4]"
+      ],
+      "training": [
+        "로더·불도저·기중기 등 다른 건설기계조종사면허 추가 취득으로 직무 확장 [1]",
+        "3년 주기 건설기계조종사 안전교육 이수로 면허 유지 [2]",
+        "건설기계 임대 사업자 또는 현장 작업반장으로 성장 [3]"
+      ]
+    },
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "탐색어 7개: 굴착기운전기능사 실기, 굴착기조종사 직업, 굴삭기 운전 방법, 굴착기 기초조작, 건설기계조종사면허 굴착기, 굴착기 안전수칙, 굴삭기 자격증 취업. 카테고리 4개 커버: 현직자·인터뷰(굴착기조종사 직업), 직무·실무(굴삭기 운전 방법·굴착기 기초조작), 강의·교육(굴착기운전기능사 실기·굴착기 안전수칙), 진로·면접(굴삭기 자격증 취업·건설기계조종사면허 굴착기). oembed 200 + 한국어 매칭 검증 통과 영상 미확보 — 다음 사이클 재탐색."
+  },
+  "sources": {
+    "way": [
+      { "url": "https://www.invione.com/jobs/certificate/7862", "text": "인비원 자격정보 — 굴착기운전기능사 시험구성(5과목 필기·실기)" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계관리법 제26조 건설기계조종사면허" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 일반건설기계 조종사 안전교육(4시간)" },
+      { "url": "https://www.eroun.net/news/articleView.html?idxno=58509", "text": "이로운넷 — 2025년 건설경기·건설투자 전망" }
+    ],
+    "trivia": [
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 굴착기 등록·말소·수출 현황(2,919대)" },
+      { "url": "https://www.invione.com/jobs/certificate/7862", "text": "인비원 — 굴착기운전기능사 합격률 추이" },
+      { "url": "https://biz.heraldcorp.com/article/3413735", "text": "헤럴드경제 — 글로벌 건설기계 시장 점유율(두산밥캣 톱10)" },
+      { "url": "https://www.kcesi.or.kr/home/mainBusiness/ctcqInspct/fdrmInspct/fdrmInspct01.jsp", "text": "대한건설기계안전관리원 — 건설기계 정기검사 유효기간(굴착기 1년)" }
+    ],
+    "overviewProspect.main": [
+      { "url": "https://www.eroun.net/news/articleView.html?idxno=58509", "text": "이로운넷 — 2025 건설투자·SOC·해외건설 수주 전망" },
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 중고 굴착기 수출 현황" },
+      { "url": "https://biz.heraldcorp.com/article/3413735", "text": "헤럴드경제 — 한국 건설기계 업체 글로벌 위상" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계관리법 제26조 자격·면허" },
+      { "url": "https://safety.king-father.com/6", "text": "KOSHA GUIDE C-105-2021 — 굴착기 안전보건작업 지침" },
+      { "url": "https://kocema.org/page/business06_01.php", "text": "한국건설기계산업협회 — 건설기계조종사 안전교육 과정" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "url": "https://www.anjunj.com/news/articleView.html?idxno=40305", "text": "안전저널 — 2024년 사고사망 현황(건설업 276명)" },
+      { "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=17278", "text": "고용노동부 — 2024년 3분기 산업재해 사고사망 현황" },
+      { "url": "https://safety.king-father.com/6", "text": "KOSHA GUIDE C-105-2021 — 굴착기 작업 안전수칙" }
+    ],
+    "detailWlb.socialDetail": [
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 등록 건설기계 중 굴착기 비중" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 무자격 운전 금지·건설기계조종사면허" }
+    ],
+    "detailReady.curriculum": [
+      { "url": "https://www.invione.com/jobs/certificate/7862", "text": "인비원 — 굴착기운전기능사 상시검정" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계조종사면허 발급" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 일반건설기계 안전교육" },
+      { "url": "https://safety.king-father.com/6", "text": "KOSHA GUIDE C-105-2021 — 차량계 건설기계 안전수칙" }
+    ],
+    "detailReady.recruit": [
+      { "url": "https://www.eroun.net/news/articleView.html?idxno=58509", "text": "이로운넷 — 국내 건설 발주 동향" },
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 건설기계 임대·등록 현황" },
+      { "url": "https://biz.heraldcorp.com/article/3413735", "text": "헤럴드경제 — 글로벌·해외 건설기계 시장" },
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 3톤 미만 소형건설기계 교육" }
+    ],
+    "detailReady.training": [
+      { "url": "https://casenote.kr/법령/건설기계관리법/제26조", "text": "케이스노트 — 건설기계조종사면허 종류" },
+      { "url": "http://www.kcea.or.kr/Source/kg/kg01.htm", "text": "대한건설기계협회 — 건설기계조종사 안전교육" },
+      { "url": "https://m.kunginews.com/a.html?uid=36714", "text": "건설기계신문 — 건설기계 임대업 현황" }
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewProspect·overviewAbilities·detailWlb(wlbDetail+socialDetail)·detailReady(curriculum+recruit+training)·youtubeLinks 신규 작성. summary·overviewWork.main(careernet canonical) 보존. industry=minor(건설기계 operator). distinct URL 11 / totalEntries 30. pool-limited: KOSHA·law.go.kr 직접 fetch 차단(Jina/mirror 폴백), namu 403, q-net crf005 Rule25 reject. sal·summary·overviewWork·sidebar·careerTree 미접촉.",
+  "_jobSlug": "굴착기조종사",
+  "_omegaSelfAudit": true
+}
