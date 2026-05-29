@@ -1,0 +1,168 @@
+{
+  "fields": {
+    "overviewProspect.main": "향후 5년간 증가 전망이다.[1] 인구 고령화에 따른 노인복지 수요 급증, 장애인 자립지원 정책 강화, 아동·청소년 복지 서비스 확대가 주요 성장 요인이다.[2] 정신건강 복지 분야와 의료사회복지사 수요도 꾸준히 늘고 있다.[3] 사회복지직 공무원 채용이 매년 확대되는 추세도 긍정적이다.[4]",
+    "detailWlb.wlbDetail": "대부분 주 5일 근무이나 복지관·시설에 따라 주말 프로그램 운영 등 탄력 근무가 있다. 감정 노동과 클라이언트 문제 해결 과정의 심리적 부담이 있으며, 번아웃을 예방하는 자기 관리가 중요하다.[1] 커리어넷 재직자 조사에서 워라밸은 '보통이상'으로 분류된다.",
+    "detailWlb.socialDetail": "취약계층(노인·장애인·아동·저소득층)의 삶의 질을 직접 개선하는 역할로 직업 보람이 매우 높다.[1] 사회 안전망 구축에 핵심적인 역할을 하며, 사회적 기여도가 높은 직업으로 인식된다.[2] 커리어넷 재직자 조사에서 사회적 기여 인식은 '높음' 수준이다.",
+    "trivia": "한국의 사회복지사 자격증 보유자 수는 2024년 기준 약 130만 명에 달하지만, 실제 사회복지 현장에서 종사하는 인원은 약 25만 명이다.[1] 사회복지사의 번아웃(소진) 비율이 높아, 한국사회복지사협회는 매년 사회복지사 처우 개선 캠페인을 벌이고 있다.[2] 의료사회복지사는 병원 내 환자의 심리·경제·사회적 어려움을 지원하는 전문직으로 수요가 빠르게 늘고 있다.[3]",
+    "way": "사회복지사가 되려면 사회복지사 자격증 취득이 필수다. 자격 등급은 1급과 2급으로 구분된다.[1] ① 2급: 전문대(3년) 또는 4년제 대학에서 사회복지학과(사회복지 관련 학과) 또는 사회복지 관련 교과목(17과목 이상) 이수 후 취득한다.[2] 국가시험 없이 학위 취득으로 자동 발급된다.[3] ② 1급: 2급 자격 취득 후 1년 이상 실무 경력을 갖추거나, 4년제 관련 학과 졸업 후 한국사회복지사협회 주관 국가시험에 합격하면 취득한다.[4] 필기(사회복지기초, 사회복지실천, 사회복지정책과 제도 3영역)로 구성된다.[5] 주요 취업처는 종합사회복지관, 노인복지시설, 장애인복지관, 아동복지시설, 의료사회복지(병원), 학교사회복지, 지역아동센터, 지방자치단체 복지팀 등이다.[6]",
+    "detailReady.curriculum": [
+      "전문대·4년제 사회복지학과(사회복지 관련 학과) 진학 — 사회복지실천론, 지역사회복지론, 노인복지론 등 17과목 이수 [1]",
+      "사회복지사 1급 국가시험 필기(3영역) 준비 — 한국사회복지사협회(kasw.or.kr) 시험 일정 확인 [2]",
+      "160시간 이상 사회복지 현장실습 이수 — 복지관·시설 실습으로 현장 감각 조기 습득 [3]"
+    ],
+    "detailReady.recruit": [
+      "종합사회복지관·노인복지관·장애인복지관 사회복지사 채용 (복지넷, 워크넷) [1]",
+      "사회복지직 공무원 임용시험 응시 (지방직·국가직 사회복지직 9급) [2]",
+      "의료사회복지사·정신건강사회복지사 채용 (병원·정신건강복지센터) [3]"
+    ],
+    "detailReady.training": [
+      "사회복지사 1급 자격 취득 — 한국사회복지사협회(kasw.or.kr) 시험일정·응시자격 확인 [1]",
+      "정신건강사회복지사, 의료사회복지사, 학교사회복지사 등 전문 자격증 취득으로 전문성 강화 [2]",
+      "사회복지사 보수교육 이수(연 8시간) — 자격증 유효 유지 및 최신 복지 정책 습득 [3]"
+    ],
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=srW_tgimgr4",
+        "title": "[사람을말하다] 종합사회복지관 사회복지사 인터뷰",
+        "description": ""
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=N7EqJamlozM",
+        "title": "사회복지사 1급 인터뷰 — 현 직업 만족도 별 다섯개인 이유",
+        "description": ""
+      }
+    ],
+    "overviewAbilities.technKnow": "사회복지가사 되기 위해서는 대학에서 사회복지학을 전공하거나, 학점은행제, 평생교육원 등에서 필요한 수업을 이수하여 자격을 취득하여야 한다. 구체적으로 사회복지개론, 사회복지실천 방법론, 노인복지론, 아동복지론, 장애인복지론, 가족복지론 등의 과목이 포함되며, 학기 중이나 방학 중에 사회복지 현장실습도 하게 된다.[1] 일정 수업을 이수(14과목)하고 현장실습(120시간) 요건이 충족되면 사회복지사 2급 자격을 취득할 수 있으며, 사회복지학 학사학위 취득자, 대학원에서 사회복지학 또는 사회사업학을 전공한 석사 또는 박사학위 취득자가 별도의 시험을 통해 사회복지사 1급 자격을 취득하게 된다.[2]\n사회복지사 2급 자격 취득자가 많아지면서 기관에 따라 채용 시 1급 소지자를 요구하는 등 급수별 차별화가 있을 수 있으며, 장기적으로 사회복지현장에서 일하며 관리자급으로 승진 및 경력을 쌓고자 한다면 사회복지사 1급 자격증을 취득하여 경쟁력을 갖출 필요가 있다."
+  },
+  "sources": {
+    "overviewProspect.main": [
+      {
+        "text": "에듀진 — 사회복지사, 복지정책 확대로 유망 직업 전망",
+        "url": "http://www.edujin.co.kr/news/articleView.html?idxno=34020"
+      },
+      {
+        "text": "SBS Biz — 향후 10년간 사회복지사 일자리 증가, 고령사회 전망",
+        "url": "https://biz.sbs.co.kr/article/10000947993"
+      },
+      {
+        "text": "보건복지부 — 지역사회 통합돌봄 추진(취약계층 돌봄 확대)",
+        "url": "https://www.mohw.go.kr/menu.es?mid=a10716100000"
+      },
+      {
+        "text": "지방공무원 신규 채용 증가 — 사회복지직 대폭 확대 보도",
+        "url": "https://v.daum.net/v/20260223130542914"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "text": "한국보건사회연구원 — 2023년 사회복지시설 종사자 보수·근로여건 실태조사",
+        "url": "https://repository.kihasa.re.kr/handle/201002/45986"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "text": "보건복지부 — 지역사회 통합돌봄(취약계층 삶의 질 개선)",
+        "url": "https://www.mohw.go.kr/menu.es?mid=a10716100000"
+      },
+      {
+        "text": "보건복지부 — 지역사회 통합돌봄 이용안내(노인맞춤돌봄·사회안전망)",
+        "url": "https://www.mohw.go.kr/menu.es?mid=a60200000000"
+      }
+    ],
+    "trivia": [
+      {
+        "text": "보건복지부 — 사회복지사 자격증 교부자 수 통계(2024)",
+        "url": "https://www.data.go.kr/data/15065415/fileData.do"
+      },
+      {
+        "text": "국가법령정보센터 — 사회복지사 등의 처우 및 지위 향상을 위한 법률",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=111574"
+      },
+      {
+        "text": "위키백과 — 사회복지사(의료·정신건강·학교 사회복지사)",
+        "url": "https://ko.wikipedia.org/wiki/사회복지사"
+      }
+    ],
+    "way": [
+      {
+        "text": "국가법령정보센터 — 사회복지사업법 제11조(사회복지사 자격증)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=000202&ancYnChk=0"
+      },
+      {
+        "text": "국가법령정보센터 — 사회복지사업법 시행규칙(이수 교과목·현장실습)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=224137&viewCls=lsRvsDocInfoR"
+      },
+      {
+        "text": "한국사회복지사협회 자격관리센터 — 사회복지사 자격·발급",
+        "url": "https://www.welfare.net/lic/"
+      },
+      {
+        "text": "국가법령정보센터 — 사회복지사업법 시행령(국가시험·응시자격)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=185282"
+      },
+      {
+        "text": "큐넷(한국산업인력공단) — 사회복지사 1급 국가시험",
+        "url": "https://www.q-net.or.kr/site/welfare"
+      },
+      {
+        "text": "한국사회복지협의회 복지넷 — 사회복지 구인정보",
+        "url": "https://www.bokji.net/job/off/01.bokji"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "text": "국가법령정보센터 — 사회복지사업법 시행규칙 별표1(이수 교과목)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=224137&viewCls=lsRvsDocInfoR"
+      },
+      {
+        "text": "큐넷(한국산업인력공단) — 사회복지사 1급 국가시험 과목",
+        "url": "https://www.q-net.or.kr/site/welfare"
+      },
+      {
+        "text": "한국사회복지사협회 자격관리센터 — 현장실습·자격관리",
+        "url": "https://www.welfare.net/lic/"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "text": "한국사회복지협의회 복지넷 — 사회복지관 구인정보",
+        "url": "https://www.bokji.net/job/off/01.bokji"
+      },
+      {
+        "text": "지방공무원 사회복지직 채용 확대 보도",
+        "url": "https://v.daum.net/v/20260223130542914"
+      },
+      {
+        "text": "국립공주병원 — 정신건강사회복지사 수련·채용",
+        "url": "https://www.knmh.go.kr/menu.es?mid=a10302020200"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "text": "한국사회복지사협회 자격관리센터 — 사회복지사 1급 자격",
+        "url": "https://www.welfare.net/lic/"
+      },
+      {
+        "text": "한국학교사회복지사협회 — 학교사회복지사 자격시험 안내",
+        "url": "https://kassw.or.kr/page/s3/s1.php?pg=3&bcode=licinfo1"
+      },
+      {
+        "text": "서울시사회복지사협회 — 사회복지사 보수교육 의무(연 8시간)",
+        "url": "https://sasw.or.kr/education_qanda2/794762"
+      }
+    ],
+    "overviewAbilities.technKnow": [
+      {
+        "text": "국가법령정보센터 — 사회복지사업법 시행규칙 별표1(이수 교과목·현장실습)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=224137&viewCls=lsRvsDocInfoR"
+      },
+      {
+        "text": "국가법령정보센터 — 사회복지사업법 시행령(1급 국가시험·응시자격)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=185282"
+      }
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — 사회복지사 출처 전면 재구축(정부 직업포털 origin/협회 검색 listPage/text=URL 제거) + way·prospect·wlb·social·trivia·detailReady(curriculum/recruit/training) 본문 [N] field-local 정합. distinct URL 18(법령·협회·정부통계·정신건강/학교 사회복지사·복지넷·통합돌봄)",
+  "_jobSlug": "사회복지사",
+  "_omegaSelfAudit": true
+}
