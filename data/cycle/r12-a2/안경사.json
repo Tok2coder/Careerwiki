@@ -1,0 +1,59 @@
+{
+  "fields": {
+    "overviewProspect.main": "향후 5년간 현상태 유지 전망이다. 스마트폰·PC 사용 증가로 인한 근시·안구건조증 환자 급증, 인구 고령화에 따른 노안·백내장 관련 안경 수요 증가가 긍정 요인이다. 반면 온라인 안경 판매 플랫폼 확대와 안경원 과잉 공급(전국 약 1만 1천 개)으로 경쟁이 치열하다. 시력교정술(라식·라섹) 기술 발전이 일부 수요를 대체하는 위협 요인도 있다.[1] 잡코리아 직업사전 기준 안경사 연봉 중위값은 약 3,233만 원이며 상위 25%는 4,179만 원 수준으로, 안경사는 의료보건계열학과 중 유일하게 개업이 가능한 의료기사로 분류된다.[2] 위키백과에 따르면 안경사 업무는 처방전 없이 굴절검사·콘택트렌즈 처방·안경 조제가 가능하지만 의약품을 사용한 검사는 금지된다.[3]",
+    "detailWlb.socialDetail": "시력 교정을 통해 고객의 일상 생활 질을 직접 높여주는 역할로 직업적 보람이 있다. 특히 약시·사시 아동 등 의료적 처치가 필요한 환자 관리 시 사회적 기여도가 높다. 면허 발급·재발급·증명서 발급은 보건복지부 면허민원포털을 통해 안경사를 포함한 의료인력 면허 종별 절차가 통합 관리된다.[1] 안경광학과는 인구 고령화·근시 증가·디지털 기기 사용 확산에 대응해 시력보건 전문가 양성을 핵심 교육 목표로 설정하고 있다.[2]",
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=29YCiOwgIo8",
+        "title": "안경사 직업의 모든 것 | 연봉, 전망, 그리고 진짜 현실",
+        "description": ""
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=TCwTbEJ2uCo",
+        "title": "★최신★안경사 연봉 현실｜초봉부터 창업 수입까지 전부 공개#안경사연봉 #안경사현실 #전문직연봉",
+        "description": ""
+      }
+    ]
+  },
+  "sources": {
+    "overviewProspect.main": [
+      {
+        "text": "IMARC — 한국 안경 시장 2025년 33억$ → 2034년 53억$",
+        "url": "https://www.imarcgroup.com/south-korea-eyewear-market"
+      },
+      {
+        "text": "잡코리아 직업사전 — 안경사 연봉 중위 3,233만 원·개업 가능 의료기사",
+        "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=19032"
+      },
+      {
+        "text": "위키백과 — 안경사 정의·업무 범위·면허 제도",
+        "url": "https://ko.wikipedia.org/wiki/%EC%95%88%EA%B2%BD%EC%82%AC"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "text": "보건복지부 면허민원포털 — 안경사 등 의료인력 면허 발급/재발급/증명서 안내",
+        "url": "https://lic.mohw.go.kr/guide/guide03.do?MENU_ID=C-03-01"
+      },
+      {
+        "text": "백석대 안경광학과 — 시력보건 전문가 양성 교육 목표·고령화·근시 증가 대응",
+        "url": "https://www.bu.ac.kr/web/3794/subview.do"
+      }
+    ]
+  },
+  "youtubeLinks": [
+    {
+      "url": "https://www.youtube.com/watch?v=29YCiOwgIo8",
+      "title": "안경사 직업의 모든 것 | 연봉, 전망, 그리고 진짜 현실",
+      "description": ""
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=TCwTbEJ2uCo",
+      "title": "★최신★안경사 연봉 현실｜초봉부터 창업 수입까지 전부 공개#안경사연봉 #안경사현실 #전문직연봉",
+      "description": ""
+    }
+  ],
+  "changeSummary": "[job-data-master] cleanup — mojibake 오타 fix(overviewProspect.main 직업사전 / socialDetail 면허 발급). 본문·출처·숫자·마커 전부 보존, distinct 19 유지.",
+  "_jobSlug": "안경사",
+  "_omegaSelfAudit": true
+}
