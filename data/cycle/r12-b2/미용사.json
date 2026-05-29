@@ -1,0 +1,51 @@
+{
+  "_jobSlug": "미용사",
+  "_omegaSelfAudit": true,
+  "fields": {
+    "overviewAbilities.technKnow": "미용사가 되기 위해서는 미용 관련 고등학교, 특성화고등학교, 대학의 미용 관련 학과에서 관련 기술을 배울 수 있으며, 직업전문학교, 평생교육원, 사설학원 등을 통해서도 미용헤어 기술의 이론 및 실기를 배울 수 있다.[1] 미용사로 종사하기 위해서는 공중위생관리법상 미용사 면허를 취득해야 하므로 관련 기술과 이론을 배우고 자격증을 취득하는 것이 필요하다.[2] 새로운 미용기술이 계속 개발되고 있고 헤어스타일은 유행에 민감한 분야이기 때문에 미용사로 근무하면서 재교육을 받는 사람도 많은 편이다. 미용사 국가기술자격 검정은 보건복지부 소관으로 한국산업인력공단이 시행하며, 일반·피부·네일·메이크업 종목으로 구분된다.[3] 미용사(일반)의 경우 응시자격에 따로 제한을 두지 않으며, 이론시험에서 미용이론, 공중보건학, 소독학, 피부학, 공중위생법규를 다루며, 실기시험에서는 미용실무에 관한 내용을 다룬다.[4]",
+    "detailReady.curriculum": [
+      "미용 관련 특성화고등학교에 진학하면 고교 과정부터 미용 이론과 실기를 체계적으로 배울 수 있다 [1]",
+      "전문대학 또는 4년제 대학의 미용학과(헤어디자인, 뷰티미용 등)에 진학하면 헤어 컷, 파마, 염색, 두피관리 등의 심화 교육을 받을 수 있다 [2]",
+      "직업전문학교, 평생교육원, 사설 미용학원에서도 미용사(일반) 자격시험 대비 교육과정을 운영한다 [3]",
+      "미용사(일반) 자격증 필기시험 과목은 미용이론, 공중보건학, 소독학, 피부학, 공중위생법규이며, 실기시험은 커트·파마·염색·드라이·두피케어 5과제로 구성된다 [4]"
+    ],
+    "detailReady.recruit": [
+      "구인 광고, 미용 전문 구인구직 사이트(헤어인잡 등), 미용학원·학교의 취업 알선을 통해 미용실에 채용될 수 있다 [1]",
+      "개인 미용실, 프랜차이즈 미용실, 호텔·웨딩홀·방송국의 미용실, 뷰티 브랜드 등에 취업할 수 있다 [2]",
+      "경력을 쌓은 후 개인 미용실을 창업하거나, 프리랜서 헤어 아티스트로 활동할 수도 있다 [3]"
+    ],
+    "detailReady.training": [
+      "직업전문학교, 사설 이미용 학원 등에서 미용과 관련된 기술과 실기를 배울 수 있으며, 숙련된 미용사를 보조하면서 필요한 기술을 배울 수도 있다 [1]",
+      "미용업 영업자와 종사자는 공중위생관리법에 따라 매년 위생교육을 이수해야 하며, 위생교육을 통해 소독·감염 예방 등 위생관리 기준을 익힌다 [2]"
+    ],
+    "youtubeLinks": [
+      { "url": "https://www.youtube.com/watch?v=pPDcdtbqg5A", "title": "미용사가 되는법 - 헤어디자이너를 준비하는 이에게 하고 싶은 이야기", "description": "" },
+      { "url": "https://www.youtube.com/watch?v=ECJNAUDsH5A", "title": "AI시대 유망 직업, 헤어디자이너", "description": "" },
+      { "url": "https://www.youtube.com/watch?v=sP8fW1-sErw", "title": "미용사에서 유튜버로, 사업가로 변신하는 헤어디자이너 | 미용담 기우쌤", "description": "" }
+    ]
+  },
+  "sources": {
+    "overviewAbilities.technKnow": [
+      { "id": 1, "url": "https://ko.wikipedia.org/wiki/미용사", "text": "위키백과 — 미용사 직업과 교육" },
+      { "id": 2, "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1009&ccfNo=1&cciNo=2&cnpClsNo=1", "text": "찾기쉬운 생활법령정보 — 미용사 면허 취득 요건" },
+      { "id": 3, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7937", "text": "Q-net — 미용사(일반) 종목 정보(시행기관 한국산업인력공단)" },
+      { "id": 4, "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=7937", "text": "Q-net — 미용사(일반) 실기 시험 안내" }
+    ],
+    "detailReady.curriculum": [
+      { "id": 5, "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1009&ccfNo=1&cciNo=2&cnpClsNo=1", "text": "찾기쉬운 생활법령정보 — 미용사 면허(미용 학과 졸업 요건)" },
+      { "id": 6, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%AF%B8%EC%9A%A9%EC%82%AC/", "text": "직업백과 — 미용사 교육·양성 과정" },
+      { "id": 7, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7937", "text": "Q-net — 미용사(일반) 자격 정보" },
+      { "id": 8, "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=7937", "text": "Q-net — 미용사(일반) 실기 시험 과제" }
+    ],
+    "detailReady.recruit": [
+      { "id": 9, "url": "https://www.jobkorea.co.kr/goodjob/tip/view?News_No=18943", "text": "잡코리아 — 미용사 직업·취업 가이드" },
+      { "id": 10, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%AF%B8%EC%9A%A9%EC%82%AC/", "text": "직업백과 — 미용사 취업처" },
+      { "id": 11, "url": "https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A09006&CappBizCD=14600000027", "text": "정부24 — 이용사 및 미용사 면허발급 신청(창업·개업)" }
+    ],
+    "detailReady.training": [
+      { "id": 12, "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85/%EB%AF%B8%EC%9A%A9%EC%82%AC/", "text": "직업백과 — 미용사 훈련 과정" },
+      { "id": 13, "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=3&cciNo=1&cnpClsNo=2&csmSeq=1009&popMenu=ov", "text": "찾기쉬운 생활법령정보 — 미용실 위생교육 및 위생관리" }
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — detailReady.curriculum/recruit/training [N]+sources, overviewAbilities.technKnow 마커+시행기관 fact정정(검정원→산업인력공단·4종목), youtubeLinks 3건, distinct URL 9→12 (personal-service 트레이드: law.go.kr/kostat/index.go.kr/협회 blocked)"
+}
