@@ -1,0 +1,158 @@
+{
+  "fields": {
+    "way": "직업상담사가 되려면 심리학·사회복지학·교육학 등 관련 학과 이수 후 한국산업인력공단(Q-Net)이 시행하는 직업상담사 2급 국가기술자격에 합격하는 것이 일반적이다.[1] 자격 취득 후 한국고용정보원이 운영하는 워크넷 직업상담 사업, 고용복지플러스센터, 대학교 취업지원팀, 지자체 취업지원 사업 채용 공고에 응시한다.[2] Q-Net 직업상담사 자격의 NCS 기반 출제기준에 따라 학습·재인증과 보수교육으로 전문성을 지속 갱신한다.[3]",
+    "trivia": "한국의 고용센터는 1961년 직업안정법 제정과 함께 설치된 직업안정소가 현대적으로 진화한 형태다.[1] 2013년부터 한국고용정보원이 운영하는 워크넷이 인공지능(AI) 기반 일자리 매칭 시스템을 도입하면서, 직업상담사의 역할이 단순 구인·구직 연결에서 심층 진로 상담·취약계층 지원으로 무게중심이 이동하고 있다.[2]",
+    "overviewProspect.main": "고령화·경력단절·청년 취업난 심화로 직업 상담 수요는 꾸준하나, 정부 예산 편성에 따라 공공 직업상담사 채용 규모가 변동한다.[1] 한국고용정보원·워크넷이 인공지능(AI) 기반 일자리 매칭 시스템을 도입하면서 단순 구인·구직 연결 업무는 자동화 압력을 받고 있다.[2] 반면, 복잡한 진로 상담·경력 개발·취약계층 지원 역할은 한국직업상담협회 등이 직업상담사 양성·보수교육을 통해 안정적으로 유지하고 있다.[3]",
+    "detailWlb.wlbDetail": "고용센터 등 공공기관 근무는 주 5일 규칙적 근무 형태가 일반적이다. 상담 업무 특성상 감정 노동이 수반되며, 구직 스트레스를 가진 내담자와의 상담으로 소진(burnout) 위험이 있어 슈퍼비전 참여가 권장된다. 커리어넷 재직자 조사에서 워라밸은 '좋음'으로 분류된다.[1]",
+    "detailWlb.socialDetail": "취업 취약계층(장기 실업자·경력단절 여성·장애인·고령자)의 직업 재진입을 도와 사회적 안전망 역할을 수행하는 직업이다. 개인의 진로 설계와 경제적 독립을 지원하는 높은 사회적 기여도를 갖는다. 커리어넷 재직자 조사에서 사회적 기여 인식은 '매우 좋음'으로 나타난다.[1]",
+    "overviewAbilities.technKnow": "직업상담사가 되기 위해서는 4년제 대학 이상을 졸업하고, 한국산업인력공단이 시행하는 직업상담사 자격증을 취득하는 것이 유리하다. 관련 학과로는 심리학과, 교육학과, 사회복지학과 등이 있으며, 사회교육 기관 및 사설학원 등에서 직업상담사 과정을 운영하기도 한다. 외국기업을 주요 고객으로 하는 고급인력 알선업체에는 석사학위 이상의 근무자도 많으며, 외국어 능력을 요구한다. 특히 헤드헌터 중 컨설턴트는 대개 해당 분야의 관련 경력이 있어야 업무수행이 가능하다.[1]",
+    "detailReady.curriculum": [
+      "심리학과·사회복지학과·교육학과 등 관련 학과 졸업 [1]",
+      "직업상담사 2급 국가기술자격 취득 — 큐넷 필기·면접 시험 준비 [2]",
+      "고용센터·취업지원센터 자원봉사·인턴십으로 상담 현장 경험 축적 [3]",
+      "한국직업상담협회 회원 가입·상담사 양성 과정 이수 [4]",
+      "NCS 기반 직업 상담 학습 — HRD-Net 직업 훈련 과정 활용 [5]"
+    ],
+    "detailReady.recruit": [
+      "고용노동부 산하 고용센터·고용복지플러스센터 직업상담원 채용 — 공공기관 채용 공고 [1]",
+      "대학교 취업지원팀·취업지원센터 직업상담사 채용 [2]",
+      "지자체 취업지원 사업 직업상담사·커리어 코치 채용 [3]",
+      "한국고용정보원 워크넷 운영 채용·청년 진로 상담 직무 [4]",
+      "민간 헤드헌팅사·전직지원센터 커리어 컨설턴트 진출 [5]"
+    ],
+    "detailReady.training": [
+      "직업상담사 1급 취득 — 2급 자격 후 3년 이상 경력 [1]",
+      "진로심리사·청소년 상담사·전직지원 전문가 자격 병행 취득 [2]",
+      "NCS 기반 직업 상담 훈련과정(HRD-Net) 또는 한국직업상담협회 전문 교육 이수 [3]",
+      "한국직업상담협회 보수교육·슈퍼비전 참가 — 소진(burnout) 예방 [4]",
+      "한국고용정보원 워크넷 AI 매칭 시스템 활용 교육 [5]"
+    ]
+  },
+  "sources": {
+    "way": [
+      {
+        "text": "서울디지털대학교 상담심리학과 — 직업상담사 자격·교과목 안내",
+        "url": "https://counsel.sdu.ac.kr/counsel/cms/FR_CON/index.do?MENU_ID=270"
+      },
+      {
+        "text": "국가법령정보센터 — 직업안정법(직업안정기관·직업소개·직업상담원)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=001765"
+      },
+      {
+        "text": "큐넷(한국산업인력공단) — 직업상담사 2급 국가기술자격",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9511"
+      }
+    ],
+    "trivia": [
+      {
+        "text": "국가법령정보센터 — 직업안정법(직업안정기관·직업소개·직업상담원)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=001765"
+      },
+      {
+        "text": "고용노동부 — 국민취업지원제도(취업취약계층 직업상담·취업지원)",
+        "url": "https://www.moel.go.kr/policyitrd/policyItrdView.do?policy_itrd_sn=52"
+      }
+    ],
+    "overviewProspect.main": [
+      {
+        "text": "한국고용정보원 — 고용동향브리프 2026년 제1호(노동시장 변화)",
+        "url": "https://www.keis.or.kr/keis/ko/proj/118/pblc/detail.do?categoryIdx=126&pubIdx=11273"
+      },
+      {
+        "text": "한국고용정보원 — 직업연구 및 경력개발 지원 사업(직업심리검사·직업정보)",
+        "url": "https://www.keis.or.kr/keis/ko/conts/105/web.do"
+      },
+      {
+        "text": "한국상담학회 — 전문상담사(진로상담) 자격·수련 절차",
+        "url": "https://counselors.or.kr/KOR/license/process.php"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "text": "한국상담학회 — 전문상담사(진로상담) 자격·수련 절차",
+        "url": "https://counselors.or.kr/KOR/license/process.php"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "text": "고용노동부 — 국민취업지원제도(취업취약계층 직업상담·취업지원)",
+        "url": "https://www.moel.go.kr/policyitrd/policyItrdView.do?policy_itrd_sn=52"
+      }
+    ],
+    "overviewAbilities.technKnow": [
+      {
+        "text": "고려대학교 교육학과 상담전공 — 상담 자격증(직업상담사·청소년상담사)",
+        "url": "https://counselor.korea.ac.kr/counseling/curriculum/counseling_license.do"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "text": "고려대학교 교육학과 상담전공 — 상담 자격증(직업상담사·청소년상담사)",
+        "url": "https://counselor.korea.ac.kr/counseling/curriculum/counseling_license.do"
+      },
+      {
+        "text": "큐넷(한국산업인력공단) — 직업상담사 2급 국가기술자격",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9511"
+      },
+      {
+        "text": "한국고용정보원 — 직업연구 및 경력개발 지원 사업(직업심리검사·직업정보)",
+        "url": "https://www.keis.or.kr/keis/ko/conts/105/web.do"
+      },
+      {
+        "text": "한국상담학회 — 전문상담사(진로상담) 자격·수련 절차",
+        "url": "https://counselors.or.kr/KOR/license/process.php"
+      },
+      {
+        "text": "한국산업인력공단 — NCS 국가직무능력표준(일-교육훈련-자격)",
+        "url": "https://www.hrdkorea.or.kr/1/7/1"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "text": "국가법령정보센터 — 직업안정법(직업안정기관·직업소개·직업상담원)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=001765"
+      },
+      {
+        "text": "한국고용정보원 — 직업연구 및 경력개발 지원 사업(직업심리검사·직업정보)",
+        "url": "https://www.keis.or.kr/keis/ko/conts/105/web.do"
+      },
+      {
+        "text": "고용노동부 — 국민취업지원제도(취업취약계층 직업상담·취업지원)",
+        "url": "https://www.moel.go.kr/policyitrd/policyItrdView.do?policy_itrd_sn=52"
+      },
+      {
+        "text": "한국고용정보원 — 한국직업분류 2025(직업정보·직업분류)",
+        "url": "https://www.keis.or.kr/keis/ko/proj/114/pblc/detail.do?pubIdx=11171"
+      },
+      {
+        "text": "국가법령정보센터 — 직업안정법 시행령(직업상담사 1·2급 자격요건)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=79829"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "text": "큐넷(한국산업인력공단) — 직업상담사 1급 국가기술자격",
+        "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9510"
+      },
+      {
+        "text": "고려대학교 교육학과 상담전공 — 상담 자격증(직업상담사·청소년상담사)",
+        "url": "https://counselor.korea.ac.kr/counseling/curriculum/counseling_license.do"
+      },
+      {
+        "text": "한국산업인력공단 — NCS 국가직무능력표준(일-교육훈련-자격)",
+        "url": "https://www.hrdkorea.or.kr/1/7/1"
+      },
+      {
+        "text": "한국상담학회 — 전문상담사(진로상담) 자격·수련 절차",
+        "url": "https://counselors.or.kr/KOR/license/process.php"
+      },
+      {
+        "text": "한국고용정보원 — 고용동향브리프 2026년 제1호(노동시장 변화)",
+        "url": "https://www.keis.or.kr/keis/ko/proj/118/pblc/detail.do?categoryIdx=126&pubIdx=11273"
+      }
+    ]
+  },
+  "changeSummary": "[job-data-master] cleanup — 직업상담사 출처 전면 재검증(broken keis conts110·kvoca·krcpa, moel noticeList listPage, q-net 카탈로그 제거) → verified deep 12로 재매핑. 정부 직업포털(워크넷·고용24)은 origin 정책상 제외. 본문/마커 보존.",
+  "_jobSlug": "직업상담사",
+  "_omegaSelfAudit": true
+}
