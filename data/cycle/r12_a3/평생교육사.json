@@ -1,0 +1,177 @@
+{
+  "fields": {
+    "way": "평생교육사는 평생교육의 기획·진행·분석·평가 및 교수 업무를 담당하는 국가자격 전문인력으로, 자격은 1급·2급·3급으로 구분된다.[1] 자격은 대학·학점은행기관 등 양성기관에서 평생교육 관련 과목을 이수하는 양성과정과, 하위 급수 소지자가 상위 급수로 올라가는 승급과정으로 취득한다.[2] 2급은 대학원에서 필수과목 15학점 이상을 이수하거나 대학·학점은행기관에서 관련 과목 30학점 이상을 이수해야 하고, 3급은 21학점 이상 이수가 필요하다.[3] 특히 학점은행제를 활용하면 학교 밖 학습으로 관련 과목 학점을 이수해 자격 요건을 충족할 수 있다.[4] 자격 취득에는 평생교육실습 과목과 함께 현장실습기관에서 4주·160시간 이상의 평생교육현장실습 이수가 필수다.[5] 취득 후에는 시·도평생교육진흥원, 시·군·구 평생학습관, 대학 부설 평생교육원, 학교·기업의 평생교육 부서 등에 배치되어 활동한다.[6]",
+    "trivia": "2022년 12월 기준 평생교육사 자격 보유자는 1급 985명, 2급 14만 8,432명, 3급 7,818명 등 약 15만 7,000명에 이른다.[1] 평생교육 프로그램과 학습자, 평생교육사 배치 현황은 평생교육통계조사로 매년 집계된다.[2] 대학 부설 평생교육원은 4년제 대학 210곳, 전문대학 132곳에서 운영되며 다양한 학위·비학위 과정을 제공한다.[3]",
+    "overviewProspect.main": "평생학습에 대한 사회적 수요가 커지면서 평생교육사의 취업 전망은 밝은 편으로, 배치기준 확대가 취업 확대 과제로 논의된다.[1] 평생교육기관과 프로그램·학습자 수가 꾸준히 늘어 평생교육 인력 수요를 뒷받침한다.[2] 고령화에 따른 노년층 교육과 디지털 문해 등 성인 평생학습 정책 확대도 성장 요인으로 작용한다.[3]",
+    "detailWlb.wlbDetail": "평생교육사는 시·도평생교육진흥원, 평생학습관, 대학 평생교육원, 기업 교육 부서 등 다양한 기관에서 프로그램 기획·운영과 학습자 상담을 담당하며, 프로그램·행사 운영 시기에는 업무가 집중되는 탄력적 근무가 나타난다.[1]",
+    "detailWlb.socialDetail": "평생교육사는 모든 국민이 평생에 걸쳐 학습할 기회를 누리도록 온라인·오프라인 평생학습 기반을 운영한다.[1] 기초생활수급자·차상위계층·노인 등에게 교육비를 지원하는 평생교육이용권(바우처)처럼 교육 격차를 줄이고 학습 접근성을 높이는 공적 기능을 수행한다.[2] 평생교육법은 국가와 지방자치단체가 국민의 평생 학습권과 삶의 질 향상을 보장하도록 규정하고 있다.[3]",
+    "detailReady.curriculum": [
+      "대학·학점은행기관에서 평생교육론·평생교육방법론·평생교육경영론·평생교육프로그램개발론 등 평생교육 관련 과목 이수 [1]",
+      "평생교육실습 과목 수강 후 현장실습기관에서 4주·160시간 이상 평생교육현장실습 이수 [2]",
+      "전 과목 평균 80점 이상 취득 후 국가평생교육진흥원에 평생교육사 자격증 발급 신청 [3]"
+    ],
+    "detailReady.recruit": [
+      "시·도평생교육진흥원·시군구 평생학습관 등 평생교육사 의무 배치 기관 채용 [1]",
+      "평생교육법 시행령 배치기준에 따른 평생교육기관·평생학습관 평생교육사 채용 [2]",
+      "평생교육진흥원·지자체 평생교육 사업 직원 공개채용(평생교육사 자격 우대) [3]"
+    ],
+    "detailReady.training": [
+      "국가평생교육진흥원 평생교육사 자격제도 운영·전문 역량 강화 연수 참여 [1]",
+      "2급 취득 후 5년 경력과 국가평생교육진흥원 1급 승급과정 이수로 상위 자격 취득 [2]",
+      "K-MOOC·온국민평생배움터 등 온라인 평생학습 플랫폼으로 최신 교육 트렌드 습득 [3]"
+    ],
+    "sidebarCerts": [
+      "평생교육사 1급",
+      "평생교육사 2급",
+      "평생교육사 3급"
+    ],
+    "sidebarOrgs": [
+      {
+        "name": "국가평생교육진흥원",
+        "url": "www.nile.or.kr"
+      },
+      {
+        "name": "평생교육사 자격관리",
+        "url": "lledu.nile.or.kr"
+      },
+      {
+        "name": "교육부",
+        "url": "www.moe.go.kr"
+      }
+    ],
+    "sidebarMajors": [
+      "평생교육학과",
+      "교육학과",
+      "교육공학과",
+      "사회교육과"
+    ],
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=nwFQdBd2bpc",
+        "title": "평생교육사? 하는 일·연봉·취업처·메리트·주의사항 (가시TV)",
+        "description": ""
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {
+        "text": "위키백과 — 평생교육사(정의·등급·업무)",
+        "url": "https://ko.wikipedia.org/wiki/평생교육사"
+      },
+      {
+        "text": "국가평생교육진흥원 — 평생교육사 자격제도(1·2·3급)",
+        "url": "https://lledu.nile.or.kr/system/qualify/"
+      },
+      {
+        "text": "국가평생교육진흥원 — 평생교육사 등급별 자격요건(이수 학점)",
+        "url": "https://lledu.nile.or.kr/system/class/"
+      },
+      {
+        "text": "학점은행제(국가평생교육진흥원) — 학점은행제란(학점인정·평생학습)",
+        "url": "https://www.cb.or.kr/creditbank/eduIntro/nEduIntro1_1_1.do"
+      },
+      {
+        "text": "국가평생교육진흥원 — 평생교육 현장실습 안내(4주 160시간)",
+        "url": "https://lledu.nile.or.kr/pds/license/4490"
+      },
+      {
+        "text": "국가법령정보센터 — 평생교육법(평생교육사 자격·배치, 학습권)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=000851"
+      }
+    ],
+    "trivia": [
+      {
+        "text": "국가평생교육진흥원 — 평생교육사 자격제도 운영(자격 보유 현황)",
+        "url": "https://www.nile.or.kr/usr/wap/detail.do?app=13309&seq=33&lang=ko"
+      },
+      {
+        "text": "한국교육개발원 — 교육통계분석자료집(평생교육통계편)",
+        "url": "https://kess.kedi.re.kr/publ/view?itemCode=02&menuSeq=0&publSeq=45&survSeq=2022"
+      },
+      {
+        "text": "e-나라지표 — 대학부설 평생교육원 현황(210곳·전문대 132곳)",
+        "url": "https://www.index.go.kr/unity/potal/main/EachDtlPageDetail.do?idx_cd=1556"
+      }
+    ],
+    "overviewProspect.main": [
+      {
+        "text": "윤옥한(2023) — 평생교육사 취업 확대 방안 연구(KCI)",
+        "url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002983489"
+      },
+      {
+        "text": "서울특별시평생교육진흥원 — 서울시 평생교육 통계 분석(기관·프로그램·학습자)",
+        "url": "https://slei.seoul.kr/notice/researchInHouseView.do?tBoardIdx=5121"
+      },
+      {
+        "text": "교육부 — 2024년 평생교육통계·성인 평생학습 실태조사 발표",
+        "url": "https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=338&boardSeq=102862&lev=0&s=moe&m=0304&opType=N"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "text": "서울특별시평생교육진흥원 — 평생교육 직원 채용 공고(평생교육사 우대)",
+        "url": "https://slei.seoul.kr/notice/hireView.do?tBoardIdx=5484"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "text": "온국민평생배움터(국가평생학습포털) — 온라인 평생학습·계좌제",
+        "url": "https://www.all.go.kr/main/viewMain.do"
+      },
+      {
+        "text": "국가평생교육진흥원 — 평생교육이용권(바우처) 지원 사업",
+        "url": "https://www.nile.or.kr/usr/wap/detail.do?app=13309&seq=52&lang=ko"
+      },
+      {
+        "text": "국가법령정보센터 — 평생교육법(평생교육사 자격·배치, 학습권)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=000851"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "text": "부산디지털대학교 평생교육학과 — 평생교육현장실습 교과·운영",
+        "url": "https://bdu.ac.kr/edu/sub02_04.do"
+      },
+      {
+        "text": "국가평생교육진흥원 — 평생교육 현장실습 안내(4주 160시간)",
+        "url": "https://lledu.nile.or.kr/pds/license/4490"
+      },
+      {
+        "text": "국가평생교육진흥원 — 평생교육사 자격제도(1·2·3급)",
+        "url": "https://lledu.nile.or.kr/system/qualify/"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "text": "국가법령정보센터 — 평생교육법 시행령 별표(평생교육사 배치대상기관·기준)",
+        "url": "https://www.law.go.kr/LSW/lsLawLinkInfo.do?lsJoLnkSeq=900553138"
+      },
+      {
+        "text": "국가법령정보센터 — 평생교육법 시행령(평생교육사 배치기준)",
+        "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=111393"
+      },
+      {
+        "text": "서울특별시평생교육진흥원 — 평생교육 직원 채용 공고(평생교육사 우대)",
+        "url": "https://slei.seoul.kr/notice/hireView.do?tBoardIdx=5484"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "text": "국가평생교육진흥원 — 평생교육사 자격제도 운영(자격 보유 현황)",
+        "url": "https://www.nile.or.kr/usr/wap/detail.do?app=13309&seq=33&lang=ko"
+      },
+      {
+        "text": "국가평생교육진흥원 — 평생교육사 등급별 자격요건(이수 학점)",
+        "url": "https://lledu.nile.or.kr/system/class/"
+      },
+      {
+        "text": "온국민평생배움터(국가평생학습포털) — 온라인 평생학습·계좌제",
+        "url": "https://www.all.go.kr/main/viewMain.do"
+      }
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — 평생교육사 신규 보강(way·trivia·prospect·wlb·social·detailReady curriculum/recruit/training 전 영역 작성, 기존 NULL). 본문 [N] field-local 정합 + 한국 1차 출처 distinct 18(NILE 자격제도/실습/바우처, 평생교육법·시행령·배치기준, 학점은행제, 평생통계/KEDI/교육부/e-나라지표, 시도진흥원, KCI). sidebar/youtube 보강.",
+  "_jobSlug": "평생교육사",
+  "_omegaSelfAudit": true
+}
