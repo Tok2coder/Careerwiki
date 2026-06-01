@@ -57,6 +57,9 @@ const {
   detectSummaryTooLong,
   // 2026-06-01 — 룰 X (arrayItemPeriod) pre-POST FAIL 승격
   detectArrayItemPeriod,
+  // 2026-06-01 — 룰 W1/W2 (detailReady 항목 구조 malformation FAIL + 전공명만 WARN)
+  detectDetailReadyMalformed,
+  detectBareMajorCurriculum,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 룰 ZZZZ allowlist: validate-job-edit.cjs에서만 사용 ────────────────────────
@@ -332,6 +335,23 @@ function validate(data) {
     const periodHits = detectArrayItemPeriod(dr);
     for (const h of periodHits) {
       errors.push(`[arrayItemPeriod] ${h.field}[${h.idx}] 항목이 마침표로 끝남 ("...${h.preview}") — detailReady array 항목 끝 마침표 금지 ([N] 마커가 종결자). 마침표 제거 후 " [N]" 형식 사용`);
+    }
+
+    // ── 룰 W1 (2026-06-01 FAIL): detailReady array 항목 구조 malformation ──────
+    // == 마크다운 헤더 / 개행 / 불릿이 한 항목에 뭉침. 올바름: 자연어 1줄 + 끝에 [N].
+    // opus 완료 41직업 실측 0건 → false-FAIL 위험 없음.
+    const malformedHits = detectDetailReadyMalformed(dr);
+    for (const h of malformedHits) {
+      const desc = h.type === 'mdHeader' ? '마크다운 헤더(==) 누수'
+        : h.type === 'multiline' ? '개행(\\n) — 여러 내용이 한 항목에 뭉침'
+        : '불릿(- /•) 항목 시작';
+      errors.push(`[detailReadyMalformed/${h.type}] ${h.field}[${h.idx}] ${desc} ("${h.preview}") — array 항목은 자연어 1줄(끝에 [N])로 작성. 항목 분리·헤더/불릿 제거 필요`);
+    }
+
+    // ── 룰 W2 (2026-06-01 WARN): curriculum 전공명만 (사이드바 관련전공 중복) ──
+    const bareMajorHits = detectBareMajorCurriculum(dr);
+    for (const h of bareMajorHits) {
+      warnings.push(`[bareMajorCurriculum] ${h.field}[${h.idx}] "${h.preview}" — 전공명만 있음 (사이드바 관련전공과 중복, 무의미). 진학 경로·동사·설명 포함한 자연어 문장으로 보강 권장`);
     }
 
     // OS(Orphan Source) 탐지: sources["detailReady.X"]가 있는데 해당 배열의 어느 항목에도 [N] 마커가 없으면 WARN

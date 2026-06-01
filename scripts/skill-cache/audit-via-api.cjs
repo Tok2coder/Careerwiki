@@ -31,6 +31,8 @@ const {
   calcWikiQuota,
   detectArrayItemPeriod,
   detectSourcePositionCluster,
+  detectDetailReadyMalformed,
+  detectBareMajorCurriculum,
   detectUrlCountInsufficient,
   detectBodyWithoutSources,
   detectSourcesWithoutMarkers,
@@ -110,6 +112,8 @@ function analyze(slug, data, opts = {}) {
     rootURL: [],          // 2026-05-07 룰 13
     wikiQuota: null,      // 2026-05-07 룰 14
     arrayItemPeriod: [],  // 2026-05-09 룰 X — FAIL level (2026-06-01 승격: SKILL 룰 14 명확한 형식 위반, 완료 45직업 실측 0건 false-FAIL)
+    detailReadyMalformed: [], // 2026-06-01 룰 W1 — FAIL level (== 헤더/개행/불릿 뭉침, opus 41직업 실측 0건)
+    bareMajorCurriculum: [], // 2026-06-01 룰 W2 — WARN level (curriculum 전공명만)
     sourcePositionCluster: [], // 2026-05-09 룰 Y — WARN level
     urlCountInsufficient: null, // 2026-05-10 룰 Z — WARN level
     bodyWithoutSources: [], // 2026-05-10 룰 ZZ — WARN level (사용자 발견 사고)
@@ -240,8 +244,14 @@ function analyze(slug, data, opts = {}) {
     findings.wikiQuota = calcWikiQuota(sources);
   }
 
-  // 룰 X (2026-05-09): detailReady array 항목 끝 마침표 검출 (WARN level)
+  // 룰 X (2026-05-09 → 2026-06-01 FAIL): detailReady array 항목 끝 마침표 검출
   findings.arrayItemPeriod = detectArrayItemPeriod(dr);
+
+  // 룰 W1 (2026-06-01 FAIL): detailReady array 항목 구조 malformation (== 헤더/개행/불릿 뭉침)
+  findings.detailReadyMalformed = detectDetailReadyMalformed(dr);
+
+  // 룰 W2 (2026-06-01 WARN): curriculum 항목 전공명만 (사이드바 관련전공 중복)
+  findings.bareMajorCurriculum = detectBareMajorCurriculum(dr);
 
   // 룰 Y (2026-05-09): detailReady array 출처 위치 cluster 검출 (WARN level)
   findings.sourcePositionCluster = detectSourcePositionCluster(dr, sources);
@@ -303,6 +313,7 @@ function isFail(j) {
     (j.sourcesWithoutMarkers && j.sourcesWithoutMarkers.length > 0) ||
     (j.orphanSources && j.orphanSources.length > 0) ||
     (j.arrayItemPeriod && j.arrayItemPeriod.length > 0) ||
+    (j.detailReadyMalformed && j.detailReadyMalformed.length > 0) ||
     (j.omegaFindings && j.omegaFindings.some(f => f.severity === 'FAIL'))
   );
 }
@@ -343,6 +354,13 @@ function isFail(j) {
     // 사용자 spec: 결과 line `arrayItemPeriod(N)` / `sourcePositionCluster(N)`
     if (f.arrayItemPeriod && f.arrayItemPeriod.length) flags.push(`arrayItemPeriod(${f.arrayItemPeriod.length})`);
     if (f.sourcePositionCluster && f.sourcePositionCluster.length) flags.push(`sourcePositionCluster(${f.sourcePositionCluster.length})`);
+    // 룰 W1 (2026-06-01) — FAIL level (== 헤더/개행/불릿 뭉침)
+    if (f.detailReadyMalformed && f.detailReadyMalformed.length) {
+      const types = [...new Set(f.detailReadyMalformed.map(h => h.type))].join('/');
+      flags.push(`detailReadyMalformed(${f.detailReadyMalformed.length}:${types})`);
+    }
+    // 룰 W2 (2026-06-01) — WARN level (curriculum 전공명만, status 영향 X)
+    if (f.bareMajorCurriculum && f.bareMajorCurriculum.length) flags.push(`bareMajorCurriculum(${f.bareMajorCurriculum.length})`);
     // 룰 Z (2026-05-10) — WARN level (다음 사이클 트리거 역할, isFail 미포함)
     // 형식: `urlCountInsufficient(N<X)` — N=현재 URL 수, X=target
     if (f.urlCountInsufficient) {

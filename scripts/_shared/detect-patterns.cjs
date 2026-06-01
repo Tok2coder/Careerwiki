@@ -782,6 +782,69 @@ function detectArrayItemPeriod(detailReady) {
   return hits;
 }
 
+// ── 룰 W1: detailReady array 항목 구조 malformation 검출 (2026-06-01) ─────────
+//
+// sonnet cycle 사고 (R24 광업안전감독자 등 4직업): detailReady array 항목 안에
+// 마크다운 헤더(`== 제목 [N] ==`) + 개행 + `- ` 불릿이 뭉쳐 들어감.
+// 잘못: "== 에너지자원공학 [1] ==\n- 채광공학: ...\n- 발파공학: ..."
+// 올바름(opus): "기계설비공학·배관공학 관련 전문대학 진학 ... 실기 포함 [1]" (자연어 1줄)
+//
+// 검출 type (모두 FAIL):
+//   - mdHeader : 항목에 "==" 포함 (마크다운 헤더 누수)
+//   - multiline: 항목에 개행(\n) 포함 (여러 내용 한 항목에 뭉침)
+//   - bullet   : 항목에 "\n- "/"\n• " 또는 줄 시작 "- "/"• " 불릿
+// opus 완료 41직업(R20+R21) 실측 전 type 0건 → false-FAIL 위험 없음.
+//
+// @param {object} detailReady - {curriculum, recruit, training, ...}
+// @returns {Array<{field, idx, type, preview}>}
+const ARRAY_FIELDS_FOR_STRUCT = ['curriculum', 'recruit', 'training'];
+function detectDetailReadyMalformed(detailReady) {
+  if (!detailReady || typeof detailReady !== 'object') return [];
+  const hits = [];
+  for (const sub of ARRAY_FIELDS_FOR_STRUCT) {
+    const items = detailReady[sub];
+    if (!Array.isArray(items)) continue;
+    items.forEach((it, idx) => {
+      const text = typeof it === 'string' ? it : (it && typeof it === 'object' ? (it.text || '') : '');
+      if (!text) return;
+      const field = `detailReady.${sub}`;
+      const preview = text.replace(/\n/g, '\\n').slice(0, 50);
+      if (text.includes('==')) hits.push({ field, idx, type: 'mdHeader', preview });
+      else if (/\n/.test(text)) hits.push({ field, idx, type: 'multiline', preview });
+      else if (/^\s*[-•]\s/.test(text)) hits.push({ field, idx, type: 'bullet', preview });
+    });
+  }
+  return hits;
+}
+
+// ── 룰 W2: curriculum 항목 전공명만(설명 없음) 검출 (2026-06-01, WARN) ─────────
+//
+// sonnet cycle 사고 (R24 광통신연구원 등 5직업): curriculum 항목이 "물리학과[1]"
+// "전기전자공학과[2]" 처럼 전공명만 — 사이드바 관련전공과 중복이라 무의미.
+// 올바름(opus): "물리학과 진학 후 광학·광자공학 심화 — ... 이수 [1]" (진학 경로·동사·설명 포함).
+//
+// 검출: 마커 strip 후 공백 없는 단일 토큰 + 과/학과/학부/공학/학 종결.
+// (공백 있으면 설명 동반 → 정상). opus 41직업 실측 0건.
+// WARN level — 콘텐츠 품질 이슈 (형식 위반 아님, 빡빡한 FAIL 회피).
+//
+// @param {object} detailReady
+// @returns {Array<{field, idx, preview}>}
+function detectBareMajorCurriculum(detailReady) {
+  if (!detailReady || typeof detailReady !== 'object') return [];
+  const items = Array.isArray(detailReady.curriculum) ? detailReady.curriculum : [];
+  const hits = [];
+  items.forEach((it, idx) => {
+    const text = typeof it === 'string' ? it : (it && typeof it === 'object' ? (it.text || '') : '');
+    if (!text) return;
+    const stripped = text.replace(/\s*\[\d+\]\s*$/, '').trim();
+    if (/\s/.test(stripped)) return; // 공백(설명) 있으면 정상
+    if (/(과|학과|학부|공학|학)$/.test(stripped)) {
+      hits.push({ field: 'detailReady.curriculum', idx, preview: stripped.slice(0, 40) });
+    }
+  });
+  return hits;
+}
+
 // ── 룰 Y: detailReady array 출처 위치 cluster 검출 (2026-05-09) ─────────────
 //
 // SKILL 명시 룰 (job-data-master Safety Rule 15): 1 출처가 N 항목 cover하면서
@@ -1473,6 +1536,9 @@ module.exports = {
   detectArrayItemPeriod,
   detectSourcePositionCluster,
   ARRAY_FIELDS_FOR_PERIOD,
+  // 룰 W1/W2 (2026-06-01 — array 항목 구조 malformation FAIL + 전공명만 WARN)
+  detectDetailReadyMalformed,
+  detectBareMajorCurriculum,
   // 룰 Z (2026-05-10 — URL Count Insufficient WARN)
   detectUrlCountInsufficient,
   // 룰 ZZ (2026-05-10 — Body Without Sources WARN)
