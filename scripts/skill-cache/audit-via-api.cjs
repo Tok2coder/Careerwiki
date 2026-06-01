@@ -109,7 +109,7 @@ function analyze(slug, data, opts = {}) {
     sidebarSources: [],
     rootURL: [],          // 2026-05-07 룰 13
     wikiQuota: null,      // 2026-05-07 룰 14
-    arrayItemPeriod: [],  // 2026-05-09 룰 X — WARN level
+    arrayItemPeriod: [],  // 2026-05-09 룰 X — FAIL level (2026-06-01 승격: SKILL 룰 14 명확한 형식 위반, 완료 45직업 실측 0건 false-FAIL)
     sourcePositionCluster: [], // 2026-05-09 룰 Y — WARN level
     urlCountInsufficient: null, // 2026-05-10 룰 Z — WARN level
     bodyWithoutSources: [], // 2026-05-10 룰 ZZ — WARN level (사용자 발견 사고)
@@ -302,6 +302,7 @@ function isFail(j) {
     (j.wikiQuota && j.wikiQuota.level === 'FAIL') ||
     (j.sourcesWithoutMarkers && j.sourcesWithoutMarkers.length > 0) ||
     (j.orphanSources && j.orphanSources.length > 0) ||
+    (j.arrayItemPeriod && j.arrayItemPeriod.length > 0) ||
     (j.omegaFindings && j.omegaFindings.some(f => f.severity === 'FAIL'))
   );
 }
@@ -338,7 +339,7 @@ function isFail(j) {
     if (f.originDomain.length) flags.push(`origin(${f.originDomain.length})`);
     if (f.dupMarkers.length) flags.push(`dup(${f.dupMarkers.length})`);
     if (f.mojibake.length) flags.push(`mojibake(${f.mojibake.length})`);
-    // 룰 X/Y (2026-05-09) — WARN level (status 영향 X — isFail 미포함)
+    // 룰 X (2026-05-09 → 2026-06-01 FAIL 승격) — isFail 포함. 룰 Y는 여전히 WARN.
     // 사용자 spec: 결과 line `arrayItemPeriod(N)` / `sourcePositionCluster(N)`
     if (f.arrayItemPeriod && f.arrayItemPeriod.length) flags.push(`arrayItemPeriod(${f.arrayItemPeriod.length})`);
     if (f.sourcePositionCluster && f.sourcePositionCluster.length) flags.push(`sourcePositionCluster(${f.sourcePositionCluster.length})`);

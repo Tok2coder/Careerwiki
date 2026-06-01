@@ -55,6 +55,8 @@ const {
   // 2026-05-22 — 룰 26/27
   detectSourceTextIsUrl,
   detectSummaryTooLong,
+  // 2026-06-01 — 룰 X (arrayItemPeriod) pre-POST FAIL 승격
+  detectArrayItemPeriod,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 룰 ZZZZ allowlist: validate-job-edit.cjs에서만 사용 ────────────────────────
@@ -321,6 +323,15 @@ function validate(data) {
       if (dr[sub] && dr[sub].length > 0 && !sources[`detailReady.${sub}`]) {
         errors.push(`[curriculum-출처누락] detailReady.${sub}에 내용이 있지만 sources["detailReady.${sub}"]가 없음 — 반드시 출처 등록 필요`);
       }
+    }
+
+    // ── 룰 X (2026-06-01 FAIL 승격): detailReady array 항목 끝 마침표 금지 ──────
+    // SKILL 룰 14 — [N] 마커가 항목 종결자. 잘못: "...채용 포털.[1]" / 올바름: "...채용 포털 [1]"
+    // audit-via-api isFail과 동일 detector. 완료 45직업 실측 0건 → false-FAIL 위험 없음.
+    // pre-POST 차단 (draft 단계) — 모델 무관 강제.
+    const periodHits = detectArrayItemPeriod(dr);
+    for (const h of periodHits) {
+      errors.push(`[arrayItemPeriod] ${h.field}[${h.idx}] 항목이 마침표로 끝남 ("...${h.preview}") — detailReady array 항목 끝 마침표 금지 ([N] 마커가 종결자). 마침표 제거 후 " [N]" 형식 사용`);
     }
 
     // OS(Orphan Source) 탐지: sources["detailReady.X"]가 있는데 해당 배열의 어느 항목에도 [N] 마커가 없으면 WARN
