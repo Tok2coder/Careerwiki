@@ -81,6 +81,7 @@ export interface QualityAlerts {
   wayTrunc: number
   srcOrderBad: number
   ytLow: number
+  originNull: number  // master 직업인데 merged.sources(origin 레이어) 비었음 (PITR rollback 드롭 추적)
 }
 
 export interface AdminJobEqualizeProps {
@@ -367,6 +368,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
         ${alertCard('wayTrunc', 'way 잘린 텍스트', qualityAlerts.wayTrunc, 'caution')}
         ${alertCard('srcOrderBad', '_sources 순서 오류', qualityAlerts.srcOrderBad, 'caution')}
         ${alertCard('ytLow', 'YT 3개 미만', qualityAlerts.ytLow, 'caution')}
+        ${alertCard('originNull', 'origin 출처 없음(master)', qualityAlerts.originNull, 'danger')}
       </div>
     </div>
 

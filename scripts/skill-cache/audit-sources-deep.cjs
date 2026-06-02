@@ -120,9 +120,10 @@ function getNested(obj, dottedPath) {
   return cur;
 }
 
-function analyzeJob(slug, ucjStr) {
+function analyzeJob(slug, ucjStr, mergedSourcesStr, isMaster) {
   const findings = {
     slug,
+    originNull: false,    // 2026-06-02 룰 O — master 직업인데 merged.sources(origin) 비었음 (PITR rollback 드롭 추적, WARN)
     dupMarkers: [],       // [{field, marker, count}]
     orphanSrc: [],        // [{field, idx}]
     originDomain: [],     // [{field, url, host}] — 2026-04-29 격상
@@ -144,6 +145,17 @@ function analyzeJob(slug, ucjStr) {
     uniqueHosts: 0,
     externalHostCount: 0,
   };
+
+  // ── 룰 O (2026-06-02): origin-null master ─────────────────────────────────
+  //   master 마커 보유 직업인데 merged.sources(origin DataSource[])가 비었으면 WARN.
+  //   2026-05-24 PITR rollback 비대칭 guard 버그로 31 직업 origin 드롭 → 재발 추적.
+  if (isMaster) {
+    let mergedSources = null;
+    try { mergedSources = mergedSourcesStr ? JSON.parse(mergedSourcesStr) : null; } catch {}
+    if (!Array.isArray(mergedSources) || mergedSources.length === 0) {
+      findings.originNull = true;
+    }
+  }
 
   if (!ucjStr) return findings;
   let ucj;
@@ -334,6 +346,7 @@ function summarize(jobs) {
     rootURL: 0,           // 2026-05-07 룰 13
     wikiQuotaFail: 0,     // 2026-05-07 룰 14 (FAIL only)
     wikiQuotaWarn: 0,     // 2026-05-07 룰 14 (WARN only)
+    originNull: 0,        // 2026-06-02 룰 O (WARN only — clean/anyIssue 미반영)
     clean: 0,
   };
   for (const j of jobs) {
@@ -355,6 +368,7 @@ function summarize(jobs) {
     if (j.rootURL && j.rootURL.length > 0) counts.rootURL++;
     if (j.wikiQuota && j.wikiQuota.level === 'FAIL') counts.wikiQuotaFail++;
     if (j.wikiQuota && j.wikiQuota.level === 'WARN') counts.wikiQuotaWarn++;
+    if (j.originNull) counts.originNull++;  // WARN only — anyIssue/clean에 미반영
 
     const anyIssue = j.dupMarkers.length > 0 || j.orphanSrc.length > 0 ||
       j.originDomain.length > 0 || j.selfCite.length > 0 ||
@@ -461,13 +475,19 @@ async function verifyUrlsForJobs(jobs, concurrency = 10) {
 
 async function main() {
   const where = buildWhereClause();
-  const sql = `SELECT slug, user_contributed_json FROM jobs WHERE ${where} ORDER BY slug`;
+  // merged origin(sources) + master 마커 보유 여부를 함께 가져와 originNull(룰 O) 검사.
+  //   is_master: 과거 [job-data-master]/[job-data-enhance] 마커가 있던 직업 (신규 생성 직업 false positive 방지).
+  //   merged_sources: merged_profile_json.sources(origin DataSource[]) 추출.
+  const sql = `SELECT slug, user_contributed_json,
+      json_extract(merged_profile_json,'$.sources') AS merged_sources,
+      (SELECT 1 FROM page_revisions pr WHERE pr.entity_type='job' AND pr.entity_id=jobs.id AND (pr.change_summary LIKE '%[job-data-master]%' OR pr.change_summary LIKE '%[job-data-enhance]%') LIMIT 1) AS is_master
+    FROM jobs WHERE ${where} ORDER BY slug`;
 
   console.error(`[audit-sources-deep] 쿼리 실행 중...`);
   const rows = d1Query(sql);
   console.error(`[audit-sources-deep] ${rows.length}개 직업 fetch 완료`);
 
-  let jobs = rows.map(r => analyzeJob(r.slug, r.user_contributed_json));
+  let jobs = rows.map(r => analyzeJob(r.slug, r.user_contributed_json, r.merged_sources, r.is_master));
 
   // URL 갯수 필터 (옵션) — 마커 풀 중 URL ≤ N
   if (args['max-urls']) {
@@ -533,6 +553,7 @@ async function main() {
     ['arrayBrokenRef','🚨 detailReady 배열 [N]이 _sources 길이 초과 (2026-05-06)'],
     ['orderViolation','본문 [N] 첫 등장 순서가 1,2,3,... 아님 (2026-05-06)'],
     ['sidebarSources','🚨 sidebar 영역 _sources 등록 (orphan 발생, 2026-05-06)'],
+    ['originNull',   '⚠️ master인데 merged.sources(origin) 비었음 (PITR rollback, WARN, 2026-06-02)'],
   ];
   for (const [key, label] of order) {
     const n = summary[key];

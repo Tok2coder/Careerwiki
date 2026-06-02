@@ -1266,6 +1266,18 @@ jobEditorRoutes.post('/api/job/:id/rollback', requireAdmin, async (c) => {
     try { currentUcj = job.user_contributed_json ? JSON.parse(job.user_contributed_json as string) : {} } catch {}
     const preservedSal = currentUcj?.overviewSalary?.sal
 
+    // origin 레이어 보존 (sources/sourceIds protection — sal guard와 대칭)
+    // PITR rollback 재구성(apiData+adminData+UCJ)은 api_data_json=NULL 직업의
+    // origin(merged.sources/sourceIds)을 어느 레이어에도 없어 드롭한다. 현재 merged에서 보존.
+    let currentMerged: any = {}
+    try { currentMerged = job.merged_profile_json ? JSON.parse(job.merged_profile_json as string) : {} } catch {}
+    const preservedSources = Array.isArray(currentMerged?.sources) && currentMerged.sources.length > 0
+      ? currentMerged.sources
+      : undefined
+    const preservedSourceIds = currentMerged?.sourceIds && typeof currentMerged.sourceIds === 'object'
+      ? currentMerged.sourceIds
+      : undefined
+
     const { reconstructFullData, createRevision } = await import('../services/revisionService')
 
     let newUcjStr: string | null
@@ -1358,6 +1370,18 @@ jobEditorRoutes.post('/api/job/:id/rollback', requireAdmin, async (c) => {
         newMerged.overviewSalary = {}
       }
       newMerged.overviewSalary.sal = baseMerged.overviewSalary.sal
+    }
+
+    // origin final guard: 재구성 결과가 origin을 비웠으면 기존 merged origin 복원 (sal guard와 대칭)
+    // 기존 origin이 있는 직업이 rollback으로 origin을 잃지 않게 한다.
+    if (preservedSources !== undefined &&
+        (!Array.isArray(newMerged.sources) || newMerged.sources.length === 0)) {
+      newMerged.sources = preservedSources
+    }
+    if (preservedSourceIds !== undefined &&
+        (!newMerged.sourceIds || typeof newMerged.sourceIds !== 'object' ||
+         Object.keys(newMerged.sourceIds).length === 0)) {
+      newMerged.sourceIds = preservedSourceIds
     }
 
     const now = Date.now()
