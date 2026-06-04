@@ -1078,14 +1078,16 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       // originNull = master 직업(latest revision = [job-data-master])인데 merged.sources(origin 레이어) 비었음.
       //   2026-05-24 PITR rollback 비대칭 guard 버그(31 직업 origin 드롭) 추적 KPI. major 탭은 0.
       isJob && masterMarkerLike
-        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN jobs j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL AND j.merged_profile_json IS NOT NULL AND (json_extract(j.merged_profile_json,'$.sources') IS NULL OR json_array_length(json_extract(j.merged_profile_json,'$.sources')) = 0)`).bind(entityType, masterMarkerLike).first<{ count: number }>()
+        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN jobs j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL AND j.merged_profile_json IS NOT NULL AND (json_extract(j.merged_profile_json,'$.sources') IS NULL OR json_array_length(json_extract(j.merged_profile_json,'$.sources')) = 0)`).bind(entityType, masterMarkerLike).first<{ count: number }>()
         : Promise.resolve({ count: 0 } as { count: number }),
       // skillApplied = [job-data-master] 단독 (jobs 탭만, major 탭은 0)
       // 2026-05-24 rollback v2: 옛 "마커 존재" 카운트는 fake revisions가 page_revisions에 살아있어
       // RESTORE/정당인용 직업까지 master로 잡혀 over-count (1,324 vs 진짜 ~484).
       // → 각 entity의 LATEST revision이 [job-data-master] 마커인 경우만 카운트.
+      // 2026-06-04: [sidebar-fill] housekeeping rev은 latest 판정에서 제외 (최신 content revision 기준).
+      //   사이드바 보강 rev이 latest가 되면 master 직업이 KPI에서 탈락하던 버그 수정 (1283→1268 사고).
       isJob && masterMarkerLike
-        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN jobs j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL`).bind(entityType, masterMarkerLike).first<{ count: number }>()
+        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN jobs j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL`).bind(entityType, masterMarkerLike).first<{ count: number }>()
         : Promise.resolve({ count: 0 } as { count: number }),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND skill_verified_by_user=1`).first<{ count: number }>(),
     ])
@@ -1111,10 +1113,12 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       let offset = 0
       // 2026-05-24 rollback v2: latest revision이 [job-data-master] 인 경우만 master로 표시.
       // (fake revisions가 page_revisions에 그대로 살아있어도, latest가 [rollback]이면 master 아님)
+      // 2026-06-04: [sidebar-fill] housekeeping rev은 건너뛰고 최신 content revision으로 판정
+      //   (사이드바 보강 rev이 latest가 되면 master 직업이 KPI에서 탈락하던 버그 수정).
       while (true) {
         const batch = await db.prepare(
           `WITH latest AS (
-             SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? GROUP BY entity_id
+             SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id
            )
            SELECT pr.entity_id, pr.created_at AS last_at FROM page_revisions pr
            JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id
