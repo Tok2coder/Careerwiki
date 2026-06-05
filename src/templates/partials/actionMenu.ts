@@ -177,8 +177,7 @@ const ACTION_MENU_STYLES = `
   .cw-icon-btn--kebab:hover { background: rgba(148,163,184,0.16); color: #f1f5f9; }
 
   .cw-kebab-dropdown {
-    /* fixed 사용 — 부모의 overflow:hidden에 영향받지 않음 (HowTo의 .howto-action-buttons 등)
-     * 위치는 부트스트랩 스크립트가 트리거의 getBoundingClientRect() 기반으로 동적 계산 */
+    /* JS가 document.body로 portal 후 fixed로 좌표 직접 설정 — backdrop-filter/overflow 영향 차단 */
     position: fixed; min-width: 240px; max-width: 320px;
     padding: 6px; border-radius: 10px;
     background: rgba(15,19,35,0.98); border: 1px solid rgba(148,163,184,0.22);
@@ -186,7 +185,7 @@ const ACTION_MENU_STYLES = `
     display: none; z-index: 9999;
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
-  .cw-kebab-menu.is-open .cw-kebab-dropdown { display: block; }
+  /* display는 JS가 직접 제어 — .is-open CSS 룰은 portal 후 효력 없음 */
 
   .cw-action-item {
     display: flex; align-items: center; gap: 10px;
@@ -273,42 +272,82 @@ const ACTION_MENU_STYLES = `
 `
 
 // ── 단일 부트스트랩 스크립트 (전역 가드)
+// 핵심: dropdown을 document.body로 portal 후 fixed 좌표 설정.
+// backdrop-filter(.glass-card)·overflow:hidden 등 부모의 containing-block 영향을 완전 차단.
 const ACTION_MENU_BOOTSTRAP = `
 <script id="cw-action-menu-bootstrap">
 (function(){
   if (window.__cwActionMenuBoot) return;
   window.__cwActionMenuBoot = true;
 
-  // 케밥 드롭다운을 트리거 위치 기준으로 fixed 좌표 계산 (부모 overflow:hidden 우회)
-  function positionDropdown(menu) {
-    var trigger = menu.querySelector('.cw-kebab-trigger');
-    var dropdown = menu.querySelector('.cw-kebab-dropdown');
-    if (!trigger || !dropdown) return;
-    var rect = trigger.getBoundingClientRect();
-    var dropdownWidth = Math.min(280, window.innerWidth - 16);
-    // 화면 오른쪽 경계 안에 들어오도록 조정
-    var rightOffset = Math.max(8, window.innerWidth - rect.right);
-    var topOffset = rect.bottom + 6;
-    // 화면 아래쪽으로 넘어가면 위로 띄우기
-    if (topOffset + 260 > window.innerHeight) {
-      topOffset = Math.max(8, rect.top - dropdown.offsetHeight - 6);
+  var ownerSeq = 0;
+  function ensureMenuId(menu) {
+    if (!menu.id) menu.id = 'cw-kebab-' + (++ownerSeq) + '-' + Date.now();
+    return menu.id;
+  }
+  function getDropdownFor(menu) {
+    // dropdown이 portal로 body 끝에 옮겨졌을 수 있으므로 owner attribute로 찾기
+    var inMenu = menu.querySelector(':scope > .cw-kebab-dropdown');
+    if (inMenu) return inMenu;
+    var id = menu.id;
+    if (id) {
+      return document.querySelector('.cw-kebab-dropdown[data-cw-owner="' + id + '"]');
     }
-    dropdown.style.top = topOffset + 'px';
-    dropdown.style.right = rightOffset + 'px';
+    return null;
+  }
+
+  function openDropdown(menu) {
+    var trigger = menu.querySelector('.cw-kebab-trigger');
+    var dropdown = getDropdownFor(menu);
+    if (!trigger || !dropdown) return;
+
+    // 1) Portal: body 끝으로 이동 (backdrop-filter·overflow·transform 부모 우회)
+    if (dropdown.parentNode !== document.body) {
+      var id = ensureMenuId(menu);
+      dropdown.setAttribute('data-cw-owner', id);
+      document.body.appendChild(dropdown);
+    }
+
+    // 2) 보이지 않게 표시해 사이즈 측정 가능
+    dropdown.style.display = 'block';
+    dropdown.style.visibility = 'hidden';
     dropdown.style.left = 'auto';
-    dropdown.style.maxWidth = dropdownWidth + 'px';
+
+    // 3) 다음 프레임에 좌표 계산
+    requestAnimationFrame(function() {
+      var rect = trigger.getBoundingClientRect();
+      var ddH = dropdown.offsetHeight || 280;
+      var dropdownWidth = Math.min(300, window.innerWidth - 16);
+      var rightOffset = Math.max(8, window.innerWidth - rect.right);
+      var topOffset = rect.bottom + 6;
+      if (topOffset + ddH > window.innerHeight - 8) {
+        topOffset = Math.max(8, rect.top - ddH - 6);
+      }
+      dropdown.style.top = topOffset + 'px';
+      dropdown.style.right = rightOffset + 'px';
+      dropdown.style.maxWidth = dropdownWidth + 'px';
+      dropdown.style.visibility = 'visible';
+    });
+
+    menu.classList.add('is-open');
+    trigger.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeDropdown(menu) {
+    var trigger = menu.querySelector('.cw-kebab-trigger');
+    var dropdown = getDropdownFor(menu);
+    if (dropdown) dropdown.style.display = 'none';
+    menu.classList.remove('is-open');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
   }
 
   function closeAll(except) {
-    document.querySelectorAll('.cw-kebab-menu.is-open').forEach(function(m){
-      if (m === except) return;
-      m.classList.remove('is-open');
-      var b = m.querySelector('.cw-kebab-trigger');
-      if (b) b.setAttribute('aria-expanded', 'false');
+    document.querySelectorAll('.cw-kebab-menu.is-open').forEach(function(m) {
+      if (m !== except) closeDropdown(m);
     });
   }
 
-  document.addEventListener('click', function(e){
+  document.addEventListener('click', function(e) {
     var t = e.target;
     if (!t || !t.closest) return;
 
@@ -316,36 +355,40 @@ const ACTION_MENU_BOOTSTRAP = `
     if (kebabTrigger) {
       e.stopPropagation();
       e.preventDefault();
-      var kebabMenu = kebabTrigger.closest('.cw-kebab-menu');
-      if (!kebabMenu) return;
-      var willOpen = !kebabMenu.classList.contains('is-open');
-      closeAll(kebabMenu);
-      if (willOpen) {
-        kebabMenu.classList.add('is-open');
-        kebabTrigger.setAttribute('aria-expanded', 'true');
-        // 다음 프레임에 위치 계산 (display:block 적용 후)
-        requestAnimationFrame(function(){ positionDropdown(kebabMenu); });
-      } else {
-        kebabMenu.classList.remove('is-open');
-        kebabTrigger.setAttribute('aria-expanded', 'false');
-      }
+      var menu = kebabTrigger.closest('.cw-kebab-menu');
+      if (!menu) return;
+      var willOpen = !menu.classList.contains('is-open');
+      closeAll(menu);
+      if (willOpen) openDropdown(menu);
+      else closeDropdown(menu);
       return;
     }
 
-    // 외부 클릭 → 모두 닫기 (케밥 드롭다운 내부 클릭은 제외)
-    if (!t.closest('.cw-kebab-dropdown') && !t.closest('.cw-kebab-menu')) {
-      closeAll(null);
-    }
+    // 드롭다운 내부 클릭은 무시 (메뉴 항목 클릭이 닫지 않도록)
+    if (t.closest('.cw-kebab-dropdown')) return;
+    // 외부 클릭 → 모두 닫기
+    closeAll(null);
   }, true);
 
-  document.addEventListener('keydown', function(e){
-    if (e.key !== 'Escape') return;
-    closeAll(null);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAll(null);
   });
 
-  // 스크롤·리사이즈 시 열려있는 드롭다운 위치 재계산
+  // 스크롤·리사이즈 시 열린 드롭다운 좌표 재계산
   function reposition() {
-    document.querySelectorAll('.cw-kebab-menu.is-open').forEach(positionDropdown);
+    document.querySelectorAll('.cw-kebab-menu.is-open').forEach(function(menu) {
+      var trigger = menu.querySelector('.cw-kebab-trigger');
+      var dropdown = getDropdownFor(menu);
+      if (!trigger || !dropdown) return;
+      var rect = trigger.getBoundingClientRect();
+      var ddH = dropdown.offsetHeight || 280;
+      var top = rect.bottom + 6;
+      if (top + ddH > window.innerHeight - 8) {
+        top = Math.max(8, rect.top - ddH - 6);
+      }
+      dropdown.style.top = top + 'px';
+      dropdown.style.right = Math.max(8, window.innerWidth - rect.right) + 'px';
+    });
   }
   window.addEventListener('scroll', reposition, true);
   window.addEventListener('resize', reposition);
