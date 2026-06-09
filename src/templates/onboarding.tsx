@@ -602,9 +602,11 @@ export function renderOnboardingPage(props: OnboardingPageProps): string {
           career_state: state.careerState || undefined,
           consents: [
             { type: 'terms', version: consentVersions.terms },
-            { type: 'privacy', version: consentVersions.privacy },
-            { type: 'age14', version: '1.0' }
-          ]
+            { type: 'privacy', version: consentVersions.privacy }
+          ],
+          // 만 14세 이상 동의는 별도 필드로 전송 (consents 테이블의 type CHECK 제약 우회 +
+          // 정보통신망법 §31 — 약관 동의가 아니라 자격 확인이므로 의미적으로도 분리가 맞음)
+          age14_acknowledged: state.ageAgreed
         };
         
         try {

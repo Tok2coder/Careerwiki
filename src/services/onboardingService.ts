@@ -90,6 +90,11 @@ export interface OnboardingSubmission {
     type: 'terms' | 'privacy'
     version: string
   }[]
+  /**
+   * 만 14세 이상 자격 확인 (정보통신망법 §31).
+   * 약관 동의와는 의미가 달라 consents 배열이 아닌 별도 필드로 받음.
+   */
+  age14_acknowledged?: boolean
 }
 
 /**
@@ -267,19 +272,25 @@ export async function submitOnboarding(
   // 5. 동의 검증
   const requiredConsents = ['terms', 'privacy']
   const providedConsents = data.consents.map(c => c.type)
-  
+
   for (const required of requiredConsents) {
     if (!providedConsents.includes(required as 'terms' | 'privacy')) {
       return { success: false, error: `${required === 'terms' ? '이용약관' : '개인정보처리방침'} 동의가 필요합니다.` }
     }
   }
-  
-  // 버전 검증
+
+  // 버전 검증 — terms/privacy만 (age14 등 기타 동의는 별도 처리)
   for (const consent of data.consents) {
+    if (consent.type !== 'terms' && consent.type !== 'privacy') continue
     const expectedVersion = CONSENT_VERSIONS[consent.type]
     if (consent.version !== expectedVersion) {
       return { success: false, error: `${consent.type} 약관 버전이 일치하지 않습니다.` }
     }
+  }
+
+  // 만 14세 이상 자격 확인 — 정보통신망법 §31 강행 규정
+  if (data.age14_acknowledged !== true) {
+    return { success: false, error: '만 14세 이상 또는 법정대리인 동의를 받았다는 확인이 필요합니다.' }
   }
   
   try {
@@ -304,8 +315,9 @@ export async function submitOnboarding(
       )
       .run()
     
-    // 8. 동의 저장
+    // 8. 동의 저장 (terms/privacy만 — age14는 별도)
     for (const consent of data.consents) {
+      if (consent.type !== 'terms' && consent.type !== 'privacy') continue
       await db
         .prepare(`
           INSERT INTO consents (user_id, type, version, consented_at, ip, ua)
@@ -321,7 +333,15 @@ export async function submitOnboarding(
         )
         .run()
     }
-    
+
+    // 8.5. 만 14세 이상 자격 확인 시각 저장 (정보통신망법 §31, 0058 마이그레이션)
+    if (data.age14_acknowledged) {
+      await db
+        .prepare(`UPDATE users SET age14_acknowledged_at = ? WHERE id = ?`)
+        .bind(new Date(now * 1000).toISOString(), userId)
+        .run()
+    }
+
     // 9. 온보딩 완료 처리
     await completeOnboarding(db, userId)
     
