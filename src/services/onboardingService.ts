@@ -279,10 +279,16 @@ export async function submitOnboarding(
     }
   }
 
-  // 버전 검증 — terms/privacy만 (age14 등 기타 동의는 별도 처리)
+  // 버전 검증 — 알려진 type만 검사. unknown type은 무시 + 로그만 (전체 fail 회피).
+  // 이 단계를 fail-soft로 두는 이유: 향후 클라이언트가 새 consent type을 보냈을 때
+  // CONSENT_VERSIONS에 추가하기 전이라도 기존 사용자 가입이 막히지 않도록 (2026 가입 차단 사고 재발 방지).
+  const KNOWN_CONSENT_TYPES = Object.keys(CONSENT_VERSIONS)
   for (const consent of data.consents) {
-    if (consent.type !== 'terms' && consent.type !== 'privacy') continue
-    const expectedVersion = CONSENT_VERSIONS[consent.type]
+    if (!KNOWN_CONSENT_TYPES.includes(consent.type)) {
+      console.warn('[onboarding] unknown consent type ignored:', consent.type, '(CONSENT_VERSIONS에 등록 필요)')
+      continue
+    }
+    const expectedVersion = (CONSENT_VERSIONS as Record<string, string>)[consent.type]
     if (consent.version !== expectedVersion) {
       return { success: false, error: `${consent.type} 약관 버전이 일치하지 않습니다.` }
     }

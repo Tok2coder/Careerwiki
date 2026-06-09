@@ -59,3 +59,22 @@ const commitMsg = sha ? `deploy ${sha}` : 'deploy';
 run(`wrangler pages deploy dist --commit-message "${commitMsg}"`, 'wrangler pages deploy dist');
 
 console.log('\n✅ 배포 완료');
+
+// 4. 배포 후 smoke-test — 핵심 사용자 플로우 회귀 자동 검증
+//    가입 차단 같은 사고가 사용자(친구)에게 발견되기 전에 catch 하는 안전망.
+//    배포 자체는 이미 완료된 상태이므로 실패해도 exit 0 유지하되 명확히 경고.
+(async () => {
+  console.log('\n▶ 배포 후 smoke-test (가입·페이지·API 회귀 검증)');
+  console.log('   (배포 전파를 15초 대기...)');
+  await new Promise(resolve => setTimeout(resolve, 15000));
+
+  const smoke = spawnSync('node scripts/smoke-test.cjs', { shell: true, stdio: 'inherit' });
+  if (smoke.status !== 0) {
+    console.error('\n⚠️  smoke-test 실패 — 배포는 완료됐지만 회귀 가능성 있음');
+    console.error('   위 로그를 확인 후 즉시 fix 권장');
+    console.error('   (테스트 자체에 문제가 있다면 scripts/smoke-test.cjs 점검)');
+    // 배포는 이미 commit됐으므로 exit 0 — 사람이 후속 조치
+    process.exit(0);
+  }
+  console.log('\n✨ smoke-test 통과 — 핵심 플로우 정상');
+})();
