@@ -197,6 +197,23 @@ function generateCycle(cycleNum, opts = {}) {
   for (let bi = 1; bi <= batches.length; bi++) {
     console.log(`  session ${bi}: cat data/cycle/r${cycleNum}_prompts/R${cycleNum}_B${bi}_prompt.md  → prompt`);
   }
+
+  // ─── 활동 가시화 (app.wikicomu.com /activity) ───
+  // dispatcher가 각 batch spawn 직전에 running, 검증 완료 후 done 명령을 복붙 실행.
+  // 한 cycle을 한 group_key로 묶어 /activity에서 5개 병렬 진행이 한 묶음으로 보인다.
+  const isoDate = new Date().toISOString().slice(0, 10);
+  const groupKey = `cycle-R${cycleNum}-${isoDate}`;
+  console.log(`\n=== Activity emit 명령 (spawn 직전 running / 검증 완료 후 done) ===`);
+  console.log(`group_key: ${groupKey}`);
+  for (let bi = 1; bi <= batches.length; bi++) {
+    const label = `R${cycleNum} B${bi}: ${batches[bi - 1].map((j) => j.slug).join('·')}`;
+    const extId = `r${cycleNum}-b${bi}`;
+    const runEvt = JSON.stringify({ events: [{ label, source: 'batch', external_id: extId, group_key: groupKey, agent_slug: 'hangyeol', model: 'claude-sonnet-4-5', status: 'running' }] });
+    const doneEvt = JSON.stringify({ events: [{ label, source: 'batch', external_id: extId, group_key: groupKey, status: 'done' }] });
+    console.log(`  B${bi} running: node scripts/emit-activity.cjs '${runEvt}'`);
+    console.log(`  B${bi} done:    node scripts/emit-activity.cjs '${doneEvt}'`);
+  }
+
   console.log(`\n완료 후: 25 직업 rev 수집 + audit + R${cycleNum}_report.md + 메모리 갱신 (project_careerwiki_cycle_progress.md).`);
 }
 
