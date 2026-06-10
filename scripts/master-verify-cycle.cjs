@@ -173,20 +173,29 @@ function proseConcat(data) {
 }
 
 // ─── DB: 직업별 마커/UCJ/origin 일괄 조회 ───
+// ⚠️ id별 개별 쿼리(직업당 wrangler 2회 = 25직업 50회 순차 spawn) 금지 —
+//    1회당 10~30초라 총 25~50분 무출력 "행"처럼 보이던 사고(2026-06-10) 후 2회 일괄로 배치화.
 function fetchDbInfo(ids) {
+  const valid = ids.filter(Boolean);
   const info = {};
-  for (const id of ids) {
-    if (!id) continue;
-    // a) latest content rev 마커 + UCJ
-    const rev = d1Query(
-      `SELECT change_summary AS cs FROM page_revisions WHERE entity_type='job' AND entity_id='${id}' AND change_summary NOT LIKE '%[sidebar-fill]%' ORDER BY id DESC LIMIT 1`
-    );
-    const csLatest = rev[0] ? String(rev[0].cs || '') : '';
-    // b) UCJ NOT NULL + e) origin (merged_profile_json.sources/sourceIds)
-    const job = d1Query(
-      `SELECT (user_contributed_json IS NOT NULL) AS has_ucj, (json_extract(merged_profile_json,'$.sources') IS NOT NULL) AS has_src, (json_extract(merged_profile_json,'$.sourceIds') IS NOT NULL) AS has_srcids FROM jobs WHERE id='${id}'`
-    );
-    const j0 = job[0] || {};
+  if (!valid.length) return info;
+  const idList = valid.map((id) => `'${id}'`).join(',');
+  console.log(`[db] 일괄 조회 중 (${valid.length} id, wrangler 2회 — 약 1분)...`);
+  // a) latest content rev 마커 (일괄)
+  const revs = d1Query(
+    `WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type='job' AND entity_id IN (${idList}) AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT pr.entity_id AS eid, pr.change_summary AS cs FROM page_revisions pr JOIN latest l ON l.max_id = pr.id`
+  );
+  const csById = {};
+  for (const r of revs) csById[String(r.eid)] = String(r.cs || '');
+  // b) UCJ NOT NULL + e) origin (일괄)
+  const jobsRows = d1Query(
+    `SELECT id, (user_contributed_json IS NOT NULL) AS has_ucj, (json_extract(merged_profile_json,'$.sources') IS NOT NULL) AS has_src, (json_extract(merged_profile_json,'$.sourceIds') IS NOT NULL) AS has_srcids FROM jobs WHERE id IN (${idList})`
+  );
+  const jobById = {};
+  for (const r of jobsRows) jobById[String(r.id)] = r;
+  for (const id of valid) {
+    const csLatest = csById[id] || '';
+    const j0 = jobById[id] || {};
     info[id] = {
       markerOk: /\[job-data-master\]/.test(csLatest),
       csLatest,
@@ -195,6 +204,7 @@ function fetchDbInfo(ids) {
       hasOriginSourceIds: Number(j0.has_srcids) === 1,
     };
   }
+  console.log(`[db] 완료 — rev ${revs.length}건 / job ${jobsRows.length}건 매칭. 직업별 검사 시작 (1건당 20~40초)\n`);
   return info;
 }
 
