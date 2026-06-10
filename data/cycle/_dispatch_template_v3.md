@@ -92,6 +92,20 @@ v3 변경 (v2 대비):
     - 위반 시 dispatcher 재지시 받기 전까지 batch fail로 간주
     - 2026-05-28 사고: R11_B2 sub-agent (건축 5 직업) 가 "작업 규모 크다"고 AskUser 호출 → 다른 4 batch는 같은 분량 잘 처리 중. dispatcher 재지시 30분 지체 후 정상 완료.
 
+17. **🔴 룰 A — POST 전 신규 URL 생존 확인 의무** (2026-06-10 신규, R41 broken URL 사고):
+    - POST payload의 **모든 신규 `_sources[].url`을 node fetch (브라우저 UA) 로 생존 확인** 후에만 POST.
+    - **404 / 410 / DNS실패(NXDOMAIN) = 사용 금지 → 반드시 교체.**
+    - **000 · 403 · timeout · TLS 오류 = 거짓양성 가능 (Windows schannel·anti-bot) — 타 방법으로 재검, 즉시 폐기 X.**
+    - 200 · 30x = OK.
+    - 검증: `node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal` (`urlDead`=FAIL / `urlUnverified`=WARN) — `urlDead` 발견 시 즉시 RETRY.
+    - 2026-05~06 R41 사고: broken URL 11건/7직업이 audit CLEAN 통과 (URL 생존 미검사 구멍).
+
+18. **🔴 룰 B — 배치 보고 7열 전 칸 의무 + 모호 표기 금지** (2026-06-10 신규, R41 보고 형식 위반):
+    - 배치 완료 보고는 직업별 **7열 모두** 기재: `직업 | rev | distinct | totalE(정확 수치) | class | CLEAN | 마커OK`.
+    - **totalE는 실측 정확 숫자** (`≥19` 부등호 X). `node scripts/master-verify-cycle.cjs --cycle=N` 이 정확 카운트 + 마커 OK 일괄 검증.
+    - **"(이전 세션)" / "(기존 처리됨)" 류 모호 표기 절대 금지** — 실측 rev id 기재.
+    - 2026-05~06 R41 사고: B3/B4/B5 보고 totalE·class·마커 열 누락 + "(이전 세션)" 표기 → opus 세션이 totalE=18을 임의 PASS.
+
 ---
 
 # 처리 대상 5 직업

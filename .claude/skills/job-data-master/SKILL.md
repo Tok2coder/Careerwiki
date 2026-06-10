@@ -335,6 +335,10 @@ next: <Phase 1 재시작 / 4단계 인정 + pending 기록 / STOP + 사용자 �
     - **distinct < 18 보고 시 industry classification 명시 의무**: `niche (단일 공정)` / `minor (소규모 산업)` / `major (광범위)` 중 택. major + distinct < 18 = 실패 (재처리 또는 추가 발굴).
     - **2026-05-25 사고**: Rpri1_B3 5 직업 (개인자산관리사·개인정보보호전문가·객실물품보급반장·갠트리크레인조종원·갱내탐사원) 모두 메이저 산업인데 distinct 6-7로 종료 → 재처리.
 
+31. **🚨 룰 A — POST 전 신규 URL 생존 확인 의무** (2026-06-10 신규, R41 broken URL 사고) — POST payload의 **모든 신규 `_sources[].url`을 node fetch로 생존 확인** 후에만 POST. 브라우저 User-Agent 사용, HEAD 먼저·실패 시 GET 재시도. 판정: **404 / 410 / DNS실패(NXDOMAIN) = 사용 금지 → 반드시 교체** / **000(연결불가) · 403 · timeout · TLS 오류 = 거짓양성 가능 (Windows schannel·anti-bot) — 타 방법(WebFetch·브라우저)으로 재검, 즉시 폐기 X** / **200·30x = OK**. 검증 도구: `node scripts/master-verify-cycle.cjs --slugs-file=...` (d 항목) 또는 `node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal` (`urlDead`=FAIL / `urlUnverified`=WARN). **2026-05~06 R41 사고**: broken URL 11건/7직업이 `audit-via-api` CLEAN 통과 — URL 생존 미검사 구멍. 이제 audit에 URL 생존 게이트 추가됨. `urlDead` 발견 시 즉시 RETRY (교체 후 재POST).
+
+32. **🚨 룰 B — 배치 보고 7열 전 칸 의무 + 모호 표기 금지** (2026-06-10 신규, R41 보고 형식 위반) — 배치 완료 보고는 직업별 **7열 모두** 기재: `직업 | rev | distinct | totalE(정확 수치) | class | CLEAN | 마커OK`. **totalE는 실측 정확 숫자** (`≥19` 같은 부등호 X — `node scripts/master-verify-cycle.cjs`가 정확 카운트 제공). **"(이전 세션)" / "(기존 처리됨)" 류 모호 표기 절대 금지** — 실측 rev id 기재. totalE < 19면 보고 전 보강 (룰 15). **2026-05~06 R41 사고**: B3/B4/B5 배치 보고에서 totalE·class·마커 열 누락 + "(이전 세션)" 모호 표기 → opus 검증 세션이 totalE=18(<19)을 임의 PASS. 기계 검증 게이트 (`master-verify-cycle.cjs`) 로 보강.
+
 ---
 
 ## Examples

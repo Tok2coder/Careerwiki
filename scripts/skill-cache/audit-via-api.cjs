@@ -43,6 +43,9 @@ const {
   PROSE_BODY_FIELDS,
 } = require(path.join(REPO_ROOT, 'scripts', '_shared', 'detect-patterns.cjs'));
 
+// URL 생존 게이트 (R41 사후 신설). master-verify-cycle.cjs와 공유 모듈.
+const { checkUrls } = require(path.join(REPO_ROOT, 'scripts', 'skill-cache', 'url-liveness.cjs'));
+
 // PROSE_BODY_FIELDS는 detect-patterns.cjs export — validate-job-edit.cjs와 공유 (proseBodyOrphan 룰 정합성).
 const BODY_FIELDS = PROSE_BODY_FIELDS;
 
@@ -120,6 +123,9 @@ function analyze(slug, data, opts = {}) {
     sourcesWithoutMarkers: [], // 2026-05-11 룰 ZZZ — FAIL level (경찰관 사고)
     orphanSources: [], // 2026-05-11 룰 ZZZZ — FAIL level (본문 없는 영역에 _sources만 잔존)
     omegaFindings: [], // 2026-05-15 룰 OMEGA — 통합 자동 스캔 (화이트리스트 폐기)
+    urlDead: [],       // R41 룰 — FAIL level (404/410/NXDOMAIN). main 루프에서 async 채움
+    urlUnverified: [], // R41 룰 — WARN level (000/403/timeout/TLS)
+    _allUrls: [],      // 내부 — URL 생존 검사 대상 (analyze에서 수집, main에서 fetch)
   };
 
   const flatSources = [];
@@ -140,6 +146,8 @@ function analyze(slug, data, opts = {}) {
       if (!src || typeof src !== 'object') continue;
       flatSources.push(src);
       const id = typeof src.id === 'number' ? src.id : (i + 1);
+
+      if (src.url && typeof src.url === 'string') findings._allUrls.push(src.url);
 
       if (typeof src.text === 'string' && /^\s*https?:\/\//.test(src.text)) {
         findings.rawURL.push({ field: fieldKey, idx: id, text: src.text.slice(0, 80) });
@@ -314,6 +322,7 @@ function isFail(j) {
     (j.orphanSources && j.orphanSources.length > 0) ||
     (j.arrayItemPeriod && j.arrayItemPeriod.length > 0) ||
     (j.detailReadyMalformed && j.detailReadyMalformed.length > 0) ||
+    (j.urlDead && j.urlDead.length > 0) ||
     (j.omegaFindings && j.omegaFindings.some(f => f.severity === 'FAIL'))
   );
 }
@@ -335,6 +344,12 @@ function isFail(j) {
     const r = await fetchJob(slug);
     if (r.error) { console.log(`ERR  ${slug.padEnd(30)} ${r.error}`); continue; }
     const f = analyze(slug, r.data, { excludeSal });
+    // URL 생존 게이트 (R41) — _sources 모든 URL fetch 후 dead(FAIL)/unverified(WARN) 분류
+    {
+      const live = await checkUrls(f._allUrls);
+      f.urlDead = live.dead;
+      f.urlUnverified = live.unverified;
+    }
     results.push(f);
     const status = isFail(f) ? 'FAIL' : 'OK  ';
     const flags = [];
@@ -397,7 +412,18 @@ function isFail(j) {
       }
       if (warn.length) flags.push(`OMEGA-WARN(${warn.length})`);
     }
+    // R41 URL 생존 게이트 — urlDead(FAIL) / urlUnverified(WARN)
+    if (f.urlDead && f.urlDead.length) {
+      flags.push(`urlDead(${f.urlDead.length})`);
+    }
+    if (f.urlUnverified && f.urlUnverified.length) {
+      flags.push(`urlUnverified(${f.urlUnverified.length})`);
+    }
     console.log(`${status} ${slug.padEnd(30)} ${flags.join(', ') || 'clean'}`);
+    (f.urlDead || []).forEach(u =>
+      console.log(`         [urlDead] ${u.reason}: ${u.url}`));
+    (f.urlUnverified || []).forEach(u =>
+      console.log(`         [urlUnverified] ${u.reason}: ${u.url}`));
     f.arrayBrokenRef.forEach(b =>
       console.log(`         ${b.field}: broken=[${b.broken.join(',')}] srcLen=${b.srcLen}`));
     f.brokenRef.forEach(b => console.log(`         ${b.field}#${b.idx} broken`));
