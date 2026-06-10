@@ -6,12 +6,26 @@
 
 ## 📊 현재 진행 상태 (스냅샷 — 라이브 진리값은 `--status`)
 
-- 마지막 완료: **R11** (검침사무원까지) + SR cycle 89직업(totalE<19 보강)
-- **다음: R12** (검표원 + 게임 series 24개)
-- 누적 master: A=679(전체 마커) / B=609(enhance 풀 사이클) — 2026-05-29 기준
+- 마지막 완료: **R24** (25/25, 끝=광통신연구원, rev 17039~17105, sonnet+정정) — detailReady 9직업 opus 정정완료, 하네스 강화 커밋 bfc1dcf·6c87d17. distinct<18 1건(광점퍼코드조립원 10, niche)
+- **다음: R25** (시작=광트랜시버모듈개발자) — `--cycle=25`로 batch/prompt 생성
+- 누적 master: A=1016(전체 마커) / B=947(enhance 풀 사이클) — 2026-05-31 **예상치(미확정)**: R16~R24 **9 cycle 연속 wrangler 토큰 만료로 DB 직접 쿼리 미검증**, R15 확정값(791/722)+225 추정. 토큰 복구 후 일괄 재검증 필요
 - master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업, R7~R229 사전할당)
 
 > ⚠️ 위 숫자는 스냅샷. **항상 `node scripts/master-cycle-helper.cjs --status` 로 라이브 확인** (DB 진리값 — 마지막 cycle/다음 cycle 자동 탐지).
+> ⚠️ **wrangler 토큰 만료 주의 (2026-05-30 발생)**: `wrangler d1 execute` / `whoami`가 `Authentication error 10000` / `Max auth failures 9109`로 실패. A/B DB 카운트 검증 막힘. 재개 전 `wrangler login` 또는 `CLOUDFLARE_API_TOKEN` 갱신 필요. (audit-via-api / prod fetch는 공개 API라 토큰 없이 동작)
+
+---
+
+# ⚠️ 절대 룰 — sub-session 결과 인용·완료 판정 (2026-05-29 사고 재발방지)
+
+> 2026-05-29 R12/R13 dispatch 중 sub-session이 "전부 완료"를 반복 보고했으나 DB 실측은 매번 미달(5/25→20/25→25/25, 1/25→14/25→21/25→23/25). running 상태 결과 인용 + 추측 rev/카운트 + 가짜 session_id + 타임아웃 오판 + 부분완료 보고가 원인. 아래는 예외 없이 강제.
+
+1. **sub-session 결과는 `idle` / `[result]` 확인 후에만 인용.** `running` 상태 세션의 결과를 완료로 보고 금지.
+2. **rev·카운트·완료수·직업명은 `master-cycle-helper.cjs --status` / DB 쿼리 / `[result]` 원문에서 복사만.** 추측·기억으로 채우기 절대 금지.
+3. **session_id는 `start_code_task` 반환값 또는 `list_sessions`에서만 취득.** 손으로 만들거나 추정 금지.
+4. **`start_code_task` 타임아웃 ≠ 실패.** 타임아웃이 떠도 세션은 생성됨. 재시도 전 반드시 `list_sessions`로 실제 생성·중복 확인. 같은 제목 2개+면 즉시 중복 → 잉여 세션 STOP.
+5. **소규모 후속 작업은 기존 `idle` 세션에 `send_message`로 지시** — 새 `start_code_task`보다 타임아웃·중복 회피.
+6. **cycle "완료"는 helper `--status`가 25/25일 때만.** 부분(N/25) 상태를 "완료"로 보고 금지 — 정확히 `N/25`로만 표기.
 
 ---
 

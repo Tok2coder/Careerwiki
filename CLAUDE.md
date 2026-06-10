@@ -322,6 +322,7 @@ node scripts/data-health-report.cjs --top-missing=20
 - 상수: UPPER_SNAKE_CASE (`MIN_VECTOR_SCORE`)
 - DB 컬럼: snake_case (`raw_payload`)
 - 커밋: `feat/fix/chore: [한국어 설명]`
+- **자동 커밋 (Jason 지시 2026-06-10)**: git-tracked 자산(코드·스킬·매뉴얼·스크립트·CLAUDE.md) 변경 시 사용자 요청을 기다리지 말고 **그 턴 안에 즉시 커밋**. working tree에 작업 산출물을 미커밋으로 남기지 않는다. (push는 별도 — 기존 룰대로)
 - TS strict mode, async/await, functional style
 
 ## Design Doc Protocol
