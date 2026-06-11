@@ -25,8 +25,8 @@ dispatcher가 **"현재 진행 상황/현황 확인하고 master 스킬로 배�
 6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) batch 생성 → `start_code_task` × 5 → 결과 수집 → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
 
 진행 상태 요약 (자세한 건 `--status` + 매뉴얼이 진리):
-- 마지막 완료: **R11** (검침사무원까지). SR cycle(totalE<19 보강) 89직업 완료.
-- **다음: R12** (검표원 + 게임 series). batch/prompt 생성됨 또는 `--cycle=12`로 재생성.
+- 마지막 완료: **R43** (디지털장의사까지). 누적 A=1489/B=1418.
+- **다음: R44** (디지털제판원 series). `--cycle=44`로 batch/prompt 생성.
 - master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업).
 
 ## Tech Stack
