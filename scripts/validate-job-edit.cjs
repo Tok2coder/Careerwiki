@@ -60,6 +60,8 @@ const {
   // 2026-06-01 — 룰 W1/W2 (detailReady 항목 구조 malformation FAIL + 전공명만 WARN)
   detectDetailReadyMalformed,
   detectBareMajorCurriculum,
+  // 2026-06-11 — 게이트 2 [prose영역미달] (array trivia 등 normalize)
+  normalizeProseBody,
 } = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
 
 // ── 룰 ZZZZ allowlist: validate-job-edit.cjs에서만 사용 ────────────────────────
@@ -84,6 +86,37 @@ const ALLOWED_SOURCE_FIELDS = new Set([
 ]);
 
 const SIDEBAR_FIELDS_FORBIDDEN_TXT = SIDEBAR_FIELDS_FORBIDDEN.join('/');
+
+// ── 결정적 게이트 3종 상수 (2026-06-11, R43 사고 후속) ─────────────────────────
+// 작업자 LLM이 dispatch template v3 룰(totalE ≥19 / 9 prose 영역 100자+ /
+// distinct major≥18·niche≥10)을 자가 준수 보고만 하고 실측 미달했던 사고를
+// POST 전 결정적 FAIL로 차단한다.
+//
+// 9 prose 영역 — _dispatch_template_v3.md 룰과 동일 list.
+const ENHANCE_PROSE_9_FIELDS = [
+  'way',
+  'trivia',
+  'overviewProspect.main',
+  'detailWlb.wlbDetail',
+  'detailWlb.socialDetail',
+  'overviewWork.main',
+  'overviewAbilities.technKnow',
+  'summary',
+  'overviewAbilities.abilityList',
+];
+// 풀 enhance 모드에서도 "존재" 요구하지 않는 영역:
+//  - summary / overviewWork.main: CareerNet canonical (CAREERNET_CANONICAL_FIELDS 기존 로직 준용)
+//  - overviewAbilities.abilityList: CareerNet 공식 통계 array — enhance-strict-rules.md
+//    "출처 없으면 null 유지" 정책. 실측 payload 전수에서 미포함 (false-FAIL 방지).
+const ENHANCE_PROSE_EXISTENCE_EXEMPT = new Set([
+  ...CAREERNET_CANONICAL_FIELDS,
+  'overviewAbilities.abilityList',
+]);
+// 게이트 1: scripts/master-verify-cycle.cjs TOTAL_ENTRIES_MIN(=19)과 동일 기준.
+const GATE_TOTAL_ENTRIES_MIN = 19;
+// 게이트 3: distinct URL 하한 (--class=major|niche)
+const GATE_DISTINCT_MIN_MAJOR = 18;
+const GATE_DISTINCT_MIN_NICHE = 10;
 
 // ── Sentence-level marker cluster detection (audit-sentence-clusters.cjs와 동일 로직) ──
 // 한 문장 안에 마커 [N] 2개 이상 → cluster. 본질: 한 의미 단위(=문장)는 1 마커.
@@ -234,8 +267,8 @@ async function checkUrlsLive(sources, sampleRate = 100) {
   return broken;
 }
 
-async function validateAsync(data) {
-  const result = validate(data);
+async function validateAsync(data, opts = {}) {
+  const result = validate(data, opts);
   // URL HEAD fetch (옵션)
   if (process.env.VALIDATE_CHECK_URLS === '1' || data.checkUrls === true) {
     const sampleRate = parseInt(process.env.VALIDATE_URL_SAMPLE || '100', 10);
@@ -250,7 +283,7 @@ async function validateAsync(data) {
   return result;
 }
 
-function validate(data) {
+function validate(data, opts = {}) {
   const errors = [];   // 치명적 — API 호출 차단
   const warnings = []; // 경고 — 수동 확인 필요
 
@@ -1640,6 +1673,99 @@ function validate(data) {
     }
   }
 
+  // ── 13. 결정적 게이트 3종 — totalE / prose / distinct (2026-06-11, R43 사고 후속) ──
+  //
+  // 배경: R43 배치가 totalE "≥19"로 자가 보고했으나 실측 15 — validate에 게이트가
+  // 없어 prod 통과, opus 검증에서야 적발. 프롬프트 룰 자가 준수 3종을 POST 전
+  // 결정적 FAIL로 격하한다.
+  //
+  // 모드 판정: 9 prose 영역(ENHANCE_PROSE_9_FIELDS) 중 6개+ 가 payload fields에
+  // 존재하면 풀 enhance 모드 → FAIL. 미만이면 부분 패치/cleanup/사이드바 모드 →
+  // 게이트 1·2·3 모두 WARN으로 강등 (false positive 금지).
+  {
+    const proseStatus = ENHANCE_PROSE_9_FIELDS.map(f => {
+      const v = getNestedField(fields, f);
+      const present = v !== undefined && v !== null;
+      return { field: f, present, body: present ? normalizeProseBody(v) : '' };
+    });
+    const presentCount = proseStatus.filter(s => s.present).length;
+    const isFullEnhance = presentCount >= 6;
+    const modeSuffix = isFullEnhance ? '' : ' (부분 패치 모드 — WARN 강등)';
+    const demote = (msg) => (isFullEnhance ? errors : warnings).push(msg);
+
+    // ── 게이트 1 [totalEntries미달] ──────────────────────────────────────────
+    // 카운트 기준: scripts/master-verify-cycle.cjs sourceStats() (138~151행)와
+    // 동일 알고리즘 — sources의 Array 필드 순회, overviewSalary.sal 제외,
+    // object entry만 카운트. 두 스크립트 결과가 항상 일치해야 함 (변경 시 양쪽 동기).
+    let totalEntries = 0;
+    const distinctUrls = new Set();
+    for (const [field, arr] of Object.entries(sources)) {
+      if (!Array.isArray(arr)) continue;
+      if (field === 'overviewSalary.sal') continue; // sal 제외 (master-verify-cycle SAL_PROTECTED_FIELDS와 동일)
+      for (const src of arr) {
+        if (!src || typeof src !== 'object') continue;
+        totalEntries++;
+        if (src.url && typeof src.url === 'string') distinctUrls.add(src.url);
+      }
+    }
+    if (totalEntries < GATE_TOTAL_ENTRIES_MIN) {
+      demote(
+        `[totalEntries미달] _sources 총 entry ${totalEntries}개 (sal 제외) < ${GATE_TOTAL_ENTRIES_MIN} — ` +
+        `dispatch template v3 totalE ≥ ${GATE_TOTAL_ENTRIES_MIN} 룰. ` +
+        `master-verify-cycle.cjs sourceStats()와 동일 카운트 기준${modeSuffix}`
+      );
+    }
+
+    // ── 게이트 2 [prose영역미달] ─────────────────────────────────────────────
+    // 존재하는 prose 영역 본문 < 100자 → 풀 enhance FAIL / 부분 모드 WARN.
+    // 부분 보강 모드에서 payload에 없는 필드는 skip.
+    for (const s of proseStatus) {
+      if (!s.present) continue;
+      // way < 100자는 기존 섹션 1 [필드] way 검사가 이미 FAIL — 중복 통합 (truthy string 케이스)
+      if (s.field === 'way' && typeof fields.way === 'string' && fields.way.length > 0) continue;
+      // abilityList는 CareerNet 공식 통계 array — 길이 검사 부적합 (존재 카운트에만 반영)
+      if (s.field === 'overviewAbilities.abilityList') continue;
+      if (s.body.length < 100) {
+        demote(
+          `[prose영역미달] ${s.field} 본문 ${s.body.length}자 < 100자 — ` +
+          `9 prose 영역 100자+ 작성 의무 (dispatch template v3)${modeSuffix}`
+        );
+      }
+    }
+    // 풀 enhance 모드: 존재 자체 요구 (canonical summary/overviewWork.main + 통계 abilityList 제외)
+    if (isFullEnhance) {
+      for (const s of proseStatus) {
+        if (s.present || ENHANCE_PROSE_EXISTENCE_EXEMPT.has(s.field)) continue;
+        errors.push(
+          `[prose영역미달] 풀 enhance 모드(9영역 중 ${presentCount}개 존재)인데 ${s.field} 영역 누락 — ` +
+          `9 prose 영역 전수 작성 의무 (canonical summary/overviewWork.main · 통계 abilityList는 존재 요구 제외)`
+        );
+      }
+    }
+
+    // ── 게이트 3 [distinct미달] ──────────────────────────────────────────────
+    // distinct URL 수 (위 게이트 1과 동일 순회 — sal 제외 unique url).
+    // --class=major: <18 FAIL / --class=niche: <10 FAIL /
+    // 플래그 미지정: <10 FAIL(니치 하한은 보편) + 10~17 WARN [distinct미달-major의심] (하위호환 — 차단 없음)
+    const distinct = distinctUrls.size;
+    const cls = opts.sourceClass || null;
+    if (cls === 'major') {
+      if (distinct < GATE_DISTINCT_MIN_MAJOR) {
+        demote(`[distinct미달] distinct URL ${distinct}개 < ${GATE_DISTINCT_MIN_MAJOR} (--class=major) — major 직업은 distinct 출처 URL 18+ 필수${modeSuffix}`);
+      }
+    } else if (cls === 'niche') {
+      if (distinct < GATE_DISTINCT_MIN_NICHE) {
+        demote(`[distinct미달] distinct URL ${distinct}개 < ${GATE_DISTINCT_MIN_NICHE} (--class=niche) — niche 직업도 distinct 출처 URL 10+ 필수${modeSuffix}`);
+      }
+    } else {
+      if (distinct < GATE_DISTINCT_MIN_NICHE) {
+        demote(`[distinct미달] distinct URL ${distinct}개 < ${GATE_DISTINCT_MIN_NICHE} — 니치 하한(보편) 미달. major 직업이면 18+ 필요 (--class=major 플래그로 명시 검증)${modeSuffix}`);
+      } else if (distinct < GATE_DISTINCT_MIN_MAJOR) {
+        warnings.push(`[distinct미달-major의심] distinct URL ${distinct}개 (10~17) — major 직업이면 ${GATE_DISTINCT_MIN_MAJOR}+ 필요. --class=major|niche 플래그로 명시 검증 권장 (플래그 미지정 하위호환 — 차단 없음)`);
+      }
+    }
+  }
+
   return { errors, warnings };
 }
 
@@ -1677,15 +1803,27 @@ function getSourceKey(fieldPath) {
 async function main() {
   let input;
 
-  if (process.argv[2]) {
-    input = fs.readFileSync(process.argv[2], 'utf8');
+  // ── CLI 플래그 파싱 (2026-06-11 게이트 3) ──
+  // --class=major|niche — distinct URL 하한 명시 (미지정 시 하위호환: <10 FAIL + 10~17 WARN)
+  const cliArgs = process.argv.slice(2);
+  const classFlag = cliArgs.find(a => a.startsWith('--class='));
+  const sourceClass = classFlag ? classFlag.split('=')[1] : null;
+  if (sourceClass && !['major', 'niche'].includes(sourceClass)) {
+    console.error(`--class 값은 major 또는 niche여야 함 (입력: "${sourceClass}")`);
+    process.exit(2);
+  }
+  const fileArg = cliArgs.find(a => !a.startsWith('--'));
+
+  if (fileArg) {
+    input = fs.readFileSync(fileArg, 'utf8');
   } else if (!process.stdin.isTTY) {
     input = fs.readFileSync(0, 'utf8');
   } else {
-    console.error('Usage: node scripts/validate-job-edit.js <json-file>');
+    console.error('Usage: node scripts/validate-job-edit.js <json-file> [--class=major|niche]');
     console.error('   or: echo \'{"fields":...}\' | node scripts/validate-job-edit.js');
     console.error('Env: VALIDATE_CHECK_URLS=1 — _sources URL HEAD fetch 검증 (4xx/5xx/timeout = [urlBroken] FAIL)');
     console.error('     VALIDATE_URL_SAMPLE=30 — 30%만 sample 검증');
+    console.error('Flag: --class=major (distinct<18 FAIL) | --class=niche (distinct<10 FAIL)');
     process.exit(1);
   }
 
@@ -1697,7 +1835,7 @@ async function main() {
     process.exit(1);
   }
 
-  const { errors, warnings } = await validateAsync(data);
+  const { errors, warnings } = await validateAsync(data, { sourceClass });
 
   console.log(`\n=== 검증 결과: ${data.jobName || 'Unknown'} ===\n`);
 
