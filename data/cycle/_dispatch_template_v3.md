@@ -109,6 +109,7 @@ v3 변경 (v2 대비):
 
 19. **🔴 룰 C — POST 직업당 1회 원칙 + POST 전 셀프 게이트** (2026-06-11 신규, R43 사고):
     - **POST 전 distinct·totalE 셀프 카운트 의무 — 기준 미달 상태로 POST 절대 금지** (보강 완료 후 1회 POST). "일단 POST 하고 패치"는 잉여 rev + 재작업 낭비.
+    - **결정적 강제 (237ec3b)**: validate 호출은 반드시 `node scripts/validate-job-edit.cjs payload.json --class=<디스패처 지정 분류(major|niche)>` — `[totalEntries미달]`(<19) / `[prose영역미달]`(9영역 <100자) / `[distinct미달]`(major<18, niche<10) 게이트가 풀 enhance 모드에서 FAIL로 차단. 작업자 모델의 자가 카운트 보고와 무관하게 스크립트가 판정.
     - **동일 payload(동일 changeSummary) 반복 POST 금지.** POST 성공(revisionId 반환) 후 같은 직업 재POST는 audit FAIL 수정 시에만, **최대 2회**. 재POST 전 latest rev 확인(이미 반영됐으면 skip).
     - R43 사고: B2가 d=8·6 상태로 1차 POST → 패치 재POST 2건. 디지털-음원-기획자·디지털교과서연구원 동일 cs 3중 rev(audit-fix 루프 반복 POST).
 
