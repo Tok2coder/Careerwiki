@@ -15,10 +15,10 @@
  *   node scripts/master-cycle-helper.cjs --next-cycle
  *       → 처리 안 된 다음 cycle 자동 결정 + 생성
  *
- * 산출물:
- *   data/cycle/R{N}_B{1..5}.txt           (5 batch list)
- *   data/cycle/r{N}_prompts/R{N}_B{1..5}_prompt.md  (5 dispatch prompt)
- *   stdout: batch summary + dispatcher가 복붙할 5 spawn 명령
+ * 산출물 (v4, 2026-06-11 — 1직업-1세션 분리, Jason 결정):
+ *   data/cycle/R{N}_B{1..5}.txt           (wave list — 동시 spawn 상한 5의 wave 묶음)
+ *   data/cycle/r{N}_prompts/R{N}_J{01..25}_prompt.md  (25 single-job dispatch prompt)
+ *   stdout: summary + dispatcher가 복붙할 25 spawn 명령 (5병렬 wave)
  */
 
 const fs = require('fs');
@@ -27,7 +27,7 @@ const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const MASTER_LIST = path.join(ROOT, 'data/cycle/master_list_R7_R229.jsonl');
-const DISPATCH_TEMPLATE = path.join(ROOT, 'data/cycle/_dispatch_template_v3.md');
+const DISPATCH_TEMPLATE = path.join(ROOT, 'data/cycle/_dispatch_template_v4.md');
 
 // ─── arg parse ───
 const args = process.argv.slice(2);
@@ -79,61 +79,55 @@ function fetchMasterCount() {
   }
 }
 
-// ─── STRICT 룰 블록 (dispatch_template_v3.md의 ``` 펜스 내부) 추출 ───
+// ─── STRICT 룰 블록 (dispatch_template_v4.md의 ``` 펜스 내부) 추출 ───
 function loadStrictBlock() {
   const md = fs.readFileSync(DISPATCH_TEMPLATE, 'utf8');
   const m = md.match(/```\s*\n(# 🚨 STRICT[\s\S]*?)\n```/);
   if (!m) {
     // fallback: 처리 대상 헤더 전까지
-    const idx = md.indexOf('# 처리 대상 5 직업');
+    const idx = md.indexOf('# 처리 대상');
     return md.slice(md.indexOf('# 🚨 STRICT'), idx).trim();
   }
-  // 템플릿 placeholder (처리 대상 표 + 처리 절차) 제거 — 룰 1~16만
+  // 템플릿 placeholder (처리 대상 표 + 처리 절차) 제거 — 룰만
   const block = m[1];
-  const cut = block.indexOf('# 처리 대상 5 직업');
+  const cut = block.indexOf('# 처리 대상');
   return cut > 0 ? block.slice(0, cut).trim() : block.trim();
 }
 
-// ─── batch prompt 생성 ───
-function buildPrompt(cycleNum, batchNum, jobs, strictBlock) {
-  const batchName = `R${cycleNum}_B${batchNum}`;
-  const rows = jobs
-    .map((j, i) => `| ${i + 1} | ${j.name} | ${j.id} | ${j.slug} | (sub-agent 자체 분류: niche/minor/major) | 한국 1차 정부·협회·기업·언론 deep — slug별 도메인 자동 발굴 |`)
-    .join('\n');
+// ─── single-job prompt 생성 (v4: 1직업-1세션) ───
+function buildPrompt(cycleNum, jobNum, job, strictBlock) {
+  const jj = String(jobNum).padStart(2, '0');
+  const sessionName = `R${cycleNum}_J${jj}`;
 
   return `${strictBlock}
 
 ---
 
-# 처리 대상 5 직업 (${batchName} — ENHANCE 모드, marker 미보유 신규)
+# 처리 대상 직업 (${sessionName} — ENHANCE 모드, marker 미보유 신규, 1직업-1세션)
 
 | # | name | id | slug | industry_class | URL pool hint |
 |---|---|---|---|---|---|
-${rows}
+| 1 | ${job.name} | ${job.id} | ${job.slug} | (자체 분류: niche/minor/major — 모호 시 default major) | 한국 1차 정부·협회·기업·언론 deep — slug별 도메인 자동 발굴 |
 
 # 처리 절차
 
-각 직업 순서대로 \`.claude/skills/job-data-master/SKILL.md\` Phase 0~7 흐름 (ENHANCE 모드).
+\`.claude/skills/job-data-master/SKILL.md\` Phase 0~7 흐름 (ENHANCE 모드).
 - POST: \`https://careerwiki.org/api/job/{id}/edit\` + \`X-Admin-Secret: careerwiki-admin-2026\`
 - POST body: 파일 기반 (인라인 한글 본문 절대 X — mojibake-block hook)
-- POST 전 \`node scripts/validate-job-edit.cjs payload.json\` 통과 의무
-- POST 후 \`node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal\` CLEAN 의무
-- change_summary: \`[job-data-master] enhance — way·trivia·detailReady·sidebar·youtubeLinks·...\`
+- POST 전 \`node scripts/validate-job-edit.cjs payload.json --class=<분류>\` ALL PASS 의무 (룰 19 결정적 게이트)
+- POST 후 \`node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal\` CLEAN + 마커 확인 의무
+- change_summary: \`[job-data-master] enhance — way·trivia·detailReady·sidebar·youtubeLinks·...\` (top-level camelCase)
 - distinct URL ≥ 18 + totalEntries ≥ 19 강제 (룰 4·15)
 
-배치 5 직업 끝나면 즉시 종료. 자동 다음 cycle 진입 X.
+할당 직업 1건 끝나면 즉시 종료. 자동 다음 직업/cycle 진입 X.
 
 # 보고 형식
 
 \`\`\`
-${batchName} 결과:
-1. ${jobs[0]?.slug || '{slug1}'}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN
-2. ${jobs[1]?.slug || '{slug2}'}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN
-3. ${jobs[2]?.slug || '{slug3}'}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN
-4. ${jobs[3]?.slug || '{slug4}'}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN
-5. ${jobs[4]?.slug || '{slug5}'}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN
+${sessionName} 결과:
+${job.slug}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK
 
-BATCH DONE: 5/5 ok, 0 fail
+JOB DONE: 1/1 ok
 \`\`\`
 `;
 }
@@ -161,7 +155,7 @@ function generateCycle(cycleNum, opts = {}) {
     }
   }
 
-  // batch txt + prompt 생성
+  // wave txt + single-job prompt 생성 (v4: 1직업-1세션)
   const promptDir = path.join(ROOT, `data/cycle/r${cycleNum}_prompts`);
   fs.mkdirSync(promptDir, { recursive: true });
 
@@ -170,15 +164,19 @@ function generateCycle(cycleNum, opts = {}) {
     const batchNum = bi + 1;
     const txtLines = jobs.map((j) => `${j.slug} | id=${j.id} | slug=${j.slug}`);
     fs.writeFileSync(path.join(ROOT, `data/cycle/R${cycleNum}_B${batchNum}.txt`), txtLines.join('\n'));
-    const prompt = buildPrompt(cycleNum, batchNum, jobs, strictBlock);
-    fs.writeFileSync(path.join(promptDir, `R${cycleNum}_B${batchNum}_prompt.md`), prompt);
+  }
+  for (let ji = 0; ji < allJobs.length; ji++) {
+    const jobNum = ji + 1;
+    const jj = String(jobNum).padStart(2, '0');
+    const prompt = buildPrompt(cycleNum, jobNum, allJobs[ji], strictBlock);
+    fs.writeFileSync(path.join(promptDir, `R${cycleNum}_J${jj}_prompt.md`), prompt);
   }
 
   // ─── 보고 ───
-  console.log(`\n=== ${cycleKey} cycle 생성 완료 ===`);
-  console.log(`batch: ${batches.length} × 5 직업 = ${allJobs.length} 직업`);
-  console.log(`batch list:   data/cycle/R${cycleNum}_B{1..${batches.length}}.txt`);
-  console.log(`prompt:       data/cycle/r${cycleNum}_prompts/R${cycleNum}_B{1..${batches.length}}_prompt.md`);
+  console.log(`\n=== ${cycleKey} cycle 생성 완료 (v4: 1직업-1세션) ===`);
+  console.log(`직업: ${allJobs.length}건 → 세션 ${allJobs.length}개 (동시 spawn 상한 5, wave ${batches.length}회)`);
+  console.log(`wave list:    data/cycle/R${cycleNum}_B{1..${batches.length}}.txt`);
+  console.log(`prompt:       data/cycle/r${cycleNum}_prompts/R${cycleNum}_J{01..${String(allJobs.length).padStart(2, '0')}}_prompt.md`);
 
   if (alreadyDone.length) {
     console.log(`\n⚠️  이미 master 적용된 직업 ${alreadyDone.length}건 (cross-check):`);
@@ -187,34 +185,37 @@ function generateCycle(cycleNum, opts = {}) {
     console.log(`\n✓ ${allJobs.length} 직업 모두 미적용 (정상 신규 enhance 대상)`);
   }
 
-  console.log(`\n=== batch별 직업 ===`);
+  console.log(`\n=== wave별 직업 (동시 spawn 5개 단위) ===`);
+  let jc = 0;
   for (let bi = 0; bi < batches.length; bi++) {
-    console.log(`R${cycleNum}_B${bi + 1}: ${batches[bi].map((j) => j.slug).join(', ')}`);
+    const range = batches[bi].map(() => ++jc);
+    console.log(`wave ${bi + 1} (J${String(range[0]).padStart(2, '0')}~J${String(range[range.length - 1]).padStart(2, '0')}): ${batches[bi].map((j) => j.slug).join(', ')}`);
   }
 
-  console.log(`\n=== Dispatcher spawn 명령 (start_code_task × ${batches.length}) ===`);
-  console.log(`각 sub-session에 해당 prompt 파일 내용을 전달:`);
-  for (let bi = 1; bi <= batches.length; bi++) {
-    console.log(`  session ${bi}: cat data/cycle/r${cycleNum}_prompts/R${cycleNum}_B${bi}_prompt.md  → prompt`);
+  console.log(`\n=== Dispatcher spawn 명령 (1직업-1세션 × ${allJobs.length}, 동시 상한 5 wave) ===`);
+  console.log(`각 sub-session에 해당 prompt 파일 내용을 전달 (wave 단위로 5개씩 동시 spawn, 이전 wave idle 후 다음 wave):`);
+  for (let ji = 1; ji <= allJobs.length; ji++) {
+    const jj = String(ji).padStart(2, '0');
+    console.log(`  J${jj}: cat data/cycle/r${cycleNum}_prompts/R${cycleNum}_J${jj}_prompt.md  → prompt (${allJobs[ji - 1].slug})`);
   }
 
   // ─── 활동 가시화 (app.wikicomu.com /activity) ───
-  // dispatcher가 각 batch spawn 직전에 running, 검증 완료 후 done 명령을 복붙 실행.
-  // 한 cycle을 한 group_key로 묶어 /activity에서 5개 병렬 진행이 한 묶음으로 보인다.
+  // dispatcher가 각 wave spawn 직전에 running, 그 wave 세션 전부 idle 후 done 명령을 복붙 실행.
+  // 한 cycle을 한 group_key로 묶어 /activity에서 진행이 한 묶음으로 보인다.
   const isoDate = new Date().toISOString().slice(0, 10);
   const groupKey = `cycle-R${cycleNum}-${isoDate}`;
-  console.log(`\n=== Activity emit 명령 (spawn 직전 running / 검증 완료 후 done) ===`);
+  console.log(`\n=== Activity emit 명령 (wave spawn 직전 running / wave 완료 후 done) ===`);
   console.log(`group_key: ${groupKey}`);
   for (let bi = 1; bi <= batches.length; bi++) {
-    const label = `R${cycleNum} B${bi}: ${batches[bi - 1].map((j) => j.slug).join('·')}`;
-    const extId = `r${cycleNum}-b${bi}`;
+    const label = `R${cycleNum} wave${bi}: ${batches[bi - 1].map((j) => j.slug).join('·')}`;
+    const extId = `r${cycleNum}-w${bi}`;
     const runEvt = JSON.stringify({ events: [{ label, source: 'batch', external_id: extId, group_key: groupKey, agent_slug: 'hangyeol', model: 'claude-sonnet-4-5', status: 'running' }] });
     const doneEvt = JSON.stringify({ events: [{ label, source: 'batch', external_id: extId, group_key: groupKey, status: 'done' }] });
-    console.log(`  B${bi} running: node scripts/emit-activity.cjs '${runEvt}'`);
-    console.log(`  B${bi} done:    node scripts/emit-activity.cjs '${doneEvt}'`);
+    console.log(`  wave${bi} running: node scripts/emit-activity.cjs '${runEvt}'`);
+    console.log(`  wave${bi} done:    node scripts/emit-activity.cjs '${doneEvt}'`);
   }
 
-  console.log(`\n완료 후: 25 직업 rev 수집 + audit + R${cycleNum}_report.md + 메모리 갱신 (project_careerwiki_cycle_progress.md).`);
+  console.log(`\n완료 후: ${allJobs.length} 직업 rev 수집 + 검증 세션(sonnet, master-verify-cycle 전수 실측) + R${cycleNum}_report.md + 메모리 갱신 (project_careerwiki_cycle_progress.md).`);
 }
 
 // ─── 마지막 완료 cycle + 다음 미처리 cycle 계산 (DB processed Set 기반) ───

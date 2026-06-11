@@ -66,23 +66,22 @@ node scripts/master-cycle-helper.cjs --next-cycle
 node scripts/master-cycle-helper.cjs --cycle=12
 ```
 
-생성물:
-- `data/cycle/R{N}_B{1..5}.txt` (5 batch list)
-- `data/cycle/r{N}_prompts/R{N}_B{1..5}_prompt.md` (STRICT 16룰 + 직업표 + 보고형식 — `_dispatch_template_v3.md` single source 자동 prepend)
-- stdout: 5 spawn 명령 + cross-check 경고 (이미 처리된 직업 있으면 표시)
+생성물 (v4, 2026-06-11 — **1직업-1세션**, Jason 결정):
+- `data/cycle/R{N}_B{1..5}.txt` (wave list — 동시 spawn 상한 5의 wave 묶음)
+- `data/cycle/r{N}_prompts/R{N}_J{01..25}_prompt.md` (STRICT 20룰 + 직업 1건 표 + 보고형식 — `_dispatch_template_v4.md` single source 자동 prepend)
+- stdout: 25 spawn 명령(wave 안내) + cross-check 경고 (이미 처리된 직업 있으면 표시)
 
-## Step 4 — 5 sub-session spawn (`start_code_task` × 5)
+## Step 4 — sub-session spawn (1직업-1세션 × 25, 동시 상한 5 wave)
 
-helper stdout의 명령대로 각 sub-session에 prompt 파일 내용 전달:
+helper stdout의 명령대로 각 sub-session에 prompt 파일 내용 전달. **wave 단위로 5세션 동시 spawn → 그 wave 전부 idle 확인 후 다음 wave** (J01~J05 → J06~J10 → ...):
 ```
-session 1: data/cycle/r{N}_prompts/R{N}_B1_prompt.md 내용 → prompt
-session 2: ... R{N}_B2_prompt.md
-session 3: ... R{N}_B3_prompt.md
-session 4: ... R{N}_B4_prompt.md
-session 5: ... R{N}_B5_prompt.md
+session J01: data/cycle/r{N}_prompts/R{N}_J01_prompt.md 내용 → prompt
+...
+session J25: ... R{N}_J25_prompt.md
 ```
 
-⚠️ sub-agent로 spawn (Agent tool) X → **`start_code_task` × 5 로 진짜 세션 분리** (메모리 `feedback_dispatcher_subsession_pattern.md`). 각 sub-session 내부 5 직업 직렬.
+⚠️ sub-agent로 spawn (Agent tool) X → **세션 단위 spawn으로 진짜 세션 분리** (메모리 `feedback_dispatcher_subsession_pattern.md`). **세션당 직업 1건** (R42·R43 session limit 사망 사고 후속 — 사망 반경 축소 + idempotent 경계 명확화).
+⚠️ **검증 세션 모델 = sonnet** (Jason 결정 2026-06-11, opus→sonnet 전환. 전제 = 모델 무관 결정적 게이트: validate pre-POST FAIL 3종(237ec3b) + `master-verify-cycle.cjs` 전수 실측. 작업자≠검증자 세션 분리 원칙 유지).
 spawn 시 per-spawn 4 step (아래 섹션) 준수 — 단, helper가 prompt를 이미 생성했으면 industry_class는 sub-agent 자체 분류로 위임됨 (helper placeholder).
 
 ## Step 5 — 결과 수집 + 통합 보고
