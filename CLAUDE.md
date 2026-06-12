@@ -25,8 +25,8 @@ dispatcher가 **"현재 진행 상황/현황 확인하고 master 스킬로 배�
 6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) 생성 → **1직업-1세션 spawn ×25 (sonnet, 동시 상한 5 wave)** → 결과 수집 → **검증 세션 1 (sonnet — Jason 결정 2026-06-11, 전제=결정적 게이트 237ec3b + master-verify-cycle 전수 실측)** → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
 
 진행 상태 요약 (자세한 건 `--status` + 매뉴얼이 진리):
-- 마지막 완료: **R43** (디지털장의사까지). 누적 A=1489/B=1418.
-- **다음: R44** (디지털제판원 series). `--cycle=44`로 batch/prompt 생성.
+- 마지막 완료: **R44** (라텍스제품마무리원까지, 2026-06-12). KPI 1508 (admin job-equalize 기준, 이중 실측). 첫 1직업-1세션(v4)+sonnet 검증 cycle — 정상.
+- **다음: R45**. `--cycle=45`로 prompt 25건 생성. preflight: KPI 1508·max rev 18856 대조.
 - master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업).
 
 ## Tech Stack
