@@ -1,14 +1,3 @@
-# 🚨 master skill spawn STRICT prompt template (v4, 2026-06-11)
-
-dispatcher가 sub-session spawn 시 이 헤더를 prompt 맨 앞에 그대로 prepend.
-
-v4 변경 (v3 대비) — **1직업-1세션 분리** (Jason 결정 2026-06-11, 결정 로그: "Careerwiki 배치를 1직업-1세션으로 분리 + 검증 세션 Opus→Sonnet 적용"):
-- 세션당 직업 1건 (기존 5건). 배경: R42(4세션)·R43(B4) session limit 사망 사고 — 5직업 세션이 한도 근처 운행. 1직업 단위 분리로 사망 반경 축소 + 재개 오버헤드 제거 + idempotent 경계 명확화. **5직업-1세션 회귀 금지** (직업 간 컨텍스트 누적으로 토큰·시간 악화, Jason 확정 2026-06-12).
-- **wave 배리어 폐기 (v4.1, Jason 결정 2026-06-12)**: 25건 전량 일괄 enqueue — 데몬 워커풀(동시성 7)이 슬롯 비는 대로 연속 투입. "N개 묶음 완료 대기 후 다음 묶음" 금지(최장 세션 대기 낭비 제거 — R44 실측 슬롯 가동률 ~70%). 1 cycle = 준비 1 + 작업 25(J1~J25) + 검증 1(sonnet).
-- 검증 세션 모델 opus→sonnet 전환의 전제 = 모델 무관 결정적 게이트 (237ec3b validate pre-POST FAIL 3종 + master-verify-cycle 전수 실측). 품질 하한은 스크립트가 강제.
-- 룰 내용은 v3의 20룰 전부 유지 (직업 수 표현만 1건 기준으로 치환).
-
-```
 # 🚨 STRICT — 절대 룰 (위반 시 즉시 abort + 보고)
 
 1. **이 세션 할당 직업 1건 외 직업 SELECT/POST/audit 절대 X.**
@@ -116,16 +105,31 @@ v4 변경 (v3 대비) — **1직업-1세션 분리** (Jason 결정 2026-06-11, �
 
 ---
 
-# 처리 대상 직업 (1직업-1세션)
+---
+
+# 처리 대상 직업 (R45_J11 — ENHANCE 모드, marker 미보유 신규, 1직업-1세션)
 
 | # | name | id | slug | industry_class | URL pool hint |
 |---|---|---|---|---|---|
-| 1 | <name> | <id> | <slug> | <niche/minor/major> | site1, site2, ... (5+) |
+| 1 | 레이온방사원 | 1765284904830233 | 레이온방사원 | (자체 분류: niche/minor/major — 모호 시 default major) | 한국 1차 정부·협회·기업·언론 deep — slug별 도메인 자동 발굴 |
 
 # 처리 절차
 
-`.claude/skills/job-data-master/SKILL.md` Phase 0~7 흐름 따라 master 적용.
-POST endpoint: `https://careerwiki.org/api/job/{id}/edit`
-인증: `X-Admin-Secret: careerwiki-admin-2026`
+`.claude/skills/job-data-master/SKILL.md` Phase 0~7 흐름 (ENHANCE 모드).
+- POST: `https://careerwiki.org/api/job/{id}/edit` + `X-Admin-Secret: careerwiki-admin-2026`
+- POST body: 파일 기반 (인라인 한글 본문 절대 X — mojibake-block hook)
+- POST 전 `node scripts/validate-job-edit.cjs payload.json --class=<분류>` ALL PASS 의무 (룰 19 결정적 게이트)
+- POST 후 `node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal` CLEAN + 마커 확인 의무
+- change_summary: `[job-data-master] enhance — way·trivia·detailReady·sidebar·youtubeLinks·...` (top-level camelCase)
+- distinct URL ≥ 18 + totalEntries ≥ 19 강제 (룰 4·15)
+
 할당 직업 1건 끝나면 즉시 종료. 자동 다음 직업/cycle 진입 X.
+
+# 보고 형식
+
+```
+R45_J11 결과:
+레이온방사원  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK
+
+JOB DONE: 1/1 ok
 ```

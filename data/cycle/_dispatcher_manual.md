@@ -66,18 +66,16 @@ node scripts/master-cycle-helper.cjs --next-cycle
 node scripts/master-cycle-helper.cjs --cycle=12
 ```
 
-생성물 (v4, 2026-06-11 — **1직업-1세션**, Jason 결정):
-- `data/cycle/R{N}_B{1..5}.txt` (wave list — 동시 spawn 상한 5의 wave 묶음)
+생성물 (v4.1, 2026-06-12 — **1직업-1세션 + 단일 큐**, Jason 결정):
+- `data/cycle/R{N}_queue.txt` (단일 큐 — 25직업 전량 일괄 enqueue 순서)
 - `data/cycle/r{N}_prompts/R{N}_J{01..25}_prompt.md` (STRICT 20룰 + 직업 1건 표 + 보고형식 — `_dispatch_template_v4.md` single source 자동 prepend)
-- stdout: 25 spawn 명령(wave 안내) + cross-check 경고 (이미 처리된 직업 있으면 표시)
+- stdout: 25 spawn 명령(일괄 투입 안내) + cross-check 경고 (이미 처리된 직업 있으면 표시)
 
-## Step 4 — sub-session spawn (1직업-1세션 × 25, 동시 상한 5 wave)
+## Step 4 — sub-session spawn (1직업-1세션 × 25, 전량 일괄 enqueue — wave 배리어 폐기)
 
-helper stdout의 명령대로 각 sub-session에 prompt 파일 내용 전달. **wave 단위로 5세션 동시 spawn → 그 wave 전부 idle 확인 후 다음 wave** (J01~J05 → J06~J10 → ...):
+helper stdout의 명령대로 **25세션을 한 번에 전부 작업큐에 투입**한다. 데몬 워커풀(동시성 7)이 슬롯 비는 대로 연속 처리 — "N개 묶음 완료 대기 후 다음 묶음" 식 wave 대기 금지 (R44 실측: wave 배리어로 슬롯 가동률 ~70%, 최장 세션이 나머지 슬롯을 놀림):
 ```
-session J01: data/cycle/r{N}_prompts/R{N}_J01_prompt.md 내용 → prompt
-...
-session J25: ... R{N}_J25_prompt.md
+session J01~J25: data/cycle/r{N}_prompts/R{N}_J{nn}_prompt.md 내용 → prompt (25개 동시 enqueue)
 ```
 
 ⚠️ sub-agent로 spawn (Agent tool) X → **세션 단위 spawn으로 진짜 세션 분리** (메모리 `feedback_dispatcher_subsession_pattern.md`). **세션당 직업 1건** (R42·R43 session limit 사망 사고 후속 — 사망 반경 축소 + idempotent 경계 명확화).

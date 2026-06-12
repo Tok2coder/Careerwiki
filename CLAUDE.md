@@ -22,7 +22,7 @@ dispatcher가 **"현재 진행 상황/현황 확인하고 master 스킬로 배�
 3. **`data/cycle/_dispatcher_manual.md` 읽기** → ENTRY POINT 6 step 실행 매뉴얼 (self-contained, 메모리 불필요)
 4. **`data/cycle/_dispatch_template_v4.md` 읽기** → sub-session prompt STRICT 20 룰 (v4 = **1직업-1세션**, Jason 결정 2026-06-11. v3는 5직업 단위 — 보존용)
 5. (보조) dispatcher 메모리 `agent/memory/project_careerwiki_cycle_progress.md` 접근되면 추가로 읽기 — 단 위 1~4로 이미 충분
-6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) 생성 → **1직업-1세션 spawn ×25 (sonnet, 동시 상한 5 wave)** → 결과 수집 → **검증 세션 1 (sonnet — Jason 결정 2026-06-11, 전제=결정적 게이트 237ec3b + master-verify-cycle 전수 실측)** → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
+6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) 생성 → **1직업-1세션 ×25 전량 일괄 enqueue (sonnet, 데몬 워커풀 동시성 7 연속 투입 — wave 배리어 폐기, Jason 결정 2026-06-12)** → 결과 수집 → **검증 세션 1 (sonnet — 결정적 게이트 237ec3b + master-verify-cycle 전수 실측 + 다중 rev 전수 확인)** → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
 
 진행 상태 요약 (자세한 건 `--status` + 매뉴얼이 진리):
 - 마지막 완료: **R44** (라텍스제품마무리원까지, 2026-06-12). KPI 1508 (admin job-equalize 기준, 이중 실측). 첫 1직업-1세션(v4)+sonnet 검증 cycle — 정상.
