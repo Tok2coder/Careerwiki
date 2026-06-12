@@ -85,21 +85,33 @@ function loadJobs() {
   const slugsFile = getArg('slugs-file');
   const jobs = [];
   if (cycle) {
-    // data/cycle/R{N}_B*.txt — 각 줄 "name | id=N | slug=X"
-    const files = fs.readdirSync(path.join(REPO_ROOT, 'data', 'cycle'))
-      .filter((f) => new RegExp(`^R${cycle}_B\\d+\\.txt$`).test(f))
-      .sort();
-    if (files.length === 0) {
-      console.error(`[error] data/cycle/R${cycle}_B*.txt 없음`);
-      process.exit(2);
-    }
-    for (const fn of files) {
-      const txt = fs.readFileSync(path.join(REPO_ROOT, 'data', 'cycle', fn), 'utf8');
+    // v4.1 우선: data/cycle/R{N}_queue.txt — 각 줄 "Jnn | slug | id=N" (R45+, wave txt 폐지)
+    const queuePath = path.join(REPO_ROOT, 'data', 'cycle', `R${cycle}_queue.txt`);
+    if (fs.existsSync(queuePath)) {
+      const txt = fs.readFileSync(queuePath, 'utf8');
       for (const line of txt.split('\n').map((l) => l.trim()).filter(Boolean)) {
+        const parts = line.split('|').map((p) => p.trim());
         const idM = line.match(/id=([0-9]+)/);
-        const slugM = line.match(/slug=(.+?)\s*$/);
-        const nameM = line.split('|')[0].trim();
-        jobs.push({ name: nameM, id: idM ? idM[1] : null, slug: slugM ? slugM[1].trim() : nameM });
+        const slug = parts[1] || parts[0];
+        jobs.push({ name: slug, id: idM ? idM[1] : null, slug });
+      }
+    } else {
+      // 레거시 (R44 이하): data/cycle/R{N}_B*.txt — 각 줄 "name | id=N | slug=X"
+      const files = fs.readdirSync(path.join(REPO_ROOT, 'data', 'cycle'))
+        .filter((f) => new RegExp(`^R${cycle}_B\\d+\\.txt$`).test(f))
+        .sort();
+      if (files.length === 0) {
+        console.error(`[error] data/cycle/R${cycle}_queue.txt 도 R${cycle}_B*.txt 도 없음`);
+        process.exit(2);
+      }
+      for (const fn of files) {
+        const txt = fs.readFileSync(path.join(REPO_ROOT, 'data', 'cycle', fn), 'utf8');
+        for (const line of txt.split('\n').map((l) => l.trim()).filter(Boolean)) {
+          const idM = line.match(/id=([0-9]+)/);
+          const slugM = line.match(/slug=(.+?)\s*$/);
+          const nameM = line.split('|')[0].trim();
+          jobs.push({ name: nameM, id: idM ? idM[1] : null, slug: slugM ? slugM[1].trim() : nameM });
+        }
       }
     }
   } else if (slugsFile) {
