@@ -66,19 +66,19 @@ node scripts/master-cycle-helper.cjs --next-cycle
 node scripts/master-cycle-helper.cjs --cycle=12
 ```
 
-생성물 (v4.1, 2026-06-12 — **1직업-1세션 + 단일 큐**, Jason 결정):
-- `data/cycle/R{N}_queue.txt` (단일 큐 — 25직업 전량 일괄 enqueue 순서)
-- `data/cycle/r{N}_prompts/R{N}_J{01..25}_prompt.md` (STRICT 20룰 + 직업 1건 표 + 보고형식 — `_dispatch_template_v4.md` single source 자동 prepend)
-- stdout: 25 spawn 명령(일괄 투입 안내) + cross-check 경고 (이미 처리된 직업 있으면 표시)
+생성물 (**v5, 2026-06-13 — 5직업-1세션 배치 복원**, Jason 결정. v4 1직업-1세션은 토큰 회귀로 폐기):
+- `data/cycle/R{N}_queue.txt` (배치 큐 — B1~B5 × 5직업 enqueue 순서)
+- `data/cycle/r{N}_prompts/R{N}_B{1..5}_prompt.md` (STRICT 20룰 + 5직업 표 + 보고형식 — `_dispatch_template_v5.md` single source 자동 prepend)
+- stdout: 5 배치 spawn 명령(일괄 투입 안내) + cross-check 경고 (이미 처리된 직업 있으면 표시)
 
-## Step 4 — sub-session spawn (1직업-1세션 × 25, 전량 일괄 enqueue — wave 배리어 폐기)
+## Step 4 — sub-session spawn (5직업-1세션 × 5 배치, 전량 일괄 enqueue)
 
-helper stdout의 명령대로 **25세션을 한 번에 전부 작업큐에 투입**한다. 데몬 워커풀(동시성 7)이 슬롯 비는 대로 연속 처리 — "N개 묶음 완료 대기 후 다음 묶음" 식 wave 대기 금지 (R44 실측: wave 배리어로 슬롯 가동률 ~70%, 최장 세션이 나머지 슬롯을 놀림):
+helper stdout의 명령대로 **5개 배치 세션을 한 번에 작업큐에 투입**한다(Agent bg ×5 또는 Workflow parallel 권장). 데몬 워커풀(동시성 7)이 슬롯 비는 대로 연속 처리:
 ```
-session J01~J25: data/cycle/r{N}_prompts/R{N}_J{nn}_prompt.md 내용 → prompt (25개 동시 enqueue)
+session B1~B5: data/cycle/r{N}_prompts/R{N}_B{n}_prompt.md 내용 → prompt (5개 동시 enqueue)
 ```
 
-⚠️ sub-agent로 spawn (Agent tool) X → **세션 단위 spawn으로 진짜 세션 분리** (메모리 `feedback_dispatcher_subsession_pattern.md`). **세션당 직업 1건** (R42·R43 session limit 사망 사고 후속 — 사망 반경 축소 + idempotent 경계 명확화).
+⚠️ **세션당 직업 5건, 1건씩 순차 POST 체크포인트** (Jason 결정 2026-06-13 v5 배치 복원 — v4 1직업-1세션은 cycle당 고정비 ~5배·prompt 캐시 파괴로 토큰 회귀, R46 enhance 2.88M 실측). 폭발반경은 직업당 POST 체크포인트(완료분 prod 보존) + 검증세션 미완분 식별 → idempotent 재spawn으로 수습. 품질 게이트 불변.
 ⚠️ **검증 세션 모델 = sonnet** (Jason 결정 2026-06-11, opus→sonnet 전환. 전제 = 모델 무관 결정적 게이트: validate pre-POST FAIL 3종(237ec3b) + `master-verify-cycle.cjs` 전수 실측. 작업자≠검증자 세션 분리 원칙 유지).
 spawn 시 per-spawn 4 step (아래 섹션) 준수 — 단, helper가 prompt를 이미 생성했으면 industry_class는 sub-agent 자체 분류로 위임됨 (helper placeholder).
 
