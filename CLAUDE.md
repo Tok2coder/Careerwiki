@@ -20,13 +20,13 @@ dispatcher가 **"현재 진행 상황/현황 확인하고 master 스킬로 배�
 1. **이 CLAUDE.md 전체 읽기** (repo 진입 시 자동 로드 — 현재 단계)
 2. **`node scripts/master-cycle-helper.cjs --status`** 실행 → 현재 master 카운트(A/B) + 마지막 처리 cycle + 다음 cycle 시작 위치 (DB 진리값)
 3. **`data/cycle/_dispatcher_manual.md` 읽기** → ENTRY POINT 6 step 실행 매뉴얼 (self-contained, 메모리 불필요)
-4. **`data/cycle/_dispatch_template_v4.md` 읽기** → sub-session prompt STRICT 20 룰 (v4 = **1직업-1세션**, Jason 결정 2026-06-11. v3는 5직업 단위 — 보존용)
+4. **`data/cycle/_dispatch_template_v5.md` 읽기** → sub-session prompt STRICT 20 룰 (**v5 = 5직업-1세션 배치 복원**, Jason 결정 2026-06-13 — 토큰 효율 회귀 수습. v4=1직업-1세션은 cycle당 고정비 ~5배·캐시 파괴로 폐기. v3/v4는 보존용)
 5. (보조) dispatcher 메모리 `agent/memory/project_careerwiki_cycle_progress.md` 접근되면 추가로 읽기 — 단 위 1~4로 이미 충분
-6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) 생성 → **1직업-1세션 ×25 전량 일괄 enqueue (sonnet, 데몬 워커풀 동시성 7 연속 투입 — wave 배리어 폐기, Jason 결정 2026-06-12)** → 결과 수집 → **검증 세션 1 (sonnet — 결정적 게이트 237ec3b + master-verify-cycle 전수 실측 + 다중 rev 전수 확인)** → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
+6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) 생성 → **5직업-1세션 ×5 배치 전량 일괄 enqueue (sonnet, 데몬 워커풀 동시성 7 연속 투입). 직업당 순차 POST 체크포인트(idempotent 경계)** → 결과 수집 → **검증 세션 1 (sonnet — 결정적 게이트 237ec3b + master-verify-cycle 전수 실측 + 다중 rev 전수 확인)** → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
 
 진행 상태 요약 (자세한 건 `--status` + 매뉴얼이 진리):
-- 마지막 완료: **R45** (렌즈접착원까지, 2026-06-13). KPI 1533 (admin job-equalize 기준, 검증세션+디스패처 이중 실측). 첫 v4.1 단일 큐 일괄 enqueue(wave 배리어 폐기, 동시성 7) cycle — 정상(검증 FAIL 0, 수정 2건). soft-miss 1건(레크리에이션지도자 d9, 기록만).
-- **다음: R46**. `--cycle=46`로 prompt 25건 생성. preflight: KPI 1533·max rev 18909 대조. (R45 회고 개선 d08a704 적용: verify distinct<10 FAIL 게이트 / 템플릿 룰20 POST후 검증 1라운드 종결 / helper hint 구체화+minor 제거 — R46부터 반영)
+- 마지막 완료: **R46** (루핑지가공반장까지, 2026-06-13). KPI **1557** (admin job-equalize 기준, marker+sidebar-fill skip CTE COUNT — jobs에 unified_career_json 컬럼 없음). 검증 FAIL 0(urlDead 2건 수정 18961·18962), WARN 9(urlUnverified 거짓양성). 로더조종사 기처리 dup → force-enhance, net +24(사전 선언 일치). enhance를 Workflow(parallel)로 오케스트레이션. **R46 enhance 2.88M 토큰 실측 → v4(1직업-1세션) 토큰 회귀 확인 → v5 배치 복원.**
+- **다음: R47** (리거~마술사). `--cycle=47`로 5 배치 prompt 생성(완료). preflight: KPI 1557·max rev 18962 대조. **v5 첫 배치 복원 cycle — 품질 게이트 불변(직업당 validate/audit + 검증세션 전수). 폭발반경=직업당 POST 체크포인트 + idempotent 재spawn.**
 - master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업).
 
 ## Tech Stack
