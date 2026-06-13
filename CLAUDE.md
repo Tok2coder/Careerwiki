@@ -25,8 +25,8 @@ dispatcher가 **"현재 진행 상황/현황 확인하고 master 스킬로 배�
 6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) 생성 → **1직업-1세션 ×25 전량 일괄 enqueue (sonnet, 데몬 워커풀 동시성 7 연속 투입 — wave 배리어 폐기, Jason 결정 2026-06-12)** → 결과 수집 → **검증 세션 1 (sonnet — 결정적 게이트 237ec3b + master-verify-cycle 전수 실측 + 다중 rev 전수 확인)** → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
 
 진행 상태 요약 (자세한 건 `--status` + 매뉴얼이 진리):
-- 마지막 완료: **R44** (라텍스제품마무리원까지, 2026-06-12). KPI 1508 (admin job-equalize 기준, 이중 실측). 첫 1직업-1세션(v4)+sonnet 검증 cycle — 정상.
-- **다음: R45**. `--cycle=45`로 prompt 25건 생성. preflight: KPI 1508·max rev 18856 대조.
+- 마지막 완료: **R45** (렌즈접착원까지, 2026-06-13). KPI 1533 (admin job-equalize 기준, 검증세션+디스패처 이중 실측). 첫 v4.1 단일 큐 일괄 enqueue(wave 배리어 폐기, 동시성 7) cycle — 정상(검증 FAIL 0, 수정 2건). soft-miss 1건(레크리에이션지도자 d9, 기록만).
+- **다음: R46**. `--cycle=46`로 prompt 25건 생성. preflight: KPI 1533·max rev 18909 대조. (R45 회고 개선 d08a704 적용: verify distinct<10 FAIL 게이트 / 템플릿 룰20 POST후 검증 1라운드 종결 / helper hint 구체화+minor 제거 — R46부터 반영)
 - master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업).
 
 ## Tech Stack
