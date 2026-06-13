@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r48-b3",
+      "group_key": "cycle-R48-2026-06-14",
+      "agent_slug": "hangyeol",
+      "label": "R48 B3: 마카로니제조원~만년필튜브검사원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

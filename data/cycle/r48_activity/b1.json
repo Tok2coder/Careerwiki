@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r48-b1",
+      "group_key": "cycle-R48-2026-06-14",
+      "agent_slug": "hangyeol",
+      "label": "R48 B1: 마스크가공반장~마운트기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

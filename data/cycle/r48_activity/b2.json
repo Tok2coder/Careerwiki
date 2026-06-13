@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r48-b2",
+      "group_key": "cycle-R48-2026-06-14",
+      "agent_slug": "hangyeol",
+      "label": "R48 B2: 마을활동가~마취전문간호사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

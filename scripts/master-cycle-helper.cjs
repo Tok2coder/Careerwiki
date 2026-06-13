@@ -23,7 +23,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const MASTER_LIST = path.join(ROOT, 'data/cycle/master_list_R7_R229.jsonl');
@@ -102,7 +102,24 @@ function buildBatchPrompt(cycleNum, batchNum, jobs, strictBlock) {
   ).join('\n');
   const reportRows = jobs.map((job) => `${job.slug}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK`).join('\n');
 
+  // ─── 활동 가시화: wave(=이 세션) 단위 emit (대시보드 '세부 작업' 개별 행) ───
+  const actFile = `data/cycle/r${cycleNum}_activity/b${batchNum}.json`;
+
   return `${strictBlock}
+
+---
+
+# 🟢 활동 보고 (필수 — 생략 금지, 대시보드 '세부 작업' 실시간 가시화)
+
+이 세션은 대시보드에 1개의 wave 행으로 뜬다. 아래 2개를 **반드시** 실행한다(실패해도 배치는 계속 — emit 실패는 무해).
+
+- **STEP 0 (작업 시작 즉시, 첫 직업 처리 전):**
+  \`node scripts/emit-activity.cjs --file ${actFile} --status running\`
+- **STEP LAST (세션 종료 직전, 모든 직업 처리/보고 후):**
+  성공: \`node scripts/emit-activity.cjs --file ${actFile} --status done --tool-calls <대략 tool-call 수> --detail "<완료직업수>/${jobs.length} done"\`
+  일부/실패: \`node scripts/emit-activity.cjs --file ${actFile} --status failed --detail "<완료>/${jobs.length}, 미완=<slug 사유>"\`
+
+(\`--tool-calls\`/\`--detail\`는 가능하면 채우고, 모르면 생략 가능. external_id·group_key·label·model은 base 파일에 이미 박혀 있으니 건드리지 않는다.)
 
 ---
 
@@ -194,20 +211,33 @@ function generateCycle(cycleNum, opts = {}) {
     console.log(`  B${bn}: cat data/cycle/r${cycleNum}_prompts/R${cycleNum}_B${bn}_prompt.md  → prompt (${slugs})`);
   }
 
-  // ─── 활동 가시화 (app.wikicomu.com /activity) ───
-  // dispatcher가 일괄 enqueue 직전에 running 1건, 전건 완료 후 done 1건 (cycle 단위).
-  const isoDate = new Date().toISOString().slice(0, 10);
+  // ─── 활동 가시화 (app.wikicomu.com /activity) — wave(=병렬 세션) 단위 세분화 ───
+  // 옵션 A (Jason 확정 2026-06-14): cycle 1행이 아니라 B1~B5 + 검증 = 유닛별 개별 행.
+  // 각 유닛마다 base 이벤트 파일을 생성 → 해당 세션이 STEP0(running)/STEP_LAST(done) 자동 emit.
+  // (source, external_id) 유니크 키라 같은 external_id의 running→done이 같은 행을 upsert(라이프사이클).
+  // group_key가 같아 한 cycle의 6개가 대시보드에서 한 그룹으로 묶임. cycle 단위 r{N}-work 1행은 폐기(중복).
+  const d = new Date();
+  const isoDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; // 로컬 날짜(KST) — UTC toISOString는 자정 부근 하루 어긋남
   const groupKey = `cycle-R${cycleNum}-${isoDate}`;
-  console.log(`\n=== Activity emit 명령 (enqueue 직전 running / 전건 완료 후 done — cycle 단위 1건) ===`);
-  console.log(`group_key: ${groupKey}`);
-  {
-    const label = `R${cycleNum} 작업 ${allJobs.length}건: ${allJobs[0].slug}~${allJobs[allJobs.length - 1].slug}`;
-    const extId = `r${cycleNum}-work`;
-    const runEvt = JSON.stringify({ events: [{ label, source: 'batch', external_id: extId, group_key: groupKey, agent_slug: 'hangyeol', model: 'claude-sonnet-4-5', status: 'running' }] });
-    const doneEvt = JSON.stringify({ events: [{ label, source: 'batch', external_id: extId, group_key: groupKey, status: 'done' }] });
-    console.log(`  running: node scripts/emit-activity.cjs '${runEvt}'`);
-    console.log(`  done:    node scripts/emit-activity.cjs '${doneEvt}'`);
+  const activityDir = path.join(ROOT, `data/cycle/r${cycleNum}_activity`);
+  fs.mkdirSync(activityDir, { recursive: true });
+  const writeBase = (extId, label) =>
+    fs.writeFileSync(
+      path.join(activityDir, `${extId.replace(`r${cycleNum}-`, '')}.json`),
+      JSON.stringify({ events: [{ source: 'batch', external_id: extId, group_key: groupKey, agent_slug: 'hangyeol', label, model: 'sonnet', status: 'running' }] }, null, 2),
+    );
+  for (let bi = 0; bi < batches.length; bi++) {
+    const bn = bi + 1;
+    const b = batches[bi];
+    writeBase(`r${cycleNum}-b${bn}`, `R${cycleNum} B${bn}: ${b[0].slug}~${b[b.length - 1].slug}`);
   }
+  writeBase(`r${cycleNum}-verify`, `R${cycleNum} 검증: ${allJobs.length}직업 전수 실측`);
+  console.log(`\n=== Activity 가시화 (wave 단위, 옵션 A) — base 이벤트 파일 생성 완료 ===`);
+  console.log(`group_key: ${groupKey}  (B1~B${batches.length} + verify = ${batches.length + 1}개 유닛이 한 그룹으로 묶임)`);
+  console.log(`base dir:  data/cycle/r${cycleNum}_activity/  (b1..b${batches.length}.json + verify.json)`);
+  console.log(`각 배치 세션은 prompt의 STEP0/STEP_LAST에서 자동 emit (running→done). 검증 세션은 아래 명령 사용:`);
+  console.log(`  검증 running: node scripts/emit-activity.cjs --file data/cycle/r${cycleNum}_activity/verify.json --status running`);
+  console.log(`  검증 done:    node scripts/emit-activity.cjs --file data/cycle/r${cycleNum}_activity/verify.json --status done --detail "<25/25 PASS, KPI ...>"`);
 
   console.log(`\n완료 후: ${allJobs.length} 직업 rev 수집 + 검증 세션(sonnet, master-verify-cycle 전수 실측 + 다중 rev 전수 보고) + R${cycleNum}_report.md + 메모리 갱신 (project_careerwiki_cycle_progress.md).`);
 }

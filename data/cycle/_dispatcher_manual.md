@@ -78,6 +78,13 @@ helper stdout의 명령대로 **5개 배치 세션을 한 번에 작업큐에 �
 session B1~B5: data/cycle/r{N}_prompts/R{N}_B{n}_prompt.md 내용 → prompt (5개 동시 enqueue)
 ```
 
+🟢 **활동 가시화 (옵션 A, wave 단위 — Jason 확정 2026-06-14)**: helper가 `data/cycle/r{N}_activity/b{1..5}.json` + `verify.json` base 이벤트 파일을 자동 생성하고, 각 배치 prompt 맨 앞에 STEP0(running)/STEP_LAST(done) emit 명령을 박는다. 따라서 **각 배치 세션이 시작/종료 시 스스로 emit** → 대시보드 '세부 작업'에 B1~B5가 개별 행으로 실시간 표시(같은 group_key `cycle-R{N}-{date}`로 한 그룹 묶임). 검증 세션은 spawn 시 prompt에 아래 2줄을 직접 포함시킬 것(검증=6번째 유닛):
+```bash
+# 검증 세션 prompt 안에 포함 (시작 시 / 종료 시)
+node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/verify.json --status running
+node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/verify.json --status done --detail "25/25 PASS, KPI {n}"
+```
+
 ⚠️ **세션당 직업 5건, 1건씩 순차 POST 체크포인트** (Jason 결정 2026-06-13 v5 배치 복원 — v4 1직업-1세션은 cycle당 고정비 ~5배·prompt 캐시 파괴로 토큰 회귀, R46 enhance 2.88M 실측). 폭발반경은 직업당 POST 체크포인트(완료분 prod 보존) + 검증세션 미완분 식별 → idempotent 재spawn으로 수습. 품질 게이트 불변.
 ⚠️ **검증 세션 모델 = sonnet** (Jason 결정 2026-06-11, opus→sonnet 전환. 전제 = 모델 무관 결정적 게이트: validate pre-POST FAIL 3종(237ec3b) + `master-verify-cycle.cjs` 전수 실측. 작업자≠검증자 세션 분리 원칙 유지).
 spawn 시 per-spawn 4 step (아래 섹션) 준수 — 단, helper가 prompt를 이미 생성했으면 industry_class는 sub-agent 자체 분류로 위임됨 (helper placeholder).

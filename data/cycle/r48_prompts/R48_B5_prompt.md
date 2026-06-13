@@ -110,6 +110,20 @@
 
 ---
 
+# 🟢 활동 보고 (필수 — 생략 금지, 대시보드 '세부 작업' 실시간 가시화)
+
+이 세션은 대시보드에 1개의 wave 행으로 뜬다. 아래 2개를 **반드시** 실행한다(실패해도 배치는 계속 — emit 실패는 무해).
+
+- **STEP 0 (작업 시작 즉시, 첫 직업 처리 전):**
+  `node scripts/emit-activity.cjs --file data/cycle/r48_activity/b5.json --status running`
+- **STEP LAST (세션 종료 직전, 모든 직업 처리/보고 후):**
+  성공: `node scripts/emit-activity.cjs --file data/cycle/r48_activity/b5.json --status done --tool-calls <대략 tool-call 수> --detail "<완료직업수>/5 done"`
+  일부/실패: `node scripts/emit-activity.cjs --file data/cycle/r48_activity/b5.json --status failed --detail "<완료>/5, 미완=<slug 사유>"`
+
+(`--tool-calls`/`--detail`는 가능하면 채우고, 모르면 생략 가능. external_id·group_key·label·model은 base 파일에 이미 박혀 있으니 건드리지 않는다.)
+
+---
+
 # 처리 대상 직업 (R48_B5 — ENHANCE 모드, marker 미보유 신규, 5직업-1세션 배치)
 
 | # | name | id | slug | industry_class | URL pool hint |

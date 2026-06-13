@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r48-b4",
+      "group_key": "cycle-R48-2026-06-14",
+      "agent_slug": "hangyeol",
+      "label": "R48 B4: 만년필튜브성형기조작원~만두피성형원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

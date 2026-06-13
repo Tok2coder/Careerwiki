@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r48-b5",
+      "group_key": "cycle-R48-2026-06-14",
+      "agent_slug": "hangyeol",
+      "label": "R48 B5: 만화데생작가~만화영화디지털페인터",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
