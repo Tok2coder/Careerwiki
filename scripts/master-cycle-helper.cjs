@@ -107,7 +107,7 @@ function buildPrompt(cycleNum, jobNum, job, strictBlock) {
 
 | # | name | id | slug | industry_class | URL pool hint |
 |---|---|---|---|---|---|
-| 1 | ${job.name} | ${job.id} | ${job.slug} | (자체 분류: niche/minor/major — 모호 시 default major) | 한국 1차 정부·협회·기업·언론 deep — slug별 도메인 자동 발굴 |
+| 1 | ${job.name} | ${job.id} | ${job.slug} | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | 산업 소관 부처(.go.kr)·직능 협회/학회(.or.kr)·대표 기업(.co.kr) deep page + KOSIS·언론 deep article 우선. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)** |
 
 # 처리 절차
 

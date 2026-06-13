@@ -262,6 +262,9 @@ function parseJaccardPairs() {
       distinct = stats.distinct;
       pr0 = ed.data;
       if (totalE < TOTAL_ENTRIES_MIN) reasons.push(`totalE=${totalE}<${TOTAL_ENTRIES_MIN}`);
+      // distinct 보편 하한(niche=10) — queue에 class 정보 부재로 10 미만만 FAIL.
+      // (R45 레크리에이션지도자 d9가 "minor 절충"으로 통과한 soft-miss 후 추가 — niche<10 룰 강제)
+      if (distinct < 10) reasons.push(`distinct=${distinct}<10`);
       // d) URL 생존
       const live = await checkUrls(stats.urls);
       if (live.dead.length) reasons.push(`urlDead(${live.dead.length})`);
