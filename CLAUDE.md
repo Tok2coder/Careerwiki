@@ -25,8 +25,8 @@ dispatcher가 **"현재 진행 상황/현황 확인하고 master 스킬로 배�
 6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) 생성 → **5직업-1세션 ×5 배치 전량 일괄 enqueue (sonnet, 데몬 워커풀 동시성 7 연속 투입). 직업당 순차 POST 체크포인트(idempotent 경계)** → 결과 수집 → **검증 세션 1 (sonnet — 결정적 게이트 237ec3b + master-verify-cycle 전수 실측 + 다중 rev 전수 확인)** → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
 
 진행 상태 요약 (자세한 건 `--status` + 매뉴얼이 진리):
-- 마지막 완료: **R47** (리거~마술사 25직업, 2026-06-14). KPI **1582** (admin job-equalize 기준, 1557→1582 +25 정확 일치, DB 독립 재실측 확인). max master rev **19018**. 검증 25/25 PASS, FAIL 0, distinct 전건 ≥10(최소 10), 마커 전건 OK, sal 미접촉. **첫 v5 배치 복원 cycle 성공 — enhance subagent_tokens 709K 실측(R46 v4 2.88M 대비 ~75% 절감, v5 토큰 효율 회귀 입증). 5/5 배치 전 세션 5/5 완주, 세션 한도 사망 0 → 배치 크기 5 유지(4 미세조정 불필요).** Workflow(parallel 5 + verify) 오케스트레이션.
-- **다음: R48** (마스크가공반장~만화영화디지털페인터). `--cycle=48`로 5 배치 prompt 생성(완료). preflight: KPI 1582·max rev 19018 대조. **품질 게이트 불변(직업당 validate/audit + 검증세션 전수). 폭발반경=직업당 POST 체크포인트 + idempotent 재spawn.**
+- 마지막 완료: **R48** (마스크가공반장~만화영화디지털페인터 25직업, 2026-06-14). KPI **1607** (admin job-equalize 기준, 1582→1607 +25 정확 일치, DB 독립 재실측). max master rev **19070**. 25/25 처리, 실제 결함 0(검증 raw 22P/3"F"는 전부 urlUnverified WARN → dispatcher 재검으로 거짓양성 확정: adr.copyright.or.kr TLS체인·cartoon.or.kr 딥페이지 anti-bot ECONNRESET, 루트 200). distinct 전건 ≥10, totalE 전건 ≥19, 마커 전건 OK, sal 미접촉. **리밋 2단 실행**: 1차 7직업 POST 후 전 세션 session limit 동시 사망 → 즉시 재개(리셋 대기 없이, Jason 지시) → 미완 18직업만 idempotent(직업당 DB 마커 가드, 중복 POST 0). 중복 rev 2건(자가 urlDead cleanup, latest 마커 OK). Workflow(parallel + verify) 오케스트레이션.
+- **다음: R49** (R48 다음 가나다 순). `--cycle=49`로 5 배치 prompt 생성 필요. preflight: KPI 1607·max rev 19070 대조. **go-gate 복원 — 자동 연속 취소(Jason 2026-06-14), 매 cycle go 대기.** 품질 게이트 불변(직업당 validate/audit + 검증세션 전수).
 - master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업).
 
 ## Tech Stack
