@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r50-b2",
+      "group_key": "cycle-R50-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R50 B2: 맹인적응교육교사~멀티미디어분석가",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

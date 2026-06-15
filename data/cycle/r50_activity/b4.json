@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r50-b4",
+      "group_key": "cycle-R50-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R50 B4: 메모리반도체소자연구원~면세점판매원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

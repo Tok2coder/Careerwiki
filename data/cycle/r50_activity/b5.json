@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r50-b5",
+      "group_key": "cycle-R50-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R50 B5: 면취기조작원~모낭분리사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

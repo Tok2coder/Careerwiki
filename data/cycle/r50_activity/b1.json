@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r50-b1",
+      "group_key": "cycle-R50-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R50 B1: 매트페인터~맥주양조책임자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

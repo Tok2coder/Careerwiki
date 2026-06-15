@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r50-b3",
+      "group_key": "cycle-R50-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R50 B3: 멀티미디어연구원~메모리반도체소자-공정연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
