@@ -25,8 +25,8 @@ dispatcher가 **"현재 진행 상황/현황 확인하고 master 스킬로 배�
 6. 매뉴얼 6 step 따라: `--next-cycle`(또는 `--cycle=N`) 생성 → **5직업-1세션 ×5 배치 전량 일괄 enqueue (sonnet, 데몬 워커풀 동시성 7 연속 투입). 직업당 순차 POST 체크포인트(idempotent 경계)** → 결과 수집 → **검증 세션 1 (sonnet — 결정적 게이트 237ec3b + master-verify-cycle 전수 실측 + 다중 rev 전수 확인)** → 보고 → 메모리 갱신 + 사용자 ping (자동 다음 cycle X)
 
 진행 상태 요약 (자세한 건 `--status` + 매뉴얼이 진리):
-- 마지막 완료: **R48** (마스크가공반장~만화영화디지털페인터 25직업, 2026-06-14). KPI **1607** (admin job-equalize 기준, 1582→1607 +25 정확 일치, DB 독립 재실측). max master rev **19070**. 25/25 처리, 실제 결함 0(검증 raw 22P/3"F"는 전부 urlUnverified WARN → dispatcher 재검으로 거짓양성 확정: adr.copyright.or.kr TLS체인·cartoon.or.kr 딥페이지 anti-bot ECONNRESET, 루트 200). distinct 전건 ≥10, totalE 전건 ≥19, 마커 전건 OK, sal 미접촉. **리밋 2단 실행**: 1차 7직업 POST 후 전 세션 session limit 동시 사망 → 즉시 재개(리셋 대기 없이, Jason 지시) → 미완 18직업만 idempotent(직업당 DB 마커 가드, 중복 POST 0). 중복 rev 2건(자가 urlDead cleanup, latest 마커 OK). Workflow(parallel + verify) 오케스트레이션.
-- **다음: R49** (R48 다음 가나다 순). `--cycle=49`로 5 배치 prompt 생성 필요. preflight: KPI 1607·max rev 19070 대조. **go-gate 복원 — 자동 연속 취소(Jason 2026-06-14), 매 cycle go 대기.** 품질 게이트 불변(직업당 validate/audit + 검증세션 전수).
+- 마지막 완료: **R49** (만화영화연출가~매트리스포장원 25직업, 2026-06-14). KPI **1632** (admin job-equalize 기준, 1607→1632 +25 정확 일치, DB 독립 재실측). max master rev **19126**(수습 포함). 25/25 처리, 실제 결함 0(수습 후). **리밋 없이 단판 완주.** 검증 raw 22P/3"F" → dispatcher node fetch 재검: power-technology 403=anti-bot 거짓양성(UA 200), **만화컬러작가·만화펜터치작가 namu.wiki 404 2건은 진짜 dead(URL 환각)** → 수습 세션이 brunch(302→200)·fnnews(200) live 출처로 교체(rev 19125·19126, urlDead 0, 마커 OK). distinct 전건 ≥10, totalE 전건 ≥19, sal 미접촉. dup rev 3건(룰C 잉여 재POST, latest 마커 OK·KPI 무영향). Workflow(parallel + verify) + 수습 Agent.
+- **다음: R50** (R49 다음 가나다 순). `--cycle=50`로 5 배치 prompt 생성 필요. preflight: KPI 1632·max rev 19126 대조. **go-gate — 매 cycle go 대기(자동 연속 안 함).** 품질 게이트 불변(직업당 validate/audit + 검증세션 전수 + dispatcher node fetch 거짓양성/진짜dead 판별).
 - master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업).
 
 ## Tech Stack
