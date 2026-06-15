@@ -300,6 +300,80 @@ function showStatus() {
   console.log(`(보조 메모리: agent/memory/project_careerwiki_cycle_progress.md — drift 시 A 값으로 갱신)`);
 }
 
+// ─── 마커 판정 ───
+const isMasterMarker = (cs) => !!cs && (/\[job-data-master\]/.test(cs) || /\[job-data-enhance\]/.test(cs));
+
+// ─── --reset-delay: 리밋 사망 메시지에서 리셋 시각 파싱 → ScheduleWakeup delay(초) 계산 (KST 기준) ───
+// 입력 예: "...session limit · resets 3:10am (Asia/Seoul)"  → 리셋까지 남은 초 + 버퍼
+function computeResetDelay(msg) {
+  const m = (msg || '').match(/resets\s+(\d{1,2}):(\d{2})\s*(am|pm)?\s*\(Asia\/Seoul\)/i);
+  if (!m) return null;
+  let hh = parseInt(m[1], 10);
+  const mm = parseInt(m[2], 10);
+  const ap = (m[3] || '').toLowerCase();
+  if (ap === 'pm' && hh !== 12) hh += 12;
+  if (ap === 'am' && hh === 12) hh = 0;
+  const KST = 9 * 3600 * 1000;
+  const nowKstMs = Date.now() + KST;            // UTC epoch를 KST 벽시계로 shift
+  const d = new Date(nowKstMs);                  // d의 getUTC* = KST 벽시계 값
+  let targetKstMs = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), hh, mm, 0);
+  if (targetKstMs <= nowKstMs) targetKstMs += 24 * 3600 * 1000; // 이미 지난 시각이면 내일
+  const rawSec = Math.ceil((targetKstMs - nowKstMs) / 1000);
+  const delaySec = rawSec + 45;                  // 리셋 직후 버퍼 45초
+  return { hh, mm, rawSec, delaySec };
+}
+
+// ─── --resume=N: cycle N의 25직업 중 이미 master 적용(KPI 카운트)된 것 vs 미완 산출 ───
+function fetchResumeStatus(ids) {
+  const inList = ids.map((id) => `'${id}'`).join(',');
+  const cmd = `npx wrangler d1 execute careerwiki-kr --remote --command "WITH cr AS (SELECT entity_id, change_summary, ROW_NUMBER() OVER(PARTITION BY entity_id ORDER BY id DESC) rn FROM page_revisions WHERE entity_type='job' AND change_summary NOT LIKE '%[sidebar-fill]%' AND entity_id IN (${inList})) SELECT entity_id, change_summary FROM cr WHERE rn=1;" --json`;
+  const out = execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024 });
+  const rows = JSON.parse(out)[0]?.results || [];
+  const map = new Map();
+  for (const r of rows) map.set(String(r.entity_id), r.change_summary);
+  return map;
+}
+
+function resumeCycle(n) {
+  const cycles = loadCycles();
+  const batches = cycles[`R${n}`];
+  if (!batches) {
+    console.error(`[error] R${n} master_list에 없음.`);
+    process.exit(1);
+  }
+  const allJobs = batches.flatMap((b, bi) => (b || []).map((j) => ({ ...j, batch: bi + 1 })));
+  let statusMap;
+  try {
+    statusMap = fetchResumeStatus(allJobs.map((j) => String(j.id)));
+  } catch (e) {
+    console.error('[error] DB 쿼리 실패:', e.message.slice(0, 120));
+    process.exit(1);
+  }
+  const done = [], remain = [];
+  for (const j of allJobs) (isMasterMarker(statusMap.get(String(j.id))) ? done : remain).push(j);
+
+  console.log(`=== R${n} 재개 상태 (DB 기준, latest non-sidebar rev 마커 판정) ===`);
+  console.log(`완료: ${done.length}/${allJobs.length} | 미완: ${remain.length}\n`);
+  console.log(`완료 직업(재처리 금지): ${done.map((j) => j.name).join(', ') || '(없음)'}\n`);
+  if (!remain.length) {
+    console.log('✅ 미완 0 — 이 cycle은 완료됨. 재개 불필요.');
+    return;
+  }
+  console.log('미완 직업 (배치별):');
+  for (let b = 1; b <= batches.length; b++) {
+    const rs = remain.filter((j) => j.batch === b);
+    if (rs.length) console.log(`  B${b}: ${rs.map((j) => j.name).join(', ')}`);
+  }
+  // 재개 Workflow REMAIN 맵 (그대로 붙여넣기용)
+  const remainMap = {};
+  for (let b = 1; b <= batches.length; b++) {
+    const rs = remain.filter((j) => j.batch === b).map((j) => j.name);
+    if (rs.length) remainMap[b] = rs;
+  }
+  console.log(`\n재개 Workflow REMAIN(JS):\nconst REMAIN = ${JSON.stringify(remainMap)};`);
+  console.log(`완료 7직업 등 DONE 가드: 각 직업 POST 전 'SELECT MAX(id) WHERE entity_id={id} AND change_summary LIKE %[job-data-master]% 그리고 latest여부' 재확인 (idempotent).`);
+}
+
 // ─── main ───
 if (hasFlag('status')) {
   showStatus();
@@ -308,10 +382,24 @@ if (hasFlag('status')) {
   generateCycle(n);
 } else if (getArg('cycle')) {
   generateCycle(parseInt(getArg('cycle'), 10), { skipDb: hasFlag('skip-db') });
+} else if (getArg('resume')) {
+  resumeCycle(parseInt(getArg('resume'), 10));
+} else if (getArg('reset-delay') != null) {
+  const r = computeResetDelay(getArg('reset-delay'));
+  if (!r) {
+    console.error('[error] 리셋 시각 파싱 실패. 입력에 "resets H:MMam (Asia/Seoul)" 포함 필요.');
+    process.exit(1);
+  }
+  const hop = r.delaySec > 3600;
+  console.log(`리셋 ${String(r.hh).padStart(2,'0')}:${String(r.mm).padStart(2,'0')} KST 까지 ${r.rawSec}s (버퍼 포함 ${r.delaySec}s)`);
+  if (hop) console.log(`ScheduleWakeup delaySeconds=3300 (1h 초과 → 멀티홉: 깨어나 아직 리밋이면 --reset-delay 재계산 후 재예약)`);
+  else console.log(`ScheduleWakeup delaySeconds=${r.delaySec} (리셋 직후 1회 재기동)`);
 } else {
   console.log(`master-cycle-helper.cjs — 사용법:
   node scripts/master-cycle-helper.cjs --status        DB master 카운트 + drift 안내
   node scripts/master-cycle-helper.cjs --cycle=12      R12 batch list + prompt 생성
   node scripts/master-cycle-helper.cjs --cycle=12 --skip-db   DB cross-check 생략 (오프라인)
-  node scripts/master-cycle-helper.cjs --next-cycle    미처리 다음 cycle 자동 결정 + 생성`);
+  node scripts/master-cycle-helper.cjs --next-cycle    미처리 다음 cycle 자동 결정 + 생성
+  node scripts/master-cycle-helper.cjs --resume=48     R48 미완 직업 산출 (리밋 사망 후 재개용)
+  node scripts/master-cycle-helper.cjs --reset-delay="resets 3:10am (Asia/Seoul)"  리셋까지 ScheduleWakeup delay 계산`);
 }

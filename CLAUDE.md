@@ -348,7 +348,7 @@ node scripts/data-health-report.cjs --top-missing=20
 - 🎯 **CareerWiki Deck (작업 시작 진입점)**: `~/.claude/projects/C--Users-user-Careerwiki/memory/deck/README.md` — 14 룰 / audit 도구 / dispatch v3 / 사고 history latest (시점 누적 recap과 별개로 항상 최신 유지)
 - 🔄 **직업 보완 cycle 진행 상태 (dispatcher entry point)**: `project_careerwiki_cycle_progress.md` (Code측: `~/.claude/projects/C--Users-user-Careerwiki/memory/` / Dispatcher측: `local-agent-mode-sessions/.../agent/memory/`) — R-cycle 진행, 다음 시작 위치, 누적 카운트, 자산 path
 - 📋 **Dispatcher 매뉴얼**: `data/cycle/_dispatcher_manual.md` — 사용자 prompt → 6 step action (현황 검증 → batch 준비 → spawn → 보고 → 메모리 갱신)
-- ⚙️ **Cycle 자동화 helper**: `scripts/master-cycle-helper.cjs` — `--status` (DB 현황) / `--cycle=N` / `--next-cycle` (batch list + prompt 자동 생성). ⚠️ 파일명 `cycle-helper`는 cycle-script-block hook(`/^_?cycle/`)에 차단됨 → `master-` 접두 필수
+- ⚙️ **Cycle 자동화 helper**: `scripts/master-cycle-helper.cjs` — `--status` (DB 현황) / `--cycle=N` / `--next-cycle` (batch list + prompt 자동 생성) / `--resume=N` (리밋 사망 후 미완 직업 배치별 산출 — 완료분 재처리 가드용, 미착수 cycle 명단 미리보기도 됨) / `--reset-delay="resets H:MMam (Asia/Seoul)"` (리밋 메시지 → 리셋까지 ScheduleWakeup delay 계산, KST/Date.now()=UTC 기준, 1h초과 시 멀티홉 안내). ⚠️ 파일명 `cycle-helper`는 cycle-script-block hook(`/^_?cycle/`)에 차단됨 → `master-` 접두 필수
 - 글로벌 일반 원칙: `~/.claude/CLAUDE.md`
 <!-- Serena MCP 비활성화됨 (2026-05-25 사용자 명시 — ~/.claude.json mcpServers.serena 제거) -->
 - 메모리: `agent/memory/` (없으면 생성 — feedback / project / reference / user)
