@@ -14,6 +14,10 @@
  *       → R12 batch list + prompt 생성 (명시 cycle)
  *   node scripts/master-cycle-helper.cjs --next-cycle
  *       → 처리 안 된 다음 cycle 자동 결정 + 생성
+ *   node scripts/master-cycle-helper.cjs --emit-progress --r=50
+ *       → 단일 진실 진행 마커 1줄 출력 (데몬이 파싱→KV forward).
+ *         검증 PASS + KPI 산수 일치 직후 1회만 실행. stdout은 마커 라인 단 1줄.
+ *         kpi_done = admin job-equalize CTE(권위), jobs_done = master_list R7..r 누적합.
  *
  * 산출물 (v5, 2026-06-13 — 5직업-1세션 배치 복원, Jason 결정. 토큰 효율 회귀 수습):
  *   data/cycle/R{N}_queue.txt             (배치 큐 — B1~B5 × 5직업 enqueue 순서)
@@ -374,8 +378,109 @@ function resumeCycle(n) {
   console.log(`완료 7직업 등 DONE 가드: 각 직업 POST 전 'SELECT MAX(id) WHERE entity_id={id} AND change_summary LIKE %[job-data-master]% 그리고 latest여부' 재확인 (idempotent).`);
 }
 
+// ─── --emit-progress: 단일 진실 진행 마커 1줄 emit (데몬 파싱 → KV careerwiki:rbatch:v1 forward) ───
+// 계약(7키, JSON.stringify 삽입순서 = 계약순서): last_completed_r·kpi_done·kpi_total·
+//   cycles_done·cycles_total·jobs_done·jobs_total·as_of
+// 권위 규칙:
+//   kpi_done  = admin /admin/job-equalize skillApplied CTE 와 1:1 동일 쿼리 (src/routes/admin.ts L1090).
+//               latest non-[sidebar-fill] rev 가 [job-data-master] 마커 + jobs.user_contributed_json NOT NULL.
+//               --status A/B 카운트는 절대 쓰지 않음(over-count).
+//   kpi_total = jobs WHERE is_active=1 (admin totalResult, L1072와 동일).
+//   jobs_done = master_list R7..last_r 직업수 누적합 (25×cycle 금지 — 초기 cycle 크기 불균일).
+// stdout 에는 마커 라인 1줄만 출력(데몬 정규식 ^STORE_CAREERWIKI_PROGRESS:\s*(\{.*\})$ 매칭). 경고는 stderr.
+
+// admin job-equalize skillApplied CTE 와 동일 (권위 KPI). src/routes/admin.ts L1090 미러.
+function fetchKpiDone() {
+  const sql = `WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type='job' AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) AS cnt FROM page_revisions pr JOIN latest l ON l.entity_id=pr.entity_id AND l.max_id=pr.id JOIN jobs j ON j.id=pr.entity_id WHERE pr.change_summary LIKE '%[job-data-master]%' AND j.user_contributed_json IS NOT NULL;`;
+  const cmd = `npx wrangler d1 execute careerwiki-kr --remote --command "${sql}" --json`;
+  try {
+    const out = execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024 });
+    const rows = JSON.parse(out)[0]?.results || [];
+    return rows[0]?.cnt ?? null;
+  } catch (e) {
+    console.error('[error] KPI 권위 쿼리 실패:', e.message.slice(0, 120));
+    return null;
+  }
+}
+
+// kpi_total = admin totalResult 와 동일 (jobs WHERE is_active=1). src/routes/admin.ts L1072 미러.
+function fetchActiveJobCount() {
+  const cmd = `npx wrangler d1 execute careerwiki-kr --remote --command "SELECT COUNT(*) AS cnt FROM jobs WHERE is_active=1;" --json`;
+  try {
+    const out = execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024 });
+    const rows = JSON.parse(out)[0]?.results || [];
+    return rows[0]?.cnt ?? null;
+  } catch (e) {
+    console.error('[error] 활성 직업 총수 쿼리 실패:', e.message.slice(0, 120));
+    return null;
+  }
+}
+
+function emitProgress() {
+  const byCycle = loadCycles();
+  const cycleNums = Object.keys(byCycle).map((k) => parseInt(k.slice(1), 10)).sort((a, b) => a - b);
+
+  // last_completed_r: --r 명시가 진리(검증 직후 dispatcher가 방금 끝낸 cycle 번호를 안다).
+  //   미지정 시 DB processed Set 기반 lastDone 로 추론(보조).
+  let lastR = getArg('r') != null ? parseInt(getArg('r'), 10) : null;
+  if (lastR == null) {
+    const processed = fetchProcessedSlugs();
+    if (!processed) {
+      console.error('[error] --r 미지정 + DB 추론 실패. --r=N 명시 필요.');
+      process.exit(1);
+    }
+    const { lastDone } = computeCyclePosition(processed);
+    if (!lastDone) {
+      console.error('[error] 완료 cycle 추론 불가. --r=N 명시 필요.');
+      process.exit(1);
+    }
+    lastR = lastDone.n;
+  }
+  if (!cycleNums.includes(lastR)) {
+    console.error(`[error] R${lastR} 가 master_list에 없음. 범위 R${cycleNums[0]}~R${cycleNums[cycleNums.length - 1]}.`);
+    process.exit(1);
+  }
+
+  // KPI(권위): admin CTE 와 동일. 실패 시 마커 미생성(추측 emit 금지).
+  const kpiDone = fetchKpiDone();
+  const kpiTotal = fetchActiveJobCount();
+  if (kpiDone == null || kpiTotal == null) {
+    console.error('[error] 권위 KPI 측정 실패 → 마커 미생성. (추측값 emit 금지)');
+    process.exit(1);
+  }
+
+  // cycles: R7..last_r 갯수 / 전체 cycle 갯수
+  const cyclesTotal = cycleNums.length;
+  const cyclesDone = cycleNums.filter((n) => n <= lastR).length;
+
+  // jobs: master_list 직업수 누적합 (25×cycle 금지)
+  const jobsOf = (n) => byCycle[`R${n}`].flat().length;
+  const jobsTotal = cycleNums.reduce((s, n) => s + jobsOf(n), 0);
+  const jobsDone = cycleNums.filter((n) => n <= lastR).reduce((s, n) => s + jobsOf(n), 0);
+
+  // as_of: 로컬(KST) 날짜 — UTC toISOString는 자정 부근 하루 어긋남
+  const d = new Date();
+  const asOf = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  // 키 순서 = 계약 순서 (JSON.stringify 삽입순서 보존)
+  const payload = {
+    last_completed_r: lastR,
+    kpi_done: kpiDone,
+    kpi_total: kpiTotal,
+    cycles_done: cyclesDone,
+    cycles_total: cyclesTotal,
+    jobs_done: jobsDone,
+    jobs_total: jobsTotal,
+    as_of: asOf,
+  };
+  // stdout: 마커 라인 1줄만 (데몬 정규식 매칭)
+  console.log(`STORE_CAREERWIKI_PROGRESS: ${JSON.stringify(payload)}`);
+}
+
 // ─── main ───
-if (hasFlag('status')) {
+if (hasFlag('emit-progress')) {
+  emitProgress();
+} else if (hasFlag('status')) {
   showStatus();
 } else if (hasFlag('next-cycle')) {
   const n = findNextCycle();
@@ -401,5 +506,6 @@ if (hasFlag('status')) {
   node scripts/master-cycle-helper.cjs --cycle=12 --skip-db   DB cross-check 생략 (오프라인)
   node scripts/master-cycle-helper.cjs --next-cycle    미처리 다음 cycle 자동 결정 + 생성
   node scripts/master-cycle-helper.cjs --resume=48     R48 미완 직업 산출 (리밋 사망 후 재개용)
+  node scripts/master-cycle-helper.cjs --emit-progress --r=50   진행 마커 1줄 emit (검증 PASS 직후 1회, 데몬→KV forward)
   node scripts/master-cycle-helper.cjs --reset-delay="resets 3:10am (Asia/Seoul)"  리셋까지 ScheduleWakeup delay 계산`);
 }
