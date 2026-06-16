@@ -100,6 +100,13 @@ for s in <25 slug>; do node scripts/skill-cache/audit-via-api.cjs "$s" --exclude
 # youtubeLinks 게이트 통과 확인 (룰 14)
 ```
 
+**활동행(대시보드) 점검 — cycle 마감 필수** (2026-06-15 R50 B4 사고): 배치 워커가 종료 시 STEP_LAST(`emit-activity --status done`)를 누락하면(BRIDGE_SECRET 주석 보고 '무해'라며 자의 생략하는 경향) 대시보드 행이 `running`에 영구 멈춤. base 파일 `data/cycle/r{N}_activity/*.json`은 항상 `status:running` 고정이고 emit-activity가 `(source, external_id)` 행을 done으로 upsert하는 구조라 파일만 봐선 모름 → **대시보드에서 group `cycle-R{N}-{date}`의 6유닛(B1~B5+verify)이 모두 done인지 확인**. running 잔존 시 dispatcher가 직접 보정:
+```bash
+node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/b{X}.json --status done --tool-calls <N> --detail "<완료요약>"
+node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/verify.json --status done --detail "25/25 PASS, KPI {n}"
+```
+(BRIDGE_SECRET·DAEMON_ID·BRIDGE_BASE_URL은 dispatcher 환경에 set돼 있어 재emit 가능. 200 `{"ok":true,"written":1}` 확인.)
+
 보고 형식 (사용자에게): KPI before/after (A 카운트) + 25 직업 표 (slug | rev | distinct | totalE | audit | class) + 25 `careerwiki.org/job/{slug}` 링크 + 누적 진행. `data/cycle/R{N}_report.md` 저장.
 
 ## Step 6 — 메모리 갱신 + 사용자 ping (자동 진입 X)
