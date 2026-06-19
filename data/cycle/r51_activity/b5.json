@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r51-b5",
+      "group_key": "cycle-R51-2026-06-18",
+      "agent_slug": "hangyeol",
+      "label": "R51 B5: 모터사이클정비원~모피선별원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

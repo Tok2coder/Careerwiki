@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r51-b2",
+      "group_key": "cycle-R51-2026-06-18",
+      "agent_slug": "hangyeol",
+      "label": "R51 B2: 모바일-고객지원-엔지니어~모사공",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

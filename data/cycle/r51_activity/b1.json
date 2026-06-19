@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r51-b1",
+      "group_key": "cycle-R51-2026-06-18",
+      "agent_slug": "hangyeol",
+      "label": "R51 B1: 모노레일기술자~모래분리기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
