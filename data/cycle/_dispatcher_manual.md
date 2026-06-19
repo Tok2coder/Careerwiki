@@ -100,12 +100,12 @@ for s in <25 slug>; do node scripts/skill-cache/audit-via-api.cjs "$s" --exclude
 # youtubeLinks 게이트 통과 확인 (룰 14)
 ```
 
-**활동행(대시보드) 점검 — cycle 마감 필수** (2026-06-15 R50 B4 사고): 배치 워커가 종료 시 STEP_LAST(`emit-activity --status done`)를 누락하면(BRIDGE_SECRET 주석 보고 '무해'라며 자의 생략하는 경향) 대시보드 행이 `running`에 영구 멈춤. base 파일 `data/cycle/r{N}_activity/*.json`은 항상 `status:running` 고정이고 emit-activity가 `(source, external_id)` 행을 done으로 upsert하는 구조라 파일만 봐선 모름 → **대시보드에서 group `cycle-R{N}-{date}`의 6유닛(B1~B5+verify)이 모두 done인지 확인**. running 잔존 시 dispatcher가 직접 보정:
+**활동행(대시보드) done 재emit — cycle 마감 필수·무조건 실행** (2026-06-15 R50 B4 / 2026-06-18 R51 6유닛 재발): 워커 측 STEP_LAST emit은 **신뢰 불가**. ① 워커가 'BRIDGE_SECRET 없으면 무해'라며 자의 생략 ② **Agent 도구로 띄운 서브에이전트는 BRIDGE_SECRET이 env에 없어 emit이 silent skip**(daemon 워커풀과 달리) → 워커가 "emit done" 보고해도 대시보드엔 안 닿아 행이 `running`에 영구 멈춤. base 파일 `data/cycle/r{N}_activity/*.json`은 항상 `status:running` 고정(파일만 봐선 모름). **따라서 dispatcher가 cycle 마감 때 6유닛(B1~B5+verify) done을 조건 없이 전부 재emit**(idempotent upsert이라 워커가 이미 done 보냈어도 무해):
 ```bash
-node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/b{X}.json --status done --tool-calls <N> --detail "<완료요약>"
+for X in b1 b2 b3 b4 b5; do node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/$X.json --status done --detail "5/5 done"; done
 node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/verify.json --status done --detail "25/25 PASS, KPI {n}"
 ```
-(BRIDGE_SECRET·DAEMON_ID·BRIDGE_BASE_URL은 dispatcher 환경에 set돼 있어 재emit 가능. 200 `{"ok":true,"written":1}` 확인.)
+(BRIDGE_SECRET·DAEMON_ID·BRIDGE_BASE_URL은 dispatcher 환경에 set돼 있어 재emit 가능. 각 200 `{"ok":true,"written":1}` 확인.)
 
 보고 형식 (사용자에게): KPI before/after (A 카운트) + 25 직업 표 (slug | rev | distinct | totalE | audit | class) + 25 `careerwiki.org/job/{slug}` 링크 + 누적 진행. `data/cycle/R{N}_report.md` 저장.
 
