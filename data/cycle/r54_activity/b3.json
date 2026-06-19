@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r54-b3",
+      "group_key": "cycle-R54-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R54 B3: 무늬목열압처리원~무대기계조정원",
+      "model": "sonnet",
+      "status": "done",
+      "detail": "5/5 완료: 무늬목열압처리원(rev19350), 무늬목접착원(rev19352), 무대-디자이너(rev19370), 무대-조명-디자이너(rev19374), 무대기계조정원(rev19380) - 전건 audit CLEAN"
+    }
+  ]
+}
