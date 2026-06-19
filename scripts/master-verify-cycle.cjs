@@ -89,7 +89,7 @@ function loadJobs() {
     const queuePath = path.join(REPO_ROOT, 'data', 'cycle', `R${cycle}_queue.txt`);
     if (fs.existsSync(queuePath)) {
       const txt = fs.readFileSync(queuePath, 'utf8');
-      for (const line of txt.split('\n').map((l) => l.trim()).filter(Boolean)) {
+      for (const line of txt.split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'))) {
         const parts = line.split('|').map((p) => p.trim());
         const idM = line.match(/id=([0-9]+)/);
         const slug = parts[1] || parts[0];
