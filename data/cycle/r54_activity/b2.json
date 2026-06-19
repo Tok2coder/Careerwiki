@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r54-b2",
+      "group_key": "cycle-R54-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R54 B2: 묘지관리원~무늬목슬라이서조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

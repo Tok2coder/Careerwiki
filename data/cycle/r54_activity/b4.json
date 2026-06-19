@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r54-b4",
+      "group_key": "cycle-R54-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R54 B4: 무선기기감시원~무선인터넷연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

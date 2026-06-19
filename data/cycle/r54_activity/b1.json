@@ -1,0 +1,15 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r54-b1",
+      "group_key": "cycle-R54-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R54 B1: 목형제작반장~몽타주제작전문가",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ],
+  "status": "done",
+  "completedAt": "2026-06-19T13:18:53.188Z"
+}
