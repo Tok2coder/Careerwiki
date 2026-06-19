@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r53-b1",
+      "group_key": "cycle-R53-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R53 B1: 목재수분시험원~목재연마원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

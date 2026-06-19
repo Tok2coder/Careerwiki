@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r53-b4",
+      "group_key": "cycle-R53-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R53 B4: 목조각원~목초재배작업원",
+      "model": "sonnet",
+      "status": "done"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r53-b3",
+      "group_key": "cycle-R53-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R53 B3: 목재칩정선기조작원~목제품광택원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
