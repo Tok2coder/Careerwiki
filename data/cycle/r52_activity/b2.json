@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r52-b2",
+      "group_key": "cycle-R52-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R52 B2: 모피판장원~목관세척원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

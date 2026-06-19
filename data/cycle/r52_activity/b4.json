@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r52-b4",
+      "group_key": "cycle-R52-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R52 B4: 목욕관리사~목재건조반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

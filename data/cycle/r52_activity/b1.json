@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r52-b1",
+      "group_key": "cycle-R52-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R52 B1: 모피염색원~모피재봉사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

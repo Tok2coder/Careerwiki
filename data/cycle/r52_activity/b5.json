@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r52-b5",
+      "group_key": "cycle-R52-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R52 B5: 목재교육전문가~목재분쇄기운전원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r52-b3",
+      "group_key": "cycle-R52-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R52 B3: 목관악기제조원~목선반조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

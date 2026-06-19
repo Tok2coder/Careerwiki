@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r52-verify",
+      "group_key": "cycle-R52-2026-06-19",
+      "agent_slug": "hangyeol",
+      "label": "R52 검증: 25직업 전수 실측",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
