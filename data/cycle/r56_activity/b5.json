@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r56-b5",
+      "group_key": "cycle-R56-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R56 B5: 미래학자~미생물발효연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

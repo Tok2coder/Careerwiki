@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r56-b1",
+      "group_key": "cycle-R56-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R56 B1: 문지제작반장~문화세트기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

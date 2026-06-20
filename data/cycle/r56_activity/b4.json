@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r56-b4",
+      "group_key": "cycle-R56-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R56 B4: 물류전산조작원~미디어콘텐츠데이터분석가",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

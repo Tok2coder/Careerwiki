@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r56-b3",
+      "group_key": "cycle-R56-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R56 B3: 물고기치료사~물류기술연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

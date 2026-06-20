@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r56-b2",
+      "group_key": "cycle-R56-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R56 B2: 문화세트제작자~물감롤링기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
