@@ -1,0 +1,15 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r55-b4",
+      "group_key": "cycle-R55-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R55 B4: 무형재산권관리원~문자판전사원",
+      "model": "sonnet",
+      "status": "done",
+      "tool_calls": 95,
+      "detail": "5/5 done: 무형재산권관리원(rev19400)/문서감정사(rev19406)/문양지펀칭기조작원(rev19419)/문자판실크인쇄원(rev19437)/문자판전사원(rev19441) CLEAN"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r55-b3",
+      "group_key": "cycle-R55-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R55 B3: 무인변전소관리원~무전해도금원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

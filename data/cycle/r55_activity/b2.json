@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r55-b2",
+      "group_key": "cycle-R55-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R55 B2: 무역금융사무원~무인기계경비원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

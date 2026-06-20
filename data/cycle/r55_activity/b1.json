@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r55-b1",
+      "group_key": "cycle-R55-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R55 B1: 무선통신망관리원~무술연기자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

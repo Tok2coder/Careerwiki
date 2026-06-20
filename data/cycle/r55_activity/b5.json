@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r55-b5",
+      "group_key": "cycle-R55-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R55 B5: 문자판제조현장감독자~문지원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
