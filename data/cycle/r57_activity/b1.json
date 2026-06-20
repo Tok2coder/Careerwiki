@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r57-b1",
+      "group_key": "cycle-R57-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R57 B1: 미생물의약연구원~미술감독",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

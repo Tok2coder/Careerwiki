@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r57-b2",
+      "group_key": "cycle-R57-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R57 B2: 미술관관리자~미술품감정사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

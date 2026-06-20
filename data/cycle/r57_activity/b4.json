@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r57-b4",
+      "group_key": "cycle-R57-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R57 B4: 미장반장일반~밀정선기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r57-b5",
+      "group_key": "cycle-R57-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R57 B5: 밀폐형혼련기조작원~바디페인팅아티스트",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
