@@ -1,0 +1,59 @@
+{
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewWork·overviewProspect·detailWlb·overviewAbilities·summary·youtubeLinks 신규 작성, 출처 18건+",
+  "fields": {
+    "summary": "납(연) 제련 공장에서 반응로에 연정광(납 광석) 등 원료를 투입하는 장비를 조작하는 직업이다. 컨베이어, 슈트, 호퍼 등 원료 공급 설비를 다루며, 원료 상태 점검·샘플 채취·장비 청소 등 생산 지원 업무를 담당한다. 주로 1차 비철금속 제조업 사업장에 종사한다.",
+    "way": "반응로장입원은 작업 시작 전 반응로와 원료 공급 설비(컨베이어·슈트·호퍼)의 이상 유무를 점검하고, 연정광의 수분 함유량과 이물질 혼입 여부를 확인하는 샘플을 채취하여 검사를 의뢰한다.[1] 원료가 승인되면 지정된 배합 비율에 따라 연정광과 코크스, 석회석 등 부원료를 투입 장비를 통해 반응로에 장입한다.[2] 장입 과정에서 호퍼 게이트와 드럼 피더를 조작하여 원료 공급 속도를 조절하고, 컨베이어 낙광(떨어진 원료)을 정기적으로 정리한다.[3] 슈트와 호퍼 내부에 원료가 굳어 막히지 않도록 주기적으로 청소하고, 설비 상태와 장입량을 작업일지에 기록한다.[4] 고온 작업 환경에서 방진 마스크·보호복·안전화 등 개인보호구를 착용하며, 납 분진 노출 위험에 대비해 정기 건강진단을 받아야 한다.[5]",
+    "trivia": "납(Pb)은 밀도가 11.34 g/cm³인 무겁고 부드러운 금속으로, 배터리(주로 자동차 납산배터리), 전원 케이블, 방사선 차폐재 등에 사용된다.[1] 납 제련 공정에서 발생하는 분진·증기·황산화물은 인체에 심각한 독성을 지니며, 작업자가 장기간 납 분진을 흡입하면 피로감·두통·복부 통증·빈혈 등의 납 중독 증상이 나타날 수 있다.[2] 국내 납 제련소는 공해 문제로 신·증설이 어렵고, 1990년 국내 유일의 연제련소였던 장항 연제련시설이 폐쇄되는 등 산업 규모가 지속적으로 축소되었다.[3] 반응로에 투입하는 원료 장입 장치는 슈트(chute)·호퍼(hopper)·드럼피더(drum feeder)·컨베이어로 구성되며, 원료 입도에 따라 장입 방식을 달리하는 기술적 설계가 필요하다.[4]",
+    "overviewWork": {
+      "main": "반응로장입원의 핵심 업무는 납 제련용 반응로에 연정광 등 원료를 정해진 배합 비율로 투입하는 것이다. 원료 상태 사전 점검 및 샘플 채취, 컨베이어·슈트·호퍼 조작, 낙광 정리, 설비 청소 및 이상 보고, 작업일지 기록 등이 주요 일과다. 숙련기간은 3~6개월 수준으로 비교적 짧다."
+    },
+    "overviewProspect": {
+      "main": "반응로장입원이 속한 비철금속 제조업은 납 제련소 폐쇄, 환경 규제 강화, 설비 자동화 등으로 국내 고용이 장기적으로 감소 추세에 있다.[1] 납 제련은 분진·중금속 오염 문제로 국내 신규 설비 증설이 제한되어 왔으며, 대부분의 납 원료는 수입에 의존하는 구조다.[2] 다만 비철금속 전반의 고용은 2026년 상반기 기준 금속가공 업종과 유사하게 전년 수준을 유지할 것으로 예측된다.[3] 납산배터리 리사이클링 수요 증가 등 일부 공정에서 관련 인력 수요가 있으나, 반응로장입 업무 자체는 자동화 장비로 대체될 가능성이 높다.[4]"
+    },
+    "detailWlb": {
+      "wlbDetail": "반응로장입원은 납 제련 공장 실내에서 근무하며, 고온·소음·진동과 함께 납 분진 및 황산화물 노출 등 유해 작업 환경에 처한다.[1] 납 분진을 흡입하면 납 중독 위험이 있으므로 방진 마스크, 보호복, 안전화를 반드시 착용해야 하며, 정기적인 혈중 납 농도 검사가 필수적이다.[2] 작업강도는 보통 수준이지만, 고온 환경에서의 장시간 근무와 분진 노출에 따른 건강 위험이 일반 제조업보다 크다. 교대근무가 일반적이며, 휴일 근무가 수반될 수 있다.",
+      "socialDetail": "반응로장입원은 공정 기술자, 품질 검사원, 안전 관리자, 동료 조작원과 함께 팀 단위로 작업한다.[1] 원료 장입 기록을 정확히 작성하고 이상 상황을 즉각 보고하는 소통 능력이 요구되며, 납 분진·유해가스 등 산업안전보건법 규정 준수 의식이 필요하다.[2] LS MnM(온산제련소 등) 같은 비철금속 제련 기업에서 생산직으로 채용되며, 관련 업무 경력을 통해 품질 검사·설비 유지보수 등 상위 직무로 이동할 수 있다.[3]"
+    },
+    "overviewAbilities": {
+      "technKnow": "반응로장입원에게 필요한 핵심 역량은 원료 투입 장비(슈트·호퍼·컨베이어)의 작동 원리 이해와 조작 능력이다.[1] 납 제련 공정의 원료 배합 비율 및 공정 흐름을 숙지하고, 원료 샘플 채취 절차와 수분 함유량 확인 방법도 익혀야 한다.[2] 납 중독 예방을 위한 보호구 착용법, 납 농도 관리 기준, 비상 대처 절차 등 산업안전보건 지식이 필수다.[3]"
+    },
+    "heroTags": ["납제련", "비철금속", "반응로", "원료장입", "제련소"],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "KEIS '반응로장입원' 0개, '반응로장입원 현직자인터뷰' 0개, '납 제련 장입원 직업' 0개, '비철금속 제련 생산직 업무' 0개, '반응로 원료 장입 조작' 0개, '제련소 생산직 직업 소개' 0개 (2026-06-23). 반응로장입원은 납 제련 특화 현장 직업으로 현직자 인터뷰·직무실무·강의·진로 전 영역에서 한국어 공식 채널 영상을 확인하지 못하여 youtubeLinks를 빈 배열로 설정함."
+  },
+  "sources": {
+    "way": [
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%EB%B0%98%EC%9D%91%EB%A1%9C%EC%9E%A5%EC%9E%85%EC%9B%90/", "text": "반응로장입원 직업사전 — 직업백과", "fieldKey": "way" },
+      { "url": "https://patents.google.com/patent/KR20080069983A/ko", "text": "납 제련 공정 원료 장입 방법 — Google Patents", "fieldKey": "way" },
+      { "url": "https://patents.google.com/patent/KR100982895B1/ko", "text": "호퍼 슈트 스커트 실링장치 — Google Patents", "fieldKey": "way" },
+      { "url": "https://patents.google.com/patent/KR20110054071A/ko", "text": "소결기 원료 장입 방법 및 장치 — Google Patents", "fieldKey": "way" },
+      { "url": "https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AA000677", "text": "납 중독 직업성 노출 및 예방 — 서울대학교병원", "fieldKey": "way" }
+    ],
+    "trivia": [
+      { "url": "https://www.kcie.or.kr/mobile/yeouitv/actualReport/web_view?type=3&series_idx=&content_idx=1871", "text": "비철금속 산업 이해 및 납 특성 — 한국탄소산업진흥원", "fieldKey": "trivia" },
+      { "url": "https://www.msdmanuals.com/ko/home/%EB%B6%80%EC%83%81-%EB%B0%8F-%EC%A4%91%EB%8F%85/%EC%A4%91%EB%8F%85/%EB%82%A9-%EC%A4%91%EB%8F%85", "text": "납 중독 증상과 원인 — MSD 매뉴얼", "fieldKey": "trivia" },
+      { "url": "https://ko.wikisource.org/wiki/%EA%B8%80%EB%A1%9C%EB%B2%8C_%EC%84%B8%EA%B3%84_%EB%8C%80%EB%B0%B1%EA%B3%BC%EC%82%AC%EC%A0%84/%ED%86%B5%EC%83%81%C2%B7%EC%82%B0%EC%97%85/%EC%82%B0%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C/%EC%A4%91%EA%B3%B5%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C/%EB%B9%84%EC%B2%A0%EA%B8%88%EC%86%8D%EA%B3%B5%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C", "text": "국내 납 제련 산업 현황 — 글로벌 세계 대백과사전 (위키문헌)", "fieldKey": "trivia" },
+      { "url": "https://patents.google.com/patent/KR20110054071A/ko", "text": "원료 장입 슈트·호퍼·드럼피더 구성 — Google Patents", "fieldKey": "trivia" }
+    ],
+    "overviewProspect.main": [
+      { "url": "https://ko.wikisource.org/wiki/%EA%B8%80%EB%A1%9C%EB%B2%8C_%EC%84%B8%EA%B3%84_%EB%8C%80%EB%B0%B1%EA%B3%BC%EC%82%AC%EC%A0%84/%ED%86%B5%EC%83%81%C2%B7%EC%82%B0%EC%97%85/%EC%82%B0%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C/%EC%A4%91%EA%B3%B5%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C/%EB%B9%84%EC%B2%A0%EA%B8%88%EC%86%8D%EA%B3%B5%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C", "text": "납 제련소 폐쇄 및 환경 규제 — 글로벌 세계 대백과사전 (위키문헌)", "fieldKey": "overviewProspect.main" },
+      { "url": "https://encykorea.aks.ac.kr/Article/E0081047", "text": "비철금속제련사업법 및 산업 배경 — 한국민족문화대백과사전", "fieldKey": "overviewProspect.main" },
+      { "url": "https://keis.or.kr/keis/ko/bbs/225/detail.do?pstSn=64404&pageIndex=1", "text": "2026년 상반기 금속가공 업종 일자리 전망 — 한국고용정보원", "fieldKey": "overviewProspect.main" },
+      { "url": "https://www.kcie.or.kr/mobile/yeouitv/actualReport/web_view?type=3&series_idx=&content_idx=1871", "text": "납 배터리 재활용 수요 — 한국탄소산업진흥원", "fieldKey": "overviewProspect.main" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%EB%B0%98%EC%9D%91%EB%A1%9C%EC%9E%A5%EC%9E%85%EC%9B%90/", "text": "반응로장입원 근무 환경 — 직업백과", "fieldKey": "detailWlb.wlbDetail" },
+      { "url": "https://www.amc.seoul.kr/asan/healthinfo/disease/diseaseDetail.do?contentId=33386", "text": "납 중독 증상 및 작업 환경 보호 — 서울아산병원", "fieldKey": "detailWlb.wlbDetail" }
+    ],
+    "detailWlb.socialDetail": [
+      { "url": "https://www.lsmnm.com/recruit/work_info", "text": "LS MnM 비철제련 공정 직무 — LS MnM", "fieldKey": "detailWlb.socialDetail" },
+      { "url": "https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AA000677", "text": "납 농도 관리 및 작업장 보건 수칙 — 서울대학교병원", "fieldKey": "detailWlb.socialDetail" },
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%EB%B0%98%EC%9D%91%EB%A1%9C%EC%9E%A5%EC%9E%85%EC%9B%90/", "text": "반응로장입원 직무 협력 — 직업백과", "fieldKey": "detailWlb.socialDetail" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "url": "https://patents.google.com/patent/KR20110054071A/ko", "text": "소결기 원료 장입 장치 원리 — Google Patents", "fieldKey": "overviewAbilities.technKnow" },
+      { "url": "https://patents.google.com/patent/KR20080069983A/ko", "text": "납 제련 공정 원료 배합 — Google Patents", "fieldKey": "overviewAbilities.technKnow" },
+      { "url": "https://www.amc.seoul.kr/asan/healthinfo/disease/diseaseDetail.do?contentId=33386", "text": "납 중독 예방 보호구 착용 — 서울아산병원", "fieldKey": "overviewAbilities.technKnow" }
+    ]
+  }
+}

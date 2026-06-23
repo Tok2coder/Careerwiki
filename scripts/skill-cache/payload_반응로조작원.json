@@ -1,0 +1,59 @@
+{
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewWork·overviewProspect·detailWlb·overviewAbilities·summary·youtubeLinks 신규 작성, 출처 20건+",
+  "fields": {
+    "summary": "납(연) 제련 공장에서 연정광을 태워 산화슬래그와 황산을 생산하는 반응로를 조작하는 직업이다. 반응 온도·압력 등 공정 조건을 설정·모니터링하고, 샘플 분석 결과에 따라 원료 수송을 조절하며, 반응로 및 관련 장비를 유지 관리한다. 숙련기간은 2~4년 수준이다.",
+    "way": "반응로조작원은 작업 전 반응로와 보조 설비(버너·컨베이어·가스 처리 장치 등)를 점검하고, 생산 계획에 따라 연정광 투입 속도와 버너 조건을 설정한다.[1] 반응이 진행되는 동안 제어판 또는 모니터를 통해 반응로 내 온도·압력·가스 농도를 실시간으로 감시하고, 이상 징후 발생 시 버너 출력이나 원료 공급을 즉각 조정한다.[2] 반응 생성물인 산화슬래그와 이산화황(SO2) 가스는 별도 공정으로 이송되며, SO2는 황산 플랜트에서 황산으로 회수된다.[3] 중간 샘플을 채취하여 분석 결과를 확인하고, 슬래그 품위와 황산 농도가 기준치를 충족하는지 검토한 후 원료 수송 절차를 조정한다.[4] 작업 종료 후에는 온도·압력·투입량 등 작업 조건을 기록하고, 교대 인수인계 시 이상 유무와 주요 공정 변동 사항을 전달한다.[5]",
+    "trivia": "납 제련 공정에서 연정광(PbS)은 반응로 안에서 산소와 반응하여 납 금속과 납 산화물로 변환되며, 동시에 이산화황(SO2) 가스가 발생한다.[1] 발생한 SO2는 산성 플랜트로 이송되어 삼산화황(SO3)으로 전환된 뒤 물과 반응해 황산(H2SO4)을 생성하는데, 이 황산은 비철금속 습식 제련·비료·화학 산업의 원료로 활용된다.[2] 반응로 내부는 1,000~1,300℃에 달하는 고온이며, 발생하는 가스에는 SO2 외에 납 증기·카드뮴·비소 등 독성 물질이 포함되어 있어 엄격한 밀폐 운전과 오프가스 처리가 필수다.[3] 한국의 비철금속 제련 기업인 LS MnM은 아연·납·귀금속을 종합 제련하는 온산제련소를 운영하며, 건식 제련과 습식 전련 공정을 병행한다.[4]",
+    "overviewWork": {
+      "main": "반응로조작원의 핵심 업무는 연정광을 연소·산화시키는 반응로를 운전하여 산화슬래그와 SO2 가스를 생산하는 것이다. 반응 조건 설정 및 모니터링, 공정 이상 대응, 샘플 채취 및 분석 결과 반영, 작업일지 기록, 설비 점검 및 유지보수 지원이 주요 업무다. 반응로장입원보다 숙련도가 높으며 2~4년의 현장 경력이 요구된다."
+    },
+    "overviewProspect": {
+      "main": "반응로조작원이 속한 비철금속 제련업은 국내 납 제련소 감소와 환경 규제 강화로 고용 규모가 축소되는 추세다.[1] 납 제련 공정에서 발생하는 SO2·납 분진 등 유해물질 문제로 신규 설비 증설이 어렵고, 자동화·스마트 제어 시스템 도입으로 조작원 수요도 줄어들 전망이다.[2] 다만 기존 가동 중인 제련 설비의 숙련 운전 인력 수요는 당분간 유지되며, 황산 수요 산업(반도체·배터리·비료)의 성장에 따라 제련 연계 공정 운전 인력도 부분적으로 필요하다.[3] 비철금속 제조업 고용은 2026년 상반기 금속가공 업종 기준 전년 수준 유지가 예측된다.[4]"
+    },
+    "detailWlb": {
+      "wlbDetail": "반응로조작원은 1,000℃ 이상의 고온이 발생하는 납 제련 공장 실내에서 근무하며, SO2 가스·납 분진·중금속 증기 등 극히 유해한 환경에 노출된다.[1] 방진 마스크·방독 마스크·보호복·내화학 장갑·안전화를 착용해야 하며, 정기적인 혈중 납 농도와 폐 기능 검사가 필수적이다.[2] 24시간 연속 운전 공정 특성상 교대근무(3조 2교대 등)가 일반적이고, 설비 이상 발생 시 야간·휴일에도 대기 호출이 있을 수 있다. 반응로장입원보다 책임 범위가 넓어 정신적·신체적 집중도가 높다.",
+      "socialDetail": "반응로조작원은 반응로장입원, 공정 기술자, 품질 검사원, 안전 관리자, 환경 담당자와 협력한다.[1] 샘플 분석 결과를 기반으로 빠른 판단을 내리고 관련 부서에 공유하는 소통 능력이 중요하며, 비상 상황 시 대피·정지 절차를 숙지해야 한다.[2] LS MnM 같은 종합 비철금속 제련 기업에서 공정 조업 관리 인력으로 채용되며, 경력 축적 후 공정 기술자·품질 관리 등 상위 직무로 이동이 가능하다.[3]"
+    },
+    "overviewAbilities": {
+      "technKnow": "반응로조작원에게 필요한 핵심 역량은 납 제련 공정 원리(산화 반응·슬래그 형성·SO2 발생), 반응로 유형별 조작법, 온도·압력·가스 농도 계측기 판독 능력이다.[1] DCS·PLC 등 공정 제어 장비를 다루는 기초 능력과 샘플 채취 절차 및 분석 결과 해석 능력도 필수다.[2] 위험물산업기사, 화공기사 등의 자격증이 취업 및 승진에 우대되며, 납 중독 예방·비상 대처·방독 마스크 사용법 등 산업안전 교육을 이수해야 한다.[3]"
+    },
+    "heroTags": ["납제련", "반응로", "산화슬래그", "황산", "비철금속"],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "KEIS '반응로조작원' 0개, '반응로조작원 현직자인터뷰' 0개, '납 제련 반응로 운전' 0개, '비철금속 제련 생산직' 0개, '반응로 공정 조작 직업 소개' 0개, '제련소 조작원 인터뷰' 0개 (2026-06-23). 반응로조작원은 납 제련 특화 생산직으로 현직자 인터뷰·직무실무·강의·진로 전 영역에서 한국어 공식 채널 영상을 확인하지 못하여 youtubeLinks를 빈 배열로 설정함."
+  },
+  "sources": {
+    "way": [
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%EB%B0%98%EC%9D%91%EB%A1%9C%EC%A1%B0%EC%9E%91%EC%9B%90/", "text": "반응로조작원 직업사전 — 직업백과", "fieldKey": "way" },
+      { "url": "https://patents.google.com/patent/KR20080069983A/ko", "text": "납 제련 반응로 운전 및 온도·가스 조건 — Google Patents", "fieldKey": "way" },
+      { "url": "https://patents.google.com/patent/KR20160072096A/ko", "text": "제련 반응로 오프가스 처리 — Google Patents", "fieldKey": "way" },
+      { "url": "https://www.lsmnm.com/recruit/work_info", "text": "비철제련 공정 조업 관리 업무 — LS MnM", "fieldKey": "way" },
+      { "url": "https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AA000677", "text": "납 중독 예방 정기 검사 필요 — 서울대학교병원", "fieldKey": "way" }
+    ],
+    "trivia": [
+      { "url": "https://patents.google.com/patent/KR20080069983A/ko", "text": "납 제련 산화 반응 및 슬래그 형성 원리 — Google Patents", "fieldKey": "trivia" },
+      { "url": "https://patents.google.com/patent/KR20020049001A/ko", "text": "SO2에서 황산 제조 원리 — Google Patents", "fieldKey": "trivia" },
+      { "url": "https://www.msdmanuals.com/ko/home/%EB%B6%80%EC%83%81-%EB%B0%8F-%EC%A4%91%EB%8F%85/%EC%A4%91%EB%8F%85/%EB%82%A9-%EC%A4%91%EB%8F%85", "text": "납 증기·분진 직업 노출 위험 — MSD 매뉴얼", "fieldKey": "trivia" },
+      { "url": "https://www.lsmnm.com/recruit/work_info", "text": "LS MnM 온산제련소 건식·습식 제련 공정 — LS MnM", "fieldKey": "trivia" }
+    ],
+    "overviewProspect.main": [
+      { "url": "https://ko.wikisource.org/wiki/%EA%B8%80%EB%A1%9C%EB%B2%8C_%EC%84%B8%EA%B3%84_%EB%8C%80%EB%B0%B1%EA%B3%BC%EC%82%AC%EC%A0%84/%ED%86%B5%EC%83%81%C2%B7%EC%82%B0%EC%97%85/%EC%82%B0%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C/%EC%A4%91%EA%B3%B5%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C/%EB%B9%84%EC%B2%A0%EA%B8%88%EC%86%8D%EA%B3%B5%EC%97%85%EC%9D%98_%EA%B2%BD%EC%98%81%ED%98%95%ED%83%9C", "text": "납 제련소 환경 규제와 산업 감소 — 글로벌 세계 대백과사전 (위키문헌)", "fieldKey": "overviewProspect.main" },
+      { "url": "https://encykorea.aks.ac.kr/Article/E0081047", "text": "비철금속제련사업 육성 및 규제 역사 — 한국민족문화대백과사전", "fieldKey": "overviewProspect.main" },
+      { "url": "https://www.kcie.or.kr/mobile/yeouitv/actualReport/web_view?type=3&series_idx=&content_idx=1871", "text": "황산 수요 산업 성장 연계 — 한국탄소산업진흥원", "fieldKey": "overviewProspect.main" },
+      { "url": "https://keis.or.kr/keis/ko/bbs/225/detail.do?pstSn=64404&pageIndex=1", "text": "2026년 상반기 금속가공 업종 고용 전망 — 한국고용정보원", "fieldKey": "overviewProspect.main" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%EB%B0%98%EC%9D%91%EB%A1%9C%EC%A1%B0%EC%9E%91%EC%9B%90/", "text": "반응로조작원 근무 환경 고온·실내 — 직업백과", "fieldKey": "detailWlb.wlbDetail" },
+      { "url": "https://www.amc.seoul.kr/asan/healthinfo/disease/diseaseDetail.do?contentId=33386", "text": "납 중독 예방 보호구 착용 및 정기 검사 — 서울아산병원", "fieldKey": "detailWlb.wlbDetail" }
+    ],
+    "detailWlb.socialDetail": [
+      { "url": "https://www.lsmnm.com/recruit/work_info", "text": "비철제련 팀 구성 및 직무 협력 — LS MnM", "fieldKey": "detailWlb.socialDetail" },
+      { "url": "https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AA000677", "text": "작업장 납 농도 관리 및 소통 의무 — 서울대학교병원", "fieldKey": "detailWlb.socialDetail" },
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%EB%B0%98%EC%9D%91%EB%A1%9C%EC%A1%B0%EC%9E%91%EC%9B%90/", "text": "반응로조작원 협력 직무 — 직업백과", "fieldKey": "detailWlb.socialDetail" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "url": "https://patents.google.com/patent/KR20080069983A/ko", "text": "납 제련 공정 원리 및 반응 조건 — Google Patents", "fieldKey": "overviewAbilities.technKnow" },
+      { "url": "https://ko.wikipedia.org/wiki/%EB%B6%84%EC%82%B0_%EC%A0%9C%EC%96%B4_%EC%8B%9C%EC%8A%A4%ED%85%9C", "text": "DCS 공정 제어 원리 — 위키백과", "fieldKey": "overviewAbilities.technKnow" },
+      { "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2121", "text": "위험물산업기사 취업 우대 — 큐넷", "fieldKey": "overviewAbilities.technKnow" }
+    ]
+  }
+}

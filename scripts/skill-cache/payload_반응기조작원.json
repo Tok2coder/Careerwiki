@@ -1,0 +1,61 @@
+{
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewWork·overviewProspect·detailWlb·overviewAbilities·summary·youtubeLinks 신규 작성, 출처 21건+",
+  "fields": {
+    "summary": "화학 공장에서 반응기를 조작하여 원료를 화학 반응시키는 직업이다. 원료 투입, 온도·교반 속도 등 반응 조건 설정, 반응 진행 모니터링, 반응 완료 후 여과·건조 공정 이송 등을 담당하며, DCS(분산제어시스템) 등 제어 장비를 통해 공정을 관리한다.",
+    "way": "반응기조작원은 작업 전 반응기와 관련 설비의 이상 유무를 점검하고, 액체 및 고체 원료를 정해진 비율대로 반응기에 투입한다.[1] 원료 투입 후에는 제어판을 조작하여 반응 온도와 교반 속도를 설정하고, 반응 진행 과정을 계기판 및 DCS 화면으로 모니터링한다.[2] 반응이 완료되면 반응물을 수세·건조 공정으로 이송하며, 진공펌프를 이용해 수분을 제거하고 여과 공정을 거쳐 최종 제품을 얻는다.[3] 작업 중에는 온도 이상, 압력 급등, 유해가스 누출 등 이상 상황을 즉각 감지하고, 비상정지 절차에 따라 대응하며 안전관리자에게 보고한다.[4] 교대근무 체계(예: 3조 2교대)로 운영되는 공장에서 인수인계 기록을 작성하고, 설비 청소·윤활 등 기본 유지보수도 수행한다.[5]",
+    "trivia": "화학 반응기는 회분식(Batch), 연속교반탱크(CSTR), 플러그흐름(PFR), 반회분식 등 4가지 기본 유형으로 구분된다.[1] 회분식 반응기는 소량 다품종 생산과 발효·도료 제조처럼 반응 완료 시간이 긴 공정에 적합하며, CSTR는 대량 연속 생산 공정에서 반응 조건의 균일성을 확보하는 데 사용된다.[2] 반응기 설계는 전환율(conversion rate), 선택도, 수율을 최대화하면서 원료비·에너지비·노동비를 최소화하는 방향으로 이루어지며, 화학공학의 반응공학·공정제어·열역학이 모두 동원된다.[3] 한국 정부는 화학공장의 공정안전관리(PSM) 대상 사업장에 대해 반응기·증류탑·열교환기 등 주요 설비의 안전 운전 절차 서류화를 의무화하고 있다.[4]",
+    "overviewWork": {
+      "main": "반응기조작원의 핵심 업무는 화학 반응기를 가동하여 원료를 목적 물질로 전환시키는 공정 운전이다. 원료 투입 비율 결정, 온도·압력·교반 속도 제어, 반응 진행 상황 감시, 반응 완료 후 공정 이송, 설비 세척 및 기본 유지보수가 주요 일과를 이룬다. DCS 등 자동화 제어 장비를 활용하며, 이상 발생 시 비상 절차를 실행한다."
+    },
+    "overviewProspect": {
+      "main": "화학 반응기조작원의 고용은 향후 공장 자동화 심화와 스마트 팩토리 전환으로 완만한 감소 또는 정체가 예상된다.[1] 국내 화학산업은 원료가 배관으로 이동하고 장치 내부에서 반응·분리가 이루어지는 장치산업 특성상 인력 의존도가 낮은 편이며, 신규 플랜트도 자동화율을 높여 고용 증가를 억제하는 경향이 있다.[2] 다만 배터리 소재, 바이오케미컬, 정밀화학 등 신소재 분야에서 새로운 반응 공정 인력 수요가 발생하고 있다.[3] 화공기사, 위험물산업기사 등 자격증을 보유하면 반응기 운전 외 안전관리·공정기술 분야로 경력 전환이 가능하다.[4]"
+    },
+    "detailWlb": {
+      "wlbDetail": "반응기조작원은 실내 화학 공장에서 근무하며, 대기환경 불량(유해가스·분진), 고온, 소음·진동 등의 열악한 환경에 노출될 수 있다.[1] 화학 공장의 특성상 24시간 연속 운전이 필요해 3조 2교대 또는 4조 3교대 등 교대근무가 일반적이며, 야간·주말·명절 근무가 수반된다.[2] 화학물질 누출 사고, 반응열 과잉, 압력 급등 등 안전 사고 위험이 있어 방독 마스크, 내화학성 장갑, 안전화 등 개인보호구 착용이 필수이며, 산업안전보건기준에 관한 규칙에 따라 사업주는 관련 보호구를 의무 지급해야 한다.[3]",
+      "socialDetail": "반응기조작원은 공정 기술자, 품질 담당자, 안전 관리자, 교대 근무 동료와 긴밀히 협력한다.[1] 이상 상황 발생 시 즉각 보고하고 정확한 공정 일지를 작성하는 기록·소통 능력이 요구된다.[2] 화학물질안전원이 운영하는 유해화학물질 취급자 교육, 한국폴리텍대학 석유화학공정기술교육원의 반응공정 운전 교육 등을 통해 직무 역량을 향상시킬 수 있다.[3]"
+    },
+    "overviewAbilities": {
+      "technKnow": "반응기조작원에게 필요한 핵심 지식은 화학 반응의 원리(발열·흡열 반응, 반응 속도, 전환율), 반응기 유형별 특성, 공정 제어 개념이다.[1] DCS(분산제어시스템) 기초 조작 능력과 화학 설비 계기(온도계·압력계·유량계) 판독 능력도 필수다.[2] 화공기사(산업기사), 위험물산업기사 자격증이 취업 시 우대되며, 고졸 수준의 학력으로도 1~2년 숙련을 거쳐 현장에 투입될 수 있다.[3] 한국폴리텍대학 석유화학공정기술교육원에서는 파일럿 플랜트와 실제 DCS 장비를 활용한 반응공정 운전 교육 프로그램을 제공하고 있다.[4]"
+    },
+    "heroTags": ["화학반응기", "공정운전", "DCS", "석유화학", "화공기사"],
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "KEIS '반응기조작원' 0개, '반응기조작원 현직자인터뷰' 0개, '화학반응기 운전원 직업' 0개, '공정운전원 업무 소개' 0개, '화학공장 생산직 직업 소개' 0개, '화학반응기 운전 교육' 0개 (2026-06-23). 반응기조작원은 생산직 특화 직업으로 현직자 인터뷰·직무실무·강의·진로 카테고리 전 영역에서 한국어 공식 채널 영상을 확인하지 못하여 youtubeLinks를 빈 배열로 설정함."
+  },
+  "sources": {
+    "way": [
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%ED%99%94%ED%95%99%EB%B0%98%EC%9D%91%EA%B8%B0%EC%A1%B0%EC%9E%91%EC%9B%90/", "text": "화학반응기조작원 직업사전 — 직업백과", "fieldKey": "way" },
+      { "url": "https://ko.wikipedia.org/wiki/%EB%B6%84%EC%82%B0_%EC%A0%9C%EC%96%B4_%EC%8B%9C%EC%8A%A4%ED%85%9C", "text": "분산제어시스템(DCS) — 위키백과", "fieldKey": "way" },
+      { "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=11568", "text": "폴리텍 석유화학공정기술교육원 — 고용노동부", "fieldKey": "way" },
+      { "url": "https://www.law.go.kr/LSW//admRulInfoP.do?admRulSeq=2100000223970&chrClsCd=010201", "text": "공정안전보고서 규정 — 고용노동부 고시", "fieldKey": "way" },
+      { "url": "https://gscaltexmediahub.com/story/recruit-newcomer-job-introduction-engineer-2017-2/", "text": "GS칼텍스 화학공학 엔지니어 공정 운전 업무 — GS칼텍스 미디어허브", "fieldKey": "way" }
+    ],
+    "trivia": [
+      { "url": "https://ko.wikipedia.org/wiki/%ED%99%94%ED%95%99_%EB%B0%98%EC%9D%91%EA%B8%B0", "text": "화학 반응기 — 위키백과", "fieldKey": "trivia" },
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%ED%99%94%ED%95%99%EB%B0%98%EC%9D%91%EA%B8%B0%EC%A1%B0%EC%9E%91%EC%9B%90/", "text": "화학반응기조작원 장비 및 공정 — 직업백과", "fieldKey": "trivia" },
+      { "url": "https://gscaltexmediahub.com/story/recruit-newcomer-job-introduction-engineer-2017-2/", "text": "석유화학 공정 반응공학 설명 — GS칼텍스 미디어허브", "fieldKey": "trivia" },
+      { "url": "https://www.law.go.kr/LSW//admRulInfoP.do?admRulSeq=2100000223970&chrClsCd=010201", "text": "화학설비 공정안전관리 의무 — 고용노동부 고시", "fieldKey": "trivia" }
+    ],
+    "overviewProspect.main": [
+      { "url": "https://namu.wiki/w/%ED%99%94%ED%95%99%EA%B3%B5%ED%95%99%EA%B3%BC", "text": "화학공학과 취업 전망 — 나무위키", "fieldKey": "overviewProspect.main" },
+      { "url": "https://exitbasic.com/%ED%99%94%ED%95%99%EA%B3%BC-%EC%A7%84%ED%95%99/", "text": "화학과 취업 전망 — 에듀인사이트", "fieldKey": "overviewProspect.main" },
+      { "url": "https://www.gnu.ac.kr/chemeng/cm/cntnts/cntntsView.do?mi=3880&cntntsId=2397", "text": "화학공학과 졸업 후 진로 — 경상국립대학교", "fieldKey": "overviewProspect.main" },
+      { "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2121", "text": "위험물산업기사 자격 및 취업 분야 — 큐넷", "fieldKey": "overviewProspect.main" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "url": "https://job.asamaru.net/%EC%A7%81%EC%97%85%EC%82%AC%EC%A0%84/%ED%99%94%ED%95%99%EB%B0%98%EC%9D%91%EA%B8%B0%EC%A1%B0%EC%9E%91%EC%9B%90/", "text": "화학반응기조작원 근무 환경 — 직업백과", "fieldKey": "detailWlb.wlbDetail" },
+      { "url": "https://www.law.go.kr/LSW/lumLsLinkPop.do?lspttninfSeq=154679&chrClsCd=010202", "text": "화학설비 안전 기준 — 산업안전보건기준에 관한 규칙", "fieldKey": "detailWlb.wlbDetail" },
+      { "url": "https://www.law.go.kr/LSW//admRulInfoP.do?admRulSeq=2100000223970&chrClsCd=010201", "text": "공정안전보고서 규정 개인보호구 의무 — 고용노동부 고시", "fieldKey": "detailWlb.wlbDetail" }
+    ],
+    "detailWlb.socialDetail": [
+      { "url": "https://gscaltexmediahub.com/story/recruit-newcomer-job-introduction-engineer-2017-2/", "text": "화학공장 팀 협업 구조 — GS칼텍스 미디어허브", "fieldKey": "detailWlb.socialDetail" },
+      { "url": "https://nics.mcee.go.kr/sub.do?menuId=141", "text": "유해화학물질 안전교육 신청 — 화학물질안전원", "fieldKey": "detailWlb.socialDetail" },
+      { "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=11568", "text": "석유화학공정기술교육원 반응공정 교육 — 고용노동부", "fieldKey": "detailWlb.socialDetail" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "url": "https://ko.wikipedia.org/wiki/%ED%99%94%ED%95%99_%EB%B0%98%EC%9D%91%EA%B8%B0", "text": "반응기 원리 — 위키백과", "fieldKey": "overviewAbilities.technKnow" },
+      { "url": "https://ko.wikipedia.org/wiki/%EB%B6%84%EC%82%B0_%EC%A0%9C%EC%96%B4_%EC%8B%9C%EC%8A%A4%ED%85%9C", "text": "DCS 원리 — 위키백과", "fieldKey": "overviewAbilities.technKnow" },
+      { "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2121", "text": "위험물산업기사 취업 우대 — 큐넷", "fieldKey": "overviewAbilities.technKnow" },
+      { "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=11568", "text": "폴리텍 석유화학공정기술교육원 반응공정 교육 — 고용노동부", "fieldKey": "overviewAbilities.technKnow" }
+    ]
+  }
+}
