@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r63-b4",
+      "group_key": "cycle-R63-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R63 B4: 반도체재료안전관리기술자~반도체칩몰딩공정연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

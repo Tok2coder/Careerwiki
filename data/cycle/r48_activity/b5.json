@@ -7,7 +7,10 @@
       "agent_slug": "hangyeol",
       "label": "R48 B5: 만화데생작가~만화영화디지털페인터",
       "model": "sonnet",
-      "status": "running"
+      "status": "done",
+      "jobs_done": 3,
+      "jobs_total": 3,
+      "note": "만화에이전트(rev19043) + 만화영화검사원(rev19056) + 만화영화디지털페인터(rev19058) — 3/3 PASS"
     }
   ]
 }

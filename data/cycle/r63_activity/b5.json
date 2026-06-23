@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r63-b5",
+      "group_key": "cycle-R63-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R63 B5: 반도체칩몰딩장비공정연구원~반도체칩본딩공정연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

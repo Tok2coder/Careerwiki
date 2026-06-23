@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r63-b1",
+      "group_key": "cycle-R63-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R63 B1: 반도체이온주입장비부분품연구원~반도체장비기구조립원",
+      "model": "sonnet",
+      "status": "done"
+    }
+  ]
+}

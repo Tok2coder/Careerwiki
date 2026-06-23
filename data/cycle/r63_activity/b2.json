@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r63-b2",
+      "group_key": "cycle-R63-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R63 B2: 반도체장비보드개발자~반도체장비전장개발자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
