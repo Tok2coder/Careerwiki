@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r65-b5",
+      "group_key": "cycle-R65-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R65 B5: 발사체기술연구원~발전계전연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

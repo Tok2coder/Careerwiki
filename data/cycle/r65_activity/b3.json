@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r65-b3",
+      "group_key": "cycle-R65-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R65 B3: 반려동물행동교정사~반응로조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

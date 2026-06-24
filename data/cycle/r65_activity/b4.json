@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r65-b4",
+      "group_key": "cycle-R65-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R65 B4: 반응조관리원~발렛파킹원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r65-b1",
+      "group_key": "cycle-R65-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R65 B1: 반도체화학적기계적연마장비부분품연구원~반도체확산장비기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

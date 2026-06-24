@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r65-b2",
+      "group_key": "cycle-R65-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R65 B2: 반도체확산장비부분품연구원~반려동물장의사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
