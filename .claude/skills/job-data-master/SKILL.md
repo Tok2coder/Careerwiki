@@ -169,6 +169,7 @@ const payload = {
 - `fields.overviewSalary` 절대 X (sal-protection)
 - `sources["overviewSalary.sal"]` 절대 X (`[sal-readonly]` strict)
 - `fields.careerTree` 절대 X (별도 사이클)
+- 🔴 `fields.overviewAbilities.abilityList` — **스키마 = `Array<{name,score}>`.** CareerNet 공식 통계 없으면 **키 생략 또는 `null`만 허용, 빈 문자열(`""`)·기타 문자열·객체 절대 금지.** (R66 사고: `""` 저장 → createJobJsonLd `?.map` 통과 → `.map is not a function` → 20직업 HTTP 500. validate-job-edit `[abilityListType]` 게이트가 차단함)
 
 ### Phase 4 — VALIDATE
 

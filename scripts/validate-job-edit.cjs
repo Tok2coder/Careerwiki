@@ -337,6 +337,16 @@ function validate(data, opts = {}) {
     }
   }
 
+  // ── 0-B. abilityList 타입 게이트 (R66 사고: "" 빈문자열 → createJobJsonLd HTTP 500) ──
+  // overviewAbilities.abilityList는 Array<{name,score}>이거나 통계 없으면 null/키 생략만 허용.
+  // 빈 문자열("")·기타 문자열·객체는 JSON-LD 렌더 크래시(".map is not a function") 유발 → FAIL로 원천 차단.
+  if (fields.overviewAbilities && Object.prototype.hasOwnProperty.call(fields.overviewAbilities, 'abilityList')) {
+    const _al = fields.overviewAbilities.abilityList;
+    if (_al !== null && _al !== undefined && !Array.isArray(_al)) {
+      errors.push(`[abilityListType] overviewAbilities.abilityList가 ${typeof _al}${_al === '' ? '(빈 문자열)' : ''} — Array<{name,score}>이거나 null/키 생략만 허용. 빈 문자열·객체 금지 (R66 createJobJsonLd 500 사고)`);
+    }
+  }
+
   // ── 1. 필드 완성도 ──
 
   // way 필수 + 최소 분량
