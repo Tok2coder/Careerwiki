@@ -5481,11 +5481,17 @@ export const createJobJsonLd = (profile: UnifiedJobDetail, canonicalUrl: string)
           .filter(([, value]) => !!value && !!safeTrim(value))
           .map(([key, value]) => `${key}: ${value}`)
       : undefined,
-    skills: profile.overviewAbilities?.abilityList?.map((a: any) => a?.name || a).filter(Boolean),
-    qualifications: profile.sidebarCerts?.map((c: any) => c?.name || c).filter(Boolean),
+    skills: Array.isArray(profile.overviewAbilities?.abilityList)
+      ? profile.overviewAbilities.abilityList.map((a: any) => a?.name || a).filter(Boolean)
+      : undefined,
+    qualifications: Array.isArray(profile.sidebarCerts)
+      ? profile.sidebarCerts.map((c: any) => c?.name || c).filter(Boolean)
+      : undefined,
     industry: profile.heroCategory?.large,
     responsibilities: overviewWork?.main,
-    occupationalSpecialty: profile.sidebarJobs?.map((job: any) => extractEntityName(job)).filter(Boolean)
+    occupationalSpecialty: Array.isArray(profile.sidebarJobs)
+      ? profile.sidebarJobs.map((job: any) => extractEntityName(job)).filter(Boolean)
+      : undefined
   })
 
   if (!jsonLd) {
