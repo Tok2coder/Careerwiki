@@ -2,6 +2,7 @@ import type { DataSource, UnifiedMajorDetail } from '../types/unifiedProfiles'
 import type { SourceStatusRecord } from '../services/profileDataService'
 import {
   TabEntry,
+  applyInlineFootnotes,
   buildCard,
   buildDetailScaffold,
   DEFAULT_SOURCE_LABELS,
@@ -729,11 +730,76 @@ const renderMetaHighlights = (profile: UnifiedMajorDetail): string => {
   `
 }
 
+// 사용자 추가 출처를 평탄화하여 공통으로 활용 (페이지 표시 순서대로 정렬, 1부터 번호 부여)
+// — 직업 템플릿(unifiedJobDetail.ts normalizeUserSources)과 등가, 필드 목록만 전공용
+const MAJOR_SOURCE_FIELD_ORDER: string[] = [
+  // 개요 탭
+  'overview.summary', 'summary', 'property', 'aptitude', 'enterField', 'trivia',
+  // 상세정보 탭
+  'whatStudy', 'howPrepare', 'mainSubject', 'relateSubject', 'careerAct', 'jobProspect',
+  // 사이드바
+  'sidebarJobs', 'sidebarMajors', 'sidebarHowtos'
+]
+
+const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; text: string; url?: string }> => {
+  if (!src) return []
+
+  // 단순 문자열 배열 포맷: ["출처1", "출처2", ...]
+  if (Array.isArray(src) && src.every((item: any) => typeof item === 'string')) {
+    return src
+      .filter((s: string) => s && s.trim())
+      .map((s: string, idx: number) => ({
+        id: idx + 1,
+        fieldKey: 'general',
+        text: s.trim(),
+        url: undefined
+      }))
+  }
+
+  if (typeof src !== 'object') return []
+
+  const flat: Array<{ id: number; fieldKey: string; text: string; url?: string; displayOrder: number; originalId: number }> = []
+
+  for (const [rawFieldKey, val] of Object.entries(src)) {
+    // "whatStudy[1]" 같은 잘못된 키 → "whatStudy"로 정규화
+    const fieldKey = rawFieldKey.replace(/\[\d+\]$/, '')
+    const arr = Array.isArray(val) ? val : [val]
+    arr.forEach((item: any) => {
+      const text = (item?.text || '').trim()
+      const url = (item?.url || '').trim()
+      if (!text && !url) return
+      const originalId = item?.id || 0
+      const displayOrder = MAJOR_SOURCE_FIELD_ORDER.indexOf(fieldKey)
+      flat.push({
+        id: 0, // 나중에 순서대로 재부여
+        fieldKey,
+        text: text || url,
+        url: url || undefined,
+        displayOrder: displayOrder >= 0 ? displayOrder : 999,
+        originalId
+      })
+    })
+  }
+
+  // 표시 순서대로 정렬 후 1부터 번호 재부여
+  flat.sort((a, b) => {
+    if (a.displayOrder !== b.displayOrder) return a.displayOrder - b.displayOrder
+    return a.originalId - b.originalId // 같은 필드 내에서는 입력 순서
+  })
+
+  return flat.map((item, idx) => ({
+    id: idx + 1, // 1부터 순차 번호
+    fieldKey: item.fieldKey,
+    text: item.text,
+    url: item.url
+  }))
+}
+
 const renderMajorSourcesCollapsible = (
   profile: UnifiedMajorDetail,
   sources?: SourceStatusRecord,
   partials?: Partial<Record<DataSource, UnifiedMajorDetail | null>>,
-  userSourcesFlat: Array<{ id: number; fieldKey: string; text: string; displayOrder?: number }> = []
+  userSourcesFlat: Array<{ id: number; fieldKey: string; text: string; url?: string }> = []
 ): string => {
   const normalizedId = profile.id.replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'default'
   const panelId = `major-source-panel-${normalizedId}`
@@ -748,9 +814,6 @@ const renderMajorSourcesCollapsible = (
     description: '이 페이지에 노출된 주요 출처를 확인할 수 있습니다.'
   })
 
-  // 사용자가 추가한 출처 (_sources) - 직업 템플릿과 동일
-  const userSources = (profile as any)._sources as Record<string, { id?: number; text?: string; url?: string }[] | { id?: number; text?: string; url?: string }> | undefined
-  
   // 필드 키를 읽기 쉬운 레이블로 변환
   const fieldLabels: Record<string, string> = {
     'overview.summary': '전공 개요',
@@ -767,32 +830,64 @@ const renderMajorSourcesCollapsible = (
     'jobProspect': '진로 전망',
     'sidebarJobs': '관련 직업',
     'sidebarMajors': '관련 전공',
-    'sidebarHowtos': '관련 HowTo'
+    'sidebarHowtos': '관련 HowTo',
+    'general': '참고 자료'
   }
-  
-  // 사용자 출처 HTML 생성 (배열 지원)
-  let userSourcesHtml = ''
-  if (userSourcesFlat.length > 0) {
-    const sourceItems: string[] = []
-    userSourcesFlat.forEach((source) => {
-      const fieldLabel = fieldLabels[source.fieldKey] || source.fieldKey
-      sourceItems.push(`
-        <li class="user-source-item p-3 border border-wiki-secondary/30 rounded-lg bg-wiki-secondary/5 transition cursor-pointer hover:border-wiki-secondary/50 hover:bg-wiki-secondary/10" 
-            id="user-fn-${source.id}" 
-            data-back-to="user-fnref-${source.id}"
-            data-field-key="${escapeHtml(source.fieldKey)}">
-          <div class="flex items-start gap-3">
-            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-wiki-secondary/20 text-emerald-300 text-xs font-bold flex items-center justify-center">${source.id}</span>
-            <div class="flex-1 text-sm">
-              <span class="text-wiki-muted">[${escapeHtml(fieldLabel)}]</span>
-              <span class="text-wiki-text ml-2">${escapeHtml(source.text)}</span>
-            </div>
+
+  // 사용자 출처 HTML 생성 — 직업 템플릿과 등가: 필드별 그룹 헤더 + 전역 연속 번호
+  const linkifyText = (text: string): string => {
+    return escapeHtml(text).replace(
+      /https?:\/\/[^\s,)<>]+/g,
+      (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-wiki-primary underline hover:text-wiki-primary/80" onclick="event.stopPropagation()">${url}</a>`
+    )
+  }
+  const renderSourceItem = (source: { id: number; fieldKey: string; text: string; url?: string }) => {
+    const globalNum = source.id
+    const cleanText = source.text.replace(/^\[\d+\]\s*/, '')
+    const sourceUrl = source.url || ''
+    let urlHostname = ''
+    try { urlHostname = new URL(sourceUrl).hostname.replace('www.', '') } catch { urlHostname = sourceUrl.slice(0, 40) }
+    const sourceTextHtml = sourceUrl
+      ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer" class="text-wiki-text hover:text-wiki-primary underline decoration-wiki-primary/40 hover:decoration-wiki-primary transition" onclick="event.stopPropagation()">${linkifyText(cleanText) || escapeHtml(urlHostname)}</a>`
+      : `<span class="text-wiki-text">${linkifyText(cleanText)}</span>`
+    const domainBadge = sourceUrl && cleanText
+      ? `<span class="text-[11px] text-wiki-muted ml-1">(${escapeHtml(urlHostname)})</span>`
+      : ''
+    return `
+      <li class="user-source-item p-2.5 border border-wiki-primary/30 rounded-lg bg-wiki-primary/5 transition cursor-pointer hover:border-wiki-primary/50 hover:bg-wiki-primary/10"
+          id="user-fn-${globalNum}"
+          data-back-to="user-fnref-${globalNum}"
+          data-field-key="${escapeHtml(source.fieldKey)}">
+        <div class="flex items-start gap-2.5">
+          <span class="flex-shrink-0 w-5 h-5 rounded-full bg-wiki-primary/20 text-purple-300 text-[11px] font-bold flex items-center justify-center">${globalNum}</span>
+          <div class="flex-1 min-w-0 text-sm break-words">${sourceTextHtml}${domainBadge}</div>
+        </div>
+      </li>
+    `
+  }
+
+  // 필드별 그룹핑 (userSourcesFlat은 이미 페이지 표시 순서로 정렬됨)
+  const groupedSources = new Map<string, typeof userSourcesFlat>()
+  for (const source of userSourcesFlat) {
+    const key = source.fieldKey
+    if (!groupedSources.has(key)) groupedSources.set(key, [])
+    groupedSources.get(key)!.push(source)
+  }
+
+  const userSourcesHtml = userSourcesFlat.length > 0
+    ? Array.from(groupedSources.entries()).map(([fieldKey, groupSources]) => {
+        const label = fieldLabels[fieldKey] || fieldKey
+        const items = groupSources.map(renderSourceItem).join('')
+        return `
+          <div class="mb-4 last:mb-0">
+            <h5 class="text-xs font-semibold text-wiki-muted mb-2 flex items-center gap-1.5">
+              <i class="fas fa-tag text-[10px]"></i>${escapeHtml(label)}
+            </h5>
+            <ol class="space-y-1.5">${items}</ol>
           </div>
-        </li>
-      `)
-    })
-    userSourcesHtml = sourceItems.join('')
-  }
+        `
+      }).join('')
+    : ''
 
   const hasUserSources = userSourcesFlat.length > 0
   
@@ -816,9 +911,9 @@ const renderMajorSourcesCollapsible = (
         <i class="fas fa-user-edit text-wiki-secondary"></i>
         사용자 추가 출처
       </h4>
-      <ol class="space-y-2">
+      <div>
         ${userSourcesHtml}
-      </ol>
+      </div>
     </div>
   ` : ''
 
@@ -868,7 +963,35 @@ const renderMajorSourcesCollapsible = (
             }
           });
         }
-        
+
+        // 본문 인라인 각주 [N] 클릭 → 출처 섹션으로 이동 (직업 템플릿과 등가)
+        document.querySelectorAll('.user-footnote-ref').forEach(function(ref) {
+          ref.addEventListener('click', function(e) {
+            e.preventDefault();
+            var globalNum = this.getAttribute('data-source-id');
+            var targetEl = document.getElementById('user-fn-' + globalNum);
+            if (!targetEl) return;
+
+            // 출처 섹션 펼치기
+            var sourceSection = document.querySelector('[data-source-collapsible]');
+            if (sourceSection) {
+              var toggleBtn = sourceSection.querySelector('button[aria-controls]');
+              if (toggleBtn && toggleBtn.getAttribute('aria-expanded') === 'false') {
+                toggleBtn.click();
+              }
+            }
+
+            // 스크롤 이동
+            setTimeout(function() {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              targetEl.classList.add('ring-2', 'ring-wiki-primary');
+              setTimeout(function() {
+                targetEl.classList.remove('ring-2', 'ring-wiki-primary');
+              }, 2000);
+            }, 300);
+          });
+        });
+
         // 사용자 출처 클릭 시 해당 필드로 이동
         document.querySelectorAll('.user-source-item').forEach(function(item) {
           item.addEventListener('click', function() {
@@ -1023,6 +1146,48 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     return `${prefix}-${safeId}-${++chartIdCounter}`
   }
 
+  // ── 사용자 출처 전역 번호 매핑 (페이지 전체에서 1~N 통합 번호) — 직업 템플릿과 등가 ──
+  const userSourcesFlat = normalizeUserSources((profile as any)._sources)
+  // footnoteMap: { fieldKey: { localNum: globalNum } }
+  // 본문 필드-로컬 [N] → 전역 표시 번호로 변환하기 위한 매핑
+  const footnoteMap: Record<string, Record<string, number>> = {}
+  // sourceTextMap: 전역번호 → 출처 설명 텍스트 (각주 hover 시 표시)
+  const sourceTextMap: Record<number, string> = {}
+  // 소스 저장 키 → 렌더링 필드키 별칭 (전공 개요는 overview.summary/summary 혼용)
+  const sourceKeyAliases: Record<string, string[]> = {
+    'overview.summary': ['summary'],
+    'summary': ['overview.summary']
+  }
+  // 필드별 로컬 카운터 (source.text에 [N] prefix가 없는 경우 자동 부여)
+  const fieldLocalCounter: Record<string, number> = {}
+  for (const source of userSourcesFlat) {
+    const m = source.text.match(/^\[(\d+)\]/)
+    let localNum: string
+    if (m) {
+      localNum = m[1]
+    } else {
+      // [N] prefix 없는 source → 필드 내 순서대로 로컬 번호 자동 부여
+      if (!fieldLocalCounter[source.fieldKey]) fieldLocalCounter[source.fieldKey] = 0
+      fieldLocalCounter[source.fieldKey]++
+      localNum = String(fieldLocalCounter[source.fieldKey])
+    }
+
+    if (!footnoteMap[source.fieldKey]) footnoteMap[source.fieldKey] = {}
+    footnoteMap[source.fieldKey][localNum] = source.id // source.id = 전역 번호 (1~N)
+    // 별칭 키에도 동일 매핑 등록
+    const aliases = sourceKeyAliases[source.fieldKey]
+    if (aliases) {
+      for (const alias of aliases) {
+        if (!footnoteMap[alias]) footnoteMap[alias] = {}
+        footnoteMap[alias][localNum] = source.id
+      }
+    }
+
+    // [N] 접두사 제거한 출처 설명을 전역 번호로 매핑
+    const cleanDesc = source.text.replace(/^\[\d+\]\s*/, '').trim()
+    if (cleanDesc) sourceTextMap[source.id] = cleanDesc
+  }
+
   const overviewCards: Array<{ id: string; label: string; icon: string; markup: string }> = []
   const pushOverviewCard = (label: string, icon: string, markup: string, dataSources?: string[]) => {
     const id = anchorIdFactory('overview', label)
@@ -1067,7 +1232,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const overviewSummary = (profile as any)?.overview?.summary || profile.summary
   if (overviewSummary?.trim()) {
     const summarySources = getFieldSources(p => p?.summary)
-    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(overviewSummary), summarySources)
+    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(overviewSummary, 'summary', footnoteMap, sourceTextMap), summarySources)
   } else if (goyong24Summary?.trim()) {
     pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(goyong24Summary), ['GOYONG24'])
   } else if (hasCareernetOnly && careernetSummary?.trim()) {
@@ -1077,12 +1242,12 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   // 전공 특성 (property)
   if (profile.property?.trim()) {
     const propertySources = getFieldSources(p => p?.property)
-    pushOverviewCard('전공 특성', 'fa-star', formatRichText(profile.property), propertySources)
+    pushOverviewCard('전공 특성', 'fa-star', formatRichText(profile.property, 'property', footnoteMap, sourceTextMap), propertySources)
   }
   
   if (profile.aptitude?.trim()) {
     const aptitudeSources = getFieldSources(p => p?.aptitude)
-    pushOverviewCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude), aptitudeSources)
+    pushOverviewCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude, 'aptitude', footnoteMap, sourceTextMap), aptitudeSources)
   }
 
   // 졸업 후 진출 분야 (enterField + chartData.field + careerFields) - 개요로 이동
@@ -1617,8 +1782,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       const html = `<ul class="space-y-2">${triviaItems
         .map(
           item =>
-            `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(
-              item
+            `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(
+              item, 'trivia', footnoteMap, sourceTextMap
             )}</span></li>`
         )
         .join('')}</ul>`
@@ -1850,7 +2015,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
           </span>
           배우는 내용
         </h4>
-        ${formatRichText(profile.whatStudy)}
+        ${formatRichText(profile.whatStudy, 'whatStudy', footnoteMap, sourceTextMap)}
       </div>
     `)
   }
@@ -1864,7 +2029,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
           </span>
           준비 방법
         </h4>
-        ${formatRichText(profile.howPrepare)}
+        ${formatRichText(profile.howPrepare, 'howPrepare', footnoteMap, sourceTextMap)}
       </div>
     `)
   }
@@ -2123,8 +2288,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       const html = `<ul class="space-y-2">${prospectItems
         .map(
           item =>
-            `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${escapeHtml(
-              item
+            `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(
+              item, 'jobProspect', footnoteMap, sourceTextMap
             )}</span></li>`
         )
         .join('')}</ul>`
@@ -2611,54 +2776,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const hasSidebar = sidebarSections.length > 0
   const sidebarContent = sidebarSections.join('')
 
-  // 사용자 출처 평탄화 (페이지 표시 순서대로 정렬, 1부터 번호 부여)
-  const normalizeUserSources = (src: any): Array<{ id: number; fieldKey: string; text: string; displayOrder: number }> => {
-    if (!src || typeof src !== 'object') return []
-    
-    // 필드 표시 순서 (개요 탭 → 상세정보 탭)
-    const fieldOrder: string[] = [
-      // 개요 탭
-      'overview.summary', 'summary', 'property', 'aptitude', 'enterField', 'trivia',
-      // 상세정보 탭
-      'whatStudy', 'howPrepare', 'mainSubject', 'relateSubject', 'careerAct', 'jobProspect',
-      // 사이드바
-      'sidebarJobs', 'sidebarMajors', 'sidebarHowtos'
-    ]
-    
-    const flat: Array<{ id: number; fieldKey: string; text: string; displayOrder: number; originalId: number }> = []
-    
-    for (const [fieldKey, val] of Object.entries(src)) {
-      const arr = Array.isArray(val) ? val : [val]
-      arr.forEach((item: any) => {
-        const text = (item?.text || item?.url || '').trim()
-        if (!text) return
-        const originalId = item?.id || 0
-        const displayOrder = fieldOrder.indexOf(fieldKey)
-        flat.push({ 
-          id: 0, // 나중에 순서대로 재부여
-          fieldKey, 
-          text, 
-          displayOrder: displayOrder >= 0 ? displayOrder : 999,
-          originalId 
-        })
-      })
-    }
-    
-    // 표시 순서대로 정렬 후 1부터 번호 재부여
-    flat.sort((a, b) => {
-      if (a.displayOrder !== b.displayOrder) return a.displayOrder - b.displayOrder
-      return a.originalId - b.originalId // 같은 필드 내에서는 입력 순서
-    })
-    
-    return flat.map((item, idx) => ({
-      id: idx + 1, // 1부터 순차 번호
-      fieldKey: item.fieldKey,
-      text: item.text,
-      displayOrder: item.displayOrder
-    }))
-  }
-
-  const userSourcesFlat = normalizeUserSources((profile as any)._sources)
+  // userSourcesFlat은 함수 상단(footnoteMap 계산부)에서 이미 평탄화됨 — 모듈 레벨 normalizeUserSources 사용
 
   // 데이터 출처 collapsible (직업 템플릿과 동일)
   const sourcesCollapsible = renderMajorSourcesCollapsible(profile, sources, partials, userSourcesFlat)
@@ -2848,34 +2966,40 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
           const sources = window.__USER_SOURCES__ || [];
           const fieldMap = window.__SOURCE_FIELD_MAP__ || {};
           
-          sources.forEach(function(source) {
-            const sourceId = source.id;
+          (Array.isArray(sources) ? sources : []).forEach(function(source) {
+            const sourceId = source.id || 1;
             const fieldKey = source.fieldKey;
             const mapping = fieldMap[fieldKey];
             if (!mapping) return;
+            // 이미 본문에 인라인 각주(user-fnref-N)가 렌더링되어 있으면 heading badge 불필요
+            if (document.getElementById('user-fnref-' + sourceId)) return;
+
             const fieldLabel = mapping[0];
-            
+
             // content-heading 혹은 h3/h4에서 필드명 포함 요소 찾기
             const headings = document.querySelectorAll('.content-heading, h3, h4');
             headings.forEach(function(heading) {
               if (heading.textContent && heading.textContent.includes(fieldLabel)) {
                 // 동일 ID 주석이 이미 있으면 패스
                 if (heading.querySelector('#user-fnref-' + sourceId)) return;
-                
+
+                // 주석 번호 추가 (직업 템플릿과 동일 마크업 — 겹침 없는 인라인 [N])
                 const footnoteRef = document.createElement('sup');
                 footnoteRef.className = 'user-footnote-ref ml-1 inline-flex align-middle cursor-pointer';
                 footnoteRef.id = 'user-fnref-' + sourceId;
                 footnoteRef.setAttribute('data-source-id', sourceId);
-                footnoteRef.innerHTML = '<span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;font-weight:700;color:var(--wiki-secondary,#a78bfa);background:rgba(167,139,250,0.12);border-radius:9999px;">' + sourceId + '</span>';
-                
+                footnoteRef.style.cssText = 'font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;';
+                footnoteRef.textContent = '[' + sourceId + ']';
+
                 // flex justify-between로 밀리는 문제를 피하기 위해 텍스트 컨테이너에 부착
+                // ⚠️ firstElementChild 사용 금지 — 이전 badge <sup>을 가리켜서 중첩됨
+                // ⚠️ .rounded-full 제외 — 헤딩 앞 아이콘 원(w-8 h-8)에 붙으면 배지가 겹쳐 뭉개짐
                 const attachTarget =
                   heading.querySelector('.section-title-text') ||
                   heading.querySelector('.content-heading-text') ||
-                  heading.querySelector('.flex.items-center') ||
-                  heading.firstElementChild ||
+                  heading.querySelector('.flex.items-center:not(.rounded-full)') ||
                   heading;
-                
+
                 attachTarget.appendChild(footnoteRef);
                 
                 // 클릭 시 출처 섹션으로 이동
