@@ -65,11 +65,11 @@ const securityHeadersMiddleware = async (c: any, next: any) => {
   c.header(
     'Content-Security-Policy',
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://t1.kakaocdn.net https://www.googletagmanager.com https://pagead2.googlesyndication.com https://www.google-analytics.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://t1.kakaocdn.net https://www.googletagmanager.com https://pagead2.googlesyndication.com https://www.google-analytics.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com https://ideawiki.org; " +
     "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
     "img-src 'self' data: blob: https:; " +
     "font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
-    "connect-src 'self' https://bridge.careerwiki.org http://127.0.0.1:3210 http://localhost:3210 https://www.google-analytics.com https://pagead2.googlesyndication.com https://cdn.jsdelivr.net https://t1.kakaocdn.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com https://www.googletagmanager.com https://csi.gstatic.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
+    "connect-src 'self' https://bridge.careerwiki.org http://127.0.0.1:3210 http://localhost:3210 https://www.google-analytics.com https://pagead2.googlesyndication.com https://cdn.jsdelivr.net https://t1.kakaocdn.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com https://www.googletagmanager.com https://csi.gstatic.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://ideawiki.org; " +
     "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://www.google.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google; " +
     "object-src 'none'; " +
     "base-uri 'self'"
