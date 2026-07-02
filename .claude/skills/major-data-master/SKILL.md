@@ -71,7 +71,7 @@ FROM majors m WHERE m.slug = ? OR m.name = ?;
 | 필드 | 내용 | 규칙 |
 |---|---|---|
 | `whatStudy` | 배우는 내용 산문 | **신규 작성, ≥300자 문단 서술 + 본문 [N] 각주** — 상세정보 탭 렌더 (`formatRichText`, `\n\n` 문단 분리) |
-| `howPrepare` | 준비 방법 산문 | 〃 (⚠️ 렌더 잠정 — 아래 M0 확인 항목) |
+| `howPrepare` | 준비 방법 산문 | 〃 (렌더 확정 — 2026-07-02 신설 + M0 prod 검증) |
 | `jobProspect` | 진로 전망 산문 | **신규 작성, ≥300자 + [N] 각주.** ⚠️ 렌더가 `\n` 단위 bullet 분리 — 3~5개 문장 블록을 `\n`으로 구분 작성 (한 덩어리 금지) |
 | `summary` | 학과 소개 | **보강만** — careernet API 원문 존중, 전면 재작성 X. **`_sources["summary"]` 출처 등록 절대 금지** (careernet canonical) |
 | `mainSubjects` | 주요 교과목 | API 값 있으면 보강 (array 타입 유지, 기존 항목 삭제 X) |
@@ -80,6 +80,12 @@ FROM majors m WHERE m.slug = ? OR m.name = ?;
 | `youtubeLinks` | 관련 영상 | 1~3개 (oembed 200 + title 매칭 verify, 한국어만). 부재 시 `youtubeLinks: []` + `_youtubeSearchNote` (탐색어 ≥6 or 카테고리 ≥3) — **무언 스킵 금지** |
 | `heroTags` | 태그 | 있으면 유지, 부족 시 보강 (선택) |
 | `_sources` | 출처 | text 한글 제목 필수 + 본문 [N] 양방향 정합 + 한 sentence 1 마커 max |
+
+### 🔴 각주 컨벤션 (M0 렌더 사고로 확정, 2026-07-02)
+
+- **본문 [N]은 필드-로컬** — 각 필드에서 1부터 시작 (직업과 동일 컨벤션). 예: jobProspect 본문은 [1]~[4], 그 필드의 1~4번째 출처를 가리킨다.
+- 서버(major-editor)는 `_sources` id를 **전역 연속(max+1)**으로 부여하고, 템플릿이 필드-로컬 [N]→전역 표시번호로 매핑해 렌더한다 (unifiedMajorDetail 직업 등가 포팅, main ff9bef5).
+- **작성자는 전역 id를 본문에 절대 쓰지 말 것** — 전역 번호를 쓰면 매핑이 깨져 raw `[N]` 텍스트가 노출된다 (M0 컴퓨터공학과 jobProspect 사고 형태).
 
 ### 🔴 보호영역 (전공판 sal-protection — 절대 미접촉)
 
@@ -94,7 +100,7 @@ fields에도 sources에도 아래 키 절대 포함 금지. POST 후 readback에
 
 `src/routes/major-editor.ts`에 레거시 로직: **patch fields에 `trivia` 키가 있으면 서버가 `jobProspect`를 user_contributed_json과 merged_profile_json 양쪽에서 삭제**한다. 전공 enhance의 핵심 필드인 jobProspect가 파괴됨. `fields.trivia` / `sources["trivia"]` 어떤 형태로도 전송 금지.
 
-### 게이트 수치 (v1 잠정 — M0 파일럿 후 확정)
+### 게이트 수치 (✅ M0 실측으로 확정 — totalE 12~14·distinct 8~10·산문 508~707자 전건 통과)
 
 - totalEntries (모든 fieldKey `_sources` entry 합산) **≥ 12**
 - distinct URL **≥ 8** (단일 기준 — 직업의 niche/major 분류 없음. patch 9개 분배 권장 — audit 1 offset 마진)
@@ -219,11 +225,15 @@ wrangler d1 execute careerwiki-kr --remote --command \
 # 2. audit
 node scripts/skill-cache/audit-major-via-api.cjs <slug>
 
-# 3. prod 렌더 확인 (careerwiki.org 도메인 직접 — preview X)
+# 3. prod 렌더 게이트 (M0 각주 렌더 사고 후속 — 결정적 검사, 필수)
+node scripts/major-render-gate.cjs <slug>
+# → PASS 조건: 본문 각주 sup ≥1 + raw "[N]" 텍스트 잔존 0 + 패널 [필드명] prefix 0 + 필드 그룹 헤더 존재
+
+# 4. prod 본문 키워드 확인 (careerwiki.org 도메인 직접 — preview X, node fetch 권장)
 curl -s "https://careerwiki.org/major/<slug>" | grep -o "본문 키워드"
 ```
 
-완료 조건: 마커 rev 실존 + audit WARN 0 / FAIL 0 + prod 200 + 본문 키워드 매칭 + **보호영역 diff 0** (Phase 0 스냅샷 대비 chartData 등 미변경). 통과 즉시 다음 전공 (배치 모드) — 전공당 검증 1라운드 엄수 (~40 tool-call 목표).
+완료 조건: 마커 rev 실존 + audit WARN 0 / FAIL 0 + prod 200 + **render-gate PASS** + 본문 키워드 매칭 + **보호영역 diff 0** (Phase 0 스냅샷 대비 chartData 등 미변경). 통과 즉시 다음 전공 (배치 모드) — 전공당 검증 1라운드 엄수 (~40 tool-call 목표).
 
 ### Phase 7 — REPORT
 

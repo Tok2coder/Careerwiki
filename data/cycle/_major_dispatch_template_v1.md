@@ -66,6 +66,7 @@ v1 출생 (job `_dispatch_template_v5.md` 포크 — 설계 진리: `data/cycle/
 
 12. **🚨 산문 3필드 신규 작성 의무 (output-only patch X)**:
     - `whatStudy`(배우는 내용) / `howPrepare`(준비 방법) / `jobProspect`(진로 전망) — **각 300자 이상 문단 수준 산문 + 본문 [N] 각주 필수** (607 전공 전원 현재 공백 — 사실상 전부 신규 작성).
+    - 🔴 **각주 [N]은 필드-로컬** — 각 필드에서 [1]부터 (그 필드의 N번째 출처). 서버 _sources 전역 id를 본문에 절대 쓰지 마라 — 템플릿이 필드-로컬→전역 표시번호로 매핑하며, 전역 번호 사용 시 raw `[N]` 텍스트 노출 (M0 렌더 사고 컨벤션 확정).
     - `summary`는 **보강만** (careernet API 원문 존중, 전면 재작성 X) + **`_sources["summary"]` 출처 등록 절대 금지** (careernet canonical — job 룰 25 승계).
     - `mainSubjects` / `enterField` / `licenses`는 기존 API 값 있으면 보강 (기존 항목 삭제 X, 타입 유지 — array는 array로).
     - **출처만 추가하고 본문 안 채우는 minimal patch 절대 금지.**

@@ -62,6 +62,8 @@
 | 보호영역 | sal/wage · careerTree | chartData·employmentRate·salaryAfterGraduation·universities·recruitmentStatus (+relatedJobs/relatedMajors/sources/sourceIds/aptitude/property/careerAct/relateSubject/mainSubject) |
 | 특화 함정 | abilityList 타입·way string | 🔴 **trivia 전송 절대 금지**(major-editor.ts:551·652 레거시 — patch에 trivia 키 있으면 서버가 jobProspect 삭제) · **summary=canonical**(보강 허용·출처 등록 금지) · edit-data API가 howPrepare/jobProspect 미노출 → 감사는 GET 2개 병용(audit-major-via-api 반영됨) · _sources id는 max+1 연속 부여(재POST 최소화) |
 | 분류 | major/niche 이원 | 단일 티어 + **환각 게이트**: 대학별 상이 fact(커리큘럼·입결)는 "일반적 경향" 서술 강제, 특정 대학 fact는 해당 .ac.kr deep 출처 필수 |
+| 각주 컨벤션 | 본문 [N]=필드-로컬 (클라 JS 매핑) | **동일 — 본문 [N]=필드-로컬** (서버 _sources id는 전역 연속, 템플릿이 전역 표시번호로 서버 렌더 매핑 — ff9bef5 직업 등가 포팅). 본문에 전역 번호 쓰면 raw 잔존 |
+| 렌더 게이트 | (클라 JS 변환이라 fetch 검증 불가) | **`node scripts/major-render-gate.cjs <slugs>` — 검증 세션 필수 실행** (sup≥1·raw [N] 잔존 0·[필드명] prefix 0·그룹 헤더). 서버 렌더라 결정적 검증 가능 |
 | 출처 우선순위 | .go.kr/.or.kr/.co.kr deep | **.ac.kr 학과 페이지 deep 최우선** → .go.kr deep(origin 금지: career/work/work24/wagework/job.go.kr + CAREERNET/WORK24 자기인용) → 학회 .or.kr → 한국 미디어 deep |
 | M0 파일럿 | — | 정식 cycle 전 필수: API first-blood(실사용 0)·merge 반영·각주 실렌더·KPI +5 일치·보호영역 diff 0·게이트 수치 확정 (설계서 §7) |
 
@@ -88,3 +90,4 @@
 - **R62~R66**: 실행모델 전환 — background 전멸→**foreground run_in_background:false**(2.1.195 async 기본). R66 abilityList='' 500 hotfix(bd4625f)+타입게이트. (abilityList="" 21건 정합성 후속 미착수)
 - **R67**: B3 Overloaded 사망→DB landing 24/25 확정→1건만 재spawn(중복0). urlUnverified 중 검색URL/`_csrf`/로그인게이트 = 정책위반 판별·교체 룰.
 - **2026-07-02 (M-cycle 빌드)**: 전공 607 전원 UCJ NULL·산문 전량 공백 실측. major edit API 실사용 0 → M0 first-blood 필수. trivia→jobProspect 삭제 레거시 발견(룰로 차단). howPrepare 렌더 부재 발견→렌더 추가. SSOT 정리(이 파일 승격, 갱신 5곳→2곳).
+- **M0 렌더 사고 (2026-07-02, Jason 스크린샷 적발)**: 데이터는 무결(마커·출처 정합)이었으나 전공 템플릿이 ①본문 [N]을 전역 id로 해석(jobProspect 필드-로컬 [1]~[4]가 raw 텍스트 잔존, 번호 불일치) ②출처 패널 flat+`[필드명]` prefix(직업의 필드 그룹 없음) ③헤딩 배지 겹침 ④bullet 경로 각주 미변환. → 직업 템플릿 등가 포팅(ff9bef5)으로 수정, 5/5 render-gate PASS. **검증 맹점 교훈: opus 검증이 'sup 존재 수'만 확인하고 렌더 등가성(raw 잔존·번호 매핑·패널 구조) 미검증 — `major-render-gate.cjs` 결정적 게이트 신설 + Phase 6·검증 세션 필수화. 신규 도메인 이식 시 각주·출처 렌더 체계는 별도 검증 대상(템플릿마다 구현이 다르다).**

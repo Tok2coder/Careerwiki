@@ -151,3 +151,10 @@
 - 🔴 **trivia 전송 절대 금지**: major-editor.ts:551·652 — patch에 trivia 키 존재 시 서버가 jobProspect를 UCJ·merged에서 삭제하는 레거시.
 - summary는 careernet canonical — 보강 허용·출처 등록 금지 (validate `[summaryCanonical]` 게이트).
 - _sources id는 max+1 연속 부여(job의 renumber와 다름) — 재POST 최소화.
+
+### §10.1 M0 렌더 사고 (2026-07-02, Jason 적발 — 재점검 완료)
+- 증상: jobProspect 본문 raw `[N]` 잔존·헤딩 배지 겹침·출처 패널 flat+`[필드명]` prefix·본문/배지 번호 불일치.
+- 원인: **템플릿**(데이터 무결) — 전공 템플릿이 직업과 달리 본문 [N]을 전역 id로 해석 + flat 패널 + 배지 attach 버그 + bullet 경로 각주 미변환.
+- 수정: 직업 템플릿 등가 포팅(main ff9bef5, 배포·render-gate 5/5 PASS). 각주 컨벤션 확정: **본문 [N]=필드-로컬**(서버 id는 전역, 템플릿 매핑).
+- 게이트 신설: `scripts/major-render-gate.cjs` — Phase 6·검증 세션 필수 (sup≥1 / raw 잔존 0 / prefix 0 / 그룹 헤더).
+- 검증 맹점 반성: M0 1차 검증이 'sup 존재'만 확인 — 렌더 등가성 검사 항목이 P0에 없었음 → 스킬·매뉴얼 §M에 영구 반영.
