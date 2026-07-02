@@ -760,9 +760,11 @@ const renderMajorSourcesCollapsible = (
     'enterField': '졸업 후 진출 분야',
     'trivia': '여담',
     'whatStudy': '배우는 내용',
+    'howPrepare': '준비 방법',
     'mainSubject': '주요 교과목',
     'relateSubject': '고교 추천 교과목',
     'careerAct': '진로 탐색 활동',
+    'jobProspect': '진로 전망',
     'sidebarJobs': '관련 직업',
     'sidebarMajors': '관련 전공',
     'sidebarHowtos': '관련 HowTo'
@@ -1852,7 +1854,21 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       </div>
     `)
   }
-  
+
+  if (profile.howPrepare?.trim()) {
+    curriculumSections.push(`
+      <div class="pb-6 mb-8 border-b border-wiki-border/30">
+        <h4 class="text-base font-bold text-wiki-secondary mb-3 flex items-center gap-2">
+          <span class="flex h-8 w-8 items-center justify-center rounded-full bg-wiki-secondary/15 text-wiki-secondary">
+            <i class="fas fa-clipboard-check text-xs"></i>
+          </span>
+          준비 방법
+        </h4>
+        ${formatRichText(profile.howPrepare)}
+      </div>
+    `)
+  }
+
   // ETL에서 파싱된 basicSubjects/advancedSubjects가 있으면 우선 사용 (이색학과)
   let basicSubjects: string[] = Array.isArray((profile as any).basicSubjects) ? (profile as any).basicSubjects : []
   let advancedSubjects: string[] = Array.isArray((profile as any).advancedSubjects) ? (profile as any).advancedSubjects : []
@@ -2604,7 +2620,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       // 개요 탭
       'overview.summary', 'summary', 'property', 'aptitude', 'enterField', 'trivia',
       // 상세정보 탭
-      'whatStudy', 'mainSubject', 'relateSubject', 'careerAct',
+      'whatStudy', 'howPrepare', 'mainSubject', 'relateSubject', 'careerAct', 'jobProspect',
       // 사이드바
       'sidebarJobs', 'sidebarMajors', 'sidebarHowtos'
     ]
@@ -2816,9 +2832,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
           'enterField': ['졸업 후 진출 분야', 'h3:contains("졸업 후 진출 분야")', '[data-field="enterField"]'],
           'trivia': ['여담', 'h3:contains("여담")', '[data-field="trivia"]'],
           'whatStudy': ['배우는 내용', 'h3:contains("배우는 내용")', '[data-field="whatStudy"]'],
+          'howPrepare': ['준비 방법', 'h3:contains("준비 방법")', '[data-field="howPrepare"]'],
           'mainSubject': ['주요 교과목', 'h3:contains("주요 교과목")', '[data-field="mainSubject"]'],
           'relateSubject': ['고교 추천 교과목', 'h3:contains("고교 추천 교과목")', '[data-field="relateSubject"]'],
           'careerAct': ['진로 탐색 활동', 'h3:contains("진로 탐색 활동")', '[data-field="careerAct"]'],
+          'jobProspect': ['진로 전망', 'h3:contains("진로 전망")', '[data-field="jobProspect"]'],
           'sidebarJobs': ['관련 직업', 'h3:contains("관련 직업")', '[data-field="sidebarJobs"]'],
           'sidebarMajors': ['관련 전공', 'h3:contains("관련 전공")', '[data-field="sidebarMajors"]'],
           'sidebarHowtos': ['관련 HowTo', 'h3:contains("관련 HowTo")', '[data-field="sidebarHowtos"]']
@@ -2906,7 +2924,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
               // DOM 추론 실패 시 prefix 기반 fallback
               if (!targetTabId) {
                 const detailFields = [
-                  'whatStudy', 'mainSubject', 'relateSubject', 'careerAct', 'jobProspect',
+                  'whatStudy', 'howPrepare', 'mainSubject', 'relateSubject', 'careerAct', 'jobProspect',
                   'detailReady.curriculum', 'detailReady.recruit', 'detailReady.training', 'detailReady.researchList'
                 ];
                 targetTabId = 'overview';

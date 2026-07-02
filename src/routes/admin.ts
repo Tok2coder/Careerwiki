@@ -1047,9 +1047,9 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     const entityType = isJob ? 'job' : 'major'
     // 2026-05-12 WL-FULL: 옛 [job-data-enhance] 분기 완전 제거.
     //   [job-data-master]  → 현행 master 스킬 (단독 KPI 기준)
-    // major 탭은 master-data-* 미정이라 0 카운트 — major-data-master 추가 시 분기 추가.
+    // 2026-07-02: major 탭은 [major-data-master] 마커 분기 (legacy [job-data-enhance]는 job 전용 — major 분기 X).
     // skillType 결정: master 마커 보유 → 'master', 없으면 'none'
-    const masterMarker = isJob ? '[job-data-master]' : null
+    const masterMarker = isJob ? '[job-data-master]' : '[major-data-master]'
     const masterMarkerLike = masterMarker ? `%${masterMarker}%` : null
 
     // 1. 전체 활성 수 + 품질 경보 카운트 + 스킬 적용 수 — 병렬 조회
@@ -1057,7 +1057,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     //   - wayIsArray: UCJ 데이터 무결성 버그 (UCJ에서 way가 array면 API fail) — UCJ 검사 유지
     //   - imageUrlBad: image_url 컬럼 — 변경 없음
     //   - wayTrunc / srcOrderBad / ytLow: production 노출 기준 → merged 검사
-    // skillApplied (2026-05-12 WL-FULL): [job-data-master] 단독 기준. major 탭은 0.
+    // skillApplied (2026-05-12 WL-FULL): [job-data-master] 단독 기준. major 탭은 [major-data-master] (2026-07-02).
     const [
       totalResult,
       alertWayIsArrayResult,
@@ -1080,14 +1080,14 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       isJob && masterMarkerLike
         ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN jobs j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL AND j.merged_profile_json IS NOT NULL AND (json_extract(j.merged_profile_json,'$.sources') IS NULL OR json_array_length(json_extract(j.merged_profile_json,'$.sources')) = 0)`).bind(entityType, masterMarkerLike).first<{ count: number }>()
         : Promise.resolve({ count: 0 } as { count: number }),
-      // skillApplied = [job-data-master] 단독 (jobs 탭만, major 탭은 0)
+      // skillApplied = [job-data-master] 단독 (major 탭은 [major-data-master], 2026-07-02 분기).
       // 2026-05-24 rollback v2: 옛 "마커 존재" 카운트는 fake revisions가 page_revisions에 살아있어
       // RESTORE/정당인용 직업까지 master로 잡혀 over-count (1,324 vs 진짜 ~484).
       // → 각 entity의 LATEST revision이 [job-data-master] 마커인 경우만 카운트.
       // 2026-06-04: [sidebar-fill] housekeeping rev은 latest 판정에서 제외 (최신 content revision 기준).
       //   사이드바 보강 rev이 latest가 되면 master 직업이 KPI에서 탈락하던 버그 수정 (1283→1268 사고).
-      isJob && masterMarkerLike
-        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN jobs j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL`).bind(entityType, masterMarkerLike).first<{ count: number }>()
+      masterMarkerLike
+        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN ${tableName} j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL`).bind(entityType, masterMarkerLike).first<{ count: number }>()
         : Promise.resolve({ count: 0 } as { count: number }),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND skill_verified_by_user=1`).first<{ count: number }>(),
     ])
@@ -1122,7 +1122,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
            )
            SELECT pr.entity_id, pr.created_at AS last_at FROM page_revisions pr
            JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id
-           JOIN jobs j ON j.id = pr.entity_id
+           JOIN ${tableName} j ON j.id = pr.entity_id
            WHERE pr.change_summary LIKE ?
              AND j.user_contributed_json IS NOT NULL
            ORDER BY pr.entity_id LIMIT 500 OFFSET ?`
@@ -1137,7 +1137,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       return map
     }
 
-    // master 마커 맵만 로드 (major 탭은 markerLike=null → 빈 맵)
+    // master 마커 맵만 로드 (major 탭은 [major-data-master] 기준)
     const masterAppliedMap = await loadMarkerMap(masterMarkerLike)
     const skillAppliedMap = masterAppliedMap
 
