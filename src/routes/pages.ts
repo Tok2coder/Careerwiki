@@ -606,6 +606,8 @@ pagesRoutes.get('/releases', async (c) => {
       <link href="/static/style.css" rel="stylesheet" />
       <link rel="stylesheet" href="/static/tailwind.css">
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+      <!-- ideawiki 트래킹 픽셀 (iw_click 유입 시에만 활성화 — 일반 방문자 no-op) -->
+      <script async src="https://ideawiki.org/static/px.js" data-iw="prj_705d5cbe88ae72e8"></script>
       ${renderNavStyles()}
     </head>
     <body class="bg-wiki-bg text-wiki-text min-h-screen">

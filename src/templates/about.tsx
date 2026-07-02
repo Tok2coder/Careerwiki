@@ -32,6 +32,8 @@ export function renderAboutPage(options?: AboutPageOptions): string {
   </script>
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9810002715600854" crossorigin="anonymous"></script>
+  <!-- ideawiki 트래킹 픽셀 (iw_click 유입 시에만 활성화 — 일반 방문자 no-op) -->
+  <script async src="https://ideawiki.org/static/px.js" data-iw="prj_705d5cbe88ae72e8"></script>
   ${renderNavStyles()}
   <style>
     body { background-color: #0f0f23; color: #e0e0e0; }

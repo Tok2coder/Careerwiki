@@ -229,6 +229,8 @@ function renderShareCard(data: any, token: string): string {
   <meta name="robots" content="noindex, nofollow">
   <link rel="canonical" href="https://careerwiki.org/share/${token}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- ideawiki 트래킹 픽셀 (iw_click 유입 시에만 활성화 — 일반 방문자 no-op) -->
+  <script async src="https://ideawiki.org/static/px.js" data-iw="prj_705d5cbe88ae72e8"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -436,6 +438,8 @@ function renderShareGonePage(): string {
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="/static/tailwind.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- ideawiki 트래킹 픽셀 (iw_click 유입 시에만 활성화 — 일반 방문자 no-op) -->
+  <script async src="https://ideawiki.org/static/px.js" data-iw="prj_705d5cbe88ae72e8"></script>
 </head>
 <body class="bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-md text-center">
