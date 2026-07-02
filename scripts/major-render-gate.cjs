@@ -24,7 +24,7 @@ if (!slugs.length) { console.error('사용: node scripts/major-render-gate.cjs <
     const raw = text.match(/[가-힣.)"”\]]\s*\[\d{1,2}\]/g) || []
     if (raw.length) problems.push(`raw [N] 잔존 ${raw.length}건: ${raw.slice(0, 3).join(' | ')}`)
     // 패널 prefix: "[배우는 내용]" 류 대괄호 필드라벨
-    const prefix = text.match(/\[(배우는 내용|준비 방법|진로 전망|주요 교과목|진출 분야|자격증)\]/g) || []
+    const prefix = text.match(/\[(배우는 내용|준비 방법|진로 전망|주요 교과목|진출 분야|자격증|여담)\]/g) || []
     if (prefix.length) problems.push(`패널 [필드명] prefix ${prefix.length}건`)
     // 그룹 헤더: 사용자 추가 출처 패널 존재 시 필드 그룹(fa-tag) 최소 1개
     if (vis.includes('사용자 추가 출처') && !(vis.match(/fa-tag/g) || []).length) problems.push('출처 패널 필드 그룹 헤더 없음')

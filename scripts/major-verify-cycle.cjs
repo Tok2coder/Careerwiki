@@ -36,7 +36,7 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 const { checkUrls } = require(path.join(REPO_ROOT, 'scripts', 'skill-cache', 'url-liveness.cjs'));
 
 const MARKER_RE = /\[major-data-master\]/;
-const TOTAL_ENTRIES_MIN = 12; // 설계 §2 게이트 수치 (v1 잠정 — M0 후 확정)
+const TOTAL_ENTRIES_MIN = 14; // 설계 §2 게이트 수치 (trivia 편입 후 M0 확정 2026-07-02)
 const DISTINCT_MIN = 8;
 // f. 보호영역 (전공판 sal — UCJ에 이 키가 있으면 접촉 사고)
 const PROTECTED_UCJ_KEYS = ['chartData', 'employmentRate', 'salaryAfterGraduation', 'universities', 'recruitmentStatus'];

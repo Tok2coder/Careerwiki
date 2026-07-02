@@ -77,6 +77,7 @@ FROM majors m WHERE m.slug = ? OR m.name = ?;
 | `mainSubjects` | 주요 교과목 | API 값 있으면 보강 (array 타입 유지, 기존 항목 삭제 X) |
 | `enterField` | 진출 분야 | 〃 (기존 타입 유지) |
 | `licenses` | 추천 자격증 | 〃 (array 타입 유지) |
+| `trivia` | 여담 3~5 bullet | **신규 작성** (2026-07-02 편입) — 항목별 [N] 각주 + 출처 2~3건. POST 후 jobProspect 잔존 확인 의무 |
 | `youtubeLinks` | 관련 영상 | 1~3개 (oembed 200 + title 매칭 verify, 한국어만). 부재 시 `youtubeLinks: []` + `_youtubeSearchNote` (탐색어 ≥6 or 카테고리 ≥3) — **무언 스킵 금지** |
 | `heroTags` | 태그 | 있으면 유지, 부족 시 보강 (선택) |
 | `_sources` | 출처 | text 한글 제목 필수 + 본문 [N] 양방향 정합 + 한 sentence 1 마커 max |
@@ -96,13 +97,14 @@ fields에도 sources에도 아래 키 절대 포함 금지. POST 후 readback에
 - `relatedJobs` / `relatedMajors` / `sources`(origin) / `sourceIds` — 시스템 생성
 - `aptitude` / `property` / `careerAct` / `relateSubject` / `mainSubject`(단수형 레거시) — API 원천, v1 미접촉
 
-### 🔴 trivia 전송 절대 금지 (전공 특화 — 서버 레거시 함정)
+### trivia(여담) — 2026-07-02 스코프 편입 (Jason 승인)
 
-`src/routes/major-editor.ts`에 레거시 로직: **patch fields에 `trivia` 키가 있으면 서버가 `jobProspect`를 user_contributed_json과 merged_profile_json 양쪽에서 삭제**한다. 전공 enhance의 핵심 필드인 jobProspect가 파괴됨. `fields.trivia` / `sources["trivia"]` 어떤 형태로도 전송 금지.
+- (구) 서버 레거시(patch에 trivia 키 → jobProspect 삭제)는 **제거 배포됨** — 전송 안전. 단 🔴 **POST 후 readback에서 jobProspect 잔존 확인 의무** (레거시 회귀 감지).
+- 여담 3~5개 bullet (array of strings) — 직업 여담과 동일 스타일. 항목별 [N] 각주(필드-로컬) + `sources["trivia"]` 신규 출처 2~3건 (WebFetch 검증). 개요 탭 마지막 렌더.
 
-### 게이트 수치 (✅ M0 실측으로 확정 — totalE 12~14·distinct 8~10·산문 508~707자 전건 통과)
+### 게이트 수치 (✅ M0 확정 + trivia 편입 상향 2026-07-02 — M0 실측 totalE 12~14·distinct 8~10·산문 508~707자)
 
-- totalEntries (모든 fieldKey `_sources` entry 합산) **≥ 12**
+- totalEntries (모든 fieldKey `_sources` entry 합산) **≥ 14** (trivia 편입 반영)
 - distinct URL **≥ 8** (단일 기준 — 직업의 niche/major 분류 없음. patch 9개 분배 권장 — audit 1 offset 마진)
 - 산문 3필드 (whatStudy/howPrepare/jobProspect) **각 ≥300자 + 각주 보유**
 

@@ -66,6 +66,7 @@ const ALLOWED_SOURCE_FIELDS = new Set([
   'mainSubjects',
   'enterField',
   'licenses',
+  'trivia',
 ]);
 
 // 🔴 보호영역 (전공판 sal) — payload fields에 존재하면 즉시 FAIL
@@ -87,8 +88,8 @@ const PROTECTED_MAJOR_FIELDS = [
   'overviewSalary',
 ];
 
-// ── 결정적 게이트 상수 (§2 게이트 수치 — v1 초기값, 파일럿 M0 후 확정) ─────────
-const GATE_TOTAL_ENTRIES_MIN = 12;
+// ── 결정적 게이트 상수 (§2 게이트 수치 — trivia 편입 후 M0 확정 2026-07-02) ─────
+const GATE_TOTAL_ENTRIES_MIN = 14;
 const GATE_DISTINCT_MIN = 8; // 단일 티어 — job의 niche/major 이원 티어 없음
 const GATE_PROSE_MIN_LEN = 300; // whatStudy/howPrepare/jobProspect 각 최소 글자수
 const GATE_CORE_PROSE_FIELDS = ['whatStudy', 'howPrepare', 'jobProspect'];

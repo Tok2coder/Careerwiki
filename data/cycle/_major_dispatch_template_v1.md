@@ -4,10 +4,10 @@ dispatcher가 전공(major) 배치 sub-session spawn 시 이 헤더를 prompt �
 
 v1 출생 (job `_dispatch_template_v5.md` 포크 — 설계 진리: `data/cycle/major_cycle_design_v1.md`):
 - **v5 구조 그대로 승계**: 5전공-1세션 배치(고정비 amortize + prompt 캐시 재사용), 전공당 순차 POST 체크포인트(idempotent 재spawn 경계), 검증세션 전수 실측. v5 20룰 전부 유지하고 직업→전공 치환 + 전공 특화 룰 21~24 신설.
-- **품질 패리티 (Jason 지시)**: 직업 데이터 보완과 동등 수준 — 산문 깊이(문단 서술), deep URL 강제, WebFetch 검증 강제, 각주 양방향 정합 전부 동일 강도. 게이트 수치만 전공 필드 수에 맞게 조정 (totalE≥12 / distinct≥8 — §2 설계서, M0 파일럿 후 확정).
+- **품질 패리티 (Jason 지시)**: 직업 데이터 보완과 동등 수준 — 산문 깊이(문단 서술), deep URL 강제, WebFetch 검증 강제, 각주 양방향 정합 전부 동일 강도. 게이트 수치만 전공 필드 수에 맞게 조정 (totalE≥14 / distinct≥8 — §2 설계서, M0 확정 + trivia 편입 2026-07-02).
 - **네임스페이스**: M-cycle (M0=파일럿, M1~M25). 마커 `[major-data-master]`. 직업 R-cycle 자산과 절대 혼용 금지.
 - helper: `scripts/major-cycle-helper.cjs` buildBatchPrompt가 아래 ``` 펜스 내부 `# 🚨 STRICT` ~ `# 처리 대상` 구간을 추출 — 헤더 구조 변경 금지.
-- ⚠️ M0 파일럿 미완 상태에서는 게이트 수치(totalE 12/distinct 8)와 렌더 확인 항목(아래 룰 24)이 잠정값 — M0 결과로 이 파일 갱신.
+- 게이트 확정(M0 실측): totalE≥14(trivia 편입 상향) / distinct≥8 / 산문 3필드 300자. 렌더는 `scripts/major-render-gate.cjs`가 결정적 검증.
 
 ```
 # 🚨 STRICT — 절대 룰 (위반 시 즉시 abort + 보고)
@@ -84,9 +84,9 @@ v1 출생 (job `_dispatch_template_v5.md` 포크 — 설계 진리: `data/cycle/
       b. 한국어 영상 부재 → `youtubeLinks: []` + `_youtubeSearchNote` (탐색어 ≥6개 OR 카테고리 ≥3개 / 학과소개·전공소개·커리큘럼·진로·브이로그·인터뷰)
     - validate `[YouTube-영역누락]` FAIL — omit 시 차단됨.
 
-15. **🚨 totalEntries ≥ 12 강제**:
-    - `_sources` 총 entry 수 (모든 fieldKey의 entry 합산) **≥ 12** 필수 (M0 파일럿 후 수치 확정 — 확정 전 12 기준).
-    - distinct URL ≥ 8과 별개로, 본문 [N] 인용 위치 수 자체를 늘리거나 새 출처 항목 추가로 ≥12 달성.
+15. **🚨 totalEntries ≥ 14 강제** (M0 확정 + trivia 편입 상향, 2026-07-02):
+    - `_sources` 총 entry 수 (모든 fieldKey의 entry 합산) **≥ 14** 필수.
+    - distinct URL ≥ 8과 별개로, 본문 [N] 인용 위치 수 자체를 늘리거나 새 출처 항목 추가로 ≥14 달성.
     - minimal patch (totalEntries 변동 없음) 금지.
     - 보강 패턴: (a) distinct URL 추가 (1차) (b) 본문 [N] 마커 추가 인용 (1 URL → 2-3 위치 분산) (c) 산문 3필드 본문 expand + [N] 추가.
 
@@ -114,7 +114,7 @@ v1 출생 (job `_dispatch_template_v5.md` 포크 — 설계 진리: `data/cycle/
 
 19. **🔴 룰 C — POST 전공당 1회 원칙 + POST 전 셀프 게이트**:
     - **POST 전 distinct·totalE·산문 3필드 300자 셀프 카운트 의무 — 기준 미달 상태로 POST 절대 금지** (보강 완료 후 1회 POST). "일단 POST 하고 패치"는 잉여 rev + 재작업 낭비.
-    - **결정적 강제**: validate 호출은 반드시 `node scripts/validate-major-edit.cjs payload.json` — totalE(<12) / 산문 3필드(<300자) / distinct(<8) / 보호영역 접촉 게이트가 FAIL로 차단. 작업자 모델의 자가 카운트 보고와 무관하게 스크립트가 판정.
+    - **결정적 강제**: validate 호출은 반드시 `node scripts/validate-major-edit.cjs payload.json` — totalE(<14) / 산문 3필드(<300자) / distinct(<8) / 보호영역 접촉 게이트가 FAIL로 차단. 작업자 모델의 자가 카운트 보고와 무관하게 스크립트가 판정.
     - **동일 payload(동일 changeSummary) 반복 POST 금지.** POST 성공(revisionId 반환) 후 같은 전공 재POST는 audit FAIL 수정 시에만, **최대 2회**. 재POST 전 latest rev 확인(이미 반영됐으면 skip).
     - changeSummary는 **top-level** (fields 안에 중첩 금지 — R39 교훈, 중첩 시 마커 미생성 → KPI 탈락).
 
@@ -125,10 +125,11 @@ v1 출생 (job `_dispatch_template_v5.md` 포크 — 설계 진리: `data/cycle/
     - **배치 5전공 누적 tool-call 관리**: 전공당 ~40 tool-call 목표(5전공 ≈ 200 이내). 과검증이 세션 사망 주원인 — 전공당 검증 1라운드 엄수.
     - 한 전공 막히면(10 site 시도 후) 텍스트로 사유 보고 + 그 전공 skip하고 **다음 전공 계속** (세션 전체 abort 금지). 검증세션이 skip분 식별 → 재spawn.
 
-21. **🔴 룰 E (전공 신설) — `trivia` 필드 절대 전송 금지**:
-    - major-editor 서버에 레거시 로직 존재: **patch fields에 `trivia` 키가 있으면 서버가 `jobProspect`를 UCJ·merged에서 삭제** (`src/routes/major-editor.ts` deepMerge 후 trivia→jobProspect delete).
-    - 전공 enhance는 `jobProspect`가 핵심 필드 — trivia 전송 = jobProspect 파괴 사고.
-    - `fields.trivia` / `sources["trivia"]` 어떤 형태로도 전송 금지.
+21. **🔴 룰 E (개정 2026-07-02 — Jason 승인) — `trivia`(여담) 작성 의무**:
+    - (구 버전의 "전송 금지"는 폐지 — 서버 레거시(trivia 키 → jobProspect 삭제)가 **제거 배포됨**. 이제 전송 안전.)
+    - **여담 3~5개 bullet 작성** (직업 페이지 여담과 동일 스타일): 흥미로운 사실·통계·인식 교정 등, 항목별 완결 문장. 개요 탭 마지막 "여담" 섹션에 렌더.
+    - 각 항목에 [N] 각주(필드-로컬) + `sources["trivia"]` 등록 — 신규 출처 2~3건, WebFetch 검증 의무 동일.
+    - 🔴 **POST 후 readback에서 `jobProspect` 잔존 확인 의무** (레거시 회귀 감지) — 사라졌으면 즉시 abort + 보고.
 
 22. **🔴 룰 F (전공 신설) — `_sources[].text` 한글 제목 필수 (서버 silent fallback 주의)**:
     - major-editor 서버는 `text: text || url` silent fallback — text 누락 시 raw URL이 그대로 사이드바 노출 (job R1 109건 사고 패턴 동일).

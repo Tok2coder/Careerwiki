@@ -46,6 +46,7 @@
 | `mainSubjects` | 주요 교과목 보강 | API 값 있으면 보강 |
 | `enterField` | 진출 분야 보강 | 〃 |
 | `licenses` | 추천 자격증 보강 | 〃 |
+| `trivia` | 여담 3~5 bullet 신규 | ✅ 2026-07-02 편입 (Jason) — 서버 레거시(trivia→jobProspect 삭제) 제거 후. POST 후 jobProspect 잔존 확인 |
 | `youtubeLinks` | 관련 영상 1~3 | 없으면 `_youtubeSearchNote` (무언 스킵 금지 룰 동일) |
 | `heroTags` | 태그 | 있으면 유지 |
 | `_sources` | 출처 (각주 [N] 양방향 정합) | text 필수(Rule 26), 본문 마커 동반 |
@@ -57,7 +58,7 @@
 - `aptitude` / `property` / `careerAct` / `relateSubject` / `mainSubject`(단수형 레거시) — API 원천, v1에서 미접촉
 
 ### 게이트 수치 (✅ M0 파일럿 실측으로 확정, 2026-07-02 — opus 평가: 전건 통과, totalE 12~14·distinct 8~10·산문 508~707자 실측. 현행 유지)
-- totalEntries(출처 등록 건) ≥ **12** (직업 19보다 낮게 시작 — 필드 수가 적음. 파일럿 실측 후 조정)
+- totalEntries(출처 등록 건) ≥ **14** (M0 확정 12 → trivia 편입으로 상향, 2026-07-02)
 - distinct URL ≥ **8** (전공은 niche/major 구분 대신 단일 기준으로 시작)
 - 산문 3필드(whatStudy/howPrepare/jobProspect) 각 300자 이상 + 각주 보유
 

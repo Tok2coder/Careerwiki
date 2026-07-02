@@ -548,9 +548,6 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
         return target
       }
       const updatedUserData = deepMerge({ ...userData }, nestedFields)
-      if (nestedFields.trivia && updatedUserData.jobProspect) {
-        delete updatedUserData.jobProspect
-      }
 
       const previousValues: Record<string, any> = {}
       for (const key of Object.keys(fields)) {
@@ -648,10 +645,6 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
       }
 
       const updatedMerged = deepMergeForUpdate(currentMerged, updatedUserData)
-
-      if (updatedUserData.trivia && updatedMerged.jobProspect) {
-        delete updatedMerged.jobProspect
-      }
 
       const { createRevision, getCurrentRevision } = await import('../services/revisionService')
 

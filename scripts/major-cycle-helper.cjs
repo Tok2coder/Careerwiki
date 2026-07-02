@@ -123,7 +123,7 @@ function loadStrictBlock() {
 function buildBatchPrompt(cycleNum, batchNum, majors, strictBlock) {
   const sessionName = `M${cycleNum}_B${batchNum}`;
   const rows = majors.map((mj, i) =>
-    `| ${i + 1} | ${mj.name} | ${mj.id} | ${mj.slug} | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥12 필수(미달 검증 FAIL)** |`
+    `| ${i + 1} | ${mj.name} | ${mj.id} | ${mj.slug} | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥14 필수(미달 검증 FAIL)** |`
   ).join('\n');
   const reportRows = majors.map((mj) => `${mj.slug}  | rev=NNNN | distinct=NN | totalE=NN | CLEAN | 마커OK`).join('\n');
 
@@ -162,7 +162,7 @@ ${rows}
 - POST 전 \`node scripts/validate-major-edit.cjs payload.json\` ALL PASS 의무 (결정적 게이트)
 - POST 후 \`node scripts/skill-cache/audit-major-via-api.cjs <slug>\` CLEAN + 마커 확인 — **전공당 1라운드** (과검증 금지, 세션 생존)
 - change_summary: \`[major-data-master] enhance — whatStudy·howPrepare·jobProspect·summary·youtubeLinks·...\` (top-level — fields 중첩 금지)
-- distinct URL ≥ 8 + totalEntries ≥ 12 강제 + 산문 3필드(whatStudy/howPrepare/jobProspect) 각 300자+각주. 한 전공 막히면 사유 보고 + skip하고 다음 전공 계속(세션 전체 abort X).
+- distinct URL ≥ 8 + totalEntries ≥ 14 강제 + 산문 3필드(whatStudy/howPrepare/jobProspect) 각 300자+각주. 한 전공 막히면 사유 보고 + skip하고 다음 전공 계속(세션 전체 abort X).
 - 🔴 보호영역 절대 미접촉: chartData/employmentRate/salaryAfterGraduation/universities/recruitmentStatus/relatedJobs/relatedMajors/sourceIds/sources(origin)/aptitude/property/careerAct/relateSubject/mainSubject(단수형)
 
 표의 전공 전부 끝나면 즉시 종료. 자동 다음 cycle 진입 X.

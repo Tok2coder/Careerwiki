@@ -58,9 +58,10 @@
 | 마커 | `[job-data-master]`(+legacy enhance) | `[major-data-master]` (legacy 없음) |
 | API·페이지 | /api/job/{id}/edit · /job/{slug} | /api/major/{id}/edit · /major/{slug} |
 | KPI | admin job-equalize (tab=job) | admin job-equalize?tab=major (동일 CTE, entity_type='major') |
-| 게이트 수치 | totalE≥19 · distinct 18(major)/10(niche) | totalE≥12 · distinct≥8 단일 + 산문3필드(whatStudy/howPrepare/jobProspect) 각≥300자 — **M0 후 확정** |
+| 게이트 수치 | totalE≥19 · distinct 18(major)/10(niche) | totalE≥**14**(M0 확정 12→trivia 편입 상향) · distinct≥8 단일 + 산문3필드 각≥300자 + trivia 3~5 bullet |
+| 모델 정책 | 배치 sonnet · 검증 opus | **배치 opus로 시험 후 양호 시 sonnet 전환**(Jason 2026-07-02) · 검증/dispatcher=opus · 코드 수정 등 절차 작업=sonnet 이하 |
 | 보호영역 | sal/wage · careerTree | chartData·employmentRate·salaryAfterGraduation·universities·recruitmentStatus (+relatedJobs/relatedMajors/sources/sourceIds/aptitude/property/careerAct/relateSubject/mainSubject) |
-| 특화 함정 | abilityList 타입·way string | 🔴 **trivia 전송 절대 금지**(major-editor.ts:551·652 레거시 — patch에 trivia 키 있으면 서버가 jobProspect 삭제) · **summary=canonical**(보강 허용·출처 등록 금지) · edit-data API가 howPrepare/jobProspect 미노출 → 감사는 GET 2개 병용(audit-major-via-api 반영됨) · _sources id는 max+1 연속 부여(재POST 최소화) |
+| 특화 함정 | abilityList 타입·way string | trivia→jobProspect 삭제 레거시 **제거됨**(2026-07-02, trivia 편입) — 단 POST 후 jobProspect 잔존 확인 의무(회귀 감지) · **summary=canonical**(보강 허용·출처 등록 금지) · edit-data API가 howPrepare/jobProspect 미노출 → 감사는 GET 2개 병용(audit-major-via-api 반영됨) · _sources id는 max+1 연속 부여(재POST 최소화) |
 | 분류 | major/niche 이원 | 단일 티어 + **환각 게이트**: 대학별 상이 fact(커리큘럼·입결)는 "일반적 경향" 서술 강제, 특정 대학 fact는 해당 .ac.kr deep 출처 필수 |
 | 각주 컨벤션 | 본문 [N]=필드-로컬 (클라 JS 매핑) | **동일 — 본문 [N]=필드-로컬** (서버 _sources id는 전역 연속, 템플릿이 전역 표시번호로 서버 렌더 매핑 — ff9bef5 직업 등가 포팅). 본문에 전역 번호 쓰면 raw 잔존 |
 | 렌더 게이트 | (클라 JS 변환이라 fetch 검증 불가) | **`node scripts/major-render-gate.cjs <slugs>` — 검증 세션 필수 실행** (sup≥1·raw [N] 잔존 0·[필드명] prefix 0·그룹 헤더). 서버 렌더라 결정적 검증 가능 |
