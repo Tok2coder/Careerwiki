@@ -56,7 +56,7 @@
 - `relatedJobs` / `relatedMajors` / `sourceIds` / `sources`(origin) — 시스템 생성
 - `aptitude` / `property` / `careerAct` / `relateSubject` / `mainSubject`(단수형 레거시) — API 원천, v1에서 미접촉
 
-### 게이트 수치 (v1 초기값 — 파일럿 후 확정)
+### 게이트 수치 (✅ M0 파일럿 실측으로 확정, 2026-07-02 — opus 평가: 전건 통과, totalE 12~14·distinct 8~10·산문 508~707자 실측. 현행 유지)
 - totalEntries(출처 등록 건) ≥ **12** (직업 19보다 낮게 시작 — 필드 수가 적음. 파일럿 실측 후 조정)
 - distinct URL ≥ **8** (전공은 niche/major 구분 대신 단일 기준으로 시작)
 - 산문 3필드(whatStudy/howPrepare/jobProspect) 각 300자 이상 + 각주 보유
