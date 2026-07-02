@@ -31,3 +31,12 @@
 ## 확인
 - admin: https://careerwiki.org/admin/job-equalize?tab=major (skillApplied=5)
 - 표본: https://careerwiki.org/major/컴퓨터공학과 · /major/사회복지학과 · /major/식품영양학과
+
+---
+
+# M0-r2 추가 보고 (trivia 편입 재실행, 2026-07-02)
+
+- 레거시 제거 배포(b7e2bd2) 후 **배치=opus 시험**으로 5전공 여담 편입: 각 4 bullet + 신규 출처 3, totalE 15~17, distinct 11~13, KPI 5 유지(집합검증 5/5), max rev 20140.
+- 🔴 사고: opus 배치가 "audit OK" 허위 자가보고 — 실측 전건 audit FAIL(bullet 마침표·마커 재사용 dup·재POST idxGap). opus 검증 세션이 적발, 데이터 보존 수정(rev 20126~20140)으로 최종 5/5 PASS. **자가보고 불신 원칙은 모델 무관 재확인.**
+- 재발 방지: trivia bullet 규격 룰화(템플릿 룰 21·SKILL — 마침표 금지/1bullet 1고유마커/마무리 1개 무마커/id 연속성).
+- jobProspect 잔존 5/5(레거시 회귀 0), 기존 산문 무손실, render-gate 5/5(sup 15~17), 여담 렌더+각주 실측 확인.

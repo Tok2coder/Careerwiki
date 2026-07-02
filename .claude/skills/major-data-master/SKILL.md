@@ -101,6 +101,7 @@ fields에도 sources에도 아래 키 절대 포함 금지. POST 후 readback에
 
 - (구) 서버 레거시(patch에 trivia 키 → jobProspect 삭제)는 **제거 배포됨** — 전송 안전. 단 🔴 **POST 후 readback에서 jobProspect 잔존 확인 의무** (레거시 회귀 감지).
 - 여담 3~5개 bullet (array of strings) — 직업 여담과 동일 스타일. 항목별 [N] 각주(필드-로컬) + `sources["trivia"]` 신규 출처 2~3건 (WebFetch 검증). 개요 탭 마지막 렌더.
+- 🔴 bullet 규격(M0-r2 audit FAIL 재발 방지): 항목 끝 마침표 금지(룰 X) · **1 bullet 1 고유 마커**(재사용=dup FAIL) · 마무리 편집성 bullet 1개만 무마커 허용 · 재POST 시 id 연속성 유지(idxGap — delete+re-add로 복구).
 
 ### 게이트 수치 (✅ M0 확정 + trivia 편입 상향 2026-07-02 — M0 실측 totalE 12~14·distinct 8~10·산문 508~707자)
 
