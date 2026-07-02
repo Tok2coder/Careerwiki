@@ -1,206 +1,90 @@
-# Dispatcher 매뉴얼 — CareerWiki 직업 보완 cycle 진행
+# Dispatcher 매뉴얼 — CareerWiki 데이터 보완 cycle (SSOT)
 
-2026-05-25 신규 (per-spawn 4 step) / 2026-05-29 보강 (entry-point 6 step + helper script 연결).
+> 🔒 **SSOT 선언 (Jason 승인 2026-07-02)**: 오케스트레이션 **절차의 진리 원본은 이 파일 1곳**이다. CLAUDE.md 🚨섹션·데몬 스킬(master-cycle-dispatch)·persona 요약은 포인터/압축본 — 이 파일과 충돌 시 이 파일이 우선. **상태**(완료 cycle·KPI·max rev)의 진리는 **DB(`--status`)** + dispatcher 메모리 복제본이며, 이 파일에 상태 스냅샷을 적지 않는다 (과거 스냅샷 stale로 R41 중복 재시작 직전·R45 drift 사고).
+> **갱신 의무 (5곳→2곳 축소)**: ①cycle 종료 시 상태 2곳 = STORE_MEMORY(영구 메모리) + 복제본 파일(`C:/Users/user/Downloads/memory_replica_careerwiki_*_progress.md`) ②절차·함정 변경 시 이 파일 1곳 + **그 턴 즉시 커밋**.
+> 적용 도메인: 직업 **R-cycle** + 전공 **M-cycle** (§M 치환표). 이 파일은 self-contained — 메모리 접근 불가여도 이 파일 + helper `--status`만으로 진행 가능.
 
-> 📌 **이 파일은 self-contained** — 메모리 시스템 접근 불가해도 이 파일 + helper script만으로 진행 가능. (2026-05-28 새 세션이 메모리 못 읽어 작업 못 찾은 사고 후속)
+## 0. 실행 환경 — wikicomu daemon 도구 매핑 + 실행모델 (R64~R67 실증)
 
-## 📊 현재 진행 상태 (스냅샷 — 라이브 진리값은 `--status`)
+- 배치/검증 세션 = `Agent` 도구(general-purpose, model 명시). **반드시 `run_in_background:false` 명시** — 2.1.195(2026-06-28~)부터 Agent 기본이 async라 background는 메인 turn 종료 시 전멸(R66 5배치 2회 전멸). 한 메시지에 여러 false를 보내면 병렬 완주(FOREGROUND_SYNC_OK). foreground long turn은 heartbeat lease 갱신으로 안 죽음(R64·R65 실증). compaction 위험 시 cycle 청크.
+- 세션 재개 = `SendMessage`(agentId). 단 리밋 사망 세션은 재개 불가 — DB 실측 후 미완분만 새 소형 세션(idempotent 가드 명시).
+- KPI 실측 = `npx wrangler d1 execute careerwiki-kr --remote --command "..."` (admin.ts 단일진실 쿼리 원문). 한글 입력 회피 — slug 대신 rev 범위 JOIN 필터.
+- prod 상태 확인 = **node fetch** (Windows curl은 정상 200도 000/schannel — 000은 5xx 아님). 한글 페이로드 = 파일 기반 `curl -d @file.json`(인라인 금지, mojibake). 32K 출력한도 = payload 통 echo 금지, 필드별 작은 파일 Write→node 조립, 턴당 출력 2000자 이내.
+- API 인증: `X-Admin-Secret: careerwiki-admin-2026`, `Content-Type: application/json; charset=utf-8`. edit POST는 prod D1 즉시 기록 — deploy 불필요. id 404면 slug 조회(slug가 진리).
+- activity 가시화: helper가 base 이벤트 파일 생성(`{r|m}{N}_activity/`). **cycle 마감 시 dispatcher가 전 유닛(B1..+verify) done을 조건 없이 재emit**(`node scripts/emit-activity.cjs --file <f> --status done --detail "..."`) — 워커 측 emit은 신뢰 불가(BRIDGE_SECRET 부재 silent skip, R50·R51 재발).
 
-- 마지막 완료: **R24** (25/25, 끝=광통신연구원, rev 17039~17105, sonnet+정정) — detailReady 9직업 opus 정정완료, 하네스 강화 커밋 bfc1dcf·6c87d17. distinct<18 1건(광점퍼코드조립원 10, niche)
-- **다음: R25** (시작=광트랜시버모듈개발자) — `--cycle=25`로 batch/prompt 생성
-- 누적 master: A=1016(전체 마커) / B=947(enhance 풀 사이클) — 2026-05-31 **예상치(미확정)**: R16~R24 **9 cycle 연속 wrangler 토큰 만료로 DB 직접 쿼리 미검증**, R15 확정값(791/722)+225 추정. 토큰 복구 후 일괄 재검증 필요
-- master_list: `data/cycle/master_list_R7_R229.jsonl` (223 cycle / 5575 직업, R7~R229 사전할당)
+## 1. 절대 룰 (사고 실증 — 예외 없음)
 
-> ⚠️ 위 숫자는 스냅샷. **항상 `node scripts/master-cycle-helper.cjs --status` 로 라이브 확인** (DB 진리값 — 마지막 cycle/다음 cycle 자동 탐지).
-> ⚠️ **wrangler 토큰 만료 주의 (2026-05-30 발생)**: `wrangler d1 execute` / `whoami`가 `Authentication error 10000` / `Max auth failures 9109`로 실패. A/B DB 카운트 검증 막힘. 재개 전 `wrangler login` 또는 `CLOUDFLARE_API_TOKEN` 갱신 필요. (audit-via-api / prod fetch는 공개 API라 토큰 없이 동작)
+1. **sub-session 결과는 완료 확인 후에만 인용.** running 상태 결과를 추측으로 보고 금지 (dispatcher 환각 사고 7~8회).
+2. **rev·카운트·완료수·전공/직업명은 helper `--status`/DB 쿼리/[result] 원문에서 복사만.** 추측·기억 채움 금지.
+3. **spawn 타임아웃 ≠ 실패** — 실제 미생성 확인 + 사용자 "다시 띄워줘" 후만 1회 재spawn (중복 POST 사고 2회).
+4. **cycle "완료" 선언은 검증 PASS + KPI 정확 일치(+예상=직전+N) 후에만.** 부분은 정확히 N/25로만.
+5. **KPI 불일치 시 임의 종료 금지** — 차이 건수·해당 entity 규명, 원인 3분류(이번 cycle 결함=수습 / 외부 요인=별도 트랙 / 쿼리 맹점=패치+회귀).
+6. **go-gate: 매 cycle Jason go. 자동 연속 금지** (명시 승인 시만 §5 자동연속 패턴).
+7. **워커 자가보고 불신** — 슬러그명·"완료" 라벨 신뢰 금지. **명단 entity_id 집합검증(latest=master COUNT=N)이 완료 게이트** (R58 오기재·R59 batch 응답≠landing).
+8. **helper A/B 카운트는 사용자 보고에 사용 금지** — admin KPI 쿼리 하나만.
+9. URL은 careerwiki.org 도메인만. sal/wage(직업)·보호영역(전공) 미접촉. 명단 밖 entity SELECT/POST/audit 금지.
 
----
+## 2. ENTRY — cycle 절차 (v5: 준비1 + 배치5(5건/세션) + 검증1)
 
-# ⚠️ 절대 룰 — sub-session 결과 인용·완료 판정 (2026-05-29 사고 재발방지)
+1. **go 확인** → **preflight 3종 실측**: ①KPI(admin 쿼리) ②max master rev ③기록상 max rev **이후** master rev 존재 여부(25건+이면 그 cycle 이미 완료). 영구 메모리·복제본과 불일치 시 시작 금지, DB 기준 재구성 후 사용자 보고.
+2. 준비 Agent(sonnet, fg): `--cycle=N`(helper) 실행 + 명단 name|id|slug 산출만 — 작업·POST 금지.
+3. dispatcher가 명단을 배치 프롬프트 표에 직접 삽입(세션이 스스로 찾게 하지 않음) + **{도메인 주의} 작성**: 계열 복붙쌍(배치 간 분리), 동음이의, 분류 후보.
+4. B1~B5 Agent(sonnet, **run_in_background:false**, 한 메시지 동시 spawn) — 각 세션 prompt = `{r|m}{N}_prompts/*_B{n}_prompt.md`(STRICT 전문+5건 표). **건당 순차 POST 체크포인트**(idempotent 경계 — 죽어도 완료분 보존).
+5. 완료마다 결과 기록 + **의심 포인트 번호 적립**(totalE/class/마커 미보고, 부등호 보고, 최소기준 hugging, 균일값, WARN→INFO 합리화).
+6. 검증 Agent(**opus**, fg): `{master|major}-verify-cycle.cjs --cycle=N` 전수 실측 + 의심#n 명시 + 수정 권한 + KPI 쿼리 원문. **검증자도 불신** — 기준 미달 임의 PASS는 §5-C 위반, 수습 세션 추가.
+7. 잔여 결함 0 + KPI 정확 일치 → §4 보고 → **종료 갱신 2곳(같은 턴)** → activity done 재emit → 정지(다음 go 대기).
 
-> 2026-05-29 R12/R13 dispatch 중 sub-session이 "전부 완료"를 반복 보고했으나 DB 실측은 매번 미달(5/25→20/25→25/25, 1/25→14/25→21/25→23/25). running 상태 결과 인용 + 추측 rev/카운트 + 가짜 session_id + 타임아웃 오판 + 부분완료 보고가 원인. 아래는 예외 없이 강제.
+## 3. 수습 패턴 (실증 적립)
 
-1. **sub-session 결과는 `idle` / `[result]` 확인 후에만 인용.** `running` 상태 세션의 결과를 완료로 보고 금지.
-2. **rev·카운트·완료수·직업명은 `master-cycle-helper.cjs --status` / DB 쿼리 / `[result]` 원문에서 복사만.** 추측·기억으로 채우기 절대 금지.
-3. **session_id는 `start_code_task` 반환값 또는 `list_sessions`에서만 취득.** 손으로 만들거나 추정 금지.
-4. **`start_code_task` 타임아웃 ≠ 실패.** 타임아웃이 떠도 세션은 생성됨. 재시도 전 반드시 `list_sessions`로 실제 생성·중복 확인. 같은 제목 2개+면 즉시 중복 → 잉여 세션 STOP.
-5. **소규모 후속 작업은 기존 `idle` 세션에 `send_message`로 지시** — 새 `start_code_task`보다 타임아웃·중복 회피.
-6. **cycle "완료"는 helper `--status`가 25/25일 때만.** 부분(N/25) 상태를 "완료"로 보고 금지 — 정확히 `N/25`로만 표기.
+- **리밋/세션 사망**: batch 응답 유무가 아니라 **DB landing 실측**(명단 entity_id별 latest=master)으로 미완 식별(R59) → `--resume=N`으로 미완만 재배치(재개 prompt에 POST 전 latest 마커 dup 가드 주입) → 중복 POST 0 (R48·R56·R57·R59 실증). transcript 0바이트 ≠ 미수행 — prod rev 실측으로만 판정(R41). DB created_at은 UTC(KST-9h).
+- `--reset-delay="<리밋 메시지>"` → 리셋까지 ScheduleWakeup delaySeconds 계산(1h 초과 시 멀티홉).
+- **URL 판별 3분류(R48·R49·R65·R67)**: ①TLS off 200/브라우저 UA 200 = anti-bot 거짓양성(유지) ②루트 생존+페이지 404/soft-404 = 진짜 dead 환각(한국 1차 live로 교체) ③검색리스트(`/jobs?q=`·`/search?`)·`_csrf` 세션·로그인게이트 stub = **정책위반(교체)**. 판별 = dispatcher가 node GET(`rejectUnauthorized:false`, 리다이렉트 추적) + WebFetch 2차 — verify 자가 FAIL/WARN 라벨 불신.
+- url-liveness(HEAD)는 soft-404 200 오판 맹점 → node GET+본문검사 backstop(R65).
 
----
+## 4. 보고 — §6 고정 포맷
 
-# ⭐ ENTRY POINT — 사용자 prompt → 6 step action
+한 일 / 결과(N/N, audit, totalE min, distinct, 복붙, URL, origin) / 사고와 수습 / 부작용 없음(baseline 이탈 0, 보호영역 미접촉) / KPI 수치(예상 대비) / 확인 방법(admin URL + prod 페이지 표본 2~3) / "다음 cycle은 go 주면 시작". 보고서 `data/cycle/{R|M}{N}_report.md` 저장.
 
-## 트리거 키워드
+## §M — 전공 M-cycle 치환표 (설계서: `data/cycle/major_cycle_design_v1.md`)
 
-사용자가 다음과 같이 말하면 본 흐름 진입:
-- "현재 직업 보완 현황 확인하고 master 스킬 사용해서 배치 이어서 진행해줘"
-- "다음 cycle 진행", "R{N} 진행", "배치 이어서", "직업 데이터 보완 이어가"
-- "cycle 돌려", "master 배치 진행"
+| 항목 | 직업 R-cycle | 전공 M-cycle |
+|---|---|---|
+| helper | `scripts/master-cycle-helper.cjs` | `scripts/major-cycle-helper.cjs` |
+| 명단 | `master_list_R7_R229.jsonl` (223c/5575) | `major_list_M0_M25.jsonl` (M0 파일럿5 + M1~M25, 607전공) |
+| 템플릿 | `_dispatch_template_v5.md` | `_major_dispatch_template_v1.md` |
+| 작업 스킬 | job-data-master | major-data-master |
+| 게이트 3종 | validate-job-edit / audit-via-api / master-verify-cycle | validate-major-edit / audit-major-via-api / major-verify-cycle |
+| 마커 | `[job-data-master]`(+legacy enhance) | `[major-data-master]` (legacy 없음) |
+| API·페이지 | /api/job/{id}/edit · /job/{slug} | /api/major/{id}/edit · /major/{slug} |
+| KPI | admin job-equalize (tab=job) | admin job-equalize?tab=major (동일 CTE, entity_type='major') |
+| 게이트 수치 | totalE≥19 · distinct 18(major)/10(niche) | totalE≥12 · distinct≥8 단일 + 산문3필드(whatStudy/howPrepare/jobProspect) 각≥300자 — **M0 후 확정** |
+| 보호영역 | sal/wage · careerTree | chartData·employmentRate·salaryAfterGraduation·universities·recruitmentStatus (+relatedJobs/relatedMajors/sources/sourceIds/aptitude/property/careerAct/relateSubject/mainSubject) |
+| 특화 함정 | abilityList 타입·way string | 🔴 **trivia 전송 절대 금지**(major-editor.ts:551·652 레거시 — patch에 trivia 키 있으면 서버가 jobProspect 삭제) · **summary=canonical**(보강 허용·출처 등록 금지) · edit-data API가 howPrepare/jobProspect 미노출 → 감사는 GET 2개 병용(audit-major-via-api 반영됨) · _sources id는 max+1 연속 부여(재POST 최소화) |
+| 분류 | major/niche 이원 | 단일 티어 + **환각 게이트**: 대학별 상이 fact(커리큘럼·입결)는 "일반적 경향" 서술 강제, 특정 대학 fact는 해당 .ac.kr deep 출처 필수 |
+| 출처 우선순위 | .go.kr/.or.kr/.co.kr deep | **.ac.kr 학과 페이지 deep 최우선** → .go.kr deep(origin 금지: career/work/work24/wagework/job.go.kr + CAREERNET/WORK24 자기인용) → 학회 .or.kr → 한국 미디어 deep |
+| M0 파일럿 | — | 정식 cycle 전 필수: API first-blood(실사용 0)·merge 반영·각주 실렌더·KPI +5 일치·보호영역 diff 0·게이트 수치 확정 (설계서 §7) |
 
-## Step 1 — 현황 파악 (메모리 의존 X)
+## 5. 자동연속 운영 (Jason 명시 승인 시만 — R59~R61 적립)
 
-먼저 `node scripts/master-cycle-helper.cjs --status` 실행 (Step 2와 동일 — 라이브 DB 진리값). 보조로 메모리 접근되면 읽되, **없어도 됨**:
-```
-(보조, optional) agent/memory/project_careerwiki_cycle_progress.md   (dispatcher 메모리 — 자동 inject 안 될 수 있음)
-```
+각 cycle 완료 통지 시 한 턴에: ①독립 KPI 재실측 + 집합검증 + prod 표본 ②§4 보고 ③종료 갱신 2곳 ④즉시 다음 preflight+명단+spawn 연쇄. 승인 범위 마지막 cycle 후 go-gate 복원. 리밋 재발 시 DB landing→`--resume`.
 
-여기서 파악: 마지막 완료 cycle (예: R11), 다음 시작 위치 (예: R12=검표원·게임 series), 누적 master 카운트 (A 정의 679), 잔존 부실 직업, 자산 경로.
+## 6. per-spawn 사전 분류·URL pool (직업 R 전용)
 
-병행 reference: `agent/memory/reference_careerwiki_cycle_assets.md` (모든 자산 path).
+- **industry_class**: major(default — 금융·IT·법조·항공·의료·교육·건설 등 광범위 산업, distinct≥18 강제) / niche(단일 회사·공장·공정·폐지 자격증, distinct 6+ 허용). 모호 시 major. minor 분류는 폐지(R45).
+- **URL pool hint 5+ site**: 산업별 default pool 표는 helper가 프롬프트에 자동 주입(hint 구체화 d08a704). 주요 pool: 금융=fss/fsc/kafa, IT=kisa/pipc/nia, 의료=mohw/kma/koreanurse, 교육=moe/kice/kedi, 건설=molit/kict, 식품=mfds/kfia, 에너지=kepco/khnp, 반도체=ksia, 농축산=rda/mafra, 안전=kosha/moel + 각 위키. 추가 발굴은 세션 몫.
+- 사전 분류 누락 = lazy abort 사고 재발 위험(Rpri1_B3).
 
-## Step 2 — 현황 DB 검증 (drift 체크)
+## 7. 함정·사고 적립 아카이브 (요약 — 상세는 git log)
 
-```bash
-node scripts/master-cycle-helper.cjs --status
-```
-
-출력: A (모든 master 마커, 메모리 정의) + B (enhance 풀 사이클만). A 값을 메모리 "누적 진행" 표와 비교. drift 있으면 메모리 먼저 갱신.
-
-## Step 3 — 다음 cycle batch 준비 (helper 자동 생성)
-
-```bash
-# 자동 (미처리 다음 cycle 결정):
-node scripts/master-cycle-helper.cjs --next-cycle
-# 또는 명시:
-node scripts/master-cycle-helper.cjs --cycle=12
-```
-
-생성물 (**v5, 2026-06-13 — 5직업-1세션 배치 복원**, Jason 결정. v4 1직업-1세션은 토큰 회귀로 폐기):
-- `data/cycle/R{N}_queue.txt` (배치 큐 — B1~B5 × 5직업 enqueue 순서)
-- `data/cycle/r{N}_prompts/R{N}_B{1..5}_prompt.md` (STRICT 20룰 + 5직업 표 + 보고형식 — `_dispatch_template_v5.md` single source 자동 prepend)
-- stdout: 5 배치 spawn 명령(일괄 투입 안내) + cross-check 경고 (이미 처리된 직업 있으면 표시)
-
-## Step 4 — sub-session spawn (5직업-1세션 × 5 배치, 전량 일괄 enqueue)
-
-helper stdout의 명령대로 **5개 배치 세션을 한 번에 작업큐에 투입**한다(Agent bg ×5 또는 Workflow parallel 권장). 데몬 워커풀(동시성 7)이 슬롯 비는 대로 연속 처리:
-```
-session B1~B5: data/cycle/r{N}_prompts/R{N}_B{n}_prompt.md 내용 → prompt (5개 동시 enqueue)
-```
-
-🟢 **활동 가시화 (옵션 A, wave 단위 — Jason 확정 2026-06-14)**: helper가 `data/cycle/r{N}_activity/b{1..5}.json` + `verify.json` base 이벤트 파일을 자동 생성하고, 각 배치 prompt 맨 앞에 STEP0(running)/STEP_LAST(done) emit 명령을 박는다. 따라서 **각 배치 세션이 시작/종료 시 스스로 emit** → 대시보드 '세부 작업'에 B1~B5가 개별 행으로 실시간 표시(같은 group_key `cycle-R{N}-{date}`로 한 그룹 묶임). 검증 세션은 spawn 시 prompt에 아래 2줄을 직접 포함시킬 것(검증=6번째 유닛):
-```bash
-# 검증 세션 prompt 안에 포함 (시작 시 / 종료 시)
-node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/verify.json --status running
-node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/verify.json --status done --detail "25/25 PASS, KPI {n}"
-```
-
-⚠️ **세션당 직업 5건, 1건씩 순차 POST 체크포인트** (Jason 결정 2026-06-13 v5 배치 복원 — v4 1직업-1세션은 cycle당 고정비 ~5배·prompt 캐시 파괴로 토큰 회귀, R46 enhance 2.88M 실측). 폭발반경은 직업당 POST 체크포인트(완료분 prod 보존) + 검증세션 미완분 식별 → idempotent 재spawn으로 수습. 품질 게이트 불변.
-⚠️ **검증 세션 모델 = sonnet** (Jason 결정 2026-06-11, opus→sonnet 전환. 전제 = 모델 무관 결정적 게이트: validate pre-POST FAIL 3종(237ec3b) + `master-verify-cycle.cjs` 전수 실측. 작업자≠검증자 세션 분리 원칙 유지).
-spawn 시 per-spawn 4 step (아래 섹션) 준수 — 단, helper가 prompt를 이미 생성했으면 industry_class는 sub-agent 자체 분류로 위임됨 (helper placeholder).
-
-## Step 5 — 결과 수집 + 통합 보고
-
-5 batch 완료 후:
-```bash
-# rev 수집
-npx wrangler d1 execute careerwiki-kr --remote --command "SELECT j.slug, MAX(pr.id) rev FROM page_revisions pr JOIN jobs j ON CAST(j.id AS TEXT)=pr.entity_id WHERE pr.entity_type='job' AND pr.change_summary LIKE '%[job-data-master]%enhance%' AND j.slug IN (...25 slug...) GROUP BY j.slug;"
-# audit
-for s in <25 slug>; do node scripts/skill-cache/audit-via-api.cjs "$s" --exclude-sal; done
-# youtubeLinks 게이트 통과 확인 (룰 14)
-```
-
-**활동행(대시보드) done 재emit — cycle 마감 필수·무조건 실행** (2026-06-15 R50 B4 / 2026-06-18 R51 6유닛 재발): 워커 측 STEP_LAST emit은 **신뢰 불가**. ① 워커가 'BRIDGE_SECRET 없으면 무해'라며 자의 생략 ② **Agent 도구로 띄운 서브에이전트는 BRIDGE_SECRET이 env에 없어 emit이 silent skip**(daemon 워커풀과 달리) → 워커가 "emit done" 보고해도 대시보드엔 안 닿아 행이 `running`에 영구 멈춤. base 파일 `data/cycle/r{N}_activity/*.json`은 항상 `status:running` 고정(파일만 봐선 모름). **따라서 dispatcher가 cycle 마감 때 6유닛(B1~B5+verify) done을 조건 없이 전부 재emit**(idempotent upsert이라 워커가 이미 done 보냈어도 무해):
-```bash
-for X in b1 b2 b3 b4 b5; do node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/$X.json --status done --detail "5/5 done"; done
-node scripts/emit-activity.cjs --file data/cycle/r{N}_activity/verify.json --status done --detail "25/25 PASS, KPI {n}"
-```
-(BRIDGE_SECRET·DAEMON_ID·BRIDGE_BASE_URL은 dispatcher 환경에 set돼 있어 재emit 가능. 각 200 `{"ok":true,"written":1}` 확인.)
-
-보고 형식 (사용자에게): KPI before/after (A 카운트) + 25 직업 표 (slug | rev | distinct | totalE | audit | class) + 25 `careerwiki.org/job/{slug}` 링크 + 누적 진행. `data/cycle/R{N}_report.md` 저장.
-
-## Step 6 — 메모리 갱신 + 사용자 ping (자동 진입 X)
-
-1. **메모리 갱신 의무**: `agent/memory/project_careerwiki_cycle_progress.md` 의 "누적 진행" 표 + "사이클 완료 history" 표에 이번 cycle row 추가 (Edit 도구). 누적 카운트 갱신.
-2. **자동 다음 cycle 진입 절대 X** — 사용자 ping 받아 R{N+1} 결정 (무한 cycle 금지, 메모리 `feedback_auto_cycle_generic_script.md`).
-
----
-
-## 매 spawn 시 4 step (per-spawn 디테일 — Step 4 보조)
-
-### Step 1: 5 직업 industry_class 사전 분류
-
-dispatcher가 spawn 전에 각 직업의 산업을 분류. 분류 휴리스틱:
-
-**major (대부분 직업, default)** — distinct ≥ 18 강제
-- 키워드: 금융 (자산·재무·은행·증권·보험·신용·투자), IT (개발·보안·데이터·AI·SW), 법조 (변호사·법무사·검사·판사), 항공 (조종·관제·승무·정비), 항만 (선원·하역·크레인·물류), 반도체 (공정·설계·제조), 자동차 (엔진·차체·검사), 통신 (네트워크·5G·방송), 에너지 (발전·전력·원자력·재생), 의료 (의사·간호·약사·재활), 교육 (교사·교수·강사·교육행정), 농업·축산 (작물·축산·재배), 건설 (시공·설계·감리), 식품 (제조·가공·검사·조리), 디자인 (제품·UI·UX·시각), 미디어 (방송·콘텐츠·기자·작가), 행정 (공무원·정책·국세·세무)
-
-**minor (소규모 산업)** — distinct 12~17 허용 (목표는 18)
-- 특수 직군이지만 산업 자체는 살아있음 (학회·협회·정부 부처 별도 존재)
-- 예: 가축수매사무원 (축산 + 사무), 가향기조작원 (KT&G 외 일부 한국 담배 회사 존재)
-
-**niche (단일 회사·공장·공정)** — distinct 6+ 허용
-- 단일 회사 또는 폐지 자격증 또는 jmCd 부재
-- 예: 단일 공장 화학물질 처리원, KT&G 가향기 (단일 회사 한정)
-- 명백한 경우만 분류. 모호 시 default = major.
-
-**SQL 또는 휴리스틱으로 분류**:
-- 직업명 키워드 매치 (위 major 키워드 list)
-- jmCd 존재 여부 (`SELECT jmCd FROM jobs WHERE id=?`)
-- careernet API jobType 컬럼 (있으면)
-- 직업명 단어 수 (예: "강관면취기조작원" 같은 specific 직업은 niche 의심, "재무설계사" 같은 광범위 직업은 major)
-
-### Step 2: 각 직업 URL pool hint 5+ site 사전 제공
-
-직업별 한국 1차 출처 5+ site list. 산업별 default pool:
-
-| 산업 | Default URL pool |
-|---|---|
-| 금융 (자산·재무) | FPSB Korea (fpsbkorea.org), 금융감독원 (fss.or.kr), KAFA (kafa.or.kr), 한국FP협회 (kafa.kr), 한국재무설계전문가협회 (kfp.or.kr), 금융위원회 (fsc.go.kr), 한국경제 deep article (hankyung.com), 매일경제 deep article (mk.co.kr), 위키 (ko.wikipedia.org) |
-| IT/보안 | PIPC (pipc.go.kr), KISA (kisa.or.kr), NIA (nia.or.kr), 정부24 (gov.kr), 국가법령정보센터 (law.go.kr), 한국정보보호학회 (kiisc.org), 위키, 정보처리·정보보안 자격증 |
-| 법조 | 대한변호사협회 (koreanbar.or.kr), 법무부 (moj.go.kr), 국가법령정보센터, 대법원 (scourt.go.kr), 위키 |
-| 항공 | 인천국제공항공사 (airport.kr), 대한항공 (koreanair.com), 아시아나항공 (flyasiana.com), 한국공항공사 (airport.co.kr), ICAO (icao.int), IATA (iata.org), 위키 |
-| 항만 | 부산항만공사 (busanpa.com), 인천항만공사 (icpa.or.kr), KMOU (kmou.ac.kr), 한국항만물류협회 (kphla.or.kr), HMM (hmm21.com), 산업안전보건공단 (kosha.or.kr), 위키 |
-| 반도체 | KSIA (한국반도체산업협회 ksia.or.kr), 삼성전자, SK하이닉스, 한국전자기술연구원 (keti.re.kr), 위키 |
-| 자동차 | KAMA (한국자동차산업협회 kama.or.kr), 현대자동차, 기아, 한국교통안전공단 (kotsa.or.kr), 위키 |
-| 통신 | KCC (방송통신위원회 kcc.go.kr), KTOA (한국통신사업자연합회 ktoa.or.kr), KISA, 위키 |
-| 에너지 | 한국전력공사 (kepco.co.kr), 한국수력원자력 (khnp.co.kr), KOMIPO (komipo.co.kr), 한국에너지공단 (energy.or.kr), 위키 |
-| 의료 | 보건복지부 (mohw.go.kr), 의료기관평가인증원 (koiha.or.kr), 대한의사협회 (kma.org), 대한간호협회 (koreanurse.or.kr), 위키 |
-| 교육 | 교육부 (moe.go.kr), 한국교육과정평가원 (kice.re.kr), 한국교육개발원 (kedi.re.kr), 위키 |
-| 광업/지질 | KIGAM (한국지질자원연구원 kigam.re.kr), 광물공사 (kores.or.kr), 산업통상자원부, 위키 |
-| 농축산 | 농촌진흥청 (rda.go.kr), 한국농수산식품유통공사 (at.or.kr), 농림축산식품부 (mafra.go.kr), 위키 |
-| 건설 | 국토교통부 (molit.go.kr), 한국건설기술연구원 (kict.re.kr), 한국토지주택공사 (lh.or.kr), 위키 |
-| 디자인 | 한국디자인진흥원 (kidp.or.kr), 한국디자이너협회, 위키 |
-| 미디어 | 방송통신위원회 (kcc.go.kr), 한국언론진흥재단 (kpf.or.kr), 위키 |
-| 식품 | 식품의약품안전처 (mfds.go.kr), 한국식품산업협회 (kfia.or.kr), 위키 |
-| 안전·산업 | 산업안전보건공단 (kosha.or.kr), 고용노동부 (moel.go.kr), 산업안전관리공단, 위키 |
-
-→ 산업 분류 → default pool 적용 → 추가 시 sub-agent가 직접 발굴.
-
-### Step 3: spawn prompt 헤더 = `_dispatch_template_v3.md` 통째 prepend
-
-`_dispatch_template_v3.md` 의 STRICT 13 룰 + 직업 5개 table (industry_class + URL pool hint 포함) + 처리 절차를 그대로 sub-session prompt 맨 앞에 prepend.
-
-각 sub-session prompt 구조:
-```
-[_dispatch_template_v3.md 통째]
-
-# 처리 대상 5 직업
-
-| # | name | id | slug | industry_class | URL pool hint |
-|---|---|---|---|---|---|
-| 1 | <name> | <id> | <slug> | major | site1, site2, ..., site5+ |
-| ... |
-
-# 추가 컨텍스트 (선택)
-- 이전 cycle 사고 컨텍스트 (있으면 명시)
-- 특수 처리 요청 (있으면 명시)
-```
-
-### Step 4: 종료 후 결과 형식 강제 확인
-
-sub-session 응답 검증:
-- `slug | rev_id | distinct_url | industry_class | audit_status` 5줄 + `BATCH DONE: 5/5 ok, 0 fail` 형식 매치
-- distinct < 18 인 직업 + industry_class=major 면 **재처리 의무** (다음 cycle 우선처리 풀에 등록)
-- distinct 0 또는 rev_id null 인 직업 = **간판설치원 같은 누락 사고** → 단독 재처리
-
-## 사고 history (재발 방지 참조)
-
-- **2026-05-24 P1~P5 자작 cycle 사고**: cycle-script-block hook 차단 + SKILL.md 룰 명시
-- **2026-05-24 sub-agent 자동 cycle 위반**: 60+ 직업 자동 박힘 → unmark + Rpri 재처리. dispatch_template v2 STRICT 룰 1.
-- **2026-05-25 PowerShell 사용 시도**: powershell-block hook 차단 + 룰 29.
-- **2026-05-25 Rpri1_B3 lazy abort**: 5 메이저 직업을 niche로 오분류 → distinct 6-7 종료. v3 룰 9~13 강화 (산업 분류 default major + lazy abort 방지 + URL pool hint alternate + audit WARN 자기인지 + 본문 보강 의무).
-
-## 사용 형식
-
-dispatcher가 spawn 시 매번 이 4 step 따라가야. **사전 분류 누락 = lazy abort 사고 재발 위험**.
+- **2026-05-24~25**: 자작 cycle 스크립트(hook 차단)·자동 cycle 위반(60+ 침범→unmark)·PowerShell(hook 차단)·lazy abort(분류 룰 강화).
+- **2026-05-29 R12/13**: running 추측 보고 재발 → 절대 룰 1~6 성문화.
+- **R39**: changeSummary fields 중첩 → 무마커 rev KPI 탈락. top-level 필수 + POST 후 마커 실존 확인.
+- **R41**: 종료 갱신 누락→중복 재시작 직전. URL 생존 게이트 신설(urlDead/urlUnverified). totalE=18 hugging 적발.
+- **R42~R45**: 계정 리밋 동시 사망 수습 정착(DB 실측→잔여만 재개, 중복0). 부등호 보고=실결함. v4 1직업-1세션 실험.
+- **R46**: v4 토큰 회귀 발각(2.88M) → **v5 배치 복원(Jason 2026-06-13)**. KPI 쿼리 함정(jobs에 unified_career_json 없음 — marker+sidebar-fill skip CTE가 진리).
+- **R47~R57**: v5 안정(709K, ~75%↓). R48 리밋 2단 재개. R49 namu.wiki 환각 URL 수습(node fetch 판별 정착). R55 환각 47건 backstop. R56~57 `--resume` 정착. go-gate 복원(2026-06-14).
+- **R58~R61**: 집합검증 상시화(오기재 적발). DB landing≠batch 응답(R59). 유사직군 복붙 게이트(Jaccard). verify class 라벨 부정확(배치 보고가 진리).
+- **R62~R66**: 실행모델 전환 — background 전멸→**foreground run_in_background:false**(2.1.195 async 기본). R66 abilityList='' 500 hotfix(bd4625f)+타입게이트. (abilityList="" 21건 정합성 후속 미착수)
+- **R67**: B3 Overloaded 사망→DB landing 24/25 확정→1건만 재spawn(중복0). urlUnverified 중 검색URL/`_csrf`/로그인게이트 = 정책위반 판별·교체 룰.
+- **2026-07-02 (M-cycle 빌드)**: 전공 607 전원 UCJ NULL·산문 전량 공백 실측. major edit API 실사용 0 → M0 first-blood 필수. trivia→jobProspect 삭제 레거시 발견(룰로 차단). howPrepare 렌더 부재 발견→렌더 추가. SSOT 정리(이 파일 승격, 갱신 5곳→2곳).

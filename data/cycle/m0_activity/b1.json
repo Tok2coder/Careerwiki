@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "m0-b1",
+      "group_key": "cycle-M0-2026-07-02",
+      "agent_slug": "hangyeol",
+      "label": "M0 B1: 컴퓨터공학과~식품영양학과",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

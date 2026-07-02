@@ -22,7 +22,8 @@
 | 편집 API `POST /api/major/:id/edit` | ✅ 존재 | `src/routes/major-editor.ts` — fields/sources/changeSummary/baseTimestamp, Rule 26(text 필수), 충돌 409 — job과 동일 구조 |
 | page_revisions | ✅ entity_type='major' 지원 | migrations/0010 |
 | 각주(_sources) 렌더 | ✅ 구현됨 | `unifiedMajorDetail.ts:751,2645,2847` — 직업 템플릿과 동일 |
-| whatStudy/jobProspect/howPrepare 렌더 | ✅ 값 있으면 렌더 | `unifiedMajorDetail.ts:1842,2081~` |
+| whatStudy/jobProspect 렌더 | ✅ 값 있으면 렌더 | `unifiedMajorDetail.ts:1842,2081~` |
+| howPrepare 렌더 | ⚠️ v1 초판 오기(렌더 없었음) → **2026-07-02 렌더 신설** | whatStudy 패턴 미러 + __SOURCE_FIELD_MAP__에 howPrepare·jobProspect 등록 (빌드 로그 §10) |
 | admin KPI major 탭 | ⚠️ 구조 있음, `masterMarker=null` | `admin.ts:1044~` "major-data-master 추가 시 분기 추가" 주석 — **B1 코드 변경 필요** |
 
 ## 1. KPI 정의 (단일 진실 — 절대 규율)
@@ -130,3 +131,23 @@
 | 전공 산문의 환각 (커리큘럼·자격증은 대학별 상이) | "일반적 경향" 서술 강제 + 특정 대학 fact는 해당 .ac.kr deep 출처 필수 |
 | 게이트 수치 과소/과대 | v1은 잠정, M0 후 확정 (조정 이력 이 문서에 기록) |
 | 직업 cycle과 자산 혼선 | M-네임스페이스 분리, helper·리스트·템플릿 전부 major_ 접두 |
+
+## 10. 빌드 로그 (v1.1, 2026-07-02 — B1~B9 빌드 완료, M0 go 대기)
+
+| # | 자산 | 상태 | 비고 |
+|---|---|---|---|
+| B1 | admin.ts major 마커 분기 | ✅ 구현(tsc 0·build OK) | job 경로 SQL 바이트 동일 확인. 배포는 dispatcher |
+| B2 | validate-major-edit.cjs (1,162줄) | ✅ | valid PASS + FAIL 3종(보호영역/중첩/300자미달) 발화 실측 |
+| B3 | audit-major-via-api.cjs (528줄) | ✅ | 원본 29패턴 승계 + 보호영역 2룰 신설. 🔍 발견: edit-data API가 howPrepare/jobProspect 미노출 → GET 2개 병용 |
+| B4 | major-verify-cycle.cjs (297줄) | ✅ | a~e + (f)보호영역 비접촉. --cycle 로더 중첩형식 fix 후 M0 네거티브 5/5 FAIL 정확 검출 |
+| B5 | major-cycle-helper.cjs (545줄) | ✅ | --status KPI 0/607 실측. --cycle=0 M0 프롬프트 생성 스모크 PASS |
+| B6 | major_list_M0_M25.jsonl | ✅ | 122줄·607전공·distinct 607·26 cycle. M0=컴퓨터공학과·기계공학과·사회복지학과·유아교육학과·식품영양학과(대표 5, 계열 분산) |
+| B7 | _major_dispatch_template_v1.md (162줄) | ✅ | v5 룰 1~20 승계 + 21~24 신설(trivia 금지/text 한글/7000자/.ac.kr) |
+| B8 | .claude/skills/major-data-master/SKILL.md (372줄) | ✅ | Phase 0~7 + 22룰 압축 자족 수록 |
+| B9 | 진행 복제본 memory_replica_careerwiki_major_cycle_progress.md | ✅ | Downloads |
+| + | howPrepare 렌더 신설 (unifiedMajorDetail.ts) | ✅ tsc 0·build OK | §0 오기 정정분. fieldLabels·fieldOrder·__SOURCE_FIELD_MAP__·detailFields 등록 |
+
+빌드 중 발견 함정 (템플릿·스킬·SSOT 매뉴얼 §M에 반영됨):
+- 🔴 **trivia 전송 절대 금지**: major-editor.ts:551·652 — patch에 trivia 키 존재 시 서버가 jobProspect를 UCJ·merged에서 삭제하는 레거시.
+- summary는 careernet canonical — 보강 허용·출처 등록 금지 (validate `[summaryCanonical]` 게이트).
+- _sources id는 max+1 연속 부여(job의 renumber와 다름) — 재POST 최소화.

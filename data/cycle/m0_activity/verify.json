@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "m0-verify",
+      "group_key": "cycle-M0-2026-07-02",
+      "agent_slug": "hangyeol",
+      "label": "M0 검증: 5전공 전수 실측",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
