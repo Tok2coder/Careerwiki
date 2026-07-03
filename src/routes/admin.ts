@@ -1058,6 +1058,8 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     //   - imageUrlBad: image_url 컬럼 — 변경 없음
     //   - wayTrunc / srcOrderBad / ytLow: production 노출 기준 → merged 검사
     // skillApplied (2026-05-12 WL-FULL): [job-data-master] 단독 기준. major 탭은 [major-data-master] (2026-07-02).
+    // major 탭 quality alerts: wayIsArray/wayTrunc/srcOrderBad는 전공에 무의미 → proseThin 교체
+    // proseThin = UCJ 보유 전공 중 whatStudy/howPrepare/jobProspect 중 하나라도 len<300 or NULL
     const [
       totalResult,
       alertWayIsArrayResult,
@@ -1070,10 +1072,19 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       userVerifiedResult,
     ] = await Promise.all([
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active = 1`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_type(user_contributed_json,'$.way')='array'`).first<{ count: number }>(),
+      // wayIsArray(job) / proseThin(major)
+      isJob
+        ? db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND json_type(user_contributed_json,'$.way')='array'`).first<{ count: number }>()
+        : db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND user_contributed_json IS NOT NULL AND (COALESCE(length(json_extract(merged_profile_json,'$.whatStudy')),0)<300 OR COALESCE(length(json_extract(merged_profile_json,'$.howPrepare')),0)<300 OR COALESCE(length(json_extract(merged_profile_json,'$.jobProspect')),0)<300)`).first<{ count: number }>(),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND image_url IS NOT NULL AND image_url != '' AND image_url NOT LIKE '/uploads/%' AND image_url NOT LIKE 'https://%' AND image_url NOT LIKE 'http://%'`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$.way') IS NOT NULL AND length(json_extract(merged_profile_json,'$.way')) > 20 AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세]' AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세][[]*[]]'`).first<{ count: number }>(),
-      db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(merged_profile_json,'$._sources')) > 0 AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>(),
+      // wayTrunc(job only) / 0(major)
+      isJob
+        ? db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$.way') IS NOT NULL AND length(json_extract(merged_profile_json,'$.way')) > 20 AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세]' AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세][[]*[]]'`).first<{ count: number }>()
+        : Promise.resolve({ count: 0 } as { count: number }),
+      // srcOrderBad(job only) / 0(major)
+      isJob
+        ? db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(merged_profile_json,'$._sources')) > 0 AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>()
+        : Promise.resolve({ count: 0 } as { count: number }),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND (json_extract(merged_profile_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(merged_profile_json,'$.youtubeLinks')) = 0) AND (json_extract(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)`).first<{ count: number }>(),
       // originNull = master 직업(latest revision = [job-data-master])인데 merged.sources(origin 레이어) 비었음.
       //   2026-05-24 PITR rollback 비대칭 guard 버그(31 직업 origin 드롭) 추적 KPI. major 탭은 0.
@@ -1107,14 +1118,14 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     // 2. [job-data-master] 마커 보유 entity_id → 최근 적용 시각 맵 (skillApplied + 정렬용)
     //    2026-05-12 WL-FULL: 옛 enhanceAppliedMap 제거. master 단독 기준.
     //    created_at은 'YYYY-MM-DD HH:MM:SS' 포맷이라 문자열 비교로 시간순 정렬 가능.
+    //    2026-07-03 성능: 배치 500→3000 (마커 보유 entity job ~2.1k → 현재 1회 왕복).
+    //      LIMIT 3000 + OFFSET 루프 유지 — 마커 entity가 3000 넘어도 silent cap 없이 전부 로드.
     async function loadMarkerMap(markerLike: string | null): Promise<Map<string, string>> {
       const map = new Map<string, string>()
       if (!markerLike) return map
-      let offset = 0
       // 2026-05-24 rollback v2: latest revision이 [job-data-master] 인 경우만 master로 표시.
-      // (fake revisions가 page_revisions에 그대로 살아있어도, latest가 [rollback]이면 master 아님)
-      // 2026-06-04: [sidebar-fill] housekeeping rev은 건너뛰고 최신 content revision으로 판정
-      //   (사이드바 보강 rev이 latest가 되면 master 직업이 KPI에서 탈락하던 버그 수정).
+      // 2026-06-04: [sidebar-fill] housekeeping rev은 건너뛰고 최신 content revision으로 판정.
+      let offset = 0
       while (true) {
         const batch = await db.prepare(
           `WITH latest AS (
@@ -1125,14 +1136,14 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
            JOIN ${tableName} j ON j.id = pr.entity_id
            WHERE pr.change_summary LIKE ?
              AND j.user_contributed_json IS NOT NULL
-           ORDER BY pr.entity_id LIMIT 500 OFFSET ?`
+           ORDER BY pr.entity_id LIMIT 3000 OFFSET ?`
         ).bind(entityType, markerLike, offset).all<{ entity_id: string; last_at: string }>()
         const rows = batch.results || []
         for (const r of rows) {
           if (r.entity_id) map.set(r.entity_id, r.last_at ?? '')
         }
-        if (rows.length < 500) break
-        offset += 500
+        if (rows.length < 3000) break
+        offset += 3000
       }
       return map
     }
@@ -1145,6 +1156,8 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     //    Worker CPU 한도 회피: merged_profile_json bulk JSON.parse 제거.
     //    parseSources만 _sources 추출분 위에서 JS 실행 (작은 blob).
     //    필터: is_active=1 AND user_contributed_json IS NOT NULL (UCJ 보유 entity = admin 보완 대상)
+    //    2026-07-03: major 탭은 전공 전용 12 필드 CASE WHEN 분기 (job 필드 완성도 왜곡 해소).
+    //    2026-07-03 성능: 배치 500→2000 (14회→4회).
     type Row = {
       id: string
       name: string
@@ -1159,9 +1172,9 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       f_sc: number; f_ht: number; f_yt: number; f_src: number
       yt_count: number
       // quality flags
-      way_is_array: number  // UCJ 데이터 무결성
-      way_trunc: number      // merged.way 잘림 의심
-      src_order_bad: number  // merged._sources 첫 항목
+      way_is_array: number  // job: UCJ 데이터 무결성 / major: proseThin
+      way_trunc: number      // job: merged.way 잘림 의심 / major: 항상 0
+      src_order_bad: number  // job: merged._sources 첫 항목 / major: 항상 0
       yt_low: number         // merged.youtubeLinks 0 + note 없음
       // 관리자 수동 검증
       skill_verified_by_user: number
@@ -1173,11 +1186,8 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     {
       let offset = 0
       // SQL — 모든 무거운 로직을 D1에서 처리
-      const SELECT_SQL = `
-        SELECT id, name, slug, image_url,
-          length(user_contributed_json) AS json_size,
-          json_extract(merged_profile_json,'$._sources') AS sources_blob,
-          json_extract(user_contributed_json,'$._sources') AS ucj_sources_blob,
+      // job 탭과 major 탭은 12 필드 CASE WHEN만 다르고 나머지 구조 동일.
+      const JOB_FIELDS_SQL = `
           CASE WHEN json_type(merged_profile_json,'$.way') IS NOT NULL AND length(json_extract(merged_profile_json,'$.way'))>0 THEN 1 ELSE 0 END AS f_way,
           CASE WHEN json_type(merged_profile_json,'$.overviewSalary') IN ('object','array') AND length(json_extract(merged_profile_json,'$.overviewSalary'))>2 THEN 1 ELSE 0 END AS f_sal,
           CASE WHEN json_type(merged_profile_json,'$.overviewProspect') IN ('object','array') AND length(json_extract(merged_profile_json,'$.overviewProspect'))>2 THEN 1 ELSE 0 END AS f_pro,
@@ -1189,8 +1199,26 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
           CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.sidebarCerts'),0)>0 THEN 1 ELSE 0 END AS f_sc,
           CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.heroTags'),0)>0 THEN 1 ELSE 0 END AS f_ht,
           CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0)>0 THEN 1 ELSE 0 END AS f_yt,
-          CASE WHEN json_type(merged_profile_json,'$._sources') IN ('object','array') AND length(json_extract(merged_profile_json,'$._sources'))>2 THEN 1 ELSE 0 END AS f_src,
-          COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0) AS yt_count,
+          CASE WHEN json_type(merged_profile_json,'$._sources') IN ('object','array') AND length(json_extract(merged_profile_json,'$._sources'))>2 THEN 1 ELSE 0 END AS f_src`
+      // major 12 필드:
+      // 1.summary 2.whatStudy(≥300) 3.howPrepare(≥300) 4.jobProspect(≥300) 5.trivia
+      // 6.mainSubjects(array>0 or mainSubject string) 7.enterField 8.licenses 9.youtubeLinks 10.heroTags
+      // 11.chartData(object) 12._sources(len>2)
+      const MAJOR_FIELDS_SQL = `
+          CASE WHEN json_type(merged_profile_json,'$.summary') IS NOT NULL AND length(json_extract(merged_profile_json,'$.summary'))>0 THEN 1 ELSE 0 END AS f_way,
+          CASE WHEN COALESCE(length(json_extract(merged_profile_json,'$.whatStudy')),0)>=300 THEN 1 ELSE 0 END AS f_sal,
+          CASE WHEN COALESCE(length(json_extract(merged_profile_json,'$.howPrepare')),0)>=300 THEN 1 ELSE 0 END AS f_pro,
+          CASE WHEN COALESCE(length(json_extract(merged_profile_json,'$.jobProspect')),0)>=300 THEN 1 ELSE 0 END AS f_tv,
+          CASE WHEN json_type(merged_profile_json,'$.trivia') IS NOT NULL AND length(json_extract(merged_profile_json,'$.trivia'))>0 THEN 1 ELSE 0 END AS f_wlb,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.mainSubjects'),0)>0 OR (json_type(merged_profile_json,'$.mainSubject') IS NOT NULL AND length(json_extract(merged_profile_json,'$.mainSubject'))>0) THEN 1 ELSE 0 END AS f_rdy,
+          CASE WHEN json_type(merged_profile_json,'$.enterField') IS NOT NULL AND length(json_extract(merged_profile_json,'$.enterField'))>0 THEN 1 ELSE 0 END AS f_sj,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.licenses'),0)>0 OR (json_type(merged_profile_json,'$.licenses') IS NOT NULL AND length(json_extract(merged_profile_json,'$.licenses'))>0) THEN 1 ELSE 0 END AS f_sm,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0)>0 THEN 1 ELSE 0 END AS f_sc,
+          CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.heroTags'),0)>0 THEN 1 ELSE 0 END AS f_ht,
+          CASE WHEN json_type(merged_profile_json,'$.chartData') IN ('object','array') AND length(json_extract(merged_profile_json,'$.chartData'))>2 THEN 1 ELSE 0 END AS f_yt,
+          CASE WHEN json_type(merged_profile_json,'$._sources') IN ('object','array') AND length(json_extract(merged_profile_json,'$._sources'))>2 THEN 1 ELSE 0 END AS f_src`
+      // quality flags — major 탭: way_is_array=proseThin, way_trunc=0, src_order_bad=0
+      const JOB_QUALITY_SQL = `
           CASE WHEN json_type(user_contributed_json,'$.way')='array' THEN 1 ELSE 0 END AS way_is_array,
           CASE WHEN length(json_extract(merged_profile_json,'$.way'))>20
                 AND json_extract(merged_profile_json,'$.way') NOT GLOB '*[.!?다요죠음임됨니까세]'
@@ -1199,7 +1227,21 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
           CASE WHEN json_type(merged_profile_json,'$._sources[0].text')='text'
                 AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%커리어넷%'
                 AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%career%'
-               THEN 1 ELSE 0 END AS src_order_bad,
+               THEN 1 ELSE 0 END AS src_order_bad`
+      const MAJOR_QUALITY_SQL = `
+          CASE WHEN COALESCE(length(json_extract(merged_profile_json,'$.whatStudy')),0)<300 OR COALESCE(length(json_extract(merged_profile_json,'$.howPrepare')),0)<300 OR COALESCE(length(json_extract(merged_profile_json,'$.jobProspect')),0)<300 THEN 1 ELSE 0 END AS way_is_array,
+          0 AS way_trunc,
+          0 AS src_order_bad`
+      const FIELDS_SQL = isJob ? JOB_FIELDS_SQL : MAJOR_FIELDS_SQL
+      const QUALITY_SQL = isJob ? JOB_QUALITY_SQL : MAJOR_QUALITY_SQL
+      const SELECT_SQL = `
+        SELECT id, name, slug, image_url,
+          length(user_contributed_json) AS json_size,
+          json_extract(merged_profile_json,'$._sources') AS sources_blob,
+          json_extract(user_contributed_json,'$._sources') AS ucj_sources_blob,
+          ${FIELDS_SQL},
+          COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0) AS yt_count,
+          ${QUALITY_SQL},
           CASE WHEN COALESCE(json_array_length(merged_profile_json,'$.youtubeLinks'),0)=0
                 AND (json_type(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)
                THEN 1 ELSE 0 END AS yt_low,
@@ -1208,13 +1250,13 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
           MAX(CAST(COALESCE(user_last_updated_at, 0) AS INTEGER), CAST(COALESCE(admin_last_updated_at, 0) AS INTEGER)) AS last_edited_at
         FROM ${tableName}
         WHERE is_active = 1 AND user_contributed_json IS NOT NULL
-        ORDER BY name LIMIT 500 OFFSET ?`
+        ORDER BY name LIMIT 2000 OFFSET ?`
       while (true) {
         const batch = await db.prepare(SELECT_SQL).bind(offset).all<Row>()
         const rows = batch.results || []
         allRows.push(...rows)
-        if (rows.length < 500) break
-        offset += 500
+        if (rows.length < 2000) break
+        offset += 2000
       }
     }
 

@@ -17,6 +17,7 @@ export const EQUALIZE_FIELDS = [
   'sidebarCerts', 'heroTags', 'youtubeLinks', '_sources',
 ] as const
 
+// job 탭 필드 라벨/툴팁
 export const EQUALIZE_FIELD_LABELS: Record<string, string> = {
   way: '진입방법',
   overviewSalary: '임금',
@@ -46,6 +47,30 @@ export const EQUALIZE_FIELD_TOOLTIPS: Record<string, string> = {
   youtubeLinks: 'youtubeLinks 필드 — YouTube 관련 영상 링크',
   _sources: '_sources 필드 — 출처 정보 존재 여부',
 }
+
+// major 탭 필드 라벨/툴팁 (f_way~f_src 순서로 12개 — SQL CASE WHEN과 1:1 대응)
+// f_way=summary, f_sal=whatStudy, f_pro=howPrepare, f_tv=jobProspect, f_wlb=trivia,
+// f_rdy=mainSubjects, f_sj=enterField, f_sm=licenses, f_sc=youtubeLinks, f_ht=heroTags,
+// f_yt=chartData, f_src=_sources
+export const MAJOR_FIELD_LABELS: string[] = [
+  '학과소개', '배우는내용', '준비방법', '진로전망', '여담',
+  '주요교과목', '진출분야', '자격증', 'YouTube', '태그',
+  '취업률차트', '출처',
+]
+export const MAJOR_FIELD_TOOLTIPS: string[] = [
+  'summary — 학과 소개 한 줄',
+  'whatStudy(≥300자) — 배우는 내용',
+  'howPrepare(≥300자) — 준비 방법',
+  'jobProspect(≥300자) — 진로/취업 전망',
+  'trivia — 여담 (array 또는 string)',
+  'mainSubjects(array>0) 또는 mainSubject(string) — 주요 교과목',
+  'enterField — 진출 분야',
+  'licenses(array>0 또는 string) — 관련 자격증',
+  'youtubeLinks(array>0) — YouTube 영상',
+  'heroTags(array>0) — 태그',
+  'chartData(object) — 취업률/급여 차트 데이터',
+  '_sources(len>2) — 출처 정보',
+]
 
 export interface JobEqualizeItem {
   id: string
@@ -201,8 +226,16 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
   const entityUrlPrefix = isJob ? '/job/' : '/major/'
   const entityType = isJob ? 'job' : 'major'
   // 2026-05-12 WL-FULL: 옛 [job-data-enhance] 항목 완전 제거 — 진단 기준은 [job-data-master] 단독.
-  // major 탭은 master 미정이라 0%로 표시 (정상 — major 전용 master 스킬 추가 시 분기 추가).
-  const skillName = isJob ? 'job-data-master' : 'major-data-enhance'
+  // 2026-07-02: major 탭은 [major-data-master] 분기.
+  const skillName = isJob ? 'job-data-master' : 'major-data-master'
+
+  // 탭 분기 필드 라벨/툴팁 (12개, f_way~f_src 순)
+  const fieldLabels: string[] = isJob
+    ? ['방법','임금','전망','여담','WLB','준비','직업','전공','자격','태그','YT','출처']
+    : MAJOR_FIELD_LABELS
+  const fieldTooltips: string[] = isJob
+    ? Object.values(EQUALIZE_FIELD_TOOLTIPS)
+    : MAJOR_FIELD_TOOLTIPS
 
   const itemsJson = JSON.stringify(items)
 
@@ -360,15 +393,23 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
       <div class="flex items-center gap-2 mb-3">
         <i class="fas fa-shield-alt text-amber-400 text-sm"></i>
         <h3 class="text-sm font-semibold text-white">품질 경보</h3>
-        <span class="text-xs text-slate-500">카드 클릭 시 해당 직업만 필터링</span>
+        <span class="text-xs text-slate-500">카드 클릭 시 해당 ${entityLabel}만 필터링</span>
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        ${alertCard('wayIsArray', 'way 배열 오류', qualityAlerts.wayIsArray, 'danger')}
+        ${isJob
+          ? alertCard('wayIsArray', 'way 배열 오류', qualityAlerts.wayIsArray, 'danger')
+          : alertCard('wayIsArray', '산문 부족(300자↓)', qualityAlerts.wayIsArray, 'warning')}
         ${alertCard('imageUrlBad', '이미지 URL 오류', qualityAlerts.imageUrlBad, 'warning')}
-        ${alertCard('wayTrunc', 'way 잘린 텍스트', qualityAlerts.wayTrunc, 'caution')}
-        ${alertCard('srcOrderBad', '_sources 순서 오류', qualityAlerts.srcOrderBad, 'caution')}
+        ${isJob
+          ? alertCard('wayTrunc', 'way 잘린 텍스트', qualityAlerts.wayTrunc, 'caution')
+          : `<div class="glass-card rounded-xl p-3 border border-green-500/20"><div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-green-500"></span><span class="text-[11px] text-slate-300">way잘림(전공무관)</span></div><div class="text-xl font-bold text-green-400">0</div><div class="text-[10px] text-green-500">해당없음</div></div>`}
+        ${isJob
+          ? alertCard('srcOrderBad', '_sources 순서 오류', qualityAlerts.srcOrderBad, 'caution')
+          : `<div class="glass-card rounded-xl p-3 border border-green-500/20"><div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-green-500"></span><span class="text-[11px] text-slate-300">sources순서(전공무관)</span></div><div class="text-xl font-bold text-green-400">0</div><div class="text-[10px] text-green-500">해당없음</div></div>`}
         ${alertCard('ytLow', 'YT 3개 미만', qualityAlerts.ytLow, 'caution')}
-        ${alertCard('originNull', 'origin 출처 없음(master)', qualityAlerts.originNull, 'danger')}
+        ${isJob
+          ? alertCard('originNull', 'origin 출처 없음(master)', qualityAlerts.originNull, 'danger')
+          : `<div class="glass-card rounded-xl p-3 border border-green-500/20"><div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-green-500"></span><span class="text-[11px] text-slate-300">origin없음(직업전용)</span></div><div class="text-xl font-bold text-green-400">0</div><div class="text-[10px] text-green-500">해당없음</div></div>`}
       </div>
     </div>
 
@@ -474,18 +515,7 @@ export function renderAdminJobEqualize(props: AdminJobEqualizeProps): string {
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[56px] cursor-pointer hover:text-white" data-sort="skill" data-tooltip="스킬 적용 여부 (클릭=정렬)">스킬 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
               <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center min-w-[56px] cursor-pointer hover:text-white" data-sort="verified" data-tooltip="관리자 수동 검증 — 클릭하여 토글, 컬럼 헤더 클릭=정렬">검증 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
               <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px] cursor-pointer hover:text-white" data-sort="field" data-tooltip="12개 필드 중 채워진 필드 수 (n/12, 클릭=정렬)">완성도 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="way 필드 — 직업 진입 경로/방법 정보">방법</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="overviewSalary 필드 — 급여/임금 정보">임금</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="overviewProspect 필드 — 직업 전망 정보">전망</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="trivia 필드 — 여담/재미있는 사실">여담</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="detailWlb 필드 — 워라밸 상세 정보">WLB</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="detailReady 필드 — 준비 방법 상세">준비</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="sidebarJobs 필드 — 관련 직업 목록">직업</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="sidebarMajors 필드 — 관련 전공 목록">전공</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="sidebarCerts 필드 — 관련 자격증 목록">자격</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="heroTags 필드 — 직업 태그 배열">태그</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="youtubeLinks 필드 — YouTube 링크 존재 여부">YT</th>
-              <th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="_sources 필드 — 출처 정보 존재 여부">출처</th>
+              ${fieldLabels.map((lbl, i) => `<th class="px-2 py-3 text-xs text-slate-400 font-medium text-center" data-tooltip="${fieldTooltips[i]}">${lbl}</th>`).join('\n              ')}
               <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[60px] cursor-pointer hover:text-white" data-sort="size" data-tooltip="user_contributed_json 총 바이트 수 (클릭=정렬)">JSON <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
               <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px] cursor-pointer hover:text-white" data-sort="src" data-tooltip="merged._sources 출처 항목 수 (클릭=정렬)">출처수 <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
               <th class="px-3 py-3 text-xs text-slate-400 font-medium text-center min-w-[40px] cursor-pointer hover:text-white" data-sort="url" data-tooltip="merged._sources 의 URL 수 (중복 포함, 클릭=정렬)">URL <span class="sort-ind ml-0.5 text-[9px] text-slate-500"></span></th>
