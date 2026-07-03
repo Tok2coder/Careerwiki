@@ -1782,7 +1782,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       const html = `<ul class="space-y-2">${triviaItems
         .map(
           item =>
-            `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(
+            `<li class="flex items-start gap-2 text-base leading-relaxed text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(
               item, 'trivia', footnoteMap, sourceTextMap, '#10b981'
             )}</span></li>`
         )
@@ -2288,7 +2288,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
       const html = `<ul class="space-y-2">${prospectItems
         .map(
           item =>
-            `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(
+            `<li class="flex items-start gap-2 text-base leading-relaxed text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(
               item, 'jobProspect', footnoteMap, sourceTextMap, '#10b981'
             )}</span></li>`
         )
