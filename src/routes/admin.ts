@@ -1251,12 +1251,18 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
         FROM ${tableName}
         WHERE is_active = 1 AND user_contributed_json IS NOT NULL
         ORDER BY name LIMIT 2000 OFFSET ?`
-      while (true) {
-        const batch = await db.prepare(SELECT_SQL).bind(offset).all<Row>()
-        const rows = batch.results || []
-        allRows.push(...rows)
-        if (rows.length < 2000) break
-        offset += 2000
+      // COUNT: 목록 쿼리와 동일한 WHERE 조건 (is_active=1 AND user_contributed_json IS NOT NULL)
+      const countResult = await db.prepare(
+        `SELECT COUNT(*) as count FROM ${tableName} WHERE is_active = 1 AND user_contributed_json IS NOT NULL`
+      ).first<{ count: number }>()
+      const totalCount = countResult?.count || 0
+      const batchCount = Math.ceil(totalCount / 2000)
+      const offsets = Array.from({ length: batchCount }, (_, i) => i * 2000)
+      const batches = await Promise.all(
+        offsets.map(o => db.prepare(SELECT_SQL).bind(o).all<Row>())
+      )
+      for (const batch of batches) {
+        allRows.push(...(batch.results || []))
       }
     }
 
