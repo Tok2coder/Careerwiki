@@ -129,7 +129,7 @@ v1 출생 (job `_dispatch_template_v5.md` 포크 — 설계 진리: `data/cycle/
     - (구 버전의 "전송 금지"는 폐지 — 서버 레거시(trivia 키 → jobProspect 삭제)가 **제거 배포됨**. 이제 전송 안전.)
     - **여담 3~5개 bullet 작성** (직업 페이지 여담과 동일 스타일): 흥미로운 사실·통계·인식 교정 등, 항목별 완결 문장. 개요 탭 마지막 "여담" 섹션에 렌더.
     - 각 항목에 [N] 각주(필드-로컬) + `sources["trivia"]` 등록 — 신규 출처 2~3건, WebFetch 검증 의무 동일.
-    - 🔴 **bullet 작성 규격 (M0-r2 audit FAIL 3종 재발 방지)**: ①항목 끝 마침표 금지(`~했다 [N]` 형태 — 룰 X arrayItemPeriod) ②**마커 재사용 금지 — 1 bullet 1 고유 마커** (같은 [N]을 두 bullet에 쓰면 dup FAIL) ③마무리 편집성 bullet 1개는 무마커 허용 ④id는 기존 _sources 최대 id 직후 연속(재POST 시 idxGap 주의 — delete+re-add로 연속 복구).
+    - 🔴 **bullet 작성 규격 (M0-r2 audit FAIL 3종 재발 방지)**: ①항목 끝 마침표 금지(`~했다 [N]` 형태 — 룰 X arrayItemPeriod) ②**마커 재사용 금지 — 1 bullet 1 고유 마커** (같은 [N]을 두 bullet에 쓰면 dup FAIL) ③**전 bullet 각주 필수 — 무마커 bullet 금지** (Jason 2026-07-02 정책 상향: 출처로 cover 못 하는 편집성 문장은 쓰지 말고 sourced fact로 교체) ④id는 기존 _sources 최대 id 직후 연속(재POST 시 idxGap 주의 — delete+re-add로 연속 복구).
     - 🔴 **POST 후 readback에서 `jobProspect` 잔존 확인 의무** (레거시 회귀 감지) — 사라졌으면 즉시 abort + 보고.
 
 22. **🔴 룰 F (전공 신설) — `_sources[].text` 한글 제목 필수 (서버 silent fallback 주의)**:

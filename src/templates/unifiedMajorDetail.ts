@@ -859,7 +859,7 @@ const renderMajorSourcesCollapsible = (
           data-back-to="user-fnref-${globalNum}"
           data-field-key="${escapeHtml(source.fieldKey)}">
         <div class="flex items-start gap-2.5">
-          <span class="flex-shrink-0 w-5 h-5 rounded-full bg-wiki-primary/20 text-purple-300 text-[11px] font-bold flex items-center justify-center">${globalNum}</span>
+          <span class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold flex items-center justify-center">${globalNum}</span>
           <div class="flex-1 min-w-0 text-sm break-words">${sourceTextHtml}${domainBadge}</div>
         </div>
       </li>
@@ -908,7 +908,7 @@ const renderMajorSourcesCollapsible = (
   const userSourcesSection = hasUserSources ? `
     <div class="mt-6 pt-4 border-t border-wiki-border/40">
       <h4 class="text-sm font-semibold text-wiki-text mb-3 flex items-center gap-2">
-        <i class="fas fa-user-edit text-wiki-secondary"></i>
+        <i class="fas fa-user-edit text-emerald-400"></i>
         사용자 추가 출처
       </h4>
       <div>
@@ -922,16 +922,16 @@ const renderMajorSourcesCollapsible = (
       <button
         type="button"
         id="${toggleId}"
-        class="w-full flex items-center justify-between gap-3 px-4 py-4 md:px-6 md:py-5 content-text font-semibold text-white transition hover:text-wiki-secondary cursor-pointer"
+        class="w-full flex items-center justify-between gap-3 px-4 py-4 md:px-6 md:py-5 content-text font-semibold text-white transition hover:text-emerald-400 cursor-pointer"
         aria-controls="${panelId}"
         aria-expanded="false"
       >
         <span class="flex items-center gap-3">
-          <i class="fas fa-database text-wiki-secondary text-lg" aria-hidden="true"></i>
+          <i class="fas fa-database text-emerald-400 text-lg" aria-hidden="true"></i>
           <span class="text-base">출처</span>
         </span>
         <div class="flex items-center gap-3 text-sm text-wiki-muted">
-          <span class="inline-flex items-center gap-1.5 rounded-full border border-wiki-secondary/30 bg-wiki-secondary/10 px-3 py-1.5 text-wiki-secondary font-medium">${escapeHtml(badgeLabel)}</span>
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-emerald-400 font-medium">${escapeHtml(badgeLabel)}</span>
           <i id="${iconId}" class="fas fa-chevron-down text-base transition-transform duration-200" aria-hidden="true"></i>
         </div>
       </button>
@@ -984,9 +984,9 @@ const renderMajorSourcesCollapsible = (
             // 스크롤 이동
             setTimeout(function() {
               targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              targetEl.classList.add('ring-2', 'ring-wiki-primary');
+              targetEl.classList.add('ring-2', 'ring-emerald-500');
               setTimeout(function() {
-                targetEl.classList.remove('ring-2', 'ring-wiki-primary');
+                targetEl.classList.remove('ring-2', 'ring-emerald-500');
               }, 2000);
             }, 300);
           });
@@ -2988,7 +2988,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
                 footnoteRef.className = 'user-footnote-ref ml-1 inline-flex align-middle cursor-pointer';
                 footnoteRef.id = 'user-fnref-' + sourceId;
                 footnoteRef.setAttribute('data-source-id', sourceId);
-                footnoteRef.style.cssText = 'font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;';
+                footnoteRef.style.cssText = 'font-size:11px;font-weight:600;color:#10b981;margin-left:1px;vertical-align:super;line-height:1;';
                 footnoteRef.textContent = '[' + sourceId + ']';
 
                 // flex justify-between로 밀리는 문제를 피하기 위해 텍스트 컨테이너에 부착
@@ -3019,8 +3019,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
                   }
                   setTimeout(function() {
                     targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    targetEl.classList.add('ring-2', 'ring-wiki-secondary/60');
-                    setTimeout(() => targetEl.classList.remove('ring-2', 'ring-wiki-secondary/60'), 1200);
+                    targetEl.classList.add('ring-2', 'ring-emerald-500/60');
+                    setTimeout(() => targetEl.classList.remove('ring-2', 'ring-emerald-500/60'), 1200);
                   }, 100);
                 });
               }
@@ -3117,9 +3117,9 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
                 if (refEl) {
                   refEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                   // 하이라이트 효과
-                  refEl.classList.add('ring-2', 'ring-wiki-secondary');
+                  refEl.classList.add('ring-2', 'ring-emerald-500');
                   setTimeout(function() {
-                    refEl.classList.remove('ring-2', 'ring-wiki-secondary');
+                    refEl.classList.remove('ring-2', 'ring-emerald-500');
                   }, 2000);
                 }
               }, 160);
