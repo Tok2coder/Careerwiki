@@ -41,7 +41,7 @@ const stripHtmlTags = (html: string): string => {
  */
 export type FootnoteMap = Record<string, Record<string, number>>
 
-export const formatRichText = (value?: string | null | string[], fieldKey?: string, footnoteMap?: FootnoteMap, sourceTextMap?: Record<number, string>): string => {
+export const formatRichText = (value?: string | null | string[], fieldKey?: string, footnoteMap?: FootnoteMap, sourceTextMap?: Record<number, string>, accentColor = 'var(--wiki-primary,#8b5cf6)'): string => {
   // Handle array input (e.g., user_contributed_json way field stored as array)
   if (Array.isArray(value)) {
     value = value.join('\n')
@@ -142,7 +142,7 @@ export const formatRichText = (value?: string | null | string[], fieldKey?: stri
           const globalNum = parseInt(numStr)
           const sourceDesc = sourceTextMap?.[globalNum] || ''
           const titleText = sourceDesc ? sourceDesc.replace(/"/g, '&quot;') : `출처 [${globalNum}]`
-          return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`
+          return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:${accentColor};margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`
         }
       )
       return `<p class="content-text leading-relaxed text-wiki-text">${safe}</p>`
@@ -159,7 +159,8 @@ export const applyInlineFootnotes = (
   text: string,
   fieldKey: string,
   footnoteMap?: FootnoteMap,
-  sourceTextMap?: Record<number, string>
+  sourceTextMap?: Record<number, string>,
+  accentColor = 'var(--wiki-primary,#8b5cf6)'
 ): string => {
   if (!text || !text.trim()) return escapeHtml(text)
   let working = text
@@ -201,7 +202,7 @@ export const applyInlineFootnotes = (
     const globalNum = parseInt(numStr)
     const sourceDesc = sourceTextMap?.[globalNum] || ''
     const titleText = sourceDesc ? sourceDesc.replace(/"/g, '&quot;') : `출처 [${globalNum}]`
-    return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:var(--wiki-primary,#8b5cf6);margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`
+    return `<sup class="user-footnote-ref cursor-pointer transition" style="font-size:11px;font-weight:600;color:${accentColor};margin-left:1px;vertical-align:super;line-height:1;" data-source-id="${globalNum}" id="user-fnref-${globalNum}" title="${titleText}">[${globalNum}]</sup>`
   })
   return safe
 }

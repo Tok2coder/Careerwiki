@@ -1232,22 +1232,22 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
   const overviewSummary = (profile as any)?.overview?.summary || profile.summary
   if (overviewSummary?.trim()) {
     const summarySources = getFieldSources(p => p?.summary)
-    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(overviewSummary, 'summary', footnoteMap, sourceTextMap), summarySources)
+    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(overviewSummary, 'summary', footnoteMap, sourceTextMap, '#10b981'), summarySources)
   } else if (goyong24Summary?.trim()) {
-    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(goyong24Summary), ['GOYONG24'])
+    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(goyong24Summary, undefined, undefined, undefined, '#10b981'), ['GOYONG24'])
   } else if (hasCareernetOnly && careernetSummary?.trim()) {
-    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(careernetSummary), ['CAREERNET'])
+    pushOverviewCard('전공 개요', 'fa-circle-info', formatRichText(careernetSummary, undefined, undefined, undefined, '#10b981'), ['CAREERNET'])
   }
   
   // 전공 특성 (property)
   if (profile.property?.trim()) {
     const propertySources = getFieldSources(p => p?.property)
-    pushOverviewCard('전공 특성', 'fa-star', formatRichText(profile.property, 'property', footnoteMap, sourceTextMap), propertySources)
+    pushOverviewCard('전공 특성', 'fa-star', formatRichText(profile.property, 'property', footnoteMap, sourceTextMap, '#10b981'), propertySources)
   }
   
   if (profile.aptitude?.trim()) {
     const aptitudeSources = getFieldSources(p => p?.aptitude)
-    pushOverviewCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude, 'aptitude', footnoteMap, sourceTextMap), aptitudeSources)
+    pushOverviewCard('이 전공에 어울리는 사람', 'fa-user-check', formatRichText(profile.aptitude, 'aptitude', footnoteMap, sourceTextMap, '#10b981'), aptitudeSources)
   }
 
   // 졸업 후 진출 분야 (enterField + chartData.field + careerFields) - 개요로 이동
@@ -1783,7 +1783,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         .map(
           item =>
             `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(
-              item, 'trivia', footnoteMap, sourceTextMap
+              item, 'trivia', footnoteMap, sourceTextMap, '#10b981'
             )}</span></li>`
         )
         .join('')}</ul>`
@@ -2015,7 +2015,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
           </span>
           배우는 내용
         </h4>
-        ${formatRichText(profile.whatStudy, 'whatStudy', footnoteMap, sourceTextMap)}
+        ${formatRichText(profile.whatStudy, 'whatStudy', footnoteMap, sourceTextMap, '#10b981')}
       </div>
     `)
   }
@@ -2029,7 +2029,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
           </span>
           준비 방법
         </h4>
-        ${formatRichText(profile.howPrepare, 'howPrepare', footnoteMap, sourceTextMap)}
+        ${formatRichText(profile.howPrepare, 'howPrepare', footnoteMap, sourceTextMap, '#10b981')}
       </div>
     `)
   }
@@ -2181,7 +2181,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
               <i class="fas fa-school text-wiki-secondary text-xs"></i>
               ${escapeHtml(title)}
             </h5>
-            ${desc ? `<p class="text-base text-wiki-muted leading-relaxed">${formatRichText(desc)}</p>` : ''}
+            ${desc ? `<p class="text-base text-wiki-muted leading-relaxed">${formatRichText(desc, undefined, undefined, undefined, '#10b981')}</p>` : ''}
           </div>
         `
       })
@@ -2289,7 +2289,7 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
         .map(
           item =>
             `<li class="flex items-start gap-2 text-base text-wiki-text"><span class="text-wiki-secondary">•</span><span>${applyInlineFootnotes(
-              item, 'jobProspect', footnoteMap, sourceTextMap
+              item, 'jobProspect', footnoteMap, sourceTextMap, '#10b981'
             )}</span></li>`
         )
         .join('')}</ul>`
