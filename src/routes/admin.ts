@@ -1359,7 +1359,7 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     const mm = String(nowKST.getUTCMinutes()).padStart(2, '0')
     const freshUrl = `?tab=${tab}&fresh=1`
     const banner = `<div style="background:#fef9c3;border-bottom:1px solid #fde047;padding:6px 16px;font-size:13px;color:#713f12;">이 화면은 최대 10분 캐시 스냅샷 (생성 ${hh}:${mm} KST) · <a href="${freshUrl}" style="color:#0369a1;text-decoration:underline;">최신 데이터 보기</a></div>`
-    html = html.replace('<body>', '<body>' + banner)
+    html = html.replace(/(<body[^>]*>)/i, `$1${banner}`)
 
     // KV 저장 (TTL 600초)
     await kv.put(cacheKey, html, { expirationTtl: 600 })
