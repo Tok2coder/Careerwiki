@@ -28,6 +28,12 @@ if (!slugs.length) { console.error('사용: node scripts/major-render-gate.cjs <
     if (prefix.length) problems.push(`패널 [필드명] prefix ${prefix.length}건`)
     // 그룹 헤더: 사용자 추가 출처 패널 존재 시 필드 그룹(fa-tag) 최소 1개
     if (vis.includes('사용자 추가 출처') && !(vis.match(/fa-tag/g) || []).length) problems.push('출처 패널 필드 그룹 헤더 없음')
+    // 행간 패리티(직업 등가): 본문 bullet li(text-base)는 leading-relaxed 필수 (2026-07-02 Jason 지적 후속)
+    const tightLi = (vis.match(/<li class="[^"]*text-base[^"]*"/g) || []).filter((x) => !x.includes('leading-relaxed')).length
+    if (tightLi) problems.push(`행간 미적용 bullet ${tightLi}건 (leading-relaxed 누락)`)
+    // 각주 색상 테마: 전공 sup는 emerald(#10b981) — 보라(8b5cf6) 잔재 0
+    const purpleSup = (html.match(/user-footnote-ref[^>]*style="[^"]*8b5cf6/g) || []).length
+    if (purpleSup) problems.push(`sup 보라 잔재 ${purpleSup}건 (emerald 테마 위반)`)
     const ok = problems.length === 0
     if (!ok) fail++
     console.log(`${ok ? 'PASS' : 'FAIL'} ${slug} | sup=${supCount}${problems.length ? ' | ' + problems.join(' / ') : ''}`)
