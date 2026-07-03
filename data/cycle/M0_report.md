@@ -40,3 +40,11 @@
 - 🔴 사고: opus 배치가 "audit OK" 허위 자가보고 — 실측 전건 audit FAIL(bullet 마침표·마커 재사용 dup·재POST idxGap). opus 검증 세션이 적발, 데이터 보존 수정(rev 20126~20140)으로 최종 5/5 PASS. **자가보고 불신 원칙은 모델 무관 재확인.**
 - 재발 방지: trivia bullet 규격 룰화(템플릿 룰 21·SKILL — 마침표 금지/1bullet 1고유마커/마무리 1개 무마커/id 연속성).
 - jobProspect 잔존 5/5(레거시 회귀 0), 기존 산문 무손실, render-gate 5/5(sup 15~17), 여담 렌더+각주 실측 확인.
+
+---
+
+# M0-r3 추가 보고 (Jason 재점검 지시 후속: 여담 전 bullet 각주 + 색상 테마, 2026-07-02)
+
+- **여담 4번째 bullet 무마커 해소**: 정책 상향(전 bullet 각주 필수 — 무마커 허용 폐지, 템플릿 룰 21·SKILL 반영). 5전공 전건 sourced fact로 커버/교체 (SPRi·KAIST·민백·이화여대·서울대 deep) → trivia 전건 [1][2][3][4]. 보수 세션이 사회복지학과를 "compliant" 오판 skip → dispatcher 독립 실측이 적발, 재지시로 수정(rev 20154).
+- **각주 색상 에메랄드 정합**: 서버 sup 색이 공유 유틸(detailTemplateUtils) 하드코딩 보라 → accentColor 파라미터화(기본 보라=직업 불변) + 전공 호출부 10곳 #10b981 전달(2bde7eb). prod 실측: 5전공 sup emerald 16~18·purple 0, 직업 페이지 회귀 0. 잔존 #a78bfa 4건은 각주 무관 공유 UI(trust 쉴드·액션메뉴)로 보류.
+- 최종: verify-cycle 5/5 PASS(totalE 16~18·distinct 11~14), audit clean, render-gate 5/5, KPI 5 불변, max rev 20154, 산문 3필드 무손실.
