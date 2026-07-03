@@ -203,6 +203,15 @@ auth.get('/google/callback', async (c) => {
     
     // 10. 온보딩 체크 - 신규 사용자는 온보딩 페이지로
     if (user.onboarded === 0) {
+      // ideawiki 가입 미션 신호 마커 (Jason 2026-07-03) — ideawiki 트래킹(__iw 쿠키)으로
+      // 유입된 신규 가입자를 px.js 가 다음 페이지뷰에서 1회 감지해 가입 픽셀을 발사.
+      // httpOnly 아님(클라이언트 스크립트가 읽고 즉시 제거). 일반 가입자에겐 no-op.
+      setCookie(c, 'iw_su', '1', {
+        secure: isHttps,
+        sameSite: 'Lax',
+        maxAge: 600,
+        path: '/'
+      })
       // 원래 가려던 URL을 쿠키에 저장 (온보딩 완료 후 사용)
       setCookie(c, 'onboarding_return_url', returnUrl, {
         httpOnly: true,
