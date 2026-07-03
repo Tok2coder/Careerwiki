@@ -1042,6 +1042,19 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     // 탭 선택 (기본: 직업)
     const rawTab = c.req.query('tab')
     const tab: EqualizeTab = rawTab === 'major' ? 'major' : 'job'
+
+    // KV 캐시 래핑 — TTL 600초, ?fresh=1로 우회
+    const fresh = c.req.query('fresh') === '1'
+    const cacheKey = `admin-equalize-html:${tab}`
+    const kv = c.env.KV
+    if (!fresh) {
+      const cached = await kv.get(cacheKey)
+      if (cached) {
+        return new Response(cached, {
+          headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Cache': 'HIT' },
+        })
+      }
+    }
     const isJob = tab === 'job'
     const tableName = isJob ? 'jobs' : 'majors'
     const entityType = isJob ? 'job' : 'major'
@@ -1335,10 +1348,25 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
     const avgJsonSize = contributedCount > 0 ? Math.round(totalJsonSize / contributedCount) : 0
 
     // 2026-05-12 WL-FULL: enhanceOnlyCount / masterAppliedCount props 제거 — skillAppliedCount(=master) 단독 KPI.
-    return c.html(renderAdminJobEqualize({
+    let html = renderAdminJobEqualize({
       tab, totalJobs, contributedCount, perfectCount, poorCount, avgJsonSize,
       items, qualityAlerts, skillAppliedCount, userVerifiedCount,
-    }))
+    })
+
+    // 캐시 배너 주입 — <body> 직후에 삽입 (UTC+9 KST 시각 표기)
+    const nowKST = new Date(Date.now() + 9 * 60 * 60 * 1000)
+    const hh = String(nowKST.getUTCHours()).padStart(2, '0')
+    const mm = String(nowKST.getUTCMinutes()).padStart(2, '0')
+    const freshUrl = `?tab=${tab}&fresh=1`
+    const banner = `<div style="background:#fef9c3;border-bottom:1px solid #fde047;padding:6px 16px;font-size:13px;color:#713f12;">이 화면은 최대 10분 캐시 스냅샷 (생성 ${hh}:${mm} KST) · <a href="${freshUrl}" style="color:#0369a1;text-decoration:underline;">최신 데이터 보기</a></div>`
+    html = html.replace('<body>', '<body>' + banner)
+
+    // KV 저장 (TTL 600초)
+    await kv.put(cacheKey, html, { expirationTtl: 600 })
+
+    return new Response(html, {
+      headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Cache': 'MISS' },
+    })
   } catch (error: any) {
     console.error('Job equalize page error:', error)
     return c.text(`데이터 보완 현황을 불러오는데 실패했습니다. Error: ${error?.message || String(error)}`, 500)
@@ -1369,6 +1397,11 @@ async function handleVerifyToggle(c: any, table: 'jobs' | 'majors') {
     if (!result.meta || (result.meta.changes ?? 0) === 0) {
       return c.json({ success: false, error: 'not found' }, 404)
     }
+
+    // 해당 탭 KV 캐시 무효화
+    const cacheTab = table === 'jobs' ? 'job' : 'major'
+    await c.env.KV.delete(`admin-equalize-html:${cacheTab}`)
+
     return c.json({ success: true, verified: value, verified_at: verifiedAt })
   } catch (error: any) {
     console.error(`Verify toggle (${table}) error:`, error)
