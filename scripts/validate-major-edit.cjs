@@ -617,6 +617,41 @@ function validate(data, opts = {}) {
         }
       }
     }
+
+    // ── [policyUrl] 정책위반 URL 사전 게이트 (R67·R68 실측 사고 차단, 2026-07-04) ──
+    // 로그인게이트/세션·잡포털 검색·리스트 URL을 POST 전에 차단한다.
+    // ⚠️ 과차단 금지: 아래 정확 패턴만 — URL 안에 단순 단어 "search"/"research" 등은 잡지 않음.
+    //
+    // 패턴 분류:
+    //   1) 로그인게이트/세션: _csrf= 파라미터 / nsis.kofons.or.kr 에듀 경로 / /sso/login 또는 /login.do 경로
+    //   2) 검색·리스트: indeed 계열(서브도메인 포함) / /jobs?q= / /search?...(q=|query=|keyword=) / articleList+sc_word= / saramin·jobkorea 검색·리스트 경로
+    const POLICY_URL_PATTERNS = [
+      // 1) 로그인게이트/세션
+      { re: /[?&]_csrf=/i,                                    label: '_csrf= 세션 파라미터 포함 URL (로그인 필요 페이지)' },
+      { re: /nsis\.kofons\.or\.kr\/.*\/tt\/eduG/i,            label: 'nsis.kofons.or.kr /tt/eduG 경로 (로그인게이트 교육 URL)' },
+      { re: /\/sso\/login(?:[/?#]|$)/i,                       label: '/sso/login 경로 (로그인 리다이렉트 URL)' },
+      { re: /\/login\.do(?:[/?#]|$)/i,                        label: '/login.do 경로 (로그인 페이지 URL)' },
+      // 2) 검색·리스트 (정확 패턴 — indeed 도메인 자체 + 잡포털 검색 파라미터)
+      { re: /(?:^|\.)indeed\.com(?:\/|$)/i,                   label: 'indeed.com 계열 도메인 (잡포털 채용 검색 사이트)' },
+      { re: /\/jobs\?q=/i,                                     label: '/jobs?q= 잡포털 검색 URL' },
+      { re: /\/search\?[^#]*(?:q|query|keyword)=/i,            label: '/search?q= (또는 query=|keyword=) 검색 결과 URL' },
+      { re: /articleList.*[?&]sc_word=/i,                      label: 'articleList?sc_word= 검색 리스트 URL' },
+      { re: /saramin\.co\.kr\/.*\/(?:search|recruit\/joblist)(?:[/?#]|$)/i,  label: 'saramin 검색·구인 리스트 경로' },
+      { re: /jobkorea\.co\.kr\/.*\/(?:search|recruit\/joblist)(?:[/?#]|$)/i, label: 'jobkorea 검색·구인 리스트 경로' },
+    ];
+    for (const src of srcVal) {
+      if (!src || !src.url) continue;
+      for (const { re, label } of POLICY_URL_PATTERNS) {
+        if (re.test(src.url)) {
+          errors.push(
+            `[policyUrl] sources["${sourceKey}"] 정책위반 URL: "${src.url}" — ${label}. ` +
+            `로그인게이트·세션·잡포털 검색·리스트 URL은 전공 식별자가 없어 출처로 부적합. ` +
+            `기관 deep page (대학 학과·협회·정부 정책·언론 기사 등)로 교체 필요 (R67·R68 실측 사고 차단)`
+          );
+          break;
+        }
+      }
+    }
   }
 
   for (const [sourceKey, srcVal] of Object.entries(sources)) {

@@ -32,7 +32,7 @@
 3. dispatcher가 명단을 배치 프롬프트 표에 직접 삽입(세션이 스스로 찾게 하지 않음) + **{도메인 주의} 작성**: 계열 복붙쌍(배치 간 분리), 동음이의, 분류 후보.
 4. B1~B5 Agent(sonnet, **run_in_background:false**, 한 메시지 동시 spawn) — 각 세션 prompt = `{r|m}{N}_prompts/*_B{n}_prompt.md`(STRICT 전문+5건 표). **건당 순차 POST 체크포인트**(idempotent 경계 — 죽어도 완료분 보존).
 5. 완료마다 결과 기록 + **의심 포인트 번호 적립**(totalE/class/마커 미보고, 부등호 보고, 최소기준 hugging, 균일값, WARN→INFO 합리화).
-6. 검증 Agent(**opus**, fg): `{master|major}-verify-cycle.cjs --cycle=N` 전수 실측 + 의심#n 명시 + 수정 권한 + KPI 쿼리 원문. **검증자도 불신** — 기준 미달 임의 PASS는 §5-C 위반, 수습 세션 추가.
+6. **검증 이원화 (2026-07-03 효율화 ④)**: ①dispatcher가 결정적 게이트를 직접 실행·저장(측정 행위 — 작업 아님): `{master|major}-verify-cycle.cjs --cycle=N` 출력 + audit 전건 루프 출력을 `data/cycle/{r|m}{N}_gate_out.txt`로 저장 ②검증 Agent(**opus**, fg)는 게이트 출력 파일을 Read해 의심#n 판별·urlUnverified 3분류·결함 수정만 수행(스크립트 전수 재실행 금지 — 수정한 entity만 재게이트). **검증자도 불신** — 기준 미달 임의 PASS는 §5-C 위반, 수습 세션 추가.
 7. 잔여 결함 0 + KPI 정확 일치 → §4 보고 → **종료 갱신 2곳(같은 턴)** → activity done 재emit → 정지(다음 go 대기).
 
 ## 3. 수습 패턴 (실증 적립)
@@ -41,6 +41,8 @@
 - `--reset-delay="<리밋 메시지>"` → 리셋까지 ScheduleWakeup delaySeconds 계산(1h 초과 시 멀티홉).
 - **URL 판별 3분류(R48·R49·R65·R67)**: ①TLS off 200/브라우저 UA 200 = anti-bot 거짓양성(유지) ②루트 생존+페이지 404/soft-404 = 진짜 dead 환각(한국 1차 live로 교체) ③검색리스트(`/jobs?q=`·`/search?`)·`_csrf` 세션·로그인게이트 stub = **정책위반(교체)**. 판별 = dispatcher가 node GET(`rejectUnauthorized:false`, 리다이렉트 추적) + WebFetch 2차 — verify 자가 FAIL/WARN 라벨 불신.
 - url-liveness(HEAD)는 soft-404 200 오판 맹점 → node GET+본문검사 backstop(R65).
+- **재전송·mojibake 판정 = D1 직접 조회만** (R68): edge 캐시된 edit-data 재조회는 stale 응답으로 허상 mojibake·재검 루프 유발(tool_uses 504). `wrangler d1` SELECT가 진리 — 허상 의심 재POST 금지.
+- **효율화 패키지 (Jason 2026-07-03, R69~)**: ①정책 URL validate `[policyUrl]` 사전 게이트(nsis eduG·indeed·검색·`_csrf` 등 10패턴) ②D1-직접 판정 ③fix POST 직업당 최대 1회 ④검증 이원화(위 step 6) ⑤helper hint 산업별 특화(25산업). 품질 게이트 불변.
 
 ## 4. 보고 — §6 고정 포맷
 

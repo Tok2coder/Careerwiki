@@ -115,7 +115,8 @@ v1 출생 (job `_dispatch_template_v5.md` 포크 — 설계 진리: `data/cycle/
 19. **🔴 룰 C — POST 전공당 1회 원칙 + POST 전 셀프 게이트**:
     - **POST 전 distinct·totalE·산문 3필드 300자 셀프 카운트 의무 — 기준 미달 상태로 POST 절대 금지** (보강 완료 후 1회 POST). "일단 POST 하고 패치"는 잉여 rev + 재작업 낭비.
     - **결정적 강제**: validate 호출은 반드시 `node scripts/validate-major-edit.cjs payload.json` — totalE(<14) / 산문 3필드(<300자) / distinct(<8) / 보호영역 접촉 게이트가 FAIL로 차단. 작업자 모델의 자가 카운트 보고와 무관하게 스크립트가 판정.
-    - **동일 payload(동일 changeSummary) 반복 POST 금지.** POST 성공(revisionId 반환) 후 같은 전공 재POST는 audit FAIL 수정 시에만, **최대 2회**. 재POST 전 latest rev 확인(이미 반영됐으면 skip).
+    - **동일 payload(동일 changeSummary) 반복 POST 금지.** POST 성공(revisionId 반환) 후 같은 전공 재POST는 audit FAIL 수정 시에만, **fix POST 최대 1회 — 결함들을 한 payload에 묶어 1회로 해소** (2026-07-03 효율화 ③). 1회로 못 고치면 skip+사유 보고 → 검증 세션이 수습. 재POST 전 latest rev 확인(이미 반영됐으면 skip).
+    - **재전송·mojibake 판정은 D1 직접 조회로만** (2026-07-03 효율화 ②): edge 캐시된 edit-data 재조회는 stale 응답으로 mojibake 허상·재검 루프 유발(R68 사고). 저장 확인은 `wrangler d1` SELECT — 허상 의심 재POST 금지.
     - changeSummary는 **top-level** (fields 안에 중첩 금지 — R39 교훈, 중첩 시 마커 미생성 → KPI 탈락).
 
 20. **🔴 룰 D — tool-call 경제 (세션 사망 방지, 배치 모드 특히 중요)**:

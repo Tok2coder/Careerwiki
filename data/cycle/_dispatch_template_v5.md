@@ -109,7 +109,8 @@ v5 변경 (v4.1 대비) — **N직업-1세션 배치 복원 (기본 5직업/세�
 19. **🔴 룰 C — POST 직업당 1회 원칙 + POST 전 셀프 게이트** (2026-06-11, R43 사고):
     - **POST 전 distinct·totalE 셀프 카운트 의무 — 기준 미달 상태로 POST 절대 금지** (보강 완료 후 1회 POST). "일단 POST 하고 패치"는 잉여 rev + 재작업 낭비.
     - **결정적 강제 (237ec3b)**: validate 호출은 반드시 `node scripts/validate-job-edit.cjs payload.json --class=<디스패처 지정 분류(major|niche)>` — `[totalEntries미달]`(<19) / `[prose영역미달]`(9영역 <100자) / `[distinct미달]`(major<18, niche<10) 게이트가 풀 enhance 모드에서 FAIL로 차단. 작업자 모델의 자가 카운트 보고와 무관하게 스크립트가 판정.
-    - **동일 payload(동일 changeSummary) 반복 POST 금지.** POST 성공(revisionId 반환) 후 같은 직업 재POST는 audit FAIL 수정 시에만, **최대 2회**. 재POST 전 latest rev 확인(이미 반영됐으면 skip).
+    - **동일 payload(동일 changeSummary) 반복 POST 금지.** POST 성공(revisionId 반환) 후 같은 직업 재POST는 audit FAIL 수정 시에만, **fix POST 최대 1회 — 결함들을 한 payload에 묶어 1회로 해소** (2026-07-03 효율화 ③, R68 fix 3연속 사례). 1회로 못 고치면 skip+사유 보고 → 검증 세션이 수습. 재POST 전 latest rev 확인(이미 반영됐으면 skip).
+    - **재전송·mojibake 판정은 D1 직접 조회로만** (2026-07-03 효율화 ②): edge 캐시된 edit-data 재조회는 stale 응답으로 mojibake 허상·재검 루프 유발(R68 tool_uses 504 사고). 저장 확인은 `wrangler d1` SELECT — 허상 의심 재POST 금지.
 
 20. **🔴 룰 D — tool-call 경제 (세션 사망 방지, 배치 모드 특히 중요)** (2026-06-11 R43 / 2026-06-13 v5 배치 복원 강화):
     - prose 필드 임시 파일 분할 시 **인접 2~3필드를 한 파일에 묶기, 직업당 임시 파일 ~6개 이내**. 과도 세분화 금지.

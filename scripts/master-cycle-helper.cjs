@@ -98,12 +98,135 @@ function loadStrictBlock() {
   return cut > 0 ? block.slice(0, cut).trim() : block.trim();
 }
 
+// ─── 산업별 URL pool hint 매핑 테이블 ───
+// 키: 직업명에 부분 문자열 매칭할 키워드 배열 (범용어 금지 — "원", "사", "기사", "관리" 등)
+// 값: 특화 pool 사이트 문자열 (세션에 주입)
+const INDUSTRY_POOL_MAP = [
+  {
+    keywords: ['방송', '미디어', '아나운서', '기자', '앵커', '촬영감독', '영상편집', '프로듀서', '라디오', 'PD'],
+    pool: 'kcc.go.kr(방통위) · kofice.or.kr(한국국제문화교류진흥원) · kba.or.kr(한국방송협회) · kpf.or.kr(한국언론진흥재단) · kbs.co.kr · mbc.co.kr · sbs.co.kr',
+  },
+  {
+    keywords: ['금융', '은행', '보험', '증권', '펀드', '투자', '신용', '대출', '외환', '자산운용'],
+    pool: 'fss.or.kr(금융감독원) · fsc.go.kr(금융위원회) · kafa.or.kr(금융투자협회) · kofia.or.kr(금융투자협회) · kfb.or.kr(은행연합회) · knia.or.kr(손해보험협회)',
+  },
+  {
+    keywords: ['소프트웨어', '개발자', '프로그래머', '보안', '정보통신', '네트워크', '클라우드', '데이터', '인공지능', 'AI', 'IT', '사이버'],
+    pool: 'kisa.or.kr(한국인터넷진흥원) · pipc.go.kr(개인정보위) · nia.or.kr(한국지능정보사회진흥원) · spri.kr(소프트웨어정책연구소) · nipa.kr(정보통신산업진흥원)',
+  },
+  {
+    keywords: ['의사', '간호', '약사', '한의', '치과', '물리치료', '작업치료', '임상', '병원', '보건', '의료', '수술', '진료'],
+    pool: 'mohw.go.kr(보건복지부) · kma.or.kr(대한의사협회) · koreanurse.or.kr(대한간호협회) · kpa.or.kr(대한약사회) · kha.or.kr(대한병원협회) · hira.or.kr(건강보험심사평가원)',
+  },
+  {
+    keywords: ['교사', '강사', '교육', '학교', '유치원', '보육', '교수', '강의', '훈련'],
+    pool: 'moe.go.kr(교육부) · kice.re.kr(한국교육과정평가원) · kedi.re.kr(한국교육개발원) · nile.or.kr(국가평생교육진흥원) · kfae.re.kr(한국교육학술정보원)',
+  },
+  {
+    keywords: ['건설', '건축', '토목', '시공', '설계', '구조', '측량', '도시계획', '부동산개발'],
+    pool: 'molit.go.kr(국토교통부) · kict.re.kr(한국건설기술연구원) · kiaebs.or.kr(대한건축사협회) · kce.or.kr(한국건설기술인협회)',
+  },
+  {
+    keywords: ['식품', '조리', '영양', '제과', '제빵', '요리', '외식', '급식'],
+    pool: 'mfds.go.kr(식품의약품안전처) · kfia.or.kr(한국식품산업협회) · foodnara.or.kr(식품영양성분DB) · nifds.go.kr(국가식품클러스터)',
+  },
+  {
+    keywords: ['전기', '에너지', '발전', '송전', '배전', '전력', '태양광', '풍력', '신재생'],
+    pool: 'kepco.co.kr(한국전력) · khnp.co.kr(한국수력원자력) · kemco.or.kr(한국에너지공단) · motie.go.kr(산업통상자원부) · energy.or.kr',
+  },
+  {
+    keywords: ['반도체', '디스플레이', '웨이퍼', '칩', '파운드리', '패키징', '반도체장비'],
+    pool: 'ksia.or.kr(한국반도체산업협회) · motie.go.kr(산업부) · keti.re.kr(한국전자기술연구원) · etri.re.kr',
+  },
+  {
+    keywords: ['농업', '농작물', '축산', '수산', '임업', '원예', '농촌', '양식'],
+    pool: 'rda.go.kr(농촌진흥청) · mafra.go.kr(농림축산식품부) · nifs.go.kr(국립수산과학원) · naas.go.kr(국립농업과학원)',
+  },
+  {
+    keywords: ['안전', '소방', '방재', '재난', '산업보건', '위험물', '환경안전'],
+    pool: 'kosha.or.kr(안전보건공단) · moel.go.kr(고용노동부) · nema.go.kr · nfds.go.kr(소방청) · kiha.or.kr',
+  },
+  {
+    keywords: ['변호사', '검사', '판사', '법무', '법조', '사법', '법률', '형사', '민사'],
+    pool: 'koreanbar.or.kr(대한변호사협회) · moj.go.kr(법무부) · scourt.go.kr(대법원) · kppa.or.kr(한국검사협회)',
+  },
+  {
+    keywords: ['항공', '파일럿', '승무원', '항공교통', '정비사', '공항운영'],
+    pool: 'molit.go.kr/항공정책 · airport.kr(인천공항) · koreanair.com/채용 · icao.int · kcab.go.kr(항공안전기술원)',
+  },
+  {
+    keywords: ['원자력', '방사선', '방사성', '핵연료', '방폐', '방사능'],
+    pool: 'kins.re.kr(한국원자력안전기술원) · korad.or.kr(한국원자력환경공단) · kofons.or.kr · khnp.co.kr(한국수력원자력) · nssc.go.kr(원자력안전위원회)',
+  },
+  {
+    keywords: ['사회복지', '복지사', '상담사', '청소년', '노인', '장애', '자활'],
+    pool: 'mohw.go.kr(복지부) · kcwa.or.kr(한국사회복지협의회) · welfare.go.kr · nysc.or.kr(청소년활동진흥원) · nirc.or.kr',
+  },
+  {
+    keywords: ['물류', '유통', '배송', '운송', '창고', '무역', '관세', '통관', '포워딩'],
+    pool: 'molit.go.kr · klta.or.kr(한국물류협회) · korcham.net(대한상의) · customs.go.kr(관세청) · kita.net(무역협회)',
+  },
+  {
+    keywords: ['환경', '대기', '수질', '폐기물', '생태', '기후', '탄소', '온실가스'],
+    pool: 'me.go.kr(환경부) · nier.go.kr(국립환경과학원) · keiti.re.kr(한국환경산업기술원) · gir.go.kr(온실가스종합정보센터)',
+  },
+  {
+    keywords: ['디자인', '패션', '의류', '섬유', '봉제', '텍스타일'],
+    pool: 'motie.go.kr · kofoti.or.kr(한국패션산업연구원) · kfda.or.kr(한국패션디자이너협회) · kdfi.or.kr(한국디자인진흥원)',
+  },
+  {
+    keywords: ['관광', '호텔', '여행사', '컨벤션', '카지노', '레저'],
+    pool: 'mcst.go.kr(문화체육관광부) · knto.or.kr(한국관광공사) · kata.or.kr(한국여행업협회) · hira.or.kr',
+  },
+  {
+    keywords: ['문화', '예술', '공연', '음악', '미술', '영화', '게임', '콘텐츠', '웹툰', '작가', '극작'],
+    pool: 'mcst.go.kr(문화체육관광부) · kofic.or.kr(영화진흥위원회) · kocca.or.kr(한국콘텐츠진흥원) · arko.or.kr(한국문화예술위원회)',
+  },
+  {
+    keywords: ['스포츠', '체육', '선수', '코치', '심판', '트레이너'],
+    pool: 'ksoc.or.kr(대한체육회) · mcst.go.kr · sports.or.kr · ksa.or.kr · kspo.or.kr(국민체육진흥공단)',
+  },
+  {
+    keywords: ['기계', '금속', '제조', '주조', '단조', '용접', '선반', '공작', '사출', '프레스'],
+    pool: 'motie.go.kr · koami.or.kr(한국기계산업진흥회) · kims.re.kr(한국재료연구원) · kitech.re.kr(한국생산기술연구원)',
+  },
+  {
+    keywords: ['화학', '석유화학', '정유', '고분자', '플라스틱', '도료', '촉매'],
+    pool: 'motie.go.kr · krict.re.kr(화학연구원) · kiic.or.kr(한국화학공학회) · kcma.or.kr(한국화학물질관리협회)',
+  },
+  {
+    keywords: ['철도', '지하철', '기관사', '열차', '전동차'],
+    pool: 'molit.go.kr · korail.com(한국철도공사) · kric.or.kr(한국철도기술연구원) · seoulmetro.co.kr',
+  },
+  {
+    keywords: ['해운', '선박', '항만', '조선', '선원', '도선'],
+    pool: 'kmof.go.kr(해양수산부) · kmi.re.kr(한국해양수산개발원) · ksr.or.kr(한국선급) · portmis.go.kr',
+  },
+];
+
+// 직업명에서 산업별 특화 pool hint를 반환. 미매칭 시 null.
+function resolvePoolHint(jobName) {
+  for (const entry of INDUSTRY_POOL_MAP) {
+    for (const kw of entry.keywords) {
+      if (jobName.includes(kw)) {
+        return `특화 pool: ${entry.pool} + 추가 발굴`;
+      }
+    }
+  }
+  return null;
+}
+
 // ─── batch prompt 생성 (v5: 5직업-1세션, 순차 POST 체크포인트) ───
 function buildBatchPrompt(cycleNum, batchNum, jobs, strictBlock) {
   const sessionName = `R${cycleNum}_B${batchNum}`;
-  const rows = jobs.map((job, i) =>
-    `| ${i + 1} | ${job.name} | ${job.id} | ${job.slug} | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | 산업 소관 부처(.go.kr)·직능 협회/학회(.or.kr)·대표 기업(.co.kr) deep page + KOSIS·언론 deep article 우선. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)** |`
-  ).join('\n');
+  const GENERIC_HINT = '산업 소관 부처(.go.kr)·직능 협회/학회(.or.kr)·대표 기업(.co.kr) deep page + KOSIS·언론 deep article 우선. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)**';
+  const rows = jobs.map((job, i) => {
+    const specialized = resolvePoolHint(job.name);
+    const hint = specialized
+      ? `${specialized}. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)**`
+      : GENERIC_HINT;
+    return `| ${i + 1} | ${job.name} | ${job.id} | ${job.slug} | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | ${hint} |`;
+  }).join('\n');
   const reportRows = jobs.map((job) => `${job.slug}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK`).join('\n');
 
   // ─── 활동 가시화: wave(=이 세션) 단위 emit (대시보드 '세부 작업' 개별 행) ───
