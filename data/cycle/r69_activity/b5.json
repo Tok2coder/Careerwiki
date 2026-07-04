@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r69-b5",
+      "group_key": "cycle-R69-2026-07-04",
+      "agent_slug": "hangyeol",
+      "label": "R69 B5: 배소기조작원~배수장관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
