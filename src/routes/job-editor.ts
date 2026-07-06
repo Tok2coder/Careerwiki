@@ -775,6 +775,17 @@ jobEditorRoutes.post('/api/job/:id/edit', requireJobMajorEdit, async (c) => {
         )
       }
 
+      // Vectorize 재인덱싱 (fire-and-forget) — 편집 내용을 추천 임베딩에 반영
+      // (2026-07-06 P0: edit 경로 훅 부재로 활성 직업 41% stale 사고 후속 — create 경로와 동일 패턴)
+      const openaiKeyForIdx = (c.env as any).OPENAI_API_KEY
+      if (openaiKeyForIdx && (c.env as any).VECTORIZE) {
+        c.executionCtx.waitUntil(
+          import('../services/ai-analyzer/vectorize-pipeline').then(({ indexSingleJob }) =>
+            indexSingleJob(c.env.DB, (c.env as any).VECTORIZE, openaiKeyForIdx, jobId)
+          ).catch(() => {})
+        )
+      }
+
       return c.json({
         success: true,
         revisionId: revision.id,

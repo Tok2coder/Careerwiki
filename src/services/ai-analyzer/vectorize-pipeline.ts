@@ -1208,11 +1208,17 @@ export async function incrementalUpsertMajorsToVectorize(
   let offset = 0
 
   while (upserted < maxItems) {
+    // 신규 / 버전 불일치 / stale(인덱싱 이후 편집됨) 전공 조회 (2026-07-06 P0 — 직업과 동일 조건)
     const majors = await db.prepare(`
       SELECT id, name, merged_profile_json
       FROM majors
       WHERE is_active = 1
-        AND (indexed_at IS NULL OR embedding_version != ?)
+        AND (
+          indexed_at IS NULL
+          OR COALESCE(embedding_version, '') != ?
+          OR (user_last_updated_at IS NOT NULL
+              AND datetime(user_last_updated_at / 1000, 'unixepoch') > indexed_at)
+        )
       ORDER BY id
       LIMIT ? OFFSET ?
     `).bind(CURRENT_VERSION, batchSize, offset).all<{
@@ -1249,9 +1255,10 @@ export async function incrementalUpsertMajorsToVectorize(
     } catch (e) {
       lastError = e instanceof Error ? e.message : String(e)
       errors += majors.results.length
+      // 에러 배치는 WHERE 조건에 계속 매치되므로 offset으로 건너뛰어 무한루프 방지 (성공 배치는 조건에서 빠짐)
+      offset += batchSize
     }
 
-    offset += batchSize
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
 
@@ -2587,33 +2594,49 @@ export async function incrementalUpsertToVectorize(
 ): Promise<{ upserted: number; errors: number; skipped: number }> {
   const { batchSize = 50, maxJobs = 500 } = options
   const CURRENT_VERSION = `JPC_${JOB_PROFILE_COMPACT_VERSION}`
-  
-  
+
+
   let upserted = 0
   let errors = 0
   let skipped = 0
   let offset = 0
-  
+
   while (upserted + skipped < maxJobs) {
-    // 신규 또는 버전 불일치 직업 조회
+    // 신규 / 버전 불일치 / stale(인덱싱 이후 편집됨) 직업 조회
+    // (2026-07-06 P0: stale 감지 추가 — 기존엔 version 비교만 해서 "편집됐지만 버전 같음" 2,875건 미감지.
+    //  job_attributes JOIN 추가 — indexSingleJob과 동일한 V2 컨텍스트 프리앰블 텍스트 생성용.
+    //  OFFSET 제거 — 처리된 행은 WHERE에서 빠지므로 offset 증가 시 배치 건너뜀. 에러 배치만 skip 목적으로 증가.)
     const jobs = await db.prepare(`
-      SELECT id, name, merged_profile_json
-      FROM jobs
-      WHERE is_active = 1
-        AND (indexed_at IS NULL OR embedding_version != ?)
-      ORDER BY id
+      SELECT
+        j.id, j.name, j.merged_profile_json,
+        ja.income, ja.stability, ja.wlb, ja.growth,
+        ja.analytical, ja.creative, ja.people_facing, ja.solo_deep,
+        ja.teamwork, ja.execution
+      FROM jobs j
+      LEFT JOIN job_attributes ja ON j.id = ja.job_id
+      WHERE j.is_active = 1
+        AND (
+          j.indexed_at IS NULL
+          OR instr(COALESCE(j.embedding_version, ''), ?) = 0
+          OR (j.user_last_updated_at IS NOT NULL
+              AND datetime(j.user_last_updated_at / 1000, 'unixepoch') > j.indexed_at)
+        )
+      ORDER BY j.id
       LIMIT ? OFFSET ?
     `).bind(CURRENT_VERSION, batchSize, offset).all<{
       id: string
       name: string
       merged_profile_json: string | null
+      income: number | null; stability: number | null; wlb: number | null; growth: number | null
+      analytical: number | null; creative: number | null; people_facing: number | null
+      solo_deep: number | null; teamwork: number | null; execution: number | null
     }>()
 
     if (!jobs.results || jobs.results.length === 0) {
       break
     }
 
-    // 인덱싱 텍스트 생성 (category는 merged_profile_json에서 추출)
+    // 인덱싱 텍스트 생성 — indexSingleJob과 동일 구성 (attributes 프리앰블 + relatedMajors)
     const textsForEmbedding = jobs.results.map(job => {
       let category: string | null = null
       if (job.merged_profile_json) {
@@ -2628,6 +2651,20 @@ export async function incrementalUpsertToVectorize(
         job.merged_profile_json,
         category
       )
+      profileData.attributes = {
+        income: job.income, stability: job.stability, wlb: job.wlb, growth: job.growth,
+        analytical: job.analytical, creative: job.creative, people_facing: job.people_facing,
+        solo_deep: job.solo_deep, teamwork: job.teamwork, execution: job.execution,
+      }
+      if (job.merged_profile_json) {
+        try {
+          const profile = JSON.parse(job.merged_profile_json)
+          const majors = profile.relatedMajors || profile.related_majors || profile.관련학과 || []
+          if (Array.isArray(majors)) {
+            profileData.relatedMajors = majors.slice(0, 3).map((m: any) => typeof m === 'string' ? m : m.name || '').filter(Boolean)
+          }
+        } catch {}
+      }
       return buildJobProfileCompact(profileData)
     })
 
@@ -2667,24 +2704,25 @@ export async function incrementalUpsertToVectorize(
       })
       
       await vectorize.upsert(vectors)
-      
-      // D1에 인덱싱 상태 업데이트
+
+      // D1에 인덱싱 상태 업데이트 (indexSingleJob과 동일한 풀 버전 문자열로 통일)
+      const fullVersion = getFullEmbeddingVersion()
       for (const job of jobs.results) {
         await db.prepare(`
-          UPDATE jobs 
+          UPDATE jobs
           SET indexed_at = datetime('now'), embedding_version = ?
           WHERE id = ?
-        `).bind(CURRENT_VERSION, job.id).run()
+        `).bind(fullVersion, job.id).run()
       }
-      
+
       upserted += jobs.results.length
-      
+
     } catch (error) {
       errors += jobs.results.length
+      // 에러 배치는 WHERE 조건에 계속 매치되므로 offset으로 건너뛰어 무한루프 방지
+      offset += batchSize
     }
-    
-    offset += batchSize
-    
+
     // Rate limit
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
@@ -2705,10 +2743,16 @@ export async function countJobsNeedingIndexing(
     SELECT COUNT(*) as count FROM jobs WHERE is_active = 1
   `).first<{ count: number }>()
   
+  // incrementalUpsertToVectorize와 동일 조건 (신규 / 버전 불일치 / stale)
   const needsResult = await db.prepare(`
-    SELECT COUNT(*) as count FROM jobs 
-    WHERE is_active = 1 
-      AND (indexed_at IS NULL OR embedding_version != ?)
+    SELECT COUNT(*) as count FROM jobs
+    WHERE is_active = 1
+      AND (
+        indexed_at IS NULL
+        OR instr(COALESCE(embedding_version, ''), ?) = 0
+        OR (user_last_updated_at IS NOT NULL
+            AND datetime(user_last_updated_at / 1000, 'unixepoch') > indexed_at)
+      )
   `).bind(CURRENT_VERSION).first<{ count: number }>()
   
   const total = totalResult?.count || 0

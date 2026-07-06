@@ -714,6 +714,17 @@ majorEditorRoutes.post('/api/major/:id/edit', requireJobMajorEdit, async (c) => 
         )
       }
 
+      // Vectorize 재인덱싱 (fire-and-forget) — 편집 내용을 추천 임베딩에 반영
+      // (2026-07-06 P0: edit 경로 훅 부재 사고 후속 — create/restore 경로와 동일 패턴, M-cycle 대비)
+      const openaiKeyForIdx = (c.env as any).OPENAI_API_KEY
+      if (openaiKeyForIdx && (c.env as any).VECTORIZE) {
+        c.executionCtx.waitUntil(
+          import('../services/ai-analyzer/vectorize-pipeline').then(({ indexSingleMajor }) =>
+            indexSingleMajor(c.env.DB, (c.env as any).VECTORIZE, openaiKeyForIdx, majorId)
+          ).catch(() => {})
+        )
+      }
+
       return c.json({
         success: true,
         revisionId: revision.id,
