@@ -145,7 +145,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'un
         <li data-toc-order="${index + 1}">
           <a
             href="#${escapeHtml(item.id)}"
-            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
+            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
             style="font-size:15px;"
             data-toc-target="${escapeHtml(item.id)}"
             data-toc-index="${index}"
@@ -173,7 +173,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'curriculum' | 'career' | 'un
         </span>
         <h3 class="font-bold text-white leading-tight" style="font-size:19px;">${escapeHtml(heading)}</h3>
       </header>
-      <ol class="space-y-2 list-none" data-section-toc-items>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-2 list-none" data-section-toc-items>
         ${listMarkup}
       </ol>
     </nav>
@@ -2825,8 +2825,8 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     heroTags = uniqueRelatedMajors  // 제한 없음
   }
 
-  // 태그 15개 + 더보기/접기 버튼
-  const visibleLimit = 15
+  // 태그 8개 + 더보기/접기 버튼 (taste pass2: 별칭 칩 벽 완화 — 15→8)
+  const visibleLimit = 8
   const hasMoreTags = heroTags.length > visibleLimit
   const visibleTags = heroTags.slice(0, visibleLimit)
   const hiddenTags = heroTags.slice(visibleLimit)
@@ -2861,10 +2861,16 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
     : ''
   
   const heroTagsMarkup = heroTags.length > 0
-    ? `<div class="flex flex-wrap gap-2 mt-4">${visibleTagsHtml}${hiddenTagsContainer}${moreTagsButton}${lessTagsButton}</div>`
+    ? `<div class="mt-5 pt-4 border-t border-wiki-border/25">
+        <div class="flex items-center gap-2 mb-2.5">
+          <i class="fas fa-tags text-[11px]" style="color:rgba(110,231,183,0.6);" aria-hidden="true"></i>
+          <span class="text-[13px] font-semibold text-wiki-muted">이 학과의 다른 이름</span>
+        </div>
+        <div class="flex flex-wrap gap-2">${visibleTagsHtml}${hiddenTagsContainer}${moreTagsButton}${lessTagsButton}</div>
+      </div>`
     : ''
 
-  const mainColumn = `<div class="space-y-6 min-w-0">${tabLayout}</div>`
+  const mainColumn = `<div class="space-y-6 md:space-y-7 min-w-0">${tabLayout}</div>`
   const sidebarMarkup = hasSidebar
     ? `<aside class="space-y-6 lg:sticky lg:top-28 lg:h-fit lg:self-start" data-major-sidebar>${sidebarContent}</aside>`
     : ''
@@ -2883,6 +2889,11 @@ export const renderUnifiedMajorDetail = ({ profile, partials, sources, existingJ
 
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" data-major-id="${escapeHtml(profile.id)}">
+      <style>
+        /* taste pass2: 본문 카드 위계·변주 (buildCard 미변경, major 페이지 스코프 한정. 액센트 스파인은 Jason 판정으로 제거) */
+        [data-major-id] article[data-cw-detail-card]:nth-of-type(even){background-color:rgba(255,255,255,0.016)}
+        [data-major-id] article[data-cw-detail-card] > .section-title{margin-bottom:1rem}
+      </style>
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-major-hero>
         <div class="space-y-5">
           ${classificationData?.large_category
