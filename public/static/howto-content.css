@@ -812,6 +812,13 @@
   flex-direction: column;
   gap: 0.5rem;
 }
+/* taste pass: 목차 세로 스택 → 2열 그리드 (전공·직업 페이지와 동일 규칙) */
+@media (min-width: 640px) {
+  .howto-toc-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
 .howto-toc-list li a {
   display: flex;
   align-items: center;

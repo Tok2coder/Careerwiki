@@ -2172,7 +2172,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
         <li data-toc-order="${index + 1}">
           <a
             href="#${escapeHtml(item.id)}"
-            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 md:py-3 text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
+            class="flex items-center gap-3 rounded-xl border border-transparent bg-wiki-bg/45 px-3 py-2 md:px-4 text-wiki-muted transition hover:text-white hover:border-wiki-primary/60"
             style="font-size:15px;"
             data-cw-telemetry-action="toc-link"
             data-cw-telemetry-component="section-toc-link"
@@ -2205,7 +2205,7 @@ const renderSectionToc = (sectionKey: 'overview' | 'details' | 'characteristics'
         </span>
         <h3 class="font-bold text-white leading-tight" style="font-size:19px;">${escapeHtml(heading)}</h3>
       </header>
-      <ol class="space-y-2 list-none" data-section-toc-items>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-2 list-none" data-section-toc-items>
         ${listMarkup}
       </ol>
     </nav>
@@ -5254,6 +5254,11 @@ export const renderUnifiedJobDetail = ({ profile, partials, sources, existingJob
 
   return `
     <div class="max-w-[1400px] mx-auto px-2 md:px-6 space-y-4 md:space-y-8 md:py-4 md:-mt-12" style="overflow-x: clip;" data-job-id="${escapeHtml(profile.id)}">
+      <style>
+        /* taste pass: 본문 카드 위계·변주 (전공 페이지와 동일 규칙, buildCard 미변경, job 페이지 스코프 한정) */
+        [data-job-id] article[data-cw-detail-card]:nth-of-type(even){background-color:rgba(255,255,255,0.016)}
+        [data-job-id] article[data-cw-detail-card] > .section-title{margin-bottom:1rem}
+      </style>
       ${sensitiveBannerBlock}
       <section class="glass-card border px-4 py-8 md:px-8 rounded-2xl space-y-6 md:space-y-8" data-job-hero${telemetryVariantAttr}>
         <div class="space-y-4">
