@@ -5309,6 +5309,8 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
   
   try {
     const startTime = Date.now()
+    // 구간 계측 (2026-07-06 P1.5) — cold 지연 분해용, 응답 timings 필드로 노출
+    const phaseMs: Record<string, number> = {}
 
     // Additional Context 조회 (사용자가 추가한 텍스트)
     let additionalContextForRecommend: string | undefined
@@ -5465,6 +5467,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     if (nfRow?.lost_moment) narrativeTexts.push(nfRow.lost_moment)
     const roundAnswerTexts = (raRows?.results || []).map(r => r.answer).filter(Boolean)
 
+    const tExpand = Date.now()
     const expansionResult = await expandCandidatesV3(
       db,
       env.VECTORIZE,
@@ -5476,8 +5479,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         narrativeData: { narrativeTexts, roundAnswerTexts },
       }
     )
+    phaseMs.candidates = Date.now() - tExpand
 
-    
+
     // 3. TAG Hard Filter
     const userConstraints = extractUserConstraints(
       searchProfile.hardConstraints.reduce((acc, c) => {
@@ -5885,7 +5889,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           additionalContext: additionalContextForRecommend,
         }
 
+        const tJudge = Date.now()
         const judgeResults = await judgeCandidates(openaiApiKey, db, judgeInput)
+        phaseMs.judge = Date.now() - tJudge
 
         // Judge 결과를 topJobs에 매핑 (rationale + likeReason/canReason 포함)
         // 점수 매핑 정정:
@@ -6179,6 +6185,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     let narrativeFacts: { highAliveMoment: string; lostMoment: string; existentialAnswer?: string } | undefined
     let roundAnswers: Array<{ roundNumber: 1 | 2 | 3; questionId: string; answer: string }> = []
 
+    const tReport = Date.now()
     if (!skipReport) {
     // v3.10.6: NarrativeFacts + RoundAnswers 병렬 조회 (순차→병렬로 ~1초 절약)
     const [narrativeResult, roundAnswersResult] = await Promise.allSettled([
@@ -6315,6 +6322,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       }
     }
     } // end if (!skipReport)
+    phaseMs.report = Date.now() - tReport
 
     // v3.10.2: 포스트-Judge 아키타입 보장
     // LLM Judge가 유저의 핵심 흥미 아키타입 직업에 낮은 점수를 줄 경우,
@@ -6823,6 +6831,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         round_answers_count: roundAnswers.length,
       } : undefined,
       duration_ms: duration,
+      timings: { ...phaseMs, other: Math.max(0, duration - Object.values(phaseMs).reduce((a, b) => a + b, 0)) },
     }
 
     // Phase 9: 추천 결과 캐시 저장 (다음 동일 프로필 요청 시 즉시 반환)
@@ -8251,6 +8260,58 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
 
   try {
     const startTime = Date.now()
+    // 구간 계측 (2026-07-06 P1.5)
+    const phaseMs: Record<string, number> = {}
+
+    // ============================================
+    // 추천 결과 캐싱 (2026-07-06 P1.5) — job 버전(Phase 9)과 동일 로직, analysis_type='major'
+    // 기존엔 전공만 캐시가 없어 동일 프로필 재요청도 매번 풀 파이프라인(~50s+$0.01)이었음
+    // ============================================
+    let recCacheHash: string | null = null
+    if (payload.mini_module_result) {
+      try {
+        const nfRowForCache = await db.prepare(
+          'SELECT high_alive_moment, lost_moment FROM narrative_facts WHERE session_id = ?'
+        ).bind(session_id).first<{ high_alive_moment?: string; lost_moment?: string }>()
+        const raRowsForCache = await db.prepare(
+          'SELECT answer FROM round_answers WHERE session_id = ? ORDER BY round_number, question_id'
+        ).bind(session_id).all<{ answer: string }>()
+
+        const cacheInput = JSON.stringify({
+          i: payload.mini_module_result.interest_top?.sort(),
+          v: payload.mini_module_result.value_top?.sort(),
+          s: payload.mini_module_result.strength_top?.sort(),
+          c: payload.mini_module_result.constraint_flags?.sort(),
+          w: payload.mini_module_result.workstyle_top?.sort(),
+          h: nfRowForCache?.high_alive_moment?.slice(0, 80),
+          l: nfRowForCache?.lost_moment?.slice(0, 80),
+          a: raRowsForCache?.results?.map((r: { answer: string }) => r.answer?.slice(0, 60)) || [],
+        })
+        let hash = 0x811c9dc5
+        for (let ci = 0; ci < cacheInput.length; ci++) {
+          hash ^= cacheInput.charCodeAt(ci)
+          hash = (hash * 0x01000193) >>> 0
+        }
+        recCacheHash = hash.toString(16).padStart(8, '0')
+
+        const cached = await db.prepare(
+          'SELECT result_json FROM recommendation_result_cache WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
+        ).bind(recCacheHash, 'major', RECOMMENDATION_ENGINE_VERSION).first<{ result_json: string }>()
+
+        if (cached) {
+          await db.prepare(
+            'UPDATE recommendation_result_cache SET hit_count = hit_count + 1 WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
+          ).bind(recCacheHash, 'major', RECOMMENDATION_ENGINE_VERSION).run()
+          const cachedResult = JSON.parse(cached.result_json)
+          return c.json({
+            ...cachedResult,
+            session_id,
+            cache_hit: true,
+            duration_ms: Date.now() - startTime,
+          })
+        }
+      } catch { /* 캐시 실패 → 정상 파이프라인 진행 */ }
+    }
 
     // 1. SearchProfile 확정 (job 버전과 동일 로직)
     let searchProfile = payload.searchProfile
@@ -8288,6 +8349,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       vectorSearchProfile = buildSearchProfileFromMiniModule(payload.mini_module_result)
     }
 
+    const tExpand = Date.now()
     const expansionResult = await expandCandidatesV3ForMajors(
       db,
       env.VECTORIZE,
@@ -8298,6 +8360,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
         miniModule: payload.mini_module_result,
       }
     )
+    phaseMs.candidates = Date.now() - tExpand
 
     // 3. TAG Hard Filter (전공 전용)
     const constraintMap: Record<string, string | string[]> = {}
@@ -8498,7 +8561,9 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
           additionalContext: majorAdditionalContext,
         }
 
+        const tJudge = Date.now()
         const judgeResults = await judgeMajorCandidates(openaiApiKey, db, judgeInput)
+        phaseMs.judge = Date.now() - tJudge
 
         topMajors = judgeResults.results.map(result => {
           const originalMajor = preFilteredMajors.find(m => String(m.major_id) === String(result.major_id))
@@ -8728,6 +8793,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
     let narrativeFacts: { highAliveMoment: string; lostMoment: string; existentialAnswer?: string } | undefined
     let roundAnswers: RoundAnswer[] = []
 
+    const tReport = Date.now()
     if (!skipReport) {
       const [narrativeResult, roundAnswersResult] = await Promise.allSettled([
         db.prepare(`SELECT high_alive_moment, lost_moment, existential_answer FROM narrative_facts WHERE session_id = ?`)
@@ -8800,6 +8866,8 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
         }
       }
     }
+
+    phaseMs.report = Date.now() - tReport
 
     // 7. 결과 구성
     const majorToDto = (major: any) => ({
@@ -8930,7 +8998,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
 
     // 9. 응답 반환
     const duration = Date.now() - startTime
-    return c.json({
+    const responseBody = {
       success: true,
       mode: 'major_recommendation',
       session_id,
@@ -8956,7 +9024,20 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
         round_answers_count: roundAnswers.length,
       } : undefined,
       duration_ms: duration,
-    })
+      timings: { ...phaseMs, other: Math.max(0, duration - Object.values(phaseMs).reduce((a, b) => a + b, 0)) },
+    }
+
+    // 추천 결과 캐시 저장 (job Phase 9와 동일 — analysis_type='major')
+    if (recCacheHash) {
+      try {
+        const { session_id: _sid, request_id: _rid, duration_ms: _dur, ...cacheableResult } = responseBody
+        await db.prepare(
+          'INSERT OR REPLACE INTO recommendation_result_cache (profile_hash, analysis_type, engine_version, result_json, premium_report_json) VALUES (?, ?, ?, ?, ?)'
+        ).bind(recCacheHash, 'major', RECOMMENDATION_ENGINE_VERSION, JSON.stringify(cacheableResult), JSON.stringify(premiumReport)).run()
+      } catch { /* 캐시 저장 실패 무시 */ }
+    }
+
+    return c.json(responseBody)
 
   } catch (error) {
     return c.json(createErrorResponse(
