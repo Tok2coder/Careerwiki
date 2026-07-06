@@ -1,0 +1,24 @@
+{
+  "measured_at": "2026-07-06T09:41:36.408Z",
+  "engine_version": "v3.23.3",
+  "latency": {
+    "cold_n": 33,
+    "cold_p50": 61110,
+    "cold_p95": 85015,
+    "warm_n": 9,
+    "warm_p50": 408,
+    "warm_p95": 1292
+  },
+  "quality_job": {
+    "scenarios": 9,
+    "hit_at_10": 9,
+    "exclusion_violations": 0,
+    "fit_in_range": "8/9"
+  },
+  "strict_hit_at_10": "8/9 (직업명+설명 기준; rationale 포함 관대 기준은 9/9)",
+  "fit_range_note": "low_can_user topFit=76이 기대범위 초과 — balance cap 검토 필요",
+  "major_cache_gap": "recommend-major는 결과 캐시 미적용 — 동일 프로필 재요청도 매번 풀 파이프라인(~47s)",
+  "cost_estimate_usd_per_cold_run": 0.01,
+  "cost_method": "코드 기반 추정: GPT-4o-mini 8콜(쿼리생성1+Judge 6배치+리포트1) ~24k in/11k out + 임베딩 12콜. AI Gateway 로그 실측은 토큰 부재로 불가. 오차 ±2x",
+  "methodology": "TEST_SCENARIOS 9(직업)+8(전공) 실전 /v3/recommend(-major) 투입 + 합성 8. mini_module_result만 사용(내러티브 미포함 최소 경로). 품질은 기대 카테고리 키워드 매칭 프록시."
+}
