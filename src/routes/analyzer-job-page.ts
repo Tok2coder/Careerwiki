@@ -4496,6 +4496,7 @@ analyzerJobPage.get('/', async (c, next) => {
                             rationale: job.rationale || '',
                             like_reason: job.like_reason || '',
                             can_reason: job.can_reason || '',
+                            feasibility_reason: job.feasibility_reason || '',
                             evidence_quotes: job.evidence_quotes || [],
                             risk_details: [],
                             evidence_links: [],
@@ -8220,6 +8221,7 @@ analyzerJobPage.get('/', async (c, next) => {
                             fit_score: job.fit_score, like_score: job.like_score, can_score: job.can_score,
                             feasibility_score: job.feasibility_score || 0,
                             rationale: job.rationale || '', like_reason: job.like_reason || '', can_reason: job.can_reason || '',
+                            feasibility_reason: job.feasibility_reason || '',
                             evidence_quotes: job.evidence_quotes || [], risk_details: [], evidence_links: [],
                             salary_text: job.salary_text || null, prospect_text: job.prospect_text || null, way_text: job.way_text || null,
                         }));

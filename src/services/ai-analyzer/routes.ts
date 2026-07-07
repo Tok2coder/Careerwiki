@@ -5360,6 +5360,40 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       }
     } catch { /* non-critical */ }
 
+    // v3.13: 배경 데이터 로드 (LLM Judge Feasibility 평가에 사용)
+    // v3.28.0: 캐시 해시 계산보다 앞으로 이동 — 현상태(careerState)가 캐시 키에 포함돼야
+    // 같은 버튼 조합의 학생/시니어가 서로의 캐시를 공유하지 않음 (career-state 테스트 실측 결함)
+    let careerState: { role_identity: string; career_stage_years: string } | undefined
+    let careerBackground: string | undefined
+    try {
+      const [roleRow, stageRow, draftRow] = await Promise.all([
+        db.prepare(`SELECT value_json FROM facts WHERE session_id = ? AND fact_key = 'state.role_identity'`)
+          .bind(session_id).first<{ value_json: string }>(),
+        db.prepare(`SELECT value_json FROM facts WHERE session_id = ? AND fact_key = 'state.career_stage_years'`)
+          .bind(session_id).first<{ value_json: string }>(),
+        db.prepare(`SELECT aggregated_profile_json FROM analyzer_drafts WHERE session_id = ?`)
+          .bind(session_id).first<{ aggregated_profile_json?: string }>(),
+      ])
+      careerState = {
+        role_identity: roleRow ? JSON.parse(roleRow.value_json).value : '',
+        career_stage_years: stageRow ? JSON.parse(stageRow.value_json).value : '',
+      }
+      // payload fallback: DB에 데이터가 없으면 (테스트 세션 등) payload의 career_state 사용
+      if (!careerState.role_identity && payload.career_state?.role_identity) {
+        careerState.role_identity = payload.career_state.role_identity
+      }
+      if (!careerState.career_stage_years && payload.career_state?.career_stage_years) {
+        careerState.career_stage_years = payload.career_state.career_stage_years
+      }
+      if (draftRow?.aggregated_profile_json) {
+        try {
+          const profile = JSON.parse(draftRow.aggregated_profile_json)
+          careerBackground = profile?.narrative?.career_background
+        } catch { /* parse error, skip */ }
+      }
+    } catch (bgErr) {
+    }
+
     // ============================================
     // Phase 9: 추천 결과 캐싱 — 동일 프로필+답변 → 동일 결과 (일관성 보장)
     // Workers AI(분산 GPU)가 temp=0에서도 비결정적이므로, 결과 자체를 캐싱
@@ -5388,6 +5422,8 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           h: nfRow?.high_alive_moment?.slice(0, 80),
           l: nfRow?.lost_moment?.slice(0, 80),
           a: raRows?.results?.map(r => r.answer?.slice(0, 60)) || [],
+          // v3.28.0: 현상태를 캐시 키에 포함 — 학생/시니어 캐시 공유 결함 fix
+          st: [careerState?.role_identity || '', careerState?.career_stage_years || '', (careerBackground || '').slice(0, 40)],
         })
         let hash = 0x811c9dc5
         for (let ci = 0; ci < cacheInput.length; ci++) {
@@ -5917,37 +5953,8 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       return null
     }
 
-    // v3.13: 배경 데이터 로드 (LLM Judge Feasibility 평가에 사용)
-    let careerState: { role_identity: string; career_stage_years: string } | undefined
-    let careerBackground: string | undefined
-    try {
-      const [roleRow, stageRow, draftRow] = await Promise.all([
-        db.prepare(`SELECT value_json FROM facts WHERE session_id = ? AND fact_key = 'state.role_identity'`)
-          .bind(session_id).first<{ value_json: string }>(),
-        db.prepare(`SELECT value_json FROM facts WHERE session_id = ? AND fact_key = 'state.career_stage_years'`)
-          .bind(session_id).first<{ value_json: string }>(),
-        db.prepare(`SELECT aggregated_profile_json FROM analyzer_drafts WHERE session_id = ?`)
-          .bind(session_id).first<{ aggregated_profile_json?: string }>(),
-      ])
-      careerState = {
-        role_identity: roleRow ? JSON.parse(roleRow.value_json).value : '',
-        career_stage_years: stageRow ? JSON.parse(stageRow.value_json).value : '',
-      }
-      // payload fallback: DB에 데이터가 없으면 (테스트 세션 등) payload의 career_state 사용
-      if (!careerState.role_identity && payload.career_state?.role_identity) {
-        careerState.role_identity = payload.career_state.role_identity
-      }
-      if (!careerState.career_stage_years && payload.career_state?.career_stage_years) {
-        careerState.career_stage_years = payload.career_state.career_stage_years
-      }
-      if (draftRow?.aggregated_profile_json) {
-        try {
-          const profile = JSON.parse(draftRow.aggregated_profile_json)
-          careerBackground = profile?.narrative?.career_background
-        } catch { /* parse error, skip */ }
-      }
-    } catch (bgErr) {
-    }
+    // v3.13: 배경 데이터(careerState/careerBackground)는 v3.28.0부터 캐시 해시 계산 전(위쪽)에서 로드됨
+    // — 현상태가 캐시 키에 빠져 5년차 마케터와 15년차 개발자가 동일 캐시를 공유하던 결함 fix
 
     if (openaiApiKey && candidatesForJudge.length > 0) {
       try {
@@ -6117,7 +6124,8 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         const bgFlags = payload.mini_module_result?.background_flags || []
         const hasNoBackground = bgFlags.length === 0
         if (hasNoBackground) {
-          const SENIOR_KEYWORDS = ['수석', '책임', '시니어', '선임', '수장', '총괄', '관장', '원장', '소장', '부장', '팀장', '본부장', '실장', '이사', '전문가', '아키텍트', '리드', '매니저']
+          // v3.28.0: 임원·관리자·컨설턴트·교장급 추가 — 무경력·학생에게 공공기관임원/교장/교육감이 노출되던 구멍 (career-state 테스트 실측)
+          const SENIOR_KEYWORDS = ['수석', '책임', '시니어', '선임', '수장', '총괄', '관장', '원장', '소장', '부장', '팀장', '본부장', '실장', '이사', '전문가', '아키텍트', '리드', '매니저', '임원', '관리자', '컨설턴트', '교장', '교감', '교육감', '장학사', '고위']
           const ENTRY_KEYWORDS = ['주니어', '인턴', '보조', '사무원', '연구원', '교사', '간호사', '치료사', '사서', '상담사', '복지사']
           for (const job of topJobs) {
             const jobName = (job as any).job_name || ''
@@ -6887,6 +6895,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         rationale: job.rationale || null,
         like_reason: job.like_reason || null,
         can_reason: job.can_reason || null,
+        feasibility_reason: job.feasibility_reason || null,  // v3.28.0: 재열람에도 유지
         // P4-1: 위키 데이터 (재열람 시에도 카드 정보 유지)
         salary_text: cardInfoMap.get(String(job.job_id))?.salary_text || null,
         prospect_text: cardInfoMap.get(String(job.job_id))?.prospect_text || null,
@@ -7003,12 +7012,13 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           rationale: job.rationale || null,
           like_reason: job.like_reason || null,   // 좋아할 이유
           can_reason: job.can_reason || null,     // 잘할 이유
+          feasibility_reason: job.feasibility_reason || null,  // v3.28.0: 현상태·배경 적합 이유 — 계산돼 있었는데 응답에 누락됐던 필드
           evidence_quotes: job.evidence_quotes || [],
           // P4-1: 위키 데이터 (연봉·전망·되는법)
           salary_text: cardInfoMap.get(String(job.job_id))?.salary_text || null,
           prospect_text: cardInfoMap.get(String(job.job_id))?.prospect_text || null,
           way_text: cardInfoMap.get(String(job.job_id))?.way_text || null,
-        })).sort((a, b) => b.fit_score - a.fit_score)),
+        })).sort((a, b) => b.fit_score - a.fit_score).slice(0, 10)),  // v3.28.0: 응답도 top10 고정 (저장과 일관, 12~19개 유동 노출 방지)
         like_top10: sanitizeJobListOutput(likeTop10),
         can_top10: sanitizeJobListOutput(canTop10),
         total_candidates: expansionResult.candidates.length,
