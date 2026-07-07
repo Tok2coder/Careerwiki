@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.25.3'  // P3-4: 명시적 진로 희망 감지 — desire 85 플로어 + 원문 인용 의무
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.25.4'  // P3-5: 후보별 ★서사매치 플래그 (전역 규칙 미적용 문제 대응)
 
 // ============================================
 // Types
@@ -804,6 +804,11 @@ async function judgeBatch(
     const info = jobInfos.get(c.job_id)
     const style = LIKE_STYLES[idx % 3]
     const parts: string[] = [`- ID: ${c.job_id}, 이름: ${c.job_name} [likeReason스타일: ${style}]`]
+
+    // P3-5(2026-07-07): 서사 매치 후보 플래그 — 전역 규칙보다 후보별 표시가 LLM에 훨씬 잘 적용됨
+    if ((c as any).narrative_match) {
+      parts.push(`  ★서사매치: 이 직업은 사용자의 심층 답변(서술형)이 직접 가리키는 분야다. desireScore는 버튼 토큰이 아니라 심층 답변 기준으로 평가하라 — 심층 답변에 이 분야 희망/몰입 경험이 있으면 desire 80~95. rationale에 심층 답변 원문을 짧게 인용하라.`)
+    }
 
     if (info?.description) {
       parts.push(`  설명: ${info.description.substring(0, 150)}`)

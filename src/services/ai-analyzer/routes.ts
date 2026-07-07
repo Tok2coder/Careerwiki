@@ -5875,6 +5875,8 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // ScoredJob을 FilteredCandidate 형태로 변환 (attributes 포함!)
+    // P3-5: 서사 매치 후보 표시용 id 집합
+    const narrativeMatchIds = new Set(vectorBiasedJobs.map(j => String(j.job_id)))
     const candidatesForJudge: FilteredCandidate[] = preFilteredJobs.map(job => ({
       job_id: job.job_id,
       job_name: job.job_name,
@@ -5883,7 +5885,8 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       riskWarnings: [],
       tagSource: 'tagged' as const,
       attributes: job.attributes,  // ★ job_attributes 수치 전달 (LLM Judge 근거 품질 향상)
-    } as FilteredCandidate & { attributes?: Record<string, number | string> }))
+      narrative_match: narrativeMatchIds.has(String(job.job_id)),  // P3-5: 서사 매치 플래그
+    } as FilteredCandidate & { attributes?: Record<string, number | string>; narrative_match?: boolean }))
 
     // 간단한 rationale 생성 함수 (LLM Judge 없을 때 사용)
     const generateSimpleRationale = (job: any, mm: any) => {
