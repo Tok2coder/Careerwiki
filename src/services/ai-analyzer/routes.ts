@@ -6798,9 +6798,10 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       if (hasNarrativeForReserve) {
         const finalTopForNarr = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0)).slice(0, 10)
         // P5-2: 인용 정밀도 — Judge desire(like_score) 70 이상인 서사 매치만 인용 (광고판매관리자류 인접 노이즈 인용 방지)
+        // P5-6: 인용 정렬은 최종 순위(final_score) 기준 — desire 정렬이 하위권 직업을 먼저 인용하던 문제
         const narrJobNames = finalTopForNarr
           .filter((j: any) => narrativeTop3Ids.has(String(j.job_id)) && (j.like_score || 0) >= 70)
-          .sort((a: any, b: any) => (b.like_score || 0) - (a.like_score || 0))
+          .sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
           .map((j: any) => j.job_name)
         const btnLabels = [
           ...(payload.mini_module_result?.interest_top || []).slice(0, 2),

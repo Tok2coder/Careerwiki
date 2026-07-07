@@ -8765,10 +8765,13 @@ analyzerJobPage.get('/', async (c, next) => {
                                 <!-- 직업 설명 -->
                                 \${displayDescription ? \`<p class="text-[16px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">\${escapeHtmlJob(displayDescription)}</p>\` : ''}
 
-                                <!-- P5-3(2026-07-07): 근거 인용 — Judge가 발췌한 유저 원문 -->
-                                \${(job.evidence_quotes && job.evidence_quotes.length > 0 && String(job.evidence_quotes[0]).trim().length > 5) ? \`
-                                    <p class="text-[14px] mt-1.5 mb-1 leading-relaxed" style="color:#c4b5fd;">🗣 <span style="opacity:.85;">당신의 말:</span> "\${escapeHtmlJob(String(job.evidence_quotes[0]).slice(0, 70))}\${String(job.evidence_quotes[0]).length > 70 ? '…' : ''}"</p>
-                                \` : ''}
+                                <!-- P5-3(2026-07-07): 근거 인용 — Judge가 발췌한 유저 원문 (객체/문자열 양쪽 대응) -->
+                                \${(() => {
+                                    const eq = (job.evidence_quotes || [])[0];
+                                    const quoteText = typeof eq === 'string' ? eq : (eq && (eq.quote || eq.text || eq.content)) || '';
+                                    return (quoteText && quoteText.trim().length > 5) ? \`
+                                    <p class="text-[14px] mt-1.5 mb-1 leading-relaxed" style="color:#c4b5fd;">🗣 <span style="opacity:.85;">당신의 말:</span> "\${escapeHtmlJob(quoteText.slice(0, 70))}\${quoteText.length > 70 ? '…' : ''}"</p>\` : '';
+                                })()}
 
                                 <!-- P4-1(2026-07-07): 위키 데이터 — 연봉·전망·되는법 -->
                                 \${(job.salary_text || job.prospect_text || job.way_text) ? \`
