@@ -2286,20 +2286,28 @@ export function buildNarrativeSearchQueries(
   const allTexts = [...narrativeTexts, ...roundAnswerTexts].filter(Boolean)
   if (allTexts.length === 0) return []
 
-  const concreteKeywords = extractConcreteKeywordsFromText(allTexts)
-  if (concreteKeywords.length === 0) return []
-
   const queries: string[] = []
 
-  // 구체적 키워드를 3-5개씩 묶어 검색 쿼리 생성
-  const chunkSize = Math.max(3, Math.ceil(concreteKeywords.length / 3))
-  for (let i = 0; i < concreteKeywords.length; i += chunkSize) {
-    const chunk = concreteKeywords.slice(i, i + chunkSize)
-    queries.push(`${chunk.join(' ')} 관련 직업`)
+  // P3(2026-07-07): 서사 원문 자체를 시맨틱 쿼리로 사용
+  // — 기존 키워드 화이트리스트 방식은 목록에 없는 분야(요리·간호 등)의 서사에서 쿼리 0개가 되어
+  //   서사 타깃 직업이 후보 풀에 아예 못 들어가던 결함 (상충 페르소나 실측: top10 0개)
+  for (const t of allTexts) {
+    const trimmed = (t || '').trim().slice(0, 300)
+    if (trimmed.length >= 20) queries.push(trimmed)
+    if (queries.length >= 3) break
   }
 
-  // 최대 3개 쿼리
-  return queries.slice(0, 3)
+  // 보조: 구체 키워드 청크 쿼리 (기존 방식, 최대 2개)
+  const concreteKeywords = extractConcreteKeywordsFromText(allTexts)
+  if (concreteKeywords.length > 0) {
+    const chunkSize = Math.max(3, Math.ceil(concreteKeywords.length / 3))
+    for (let i = 0; i < concreteKeywords.length && queries.length < 5; i += chunkSize) {
+      const chunk = concreteKeywords.slice(i, i + chunkSize)
+      queries.push(`${chunk.join(' ')} 관련 직업`)
+    }
+  }
+
+  return queries.slice(0, 5)
 }
 
 // ============================================

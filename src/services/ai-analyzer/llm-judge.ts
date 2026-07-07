@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.25.0'  // P3: 서사 우선 원칙(상충 시 심층답변 우선) + 벡터 상위 12 Judge 후보 예약
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.25.1'  // P3-2: 서사 원문 시맨틱 쿼리 + 긍정 서사만 + 서사 전용 검색 기반 Judge 후보 예약
 
 // ============================================
 // Types

@@ -153,6 +153,9 @@ import {
   indexMajorsToVectorize,
   indexHowtosToVectorize,
   extractJobDescription,
+  // P3: 서사 기반 Judge 후보 예약용
+  buildNarrativeSearchQueries,
+  searchCandidatesMultiQuery,
   // Major 전용
   expandCandidatesV3ForMajors,
   vectorResultsToScoredMajors,
@@ -5493,11 +5496,15 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       vectorSearchProfile = buildSearchProfileFromMiniModule(payload.mini_module_result)
     }
 
-    // Phase 10: 내러티브/인터뷰 답변에서 구체적 키워드를 벡터 검색에 반영
+    // Phase 10: 내러티브/인터뷰 답변을 벡터 검색에 반영
+    // P3(2026-07-07): 긍정 서사만 쿼리로 사용 — lost_moment(싫었던 것)·Round2(회피)를 쿼리에 넣으면
+    // 피하고 싶은 분야의 직업을 오히려 끌어오는 역효과
     const narrativeTexts: string[] = []
     if (nfRow?.high_alive_moment) narrativeTexts.push(nfRow.high_alive_moment)
-    if (nfRow?.lost_moment) narrativeTexts.push(nfRow.lost_moment)
-    const roundAnswerTexts = (raRows?.results || []).map(r => r.answer).filter(Boolean)
+    const roundAnswerTexts = (raRows?.results || [])
+      .filter((r: any) => r.round_number !== 2)
+      .map(r => r.answer)
+      .filter(Boolean)
 
     const tExpand = Date.now()
     const expansionResult = await expandCandidatesV3(
@@ -5806,15 +5813,30 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     const finalBiasedJobs = [...filteredJobs]
       .sort((a, b) => (b.final_score || 0) - (a.final_score || 0))
       .slice(0, 20)
-    // P3(2026-07-07): 서사(심층답변)가 있으면 벡터 유사도 상위 12개를 Judge 후보에 예약
-    // — 서사 타깃 직업이 버튼 기반 base 점수에 밀려 Judge에 도달조차 못 하던 문제 (상충 페르소나 3종 top10 0개 실측)
-    const hasNarrativeForReserve = !!(nfRow?.high_alive_moment || nfRow?.lost_moment || (raRows?.results && raRows.results.length > 0))
-    const vectorBiasedJobs = hasNarrativeForReserve
-      ? [...filteredJobs]
+    // P3(2026-07-07): 서사(심층답변)가 있으면 "서사가 가리키는 직업"을 전용 벡터 검색으로 직접 식별해 Judge 후보 예약
+    // — 서사 타깃 직업이 버튼 기반 base 점수·히트카운트 보너스에 밀려 Judge에 도달조차 못 하던 문제 (상충 페르소나 3종 top10 0개 실측)
+    const hasNarrativeForReserve = !!(nfRow?.high_alive_moment || roundAnswerTexts.length > 0)
+    let vectorBiasedJobs: typeof filteredJobs = []
+    if (hasNarrativeForReserve && env.VECTORIZE && openaiApiKey) {
+      try {
+        const narrQueries = buildNarrativeSearchQueries(narrativeTexts, roundAnswerTexts)
+        if (narrQueries.length > 0) {
+          const narrHits = await searchCandidatesMultiQuery(env.VECTORIZE, openaiApiKey, narrQueries, 40)
+          const narrIds = new Set(narrHits.map(h => String(h.job_id)))
+          vectorBiasedJobs = filteredJobs
+            .filter(j => narrIds.has(String(j.job_id)))
+            .sort((a, b) => ((b as any).vector_score || 0) - ((a as any).vector_score || 0))
+            .slice(0, 12)
+        }
+      } catch { /* 서사 예약 검색 실패 → 폴백 아래에서 처리 */ }
+      // 폴백: 서사 전용 검색이 비면 글로벌 벡터 유사도 상위로라도 예약
+      if (vectorBiasedJobs.length === 0) {
+        vectorBiasedJobs = [...filteredJobs]
           .filter(j => ((j as any).vector_score || 0) > 0)
           .sort((a, b) => ((b as any).vector_score || 0) - ((a as any).vector_score || 0))
           .slice(0, 12)
-      : []
+      }
+    }
     // 합집합 (중복 제거) → ~40-50개 unique 후보
     const preFilterJobIdSet = new Set<string>()
     const preFilteredJobs: typeof filteredJobs = []
