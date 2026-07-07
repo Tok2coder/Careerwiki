@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.28.0'  // 현상태(careerState) 캐시 키 포함 + SENIOR 키워드 확장 + feasibility_reason 노출
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.28.1'  // job 경로 feasibilityReason 매핑 누락 fix
 
 // ============================================
 // Types
@@ -991,6 +991,7 @@ function parseJudgeResponse(
         rationale: (job.rationale || '') + rationaleAddendum,
         likeReason: job.likeReason || undefined,  // 좋아할 이유
         canReason: job.canReason || undefined,    // 잘할 이유
+        feasibilityReason: job.feasibilityReason || undefined,  // v3.28.1: job 경로만 이 매핑이 누락돼 현상태 근거가 유저에게 안 보이던 버그 (major 경로엔 있었음)
         first30DaysPlan: job.first30DaysPlan || [],
       }
       
