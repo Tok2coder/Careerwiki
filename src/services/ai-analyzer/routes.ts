@@ -5819,16 +5819,18 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     // — 서사 타깃 직업이 버튼 기반 base 점수·히트카운트 보너스에 밀려 Judge에 도달조차 못 하던 문제 (상충 페르소나 3종 top10 0개 실측)
     const hasNarrativeForReserve = !!(nfRow?.high_alive_moment || roundAnswerTexts.length > 0)
     let vectorBiasedJobs: typeof filteredJobs = []
+    const narrativeTop3Ids = new Set<string>()  // P3-6: 서사 유사도 최상위 3개 (결정적 보너스 대상)
     if (hasNarrativeForReserve && env.VECTORIZE && openaiApiKey) {
       try {
         const narrQueries = buildNarrativeSearchQueries(narrativeTexts, roundAnswerTexts)
         if (narrQueries.length > 0) {
           const narrHits = await searchCandidatesMultiQuery(env.VECTORIZE, openaiApiKey, narrQueries, 40)
-          const narrIds = new Set(narrHits.map(h => String(h.job_id)))
+          const narrScoreMap = new Map(narrHits.map(h => [String(h.job_id), h.score || 0]))
           vectorBiasedJobs = filteredJobs
-            .filter(j => narrIds.has(String(j.job_id)))
-            .sort((a, b) => ((b as any).vector_score || 0) - ((a as any).vector_score || 0))
+            .filter(j => narrScoreMap.has(String(j.job_id)))
+            .sort((a, b) => (narrScoreMap.get(String(b.job_id)) || 0) - (narrScoreMap.get(String(a.job_id)) || 0))
             .slice(0, 12)
+          for (const j of vectorBiasedJobs.slice(0, 3)) narrativeTop3Ids.add(String(j.job_id))
         }
       } catch { /* 서사 예약 검색 실패 → 폴백 아래에서 처리 */ }
       // 폴백: 서사 전용 검색이 비면 글로벌 벡터 유사도 상위로라도 예약
@@ -6011,6 +6013,15 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
             evidence_quotes: result.evidenceQuotes,
           }
         })
+
+        // P3-6(2026-07-07): 서사 유사도 최상위 3개 결정적 보너스 (+15)
+        // — 프롬프트 규칙·후보 플래그만으로는 gpt-4o-mini가 서사 우선을 약하게만 반영 (desire +6~9 실측).
+        //   아키타입 주입과 동일 철학: 강한 신호는 코드 레벨에서 보장. 서사 없으면 미적용 → 버튼만 쓴 유저 무영향.
+        if (narrativeTop3Ids.size > 0) {
+          topJobs = topJobs.map((j: any) => narrativeTop3Ids.has(String(j.job_id))
+            ? { ...j, fit_score: Math.min(100, (j.final_score || 0) + 15), final_score: Math.min(100, (j.final_score || 0) + 15) }
+            : j)
+        }
 
         // Phase 7-B: 코드 레벨 Relevance Post-Filter (복합 키워드 매칭)
         // "연구" 같은 범용 접미사만으로 통과하지 못하도록 도메인 키워드 AND 매칭
