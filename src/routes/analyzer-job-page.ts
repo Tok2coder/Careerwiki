@@ -4525,8 +4525,9 @@ analyzerJobPage.get('/', async (c, next) => {
                         analyzeData._report_deferred = recData.report_mode === 'deferred' && !recData.premium_report;
                         // 리포트 부재 시 v3 게이트(displayResults의 engine_version 판정) 통과 보장
                         analyzeData.result.engine_version = recData.engine_version || analyzeData.result.engine_version || 'v3';
-                        // P5: 추천 내러티브
+                        // P5: 추천 내러티브 + 관련 가이드
                         if (recData.recommendation_narrative) analyzeData.result.recommendation_narrative = recData.recommendation_narrative;
+                        if (recData.related_guides) analyzeData.result.related_guides = recData.related_guides;
                         analyzeData._recommendation_mode = {
                             enabled: true,
                             total_candidates: recData.recommendations.total_candidates,
@@ -7049,11 +7050,16 @@ analyzerJobPage.get('/', async (c, next) => {
                         \` : ''}
 
                         <!-- P4-3(2026-07-07): 오늘 할 수 있는 첫 걸음 -->
-                        \${(overallTop5[0] && overallTop5[0].way_text) ? \`
+                        \${(overallTop5[0] && (overallTop5[0].way_text || (result.related_guides || []).length > 0)) ? \`
                             <div class="mt-6 p-4 rounded-xl" style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25);">
                                 <h4 class="text-lg font-bold mb-2" style="color:#34d399;">🚀 오늘 할 수 있는 첫 걸음 — \${escapeHtmlJob(overallTop5[0].job_name || '')}</h4>
-                                <p class="text-[14px] text-wiki-muted leading-relaxed">\${escapeHtmlJob(overallTop5[0].way_text)}</p>
-                                <a href="/job/\${encodeURIComponent(overallTop5[0].slug || overallTop5[0].job_name || '')}" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 text-[13px] font-medium hover:underline" style="color:#34d399;">직업 상세에서 전체 로드맵 보기 →</a>
+                                \${overallTop5[0].way_text ? \`<p class="text-[14px] text-wiki-muted leading-relaxed">\${escapeHtmlJob(overallTop5[0].way_text)}</p>\` : ''}
+                                <div class="mt-2 flex flex-col gap-1">
+                                    \${(result.related_guides || []).map(g => \`
+                                        <a href="/howto/\${encodeURIComponent(g.slug)}" target="_blank" rel="noopener noreferrer" class="text-[13px] font-medium hover:underline" style="color:#6ee7b7;">📚 가이드: \${escapeHtmlJob(g.title)} →</a>
+                                    \`).join('')}
+                                    <a href="/job/\${encodeURIComponent(overallTop5[0].slug || overallTop5[0].job_name || '')}" target="_blank" rel="noopener noreferrer" class="text-[13px] font-medium hover:underline" style="color:#34d399;">직업 상세에서 전체 로드맵 보기 →</a>
+                                </div>
                             </div>
                         \` : ''}
                     \` : ''}
@@ -8758,6 +8764,11 @@ analyzerJobPage.get('/', async (c, next) => {
 
                                 <!-- 직업 설명 -->
                                 \${displayDescription ? \`<p class="text-[16px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">\${escapeHtmlJob(displayDescription)}</p>\` : ''}
+
+                                <!-- P5-3(2026-07-07): 근거 인용 — Judge가 발췌한 유저 원문 -->
+                                \${(job.evidence_quotes && job.evidence_quotes.length > 0 && String(job.evidence_quotes[0]).trim().length > 5) ? \`
+                                    <p class="text-[14px] mt-1.5 mb-1 leading-relaxed" style="color:#c4b5fd;">🗣 <span style="opacity:.85;">당신의 말:</span> "\${escapeHtmlJob(String(job.evidence_quotes[0]).slice(0, 70))}\${String(job.evidence_quotes[0]).length > 70 ? '…' : ''}"</p>
+                                \` : ''}
 
                                 <!-- P4-1(2026-07-07): 위키 데이터 — 연봉·전망·되는법 -->
                                 \${(job.salary_text || job.prospect_text || job.way_text) ? \`

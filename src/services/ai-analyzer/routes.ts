@@ -6087,7 +6087,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
 
               // P3-6(2026-07-07): 서사 매치 직업은 관련성 캡 면제 — 심층 답변이 곧 관련성의 근거
               // (버튼 도메인 키워드 기반 캡이 서사 타깃 직업을 사후 제거하던 문제: 요리연구가 65→55 캡 실측)
-              if (narrativeMatchIds.has(String((job as any).job_id))) continue
+              // P5-2(2026-07-07): 면제 범위를 보너스 대상(top3)으로 축소 — 넓은 집합(12개) 면제가
+              // 서사 인접 노이즈(발효실관리원·광고판매관리자류)까지 캡을 피하게 하던 문제
+              if (narrativeTop3Ids.has(String((job as any).job_id))) continue
 
               // 1차: 명백한 노이즈 직업은 무조건 캡 (물리적 흥미가 없는 한)
               if (!hasPhysicalInterest && NOISE_JOB_PATTERNS.some(p => p.test(jobName))) {
@@ -6793,7 +6795,11 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     try {
       if (hasNarrativeForReserve) {
         const finalTopForNarr = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0)).slice(0, 10)
-        const narrJobNames = finalTopForNarr.filter((j: any) => narrativeTop3Ids.has(String(j.job_id))).map((j: any) => j.job_name)
+        // P5-2: 인용 정밀도 — Judge desire(like_score) 70 이상인 서사 매치만 인용 (광고판매관리자류 인접 노이즈 인용 방지)
+        const narrJobNames = finalTopForNarr
+          .filter((j: any) => narrativeTop3Ids.has(String(j.job_id)) && (j.like_score || 0) >= 70)
+          .sort((a: any, b: any) => (b.like_score || 0) - (a.like_score || 0))
+          .map((j: any) => j.job_name)
         const btnLabels = [
           ...(payload.mini_module_result?.interest_top || []).slice(0, 2),
           ...(payload.mini_module_result?.value_top || []).slice(0, 1),
@@ -6842,6 +6848,21 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       }
     } catch { /* 카드 정보 실패해도 추천은 정상 반환 */ }
 
+    // P5-4 (2026-07-07): 관련 HowTo 가이드 연결 — top3 직업명으로 가이드(77건) 제목 매치
+    let relatedGuides: Array<{ title: string; slug: string; job_name: string }> = []
+    try {
+      const top3ForGuide = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0)).slice(0, 3)
+      for (const j of top3ForGuide) {
+        const cleanName = String(j.job_name || '').replace(/\(.*?\)/g, '').trim()
+        if (cleanName.length < 2) continue
+        const guide = await db.prepare(
+          `SELECT title, slug FROM pages WHERE page_type='guide' AND title LIKE ? LIMIT 1`
+        ).bind(`%${cleanName}%`).first<{ title: string; slug: string }>()
+        if (guide) relatedGuides.push({ title: guide.title, slug: guide.slug, job_name: j.job_name })
+        if (relatedGuides.length >= 2) break
+      }
+    } catch { /* 가이드 매치 실패 무시 */ }
+
     // ============================================
     // 7. 결과 저장 (ai_analysis_requests + ai_analysis_results)
     // ============================================
@@ -6870,6 +6891,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       can_top10: sanitizeJobListOutput(canTop10),
       premium_report: premiumReport,
       recommendation_narrative: recommendationNarrative,  // P5: 재열람에도 유지
+      related_guides: relatedGuides,                       // P5-4: 재열람에도 유지
       search_profile: searchProfile,
       total_candidates: expansionResult.candidates.length,
       filtered_count: filteredJobs.length,
@@ -6990,6 +7012,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       },
       premium_report: premiumReport,
       recommendation_narrative: recommendationNarrative,  // P5: 왜 이 순서인지 설명
+      related_guides: relatedGuides,  // P5-4: 관련 HowTo 가이드
       engine_version: RECOMMENDATION_ENGINE_VERSION,
       report_mode: reportMode,  // 'llm' | 'fallback' | 'none'
       search_profile_used: searchProfile,
