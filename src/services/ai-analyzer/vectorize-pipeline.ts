@@ -1508,7 +1508,9 @@ export async function indexSingleJob(
     const version = getFullEmbeddingVersion()
     await db.prepare(`UPDATE jobs SET indexed_at = datetime('now'), embedding_version = ? WHERE id = ?`).bind(version, jobId).run()
     return true
-  } catch {
+  } catch (e) {
+    // 2026-07-07: 인덱싱 실패가 조용히 삼켜지던 문제 — edit 훅/backfill 디버깅용 로깅
+    console.warn(`[indexSingleJob] 실패 jobId=${jobId}:`, e instanceof Error ? e.message : String(e))
     return false
   }
 }
@@ -1538,7 +1540,9 @@ export async function indexSingleMajor(
 
     await db.prepare(`UPDATE majors SET indexed_at = datetime('now'), embedding_version = 'MPC_V1' WHERE id = ?`).bind(majorId).run()
     return true
-  } catch {
+  } catch (e) {
+    // 2026-07-07: 인덱싱 실패 로깅 (edit 훅/backfill 디버깅용)
+    console.warn(`[indexSingleMajor] 실패 majorId=${majorId}:`, e instanceof Error ? e.message : String(e))
     return false
   }
 }
@@ -2730,6 +2734,8 @@ export async function incrementalUpsertToVectorize(
 
     } catch (error) {
       errors += jobs.results.length
+      // 2026-07-07: backfill 배치 실패 이유 로깅 (기존엔 errors만 카운트하고 원인 소실)
+      console.warn(`[incrementalUpsert] 배치 실패 (offset=${offset}, ${jobs.results.length}건):`, error instanceof Error ? error.message : String(error))
       // 에러 배치는 WHERE 조건에 계속 매치되므로 offset으로 건너뛰어 무한루프 방지
       offset += batchSize
     }
