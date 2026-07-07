@@ -5344,6 +5344,8 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     const startTime = Date.now()
     // 구간 계측 (2026-07-06 P1.5) — cold 지연 분해용, 응답 timings 필드로 노출
     const phaseMs: Record<string, number> = {}
+    // P3 계측 (debug 전용)
+    let p3JudgedDebug: string[] = []
 
     // Additional Context 조회 (사용자가 추가한 텍스트)
     let additionalContextForRecommend: string | undefined
@@ -5967,6 +5969,11 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         const tJudge = Date.now()
         const judgeResults = await judgeCandidates(openaiApiKey, db, judgeInput)
         phaseMs.judge = Date.now() - tJudge
+        // P3 계측: Judge 원점수 (debug 전용)
+        if (debug) {
+          p3JudgedDebug = judgeResults.results.map(r =>
+            `${r.job_name}: desire=${r.desireScore} fit=${r.fitScore} overall=${r.overallScore} feas=${(r as any).feasibilityScore ?? '?'}`)
+        }
 
         // Judge 결과를 topJobs에 매핑 (rationale + likeReason/canReason 포함)
         // 점수 매핑 정정:
@@ -6909,6 +6916,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         p3_round_answer_texts: roundAnswerTexts.length,
         p3_reserved_jobs: vectorBiasedJobs.map(j => j.job_name),
         p3_judge_pool: preFilteredJobs.map(j => j.job_name),
+        p3_judged_scores: p3JudgedDebug,
       } : undefined,
       duration_ms: duration,
       timings: { ...phaseMs, other: Math.max(0, duration - Object.values(phaseMs).reduce((a, b) => a + b, 0)) },
