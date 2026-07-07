@@ -200,11 +200,13 @@ export function buildSearchProfileFromMiniModule(
   const hardConstraints: string[] = miniModule.constraint_flags || []
 
   // keywords: 검색 키워드 (영어 + 한국어 혼합, 가치 한국어 포함)
+  // P4-0(2026-07-07): 한국어 혼입 부분(interestKorean/valueKorean)에 TOKEN_TO_KOREAN 폴백 —
+  // 로컬맵 미커버 토큰(creating/helping 등)이 raw로 search_profile_used·리포트 프롬프트에 에코되던 잔존 버그
   const keywords: string[] = [
     ...(miniModule.interest_top || []).map(t => TOKEN_TO_ENGLISH[t] || t),
     ...(miniModule.strength_top || []).map(t => TOKEN_TO_ENGLISH[t] || t),
-    ...(miniModule.interest_top || []).map(t => interestKorean[t] || t),
-    ...(miniModule.value_top || []).map(t => valueKorean[t] || t),
+    ...(miniModule.interest_top || []).map(t => interestKorean[t] || TOKEN_TO_KOREAN[t] || t),
+    ...(miniModule.value_top || []).map(t => valueKorean[t] || TOKEN_TO_KOREAN[t] || t),
   ]
 
   // dislikedThemes: 에너지 소모 플래그에서 추출
