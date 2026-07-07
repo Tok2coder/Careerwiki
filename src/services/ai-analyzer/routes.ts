@@ -6904,6 +6904,11 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         fallback_used: expansionResult.fallback_used,
         has_narrative_facts: !!narrativeFacts,
         round_answers_count: roundAnswers.length,
+        // P3 계측 (2026-07-07): 서사→예약→Judge 풀 추적
+        p3_narrative_texts: narrativeTexts.length,
+        p3_round_answer_texts: roundAnswerTexts.length,
+        p3_reserved_jobs: vectorBiasedJobs.map(j => j.job_name),
+        p3_judge_pool: preFilteredJobs.map(j => j.job_name),
       } : undefined,
       duration_ms: duration,
       timings: { ...phaseMs, other: Math.max(0, duration - Object.values(phaseMs).reduce((a, b) => a + b, 0)) },
