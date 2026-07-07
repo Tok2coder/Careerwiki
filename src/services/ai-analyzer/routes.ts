@@ -6018,7 +6018,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         // — 프롬프트 규칙·후보 플래그만으로는 gpt-4o-mini가 서사 우선을 약하게만 반영 (desire +6~9 실측).
         //   아키타입 주입과 동일 철학: 강한 신호는 코드 레벨에서 보장. 서사 없으면 미적용 → 버튼만 쓴 유저 무영향.
         if (narrativeTop3Ids.size > 0) {
-          topJobs = topJobs.map((j: any) => narrativeTop3Ids.has(String(j.job_id))
+          // 노이즈 게이트: Judge desire(like_score) 60 미만이면 보너스 미적용
+          // — 서사 유사도 top3에 시맨틱 노이즈(예: C3에서 산림기술자)가 섞여 무조건 부스트 시 오염 (실측)
+          topJobs = topJobs.map((j: any) => (narrativeTop3Ids.has(String(j.job_id)) && (j.like_score || 0) >= 60)
             ? { ...j, fit_score: Math.min(100, (j.final_score || 0) + 15), final_score: Math.min(100, (j.final_score || 0) + 15) }
             : j)
         }
