@@ -2939,7 +2939,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         academic_state: window.academicState || undefined,
                         topK: 600,
                         judgeTopN: 15,
-                        skipReport: false,
+                        skipReport: true,  // deferred report (2026-07-06)
                         debug: DEBUG_MODE,
                     }),
                     signal: analyzeController.signal,
@@ -2963,6 +2963,10 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 };
 
                 if (window.__editMode && data.request_id) {
+                    // deferred report: 결과 페이지가 저장된 리포트를 읽으므로 이동 전에 생성 완료 대기 (2026-07-06)
+                    if (recData.report_mode === 'deferred' && !recData.premium_report) {
+                        try { await fetchDeferredReportMajor(currentSessionId, recData.profile_hash); } catch (e) {}
+                    }
                     hideLoading();
                     clearTimeout(globalTimeout);
                     fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
@@ -2976,6 +2980,19 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 displayResults(data);
                 saveDraftAsCompletedMajor();
                 hideSkeletonLoading();
+
+                // deferred report: 백그라운드 생성 → 도착 시 4탭 리포트로 전환 (2026-07-06)
+                if (recData.report_mode === 'deferred' && !data.result.premium_report) {
+                    showReportPendingBannerMajor();
+                    fetchDeferredReportMajor(currentSessionId, recData.profile_hash).then((report) => {
+                        if (report) {
+                            data.result.premium_report = report;
+                            displayResults(data);
+                        } else {
+                            markReportBannerFailedMajor();
+                        }
+                    });
+                }
                 // URL 업데이트: ?view={request_id}로 변경하여 결과 재방문 가능
                 if (data.request_id) {
                     history.replaceState(null, '', '/analyzer/major?view=' + data.request_id);
@@ -3006,7 +3023,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                         academic_state: window.academicState || undefined,
                         topK: 600,
                         judgeTopN: 15,
-                        skipReport: false,
+                        skipReport: true,  // deferred report (2026-07-06)
                         debug: DEBUG_MODE,
                     })
                 });
@@ -3028,6 +3045,10 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
 
                 // 편집 모드: 분석 완료 → 결과 페이지로 이동
                 if (window.__editMode && data.request_id) {
+                    // deferred report: 이동 전에 생성 완료 대기 (2026-07-06)
+                    if (recData.report_mode === 'deferred' && !recData.premium_report) {
+                        try { await fetchDeferredReportMajor(currentSessionId, recData.profile_hash); } catch (e) {}
+                    }
                     hideLoading();
                     fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
                         method: 'DELETE', credentials: 'same-origin'
@@ -3039,6 +3060,19 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                 currentRequestId = data.request_id;
                 displayResults(data);
                 hideSkeletonLoading();
+
+                // deferred report: 백그라운드 생성 → 도착 시 4탭 리포트로 전환 (2026-07-06)
+                if (recData.report_mode === 'deferred' && !data.result.premium_report) {
+                    showReportPendingBannerMajor();
+                    fetchDeferredReportMajor(currentSessionId, recData.profile_hash).then((report) => {
+                        if (report) {
+                            data.result.premium_report = report;
+                            displayResults(data);
+                        } else {
+                            markReportBannerFailedMajor();
+                        }
+                    });
+                }
 
                 // 완료 후 draft 정리 (새로고침 시 "이어서 하기" 방지)
                 if (currentSessionId) {
@@ -3054,6 +3088,44 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
             }
         }
         
+        // ============================================
+        // Deferred Report (2026-07-06): 추천 먼저 표시, 심층 리포트는 별도 호출로 나중에 채움
+        // ============================================
+        async function fetchDeferredReportMajor(sessionId, profileHash) {
+            try {
+                const res = await fetch('/api/ai-analyzer/v3/recommend-major/report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId, profile_hash: profileHash || undefined }),
+                });
+                if (!res.ok) return null;
+                const data = await res.json();
+                return (data && data.success && data.premium_report) ? data.premium_report : null;
+            } catch (e) { return null; }
+        }
+        function deferredBannerTargetMajor() {
+            const list = document.getElementById('major-results');
+            if (list && list.childElementCount > 0) return list;
+            return document.getElementById('step3');
+        }
+        function showReportPendingBannerMajor() {
+            if (document.getElementById('deferred-report-banner')) return;
+            const target = deferredBannerTargetMajor();
+            if (!target) return;
+            const banner = document.createElement('div');
+            banner.id = 'deferred-report-banner';
+            banner.setAttribute('style', 'margin-bottom:12px;padding:10px 14px;border-radius:10px;background:rgba(49,46,129,0.55);border:1px solid rgba(99,102,241,0.5);color:#c7d2fe;font-size:13px;display:flex;align-items:center;gap:8px;');
+            banner.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 심층 분석 리포트를 생성하고 있습니다 — 완료되면 자동으로 전체 리포트가 표시됩니다';
+            target.prepend(banner);
+        }
+        function markReportBannerFailedMajor() {
+            const banner = document.getElementById('deferred-report-banner');
+            if (banner) {
+                banner.setAttribute('style', 'margin-bottom:12px;padding:10px 14px;border-radius:10px;background:rgba(127,29,29,0.4);border:1px solid rgba(248,113,113,0.5);color:#fecaca;font-size:13px;');
+                banner.textContent = '심층 리포트 생성이 지연되고 있습니다. 페이지를 새로고침하면 다시 시도합니다.';
+            }
+        }
+
         function displayResults(data) {
             const result = data.result || data;
 
@@ -4765,7 +4837,7 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
                         academic_state: window.academicState || undefined,
                         topK: 600,
                         judgeTopN: 15,
-                        skipReport: false,
+                        skipReport: true,  // deferred report (2026-07-06)
                         debug: DEBUG_MODE,
                     })
                 });
@@ -4788,6 +4860,19 @@ window.toggleMajorScoresCompact = toggleMajorScoresCompact;
                 hideLoading();
                 currentRequestId = analyzeData.request_id;
                 displayResults(analyzeData);
+
+                // deferred report: 백그라운드 생성 → 도착 시 4탭 리포트로 전환 (2026-07-06)
+                if (recData.report_mode === 'deferred' && !analyzeData.result.premium_report) {
+                    showReportPendingBannerMajor();
+                    fetchDeferredReportMajor(currentSessionId, recData.profile_hash).then((report) => {
+                        if (report) {
+                            analyzeData.result.premium_report = report;
+                            displayResults(analyzeData);
+                        } else {
+                            markReportBannerFailedMajor();
+                        }
+                    });
+                }
                 // success toast
                 const toast = document.createElement('div');
                 toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[10000] px-6 py-3 rounded-xl text-base font-medium border border-emerald-500/50 bg-emerald-900/80 text-emerald-200 shadow-lg backdrop-blur-sm';

@@ -4462,7 +4462,7 @@ analyzerJobPage.get('/', async (c, next) => {
                                 mini_module_result: miniModule,
                                 topK: 800,
                                 judgeTopN: 20,
-                                skipReport: false,
+                                skipReport: true,  // deferred report (2026-07-06): 추천 먼저, 리포트는 별도 호출
                                 debug: DEBUG_MODE,
                             })
                         });
@@ -4512,6 +4512,11 @@ analyzerJobPage.get('/', async (c, next) => {
                         if (recData.request_id) {
                             analyzeData.request_id = recData.request_id;
                         }
+                        // deferred report 메타 (2026-07-06)
+                        analyzeData._profile_hash = recData.profile_hash || null;
+                        analyzeData._report_deferred = recData.report_mode === 'deferred' && !recData.premium_report;
+                        // 리포트 부재 시 v3 게이트(displayResults의 engine_version 판정) 통과 보장
+                        analyzeData.result.engine_version = recData.engine_version || analyzeData.result.engine_version || 'v3';
                         analyzeData._recommendation_mode = {
                             enabled: true,
                             total_candidates: recData.recommendations.total_candidates,
@@ -4527,6 +4532,10 @@ analyzerJobPage.get('/', async (c, next) => {
                 
                 // 편집 모드: 분석 완료 → 결과 페이지로 이동
                 if (window.__editMode && analyzeData.request_id) {
+                    // deferred report: 결과 페이지가 저장된 리포트를 읽으므로 이동 전에 생성 완료 대기 (2026-07-06)
+                    if (analyzeData._report_deferred) {
+                        try { await fetchDeferredReport('/api/ai-analyzer/v3/recommend/report', currentSessionId, analyzeData._profile_hash); } catch (e) {}
+                    }
                     hideLoading();
                     clearTimeout(globalTimeout);
                     fetch('/api/ai-analyzer/draft/delete?session_id=' + encodeURIComponent(window.__editSessionId), {
@@ -4540,6 +4549,20 @@ analyzerJobPage.get('/', async (c, next) => {
                 displayResults(analyzeData);
                 // skeleton이 이미 step3에 있으므로 goToStep 불필요 — displayResults가 innerHTML 교체
                 hideSkeletonLoading();
+
+                // deferred report: 백그라운드로 리포트 생성 → 도착 시 재렌더 (2026-07-06)
+                if (analyzeData._report_deferred && !(analyzeData.result && analyzeData.result.premium_report)) {
+                    showReportPendingBanner();
+                    const deferredSessionId = currentSessionId;
+                    fetchDeferredReport('/api/ai-analyzer/v3/recommend/report', deferredSessionId, analyzeData._profile_hash).then((report) => {
+                        if (report) {
+                            analyzeData.result.premium_report = report;
+                            displayResults(analyzeData);
+                        } else {
+                            markReportBannerFailed();
+                        }
+                    });
+                }
 
                 // 완료 후 draft 정리 (새로고침 시 "이어서 하기" 방지)
                 if (currentSessionId) {
@@ -6136,6 +6159,38 @@ analyzerJobPage.get('/', async (c, next) => {
             }
         }
         
+        // ============================================
+        // Deferred Report (2026-07-06): 추천 먼저 표시, 심층 리포트는 별도 호출로 나중에 채움
+        // ============================================
+        async function fetchDeferredReport(endpoint, sessionId, profileHash) {
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId, profile_hash: profileHash || undefined }),
+                });
+                if (!res.ok) return null;
+                const data = await res.json();
+                return (data && data.success && data.premium_report) ? data.premium_report : null;
+            } catch (e) { return null; }
+        }
+        function showReportPendingBanner() {
+            const step3 = document.getElementById('step3');
+            if (!step3 || document.getElementById('deferred-report-banner')) return;
+            const banner = document.createElement('div');
+            banner.id = 'deferred-report-banner';
+            banner.setAttribute('style', 'margin-bottom:12px;padding:10px 14px;border-radius:10px;background:#eef2ff;border:1px solid #c7d2fe;color:#4338ca;font-size:13px;display:flex;align-items:center;gap:8px;');
+            banner.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 심층 분석 리포트를 생성하고 있습니다 — 완료되면 자동으로 채워집니다';
+            step3.prepend(banner);
+        }
+        function markReportBannerFailed() {
+            const banner = document.getElementById('deferred-report-banner');
+            if (banner) {
+                banner.setAttribute('style', 'margin-bottom:12px;padding:10px 14px;border-radius:10px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-size:13px;');
+                banner.innerHTML = '심층 리포트 생성이 지연되고 있습니다. 페이지를 새로고침하면 다시 시도합니다.';
+            }
+        }
+
         // ============================================
         // Step 4: 결과 표시 (V3: 프리미엄 리포트 지원)
         // ============================================
@@ -8054,7 +8109,7 @@ analyzerJobPage.get('/', async (c, next) => {
                         mini_module_result: miniModule,
                         topK: 800,
                         judgeTopN: 20,
-                        skipReport: false,
+                        skipReport: true,  // deferred report (2026-07-06)
                         debug: DEBUG_MODE,
                     })
                 });
@@ -8104,6 +8159,19 @@ analyzerJobPage.get('/', async (c, next) => {
                 currentRequestId = analyzeData.request_id;
                 displayResults(analyzeData);
                 showToast('추가 정보가 반영된 새로운 분석 결과입니다.', 'success');
+
+                // deferred report: 백그라운드 생성 → 도착 시 재렌더 (2026-07-06)
+                if (recommendData.report_mode === 'deferred' && !analyzeData.result.premium_report) {
+                    showReportPendingBanner();
+                    fetchDeferredReport('/api/ai-analyzer/v3/recommend/report', currentSessionId, recommendData.profile_hash).then((report) => {
+                        if (report) {
+                            analyzeData.result.premium_report = report;
+                            displayResults(analyzeData);
+                        } else {
+                            markReportBannerFailed();
+                        }
+                    });
+                }
             } catch (err) {
                 hideLoading();
                 alert('재분석 중 오류가 발생했습니다: ' + err.message);

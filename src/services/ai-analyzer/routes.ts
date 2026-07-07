@@ -5379,6 +5379,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
             session_id,
             cache_hit: true,
             duration_ms: duration,
+            profile_hash: recCacheHash,
           })
         }
       } catch { /* 캐시 실패 → 정상 파이프라인 진행 */ }
@@ -6832,6 +6833,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       } : undefined,
       duration_ms: duration,
       timings: { ...phaseMs, other: Math.max(0, duration - Object.values(phaseMs).reduce((a, b) => a + b, 0)) },
+      profile_hash: recCacheHash,  // deferred report가 캐시 주입 시 사용 (2026-07-06)
     }
 
     // Phase 9: 추천 결과 캐시 저장 (다음 동일 프로필 요청 시 즉시 반환)
@@ -6865,7 +6867,7 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
   const env = c.env as Bindings
   const db = env.DB
   const openaiApiKey = c.env.OPENAI_API_KEY
-  const { session_id } = await c.req.json<{ session_id: string }>()
+  const { session_id, profile_hash } = await c.req.json<{ session_id: string; profile_hash?: string }>()
 
   if (!session_id) {
     return c.json(createErrorResponse('VALIDATION_ERROR', 'session_id is required'), 400)
@@ -6877,9 +6879,9 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
   try {
     const startTime = Date.now()
 
-    // 1. DB에서 Phase 1 결과 로드
+    // 1. DB에서 Phase 1 결과 로드 (major 요청 오조회 방지 — analysis_type 필터, 2026-07-06)
     const existingRequest = await db.prepare(
-      `SELECT id FROM ai_analysis_requests WHERE session_id = ?`
+      `SELECT id FROM ai_analysis_requests WHERE session_id = ? AND analysis_type = 'job'`
     ).bind(session_id).first<{ id: number }>()
     if (!existingRequest) {
       return c.json(createErrorResponse('NOT_FOUND', 'Phase 1 결과가 없습니다. /v3/recommend를 먼저 호출하세요.'), 404)
@@ -7005,6 +7007,23 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
     } catch (saveErr) {
     }
 
+    // 6. 결과 캐시에 리포트 주입 (deferred 전환 시 cache-hit 사용자도 리포트 포함 결과 수신, 2026-07-06)
+    if (profile_hash) {
+      try {
+        const cacheRow = await db.prepare(
+          'SELECT result_json FROM recommendation_result_cache WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
+        ).bind(profile_hash, 'job', RECOMMENDATION_ENGINE_VERSION).first<{ result_json: string }>()
+        if (cacheRow?.result_json) {
+          const cachedObj = JSON.parse(cacheRow.result_json)
+          cachedObj.premium_report = premiumReport
+          cachedObj.report_mode = reportMode
+          await db.prepare(
+            'UPDATE recommendation_result_cache SET result_json = ?, premium_report_json = ? WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
+          ).bind(JSON.stringify(cachedObj), JSON.stringify(premiumReport), profile_hash, 'job', RECOMMENDATION_ENGINE_VERSION).run()
+        }
+      } catch { /* 캐시 주입 실패 무시 — 다음 cold 요청이 자연 복구 */ }
+    }
+
     return c.json({
       success: true,
       session_id,
@@ -7016,6 +7035,159 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
     return c.json(createErrorResponse(
       'REPORT_FAILED',
       error instanceof Error ? error.message : 'Report generation failed'
+    ), 500)
+  }
+})
+
+// ============================================
+// Phase 2(major): LLM Reporter 전용 엔드포인트 (2026-07-06 deferred report)
+// /v3/recommend-major에서 skipReport=true 후 호출 — job 버전 미러
+// ============================================
+analyzerRoutes.post('/v3/recommend-major/report', async (c) => {
+  const env = c.env as Bindings
+  const db = env.DB
+  const openaiApiKey = c.env.OPENAI_API_KEY
+  const { session_id, profile_hash } = await c.req.json<{ session_id: string; profile_hash?: string }>()
+
+  if (!session_id) {
+    return c.json(createErrorResponse('VALIDATION_ERROR', 'session_id is required'), 400)
+  }
+  if (!openaiApiKey) {
+    return c.json(createErrorResponse('INTERNAL_ERROR', 'OpenAI API key not configured'), 500)
+  }
+
+  try {
+    const startTime = Date.now()
+
+    // 1. DB에서 Phase 1 결과 로드
+    const existingRequest = await db.prepare(
+      `SELECT id FROM ai_analysis_requests WHERE session_id = ? AND analysis_type = 'major'`
+    ).bind(session_id).first<{ id: number }>()
+    if (!existingRequest) {
+      return c.json(createErrorResponse('NOT_FOUND', 'Phase 1 결과가 없습니다. /v3/recommend-major를 먼저 호출하세요.'), 404)
+    }
+
+    const savedResult = await db.prepare(
+      `SELECT result_json FROM ai_analysis_results WHERE request_id = ?`
+    ).bind(existingRequest.id).first<{ result_json: string }>()
+    if (!savedResult?.result_json) {
+      return c.json(createErrorResponse('NOT_FOUND', '저장된 분석 결과가 없습니다.'), 404)
+    }
+
+    const parsed = JSON.parse(savedResult.result_json)
+    const miniModuleResult = parsed.mini_module_result
+    const searchProfile = parsed.search_profile
+    const topMajors = parsed.fit_top_majors || []
+
+    // 2. NarrativeFacts + RoundAnswers 병렬 조회 (job 버전과 동일)
+    let narrativeFacts: { highAliveMoment: string; lostMoment: string; existentialAnswer?: string } | undefined
+    let roundAnswers: Array<{ roundNumber: 1 | 2 | 3; questionId: string; answer: string }> = []
+
+    const [nfResult, raResult] = await Promise.allSettled([
+      db.prepare(
+        `SELECT high_alive_moment, lost_moment, existential_answer FROM narrative_facts WHERE session_id = ?`
+      ).bind(session_id).first<{ high_alive_moment: string | null; lost_moment: string | null; existential_answer: string | null }>(),
+      db.prepare(
+        `SELECT round_number, question_id, answer FROM round_answers WHERE session_id = ? ORDER BY round_number, question_id`
+      ).bind(session_id).all<{ round_number: number; question_id: string; answer: string }>(),
+    ])
+
+    if (nfResult.status === 'fulfilled' && nfResult.value) {
+      const narrativeRow = nfResult.value
+      if (narrativeRow.high_alive_moment || narrativeRow.lost_moment) {
+        narrativeFacts = {
+          highAliveMoment: narrativeRow.high_alive_moment || '',
+          lostMoment: narrativeRow.lost_moment || '',
+          existentialAnswer: narrativeRow.existential_answer || undefined,
+        }
+      }
+    }
+    if (raResult.status === 'fulfilled' && raResult.value?.results?.length) {
+      roundAnswers = raResult.value.results.map(r => ({ roundNumber: r.round_number as 1 | 2 | 3, questionId: r.question_id, answer: r.answer }))
+    }
+
+    // 3. Additional Context 조회
+    let deferredAdditionalContext: string | undefined
+    try {
+      const acRows = await db.prepare(`
+        SELECT value_text FROM analyzer_facts
+        WHERE session_id = ? AND fact_key = 'additional_context'
+        ORDER BY created_at DESC
+      `).bind(session_id).all<{ value_text: string }>()
+      if (acRows.results && acRows.results.length > 0) {
+        deferredAdditionalContext = acRows.results.map(r => r.value_text).join('\n\n')
+      }
+    } catch { /* non-critical */ }
+
+    // 4. LLM Reporter 호출 (전공 — 저장된 fit_top_majors DTO에서 재구성)
+    const reporterInput: MajorReporterInput = {
+      sessionId: session_id,
+      judgeResults: topMajors.map((m: any) => ({
+        major_id: m.major_id,
+        major_name: m.major_name,
+        fitScore: m.can_score || 50,
+        desireScore: m.like_score || 50,
+        feasibilityScore: m.feasibility_score || 50,
+        overallScore: m.fit_score || m.final_score || 50,
+        riskFlags: [],
+        riskPenalty: m.risk_penalty || 0,
+        evidenceQuotes: m.evidence_quotes || [],
+        rationale: m.rationale || '',
+        likeReason: m.like_reason,
+        canReason: m.can_reason,
+        riskReason: m.risk_reason,
+        semesterPlan: m.semester_plan,
+      })),
+      searchProfile: searchProfile || { desiredThemes: [], dislikedThemes: [], strengthsHypothesis: [], environmentPreferences: [], hardConstraints: [], riskSignals: [], keywords: [] },
+      narrativeFacts,
+      roundAnswers: roundAnswers as any,
+      universalAnswers: {},
+      hardCutList: [],
+      miniModuleResult,
+      additionalContext: deferredAdditionalContext,
+    }
+
+    const premiumReport = await generateMajorPremiumReport(env?.AI || null, reporterInput, openaiApiKey)
+    const reportMode = (premiumReport as any)?.metaCognition?._meta?.generated_by === 'rule' ? 'fallback' : 'llm'
+
+    // 5. DB에 리포트 저장
+    try {
+      const premiumJson = JSON.stringify(premiumReport)
+      const updatedResult = { ...parsed, premium_report: premiumReport }
+      await db.prepare(
+        `UPDATE ai_analysis_results SET result_json = ?, premium_report_json = ? WHERE request_id = ?`
+      ).bind(JSON.stringify(updatedResult), premiumJson, existingRequest.id).run()
+    } catch (saveErr) {
+    }
+
+    // 6. 결과 캐시에 리포트 주입
+    if (profile_hash) {
+      try {
+        const cacheRow = await db.prepare(
+          'SELECT result_json FROM recommendation_result_cache WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
+        ).bind(profile_hash, 'major', RECOMMENDATION_ENGINE_VERSION).first<{ result_json: string }>()
+        if (cacheRow?.result_json) {
+          const cachedObj = JSON.parse(cacheRow.result_json)
+          cachedObj.premium_report = premiumReport
+          cachedObj.report_mode = reportMode
+          await db.prepare(
+            'UPDATE recommendation_result_cache SET result_json = ?, premium_report_json = ? WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
+          ).bind(JSON.stringify(cachedObj), JSON.stringify(premiumReport), profile_hash, 'major', RECOMMENDATION_ENGINE_VERSION).run()
+        }
+      } catch { /* 캐시 주입 실패 무시 */ }
+    }
+
+    return c.json({
+      success: true,
+      session_id,
+      premium_report: premiumReport,
+      report_mode: reportMode,
+      duration_ms: Date.now() - startTime,
+    })
+  } catch (error) {
+    return c.json(createErrorResponse(
+      'REPORT_FAILED',
+      error instanceof Error ? error.message : 'Major report generation failed'
     ), 500)
   }
 })
@@ -8308,6 +8480,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
             session_id,
             cache_hit: true,
             duration_ms: Date.now() - startTime,
+            profile_hash: recCacheHash,
           })
         }
       } catch { /* 캐시 실패 → 정상 파이프라인 진행 */ }
@@ -9025,6 +9198,7 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
       } : undefined,
       duration_ms: duration,
       timings: { ...phaseMs, other: Math.max(0, duration - Object.values(phaseMs).reduce((a, b) => a + b, 0)) },
+      profile_hash: recCacheHash,  // deferred report가 캐시 주입 시 사용 (2026-07-06)
     }
 
     // 추천 결과 캐시 저장 (job Phase 9와 동일 — analysis_type='major')
