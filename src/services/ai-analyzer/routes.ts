@@ -5840,9 +5840,11 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       }
     }
     // 합집합 (중복 제거) → ~40-50개 unique 후보
+    // P3-3(2026-07-07): 서사 예약분을 맨 앞에 — llm-judge가 MAX_TOTAL_CANDIDATES(30)로 앞에서부터 자르므로
+    // 뒤에 붙이면 예약 직업이 Judge에 도달 전 전부 잘려나감 (debug 계측으로 확인: reserved 12개가 judged 29개에 0개 포함)
     const preFilterJobIdSet = new Set<string>()
     const preFilteredJobs: typeof filteredJobs = []
-    for (const job of [...likeBiasedJobs, ...canBiasedJobs, ...finalBiasedJobs, ...vectorBiasedJobs]) {
+    for (const job of [...vectorBiasedJobs, ...likeBiasedJobs, ...canBiasedJobs, ...finalBiasedJobs]) {
       if (!preFilterJobIdSet.has(job.job_id)) {
         preFilterJobIdSet.add(job.job_id)
         preFilteredJobs.push(job)
