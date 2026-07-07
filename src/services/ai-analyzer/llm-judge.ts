@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.27.3'  // P5-6: 인용 final_score 정렬 + 근거인용 객체 대응
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.27.4'  // P5-7: 인용 후보 서사매치 전체+desire 게이트
 
 // ============================================
 // Types

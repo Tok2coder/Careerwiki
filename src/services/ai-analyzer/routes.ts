@@ -6799,8 +6799,10 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         const finalTopForNarr = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0)).slice(0, 10)
         // P5-2: 인용 정밀도 — Judge desire(like_score) 70 이상인 서사 매치만 인용 (광고판매관리자류 인접 노이즈 인용 방지)
         // P5-6: 인용 정렬은 최종 순위(final_score) 기준 — desire 정렬이 하위권 직업을 먼저 인용하던 문제
+        // P5-7: 인용 후보를 서사 매치 전체(12)로 확장 — top3 유사도 집합이 좁아 desire 95짜리 진짜 타깃(데이터분석가)이
+        // 인용에서 빠지고 내러티브 자체가 미생성되던 문제 (desire>=70 게이트가 노이즈는 이미 차단)
         const narrJobNames = finalTopForNarr
-          .filter((j: any) => narrativeTop3Ids.has(String(j.job_id)) && (j.like_score || 0) >= 70)
+          .filter((j: any) => narrativeMatchIds.has(String(j.job_id)) && (j.like_score || 0) >= 70)
           .sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0))
           .map((j: any) => j.job_name)
         const btnLabels = [
