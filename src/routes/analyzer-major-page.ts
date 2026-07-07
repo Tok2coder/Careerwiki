@@ -459,7 +459,11 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
 
         // Skeleton HTML (전공용)
         function getSkeletonHtml() {
-            return '<div id="skeleton-report" class="animate-pulse">' +
+            return '<div id="skeleton-report">' +
+                '<div class="text-center mb-4" style="font-size:13px;color:#a5b4fc;">' +
+                    '<i class="far fa-clock" style="margin-right:6px;"></i>분석에는 보통 <b>40초~1분</b> 정도 걸려요' +
+                '</div>' +
+                '<div class="animate-pulse">' +
                 '<div class="text-center mb-8">' +
                     '<div class="h-8 bg-white/10 rounded-lg w-72 mx-auto mb-3"></div>' +
                     '<div class="h-4 bg-white/5 rounded w-52 mx-auto"></div>' +
@@ -500,6 +504,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                             '<div class="h-4 bg-white/5 rounded w-full"></div>' +
                         '</div>' +
                     '</div>' +
+                '</div>' +
                 '</div>' +
             '</div>';
         }
@@ -2680,7 +2685,7 @@ analyzerMajorPage.get('/', requireAuth, (c) => {
                                 name="\${q.id}"
                                 rows="4"
                                 minlength="\${q.minLengthGuidance || 30}"
-                                placeholder="자유롭게 적어주세요..."
+                                placeholder="\${q.hint ? '예) ' + String(q.hint).replace(/"/g, '') : '자유롭게 적어주세요...'}"
                                 class="w-full px-4 py-3 rounded-xl border transition-all resize-none"
                                 style="background-color: rgba(15,15,35,1); border-color: rgba(67,97,238,0.3); color: #fff;"
                                 onfocus="this.style.borderColor='rgba(67,97,238,0.6)';"

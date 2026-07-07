@@ -1036,6 +1036,7 @@ export interface RoundQuestion {
   intent?: string              // UI 노출용: "자율이 중요한 이유의 근원(경험/감정)을 확인"
   what_to_extract?: ExtractTarget[]  // 운영/학습용: 이 질문으로 뽑아내려는 데이터
   anchor?: string              // v3.18: LLM이 참조한 유저 발언 (앵커링 검증용)
+  hint?: string                // P2(2026-07-07): 답변 예시 1줄 — textarea placeholder로 노출
 }
 
 export interface RoundAnswer {

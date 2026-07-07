@@ -4516,6 +4516,7 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
     if (mini_module_result && round_number >= 1 && round_number <= 3) {
       // 캐시 키: 프로필 토큰 + 내러티브 + 이전 라운드 답변 (R2/R3용)
       const cacheInput = JSON.stringify({
+        pv: 'q2',  // P2(2026-07-07) 질문 프롬프트 버전 솔트 — 구버전 스타일 질문이 캐시로 계속 나오는 것 방지
         i: mini_module_result.interest_top?.sort(),
         v: mini_module_result.value_top?.sort(),
         s: mini_module_result.strength_top?.sort(),
@@ -4611,6 +4612,27 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
         // 모든 질문이 감정 → 첫 1개만 유지
         result.questions = originalQuestions.slice(0, 1)
       }
+    }
+
+    // ============================================
+    // P2 품질 게이트 (2026-07-07): 꼬리질문·과도한 길이·모호 지시어 제거 + 문항 수 3개 상한
+    // (실증 결함: "분석 결과가 실제로 의사결정에그 경험을..." 깨진 문장 노출, "그 과정에서" 앵커 소실)
+    // ============================================
+    {
+      const isLowQualityQuestion = (t: string): boolean => {
+        if (!t) return false
+        const qMarks = (t.match(/[?？]/g) || []).length
+        if (qMarks > 1) return true                       // 꼬리 질문 (1질문 1물음 위반)
+        if (t.length > 220) return true                   // 과도한 길이
+        if (/^(그 |그런 |그때 |그 과정)/.test(t) && !/[''""「『]/.test(t)) return true  // 인용 없는 모호 지시어 시작
+        return false
+      }
+      const qualityOk = result.questions.filter(q => !isLowQualityQuestion(q.questionText || ''))
+      if (qualityOk.length >= 1) {
+        result.questions = qualityOk
+      }
+      // 라운드당 3문항 상한 (P2: 5→3 — 피로 저감)
+      result.questions = result.questions.slice(0, 3)
     }
 
     // ============================================
@@ -5339,8 +5361,9 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         nfRow = await db.prepare(
           'SELECT high_alive_moment, lost_moment FROM narrative_facts WHERE session_id = ?'
         ).bind(session_id).first<{ high_alive_moment?: string; lost_moment?: string }>()
+        // P1(2026-07-07): Judge 주입용으로 round_number/question_id 추가 조회 (캐시 해시는 answer만 사용 — 불변)
         raRows = await db.prepare(
-          'SELECT answer FROM round_answers WHERE session_id = ? ORDER BY round_number, question_id'
+          'SELECT round_number, question_id, answer FROM round_answers WHERE session_id = ? ORDER BY round_number, question_id'
         ).bind(session_id).all<{ answer: string }>()
 
         const cacheInput = JSON.stringify({
@@ -5888,6 +5911,18 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           careerState,
           careerBackground,
           additionalContext: additionalContextForRecommend,
+          // P1(2026-07-07): 심층 답변을 Judge에 주입 — 기존엔 미전달이라 점수·이유가 미니모듈 토큰만 인용
+          // (llm-judge의 buildUserContext/buildUserTextPool은 원래 이 입력을 받도록 설계돼 있었음)
+          narrativeFacts: (nfRow && (nfRow.high_alive_moment || nfRow.lost_moment)) ? {
+            highAliveMoment: nfRow.high_alive_moment || '',
+            lostMoment: nfRow.lost_moment || '',
+          } : undefined,
+          roundAnswers: (raRows?.results || []).map((r: any) => ({
+            questionId: r.question_id || '',
+            roundNumber: (r.round_number || 1) as 1 | 2 | 3,
+            answer: r.answer,
+            answeredAt: '',
+          })),
         }
 
         const tJudge = Date.now()
@@ -6997,6 +7032,24 @@ analyzerRoutes.post('/v3/recommend/report', async (c) => {
     } catch (e) {
     }
 
+    // 분석 상세 통계 백필 — deferred 경로에서 _factsCount 등 누락 → UI에 0 표시되던 버그 fix (2026-07-07)
+    try {
+      const pr: any = premiumReport
+      if (pr && typeof pr === 'object') {
+        const mm: any = miniModuleResult || {}
+        if (pr._factsCount == null) {
+          pr._factsCount = (mm.interest_top?.length || 0) + (mm.value_top?.length || 0) + (mm.strength_top?.length || 0)
+            + (mm.constraint_flags?.length || 0) + (mm.sacrifice_flags?.length || 0) + (mm.energy_drain_flags?.length || 0)
+            + (narrativeFacts?.highAliveMoment ? 1 : 0) + (narrativeFacts?.lostMoment ? 1 : 0) + ((narrativeFacts as any)?.existentialAnswer ? 1 : 0)
+        }
+        if (pr._answeredQuestions == null) {
+          pr._answeredQuestions = (miniModuleResult ? 15 : 0) + roundAnswers.length
+            + (narrativeFacts?.highAliveMoment ? 1 : 0) + (narrativeFacts?.lostMoment ? 1 : 0) + ((narrativeFacts as any)?.existentialAnswer ? 1 : 0)
+        }
+        if (pr._totalJobCount == null) pr._totalJobCount = parsed.total_candidates || 0
+      }
+    } catch { /* 통계 백필 실패 무시 */ }
+
     // 5. DB에 리포트 저장
     try {
       const premiumJson = JSON.stringify(premiumReport)
@@ -7149,6 +7202,24 @@ analyzerRoutes.post('/v3/recommend-major/report', async (c) => {
 
     const premiumReport = await generateMajorPremiumReport(env?.AI || null, reporterInput, openaiApiKey)
     const reportMode = (premiumReport as any)?.metaCognition?._meta?.generated_by === 'rule' ? 'fallback' : 'llm'
+
+    // 분석 상세 통계 백필 — deferred 경로 누락 fix (job 버전과 동일, 2026-07-07)
+    try {
+      const pr: any = premiumReport
+      if (pr && typeof pr === 'object') {
+        const mm: any = miniModuleResult || {}
+        if (pr._factsCount == null) {
+          pr._factsCount = (mm.interest_top?.length || 0) + (mm.value_top?.length || 0) + (mm.strength_top?.length || 0)
+            + (mm.constraint_flags?.length || 0) + (mm.sacrifice_flags?.length || 0) + (mm.energy_drain_flags?.length || 0)
+            + (narrativeFacts?.highAliveMoment ? 1 : 0) + (narrativeFacts?.lostMoment ? 1 : 0) + ((narrativeFacts as any)?.existentialAnswer ? 1 : 0)
+        }
+        if (pr._answeredQuestions == null) {
+          pr._answeredQuestions = (miniModuleResult ? 15 : 0) + roundAnswers.length
+            + (narrativeFacts?.highAliveMoment ? 1 : 0) + (narrativeFacts?.lostMoment ? 1 : 0) + ((narrativeFacts as any)?.existentialAnswer ? 1 : 0)
+        }
+        if (pr._totalJobCount == null) pr._totalJobCount = parsed.total_candidates || 0
+      }
+    } catch { /* 통계 백필 실패 무시 */ }
 
     // 5. DB에 리포트 저장
     try {
@@ -8440,13 +8511,16 @@ analyzerRoutes.post('/v3/recommend-major', async (c) => {
     // 기존엔 전공만 캐시가 없어 동일 프로필 재요청도 매번 풀 파이프라인(~50s+$0.01)이었음
     // ============================================
     let recCacheHash: string | null = null
+    // P1(2026-07-07): Judge 주입용으로 캐시 블록 밖에서도 재사용
+    let nfRowForCache: { high_alive_moment?: string; lost_moment?: string } | null = null
+    let raRowsForCache: { results?: Array<{ round_number?: number; question_id?: string; answer: string }> } | null = null
     if (payload.mini_module_result) {
       try {
-        const nfRowForCache = await db.prepare(
+        nfRowForCache = await db.prepare(
           'SELECT high_alive_moment, lost_moment FROM narrative_facts WHERE session_id = ?'
         ).bind(session_id).first<{ high_alive_moment?: string; lost_moment?: string }>()
-        const raRowsForCache = await db.prepare(
-          'SELECT answer FROM round_answers WHERE session_id = ? ORDER BY round_number, question_id'
+        raRowsForCache = await db.prepare(
+          'SELECT round_number, question_id, answer FROM round_answers WHERE session_id = ? ORDER BY round_number, question_id'
         ).bind(session_id).all<{ answer: string }>()
 
         const cacheInput = JSON.stringify({

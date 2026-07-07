@@ -1192,15 +1192,14 @@ analyzerJobPage.get('/', async (c, next) => {
 
         // 메시지 단계 정의 (프로그레스 수치는 로그 커브로 별도 계산)
         const ANALYSIS_STEPS = [
+            // deferred report 전환(2026-07-06) 후 추천 응답 ~40s 기준으로 재조정
             { msg: '프로필 분석 중...',         step: 1, delayMs: 3000 },
             { msg: '직업 데이터 검색 중...',     step: 2, delayMs: 8000 },
-            { msg: 'AI 적합도 분석 중...',       step: 2, delayMs: 15000 },
-            { msg: '최적의 후보를 선별 중...',    step: 3, delayMs: 25000 },
-            { msg: 'AI 심층 평가 중...',         step: 3, delayMs: 40000 },
-            { msg: '거의 다 됐어요...',          step: 3, delayMs: 55000 },
-            { msg: '리포트 작성 중...',          step: 4, delayMs: 70000 },
-            { msg: '리포트 정리 중...',          step: 4, delayMs: 85000 },
-            { msg: '마무리 중...',               step: 4, delayMs: 100000 },
+            { msg: 'AI 적합도 분석 중...',       step: 2, delayMs: 14000 },
+            { msg: '최적의 후보를 선별 중...',    step: 3, delayMs: 22000 },
+            { msg: 'AI 심층 평가 중...',         step: 3, delayMs: 30000 },
+            { msg: '거의 다 됐어요...',          step: 4, delayMs: 40000 },
+            { msg: '마무리 중...',               step: 4, delayMs: 52000 },
         ];
 
         // 로그 커브 프로그레스: 초반 빠르게, 후반 느리게
@@ -1213,7 +1212,11 @@ analyzerJobPage.get('/', async (c, next) => {
 
         // Skeleton HTML 생성
         function getSkeletonHtml() {
-            return '<div id="skeleton-report" class="animate-pulse">' +
+            return '<div id="skeleton-report">' +
+                '<div class="text-center mb-4" style="font-size:13px;color:#a5b4fc;">' +
+                    '<i class="far fa-clock" style="margin-right:6px;"></i>분석에는 보통 <b>40초~1분</b> 정도 걸려요' +
+                '</div>' +
+                '<div class="animate-pulse">' +
                 '<div class="text-center mb-8">' +
                     '<div class="h-8 bg-white/10 rounded-lg w-72 mx-auto mb-3"></div>' +
                     '<div class="h-4 bg-white/5 rounded w-52 mx-auto"></div>' +
@@ -1254,6 +1257,7 @@ analyzerJobPage.get('/', async (c, next) => {
                             '<div class="h-4 bg-white/5 rounded w-full"></div>' +
                         '</div>' +
                     '</div>' +
+                '</div>' +
                 '</div>' +
             '</div>';
         }
@@ -4150,7 +4154,7 @@ analyzerJobPage.get('/', async (c, next) => {
                                 name="\${q.id}" 
                                 rows="4" 
                                 minlength="\${q.minLengthGuidance || 30}"
-                                placeholder="자유롭게 적어주세요..."
+                                placeholder="\${q.hint ? '예) ' + String(q.hint).replace(/"/g, '') : '자유롭게 적어주세요...'}"
                                 class="w-full px-4 py-3 rounded-xl border transition-all resize-none"
                                 style="background-color: rgba(15,23,42,0.8); border-color: rgba(67,97,238,0.3); color: #fff;"
                                 onfocus="this.style.borderColor='rgba(67,97,238,0.6)';"
@@ -4553,11 +4557,14 @@ analyzerJobPage.get('/', async (c, next) => {
                 // deferred report: 백그라운드로 리포트 생성 → 도착 시 재렌더 (2026-07-06)
                 if (analyzeData._report_deferred && !(analyzeData.result && analyzeData.result.premium_report)) {
                     showReportPendingBanner();
+                    applyReportPendingState();
                     const deferredSessionId = currentSessionId;
                     fetchDeferredReport('/api/ai-analyzer/v3/recommend/report', deferredSessionId, analyzeData._profile_hash).then((report) => {
                         if (report) {
+                            const prevTab = getActiveReportTab();
                             analyzeData.result.premium_report = report;
                             displayResults(analyzeData);
+                            if (prevTab) { try { showReportTab(prevTab); } catch (e) {} }
                         } else {
                             markReportBannerFailed();
                         }
@@ -6189,6 +6196,22 @@ analyzerJobPage.get('/', async (c, next) => {
                 banner.setAttribute('style', 'margin-bottom:12px;padding:10px 14px;border-radius:10px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-size:13px;');
                 banner.innerHTML = '심층 리포트 생성이 지연되고 있습니다. 페이지를 새로고침하면 다시 시도합니다.';
             }
+        }
+        // 리포트 대기 중: 요약/메타인지 탭을 "생성 중" 표시로 덮고, 완성된 추천 탭으로 자동 이동
+        // (기존 fallback 문구 "더 많은 질문에 답변해주세요"가 고장처럼 보이는 문제 방지 — 2026-07-07 Jason 피드백)
+        function applyReportPendingState() {
+            const pendingHtml = '<div class="text-center py-16">' +
+                '<div style="font-size:15px;color:#c7d2fe;margin-bottom:10px;"><i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>심층 분석 리포트를 생성하고 있어요</div>' +
+                '<div style="font-size:13px;color:#818cf8;">약 20초 뒤 자동으로 채워집니다 — 그동안 <b>추천 직업</b> 탭을 먼저 둘러보세요</div>' +
+                '</div>';
+            const summaryEl = document.getElementById('tab-summary');
+            const psychEl = document.getElementById('tab-psychology');
+            if (summaryEl) summaryEl.innerHTML = pendingHtml;
+            if (psychEl) psychEl.innerHTML = pendingHtml;
+            try { showReportTab('recommendations'); } catch (e) {}
+        }
+        function getActiveReportTab() {
+            try { return document.querySelector('.report-tab.active')?.getAttribute('data-tab') || null; } catch (e) { return null; }
         }
 
         // ============================================
@@ -8163,10 +8186,13 @@ analyzerJobPage.get('/', async (c, next) => {
                 // deferred report: 백그라운드 생성 → 도착 시 재렌더 (2026-07-06)
                 if (recommendData.report_mode === 'deferred' && !analyzeData.result.premium_report) {
                     showReportPendingBanner();
+                    applyReportPendingState();
                     fetchDeferredReport('/api/ai-analyzer/v3/recommend/report', currentSessionId, recommendData.profile_hash).then((report) => {
                         if (report) {
+                            const prevTab = getActiveReportTab();
                             analyzeData.result.premium_report = report;
                             displayResults(analyzeData);
+                            if (prevTab) { try { showReportTab(prevTab); } catch (e) {} }
                         } else {
                             markReportBannerFailed();
                         }

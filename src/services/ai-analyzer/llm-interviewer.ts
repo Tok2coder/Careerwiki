@@ -40,7 +40,7 @@ import { cagGuardQuestion, isQuestionAlreadyAsked } from './cag-manager'
 // ============================================
 const DEFAULT_MODEL = OPENAI_MODEL  // GPT-4o-mini
 const FALLBACK_MODEL = '@cf/meta/llama-3.1-8b-instruct'  // OpenAI 실패 시 폴백
-const MAX_QUESTIONS_PER_ROUND = 5
+const MAX_QUESTIONS_PER_ROUND = 3  // P2(2026-07-07): 5→3 — 라운드당 5문항×30자 피로로 답변 품질 저하 (Jason 피드백)
 const MIN_QUESTIONS_PER_ROUND = 3
 
 // ============================================
@@ -351,6 +351,18 @@ ${INJECTION_DEFENSE}
 // ============================================
 // Round-specific Prompts (확장됨: DRIVE/FRICTION/REALITY)
 // ============================================
+// P2(2026-07-07): 질문 난이도·앵커·힌트 공통 규칙 — "질문이 어렵고 '그 과정'이 뭘 가리키는지 모호" 피드백 반영
+const QUESTION_QUALITY_RULES = `## 질문 작성 필수 규칙 (모든 라운드 공통 — 위반 질문은 폐기됨)
+1. 앵커 인용 필수: 각 질문은 사용자가 실제 쓴 표현을 따옴표로 짧게(10~25자) 인용하며 시작하라.
+   예: "'위에서 하라니까 하는 캠페인이 싫었다'고 하셨는데, ..."
+   ⚠️ "그 과정에서", "그런 상황에서"처럼 무엇을 가리키는지 모호한 지시어로 시작하는 것 금지.
+2. 1질문 1물음: 물음표는 질문당 정확히 1개. "~인가요? 그 이유는 무엇인가요?" 같은 꼬리 질문 금지.
+3. 쉬운 말: 중학생이 바로 이해할 일상어로. "가치를 실현", "요소", "역량" 같은 컨설팅 용어 금지.
+   나쁜 예: "어떤 가치를 실현하고 싶으신가요?" → 좋은 예: "그 일이 잘 풀리면 뭐가 제일 뿌듯할 것 같아요?"
+4. hint 필드 필수: 각 질문 객체에 답변 예시 1줄을 "hint" 필드로 넣어라 (40자 이내, 이 사용자의 상황에 맞는 구체 예시).
+   예: "hint": "내 리포트대로 예산을 옮겼더니 실제로 효율이 좋아졌을 때"
+5. 출력 전에 각 질문이 완성된 자연스러운 한국어 문장인지 검증하라. 조사 오류·중간에 끊긴 문장 금지.`
+
 const ROUND_PROMPTS: Record<1 | 2 | 3, string> = {
   1: `## 이번 라운드: DRIVE - 욕망 + 정체성 + 가치 탐색
 
@@ -404,15 +416,13 @@ const ROUND_PROMPTS: Record<1 | 2 | 3, string> = {
 목표: 사용자가 피하고 싶은 것, 맞지 않는 관계/조직 유형, 힘든 환경 조건을 파악합니다.
 **핵심: "못하는 것"을 구체적 업무 요소로 분해하여 데이터화하기!**
 
-### ⚠️ Round 2 — 5개 질문의 관점 분배 (필수!)
+### ⚠️ Round 2 — 3개 질문의 관점 분배 (필수!)
 | 질문 | 관점 | target_variable |
 |------|------|----------------|
 | Q1 | 특정 업무/과업 유형 | "task_aversion" |
-| Q2 | 조직 문화/환경 | "culture_friction" |
-| Q3 | 대인관계/소통 방식 | "relationship_pattern" |
-| Q4 | 시간/체력/생활 패턴 | "lifestyle_constraint" |
-| Q5 | 자기 자신(내적 갈등) | "self_awareness" |
-5개 관점이 겹치면 폐기 후 재생성!
+| Q2 | 시간/체력/생활 패턴 | "lifestyle_constraint" |
+| Q3 | 자기 자신(내적 갈등) | "self_awareness" |
+3개 관점이 겹치면 폐기 후 재생성!
 
 ### 업무 요소별 분해 질문 (핵심 피드백 반영!)
 **추상적 "싫다"가 아닌, 구체적 업무 요소로 분해하세요:**
@@ -543,7 +553,7 @@ export async function generateRoundQuestions(
   
   // 컨텍스트 구성
   const context = buildInterviewContext(input)
-  const userPrompt = `${ROUND_PROMPTS[roundNumber]}\n\n## 사용자 컨텍스트\n${context}\n\n위 맥락을 바탕으로 라운드 ${roundNumber}에 적합한 질문 ${MIN_QUESTIONS_PER_ROUND}-${MAX_QUESTIONS_PER_ROUND}개를 생성하세요.`
+  const userPrompt = `${ROUND_PROMPTS[roundNumber]}\n\n${QUESTION_QUALITY_RULES}\n\n## 사용자 컨텍스트\n${context}\n\n위 맥락을 바탕으로 라운드 ${roundNumber}에 적합한 질문 ${MAX_QUESTIONS_PER_ROUND}개를 생성하세요.`
   
   
   // OpenAI API 호출 (최대 2회 재시도)
@@ -1344,6 +1354,7 @@ function parseInterviewerResponse(
           intent: intent,
           what_to_extract: extractTargets,
           anchor: typeof q.anchor === 'string' && q.anchor.length > 0 ? q.anchor.slice(0, 200) : undefined,  // v3.18: LLM anchor 추출
+          hint: typeof q.hint === 'string' && q.hint.trim().length > 0 ? q.hint.trim().slice(0, 80) : undefined,  // P2: 답변 예시 placeholder
         }
       })
       .filter((q: RoundQuestion) => q.questionText.length > 10)
@@ -1910,7 +1921,7 @@ export async function generateMajorRoundQuestions(
 
   // 컨텍스트 구성
   const context = buildInterviewContext(input)
-  const userPrompt = `${MAJOR_ROUND_PROMPTS[roundNumber]}\n\n## 사용자 컨텍스트\n${context}\n\n위 맥락을 바탕으로 라운드 ${roundNumber}에 적합한 학과/전공 탐색 질문 ${MIN_QUESTIONS_PER_ROUND}-${MAX_QUESTIONS_PER_ROUND}개를 생성하세요.`
+  const userPrompt = `${MAJOR_ROUND_PROMPTS[roundNumber]}\n\n${QUESTION_QUALITY_RULES}\n\n## 사용자 컨텍스트\n${context}\n\n위 맥락을 바탕으로 라운드 ${roundNumber}에 적합한 학과/전공 탐색 질문 ${MAX_QUESTIONS_PER_ROUND}개를 생성하세요.`
 
 
   // OpenAI API 호출 (최대 2회 재시도)
