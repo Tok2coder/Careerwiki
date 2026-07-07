@@ -5806,10 +5806,19 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     const finalBiasedJobs = [...filteredJobs]
       .sort((a, b) => (b.final_score || 0) - (a.final_score || 0))
       .slice(0, 20)
+    // P3(2026-07-07): 서사(심층답변)가 있으면 벡터 유사도 상위 12개를 Judge 후보에 예약
+    // — 서사 타깃 직업이 버튼 기반 base 점수에 밀려 Judge에 도달조차 못 하던 문제 (상충 페르소나 3종 top10 0개 실측)
+    const hasNarrativeForReserve = !!(nfRow?.high_alive_moment || nfRow?.lost_moment || (raRows?.results && raRows.results.length > 0))
+    const vectorBiasedJobs = hasNarrativeForReserve
+      ? [...filteredJobs]
+          .filter(j => ((j as any).vector_score || 0) > 0)
+          .sort((a, b) => ((b as any).vector_score || 0) - ((a as any).vector_score || 0))
+          .slice(0, 12)
+      : []
     // 합집합 (중복 제거) → ~40-50개 unique 후보
     const preFilterJobIdSet = new Set<string>()
     const preFilteredJobs: typeof filteredJobs = []
-    for (const job of [...likeBiasedJobs, ...canBiasedJobs, ...finalBiasedJobs]) {
+    for (const job of [...likeBiasedJobs, ...canBiasedJobs, ...finalBiasedJobs, ...vectorBiasedJobs]) {
       if (!preFilterJobIdSet.has(job.job_id)) {
         preFilterJobIdSet.add(job.job_id)
         preFilteredJobs.push(job)

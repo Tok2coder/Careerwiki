@@ -1820,6 +1820,7 @@ export async function vectorResultsToScoredJobs(
         slug: attrs.slug || undefined,
         image_url: attrs.image_url || undefined,
         job_description: extractJobDescription(attrs.api_data_json, attrs.merged_profile_json, attrs.job_name),
+        vector_score: vectorScore,  // P3(2026-07-07): 서사 기반 Judge 후보 예약용 노출
         base_like: baseLike,
         base_can: baseCan,
         base_risk: baseRisk,

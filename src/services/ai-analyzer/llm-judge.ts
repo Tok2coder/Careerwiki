@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.24.0'  // P1: job Judge에 심층답변(narrative/round) 주입 + likeReason 순방향 인용 규칙
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.25.0'  // P3: 서사 우선 원칙(상충 시 심층답변 우선) + 벡터 상위 12 Judge 후보 예약
 
 // ============================================
 // Types
@@ -103,6 +103,13 @@ const JUDGE_SYSTEM_PROMPT = `당신은 커리어 매칭 전문가입니다. 사�
 
 각 점수는 반드시 아래 대응 관계를 근거로 계산하세요:
 
+### ★ 최우선 원칙: 서사 우선 (P3, 2026-07-07)
+- [USER_DATA] 안의 서술형 답변([Step2-서술1/2])과 라운드 답변([Round1~3-*])이 존재하고 그 내용이 미니모듈 버튼 선택과 **상충하면, 심층 답변을 우선**하세요.
+- 근거: 버튼은 몇 초 만에 고른 대략적 선호이고, 심층 답변은 실제 경험을 직접 서술한 강한 신호입니다.
+- 예: 버튼 흥미가 "안정/도움"인데 심층 답변에 "SQL로 분석해서 채택됐을 때 심장이 뛰었다, 데이터 분석가로 전환하고 싶다"면 → 데이터 분석 직업의 desire/fit을 심층 답변 기준으로 높게 평가하세요.
+- 심층 답변에 구체적 직업 희망("~가 되고 싶다", "~로 전환하고 싶다")이 명시되면 그 직업군의 desireScore에 +15~25 가산.
+- 이 경우 이유(likeReason/rationale)에는 반드시 심층 답변의 표현을 직접 인용하세요.
+
 ### Fit (적합도) 계산법
 - user_strength_tokens(강점 Top2) ↔ job_required_skills(직업 요구 역량) 매칭률
 - 강점이 직업 요구사항과 일치하면 +20~30점
@@ -111,6 +118,7 @@ const JUDGE_SYSTEM_PROMPT = `당신은 커리어 매칭 전문가입니다. 사�
 ### Desire (욕망 부합) 계산법
 - user_interest_tokens(흥미) + user_value_tokens(가치) ↔ job_rewards(직업이 제공하는 것)
 - ⚠️ **1순위 흥미(첫 번째 토큰)가 가장 중요!** 1순위 흥미 도메인과 직접 관련된 직업에 desireScore +10~15 가산
+- 단, 위 "서사 우선" 원칙이 적용되는 상충 상황에서는 심층 답변이 흥미 토큰보다 우선
 - 2순위, 3순위 흥미는 보조적 참고 — 1순위와 무관한 직업이 2/3순위만으로 높은 desire를 받으면 안 됨
 - 예: 1순위 "창작/예술" 유저 → 디자이너 직업 desire 80+, 경영정보시스템 직업은 desire 60 이하
 
