@@ -6083,6 +6083,10 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
             for (const job of topJobs) {
               const jobName = (job as any).job_name || ''
 
+              // P3-6(2026-07-07): 서사 매치 직업은 관련성 캡 면제 — 심층 답변이 곧 관련성의 근거
+              // (버튼 도메인 키워드 기반 캡이 서사 타깃 직업을 사후 제거하던 문제: 요리연구가 65→55 캡 실측)
+              if (narrativeMatchIds.has(String((job as any).job_id))) continue
+
               // 1차: 명백한 노이즈 직업은 무조건 캡 (물리적 흥미가 없는 한)
               if (!hasPhysicalInterest && NOISE_JOB_PATTERNS.some(p => p.test(jobName))) {
                 if ((job as any).like_score > 45) (job as any).like_score = 45
