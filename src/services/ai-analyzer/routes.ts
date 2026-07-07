@@ -6786,6 +6786,31 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // ============================================
+    // P5 (2026-07-07): 추천 내러티브 — "왜 이 순서인가" 한 문단 (결정적 생성, LLM 0콜·지연 0ms)
+    // 버튼과 서사가 상충할 때 그 긴장을 설명하지 않고 목록만 던지던 문제 (Jason 911 결과 피드백)
+    // ============================================
+    let recommendationNarrative: string | null = null
+    try {
+      if (hasNarrativeForReserve) {
+        const finalTopForNarr = [...topJobs].sort((a: any, b: any) => (b.final_score || 0) - (a.final_score || 0)).slice(0, 10)
+        const narrJobNames = finalTopForNarr.filter((j: any) => narrativeTop3Ids.has(String(j.job_id))).map((j: any) => j.job_name)
+        const btnLabels = [
+          ...(payload.mini_module_result?.interest_top || []).slice(0, 2),
+          ...(payload.mini_module_result?.value_top || []).slice(0, 1),
+        ].map(t => TOKEN_TO_KOREAN[t] || t).filter(Boolean)
+        const aliveSnip = (nfRow?.high_alive_moment || '').replace(/\s+/g, ' ').trim().slice(0, 40)
+        const top1Name = finalTopForNarr[0]?.job_name
+        if (narrJobNames.length > 0 && top1Name && !narrJobNames.includes(top1Name) && aliveSnip) {
+          // 상충: 버튼 성향과 서사 지향이 다른 방향
+          recommendationNarrative = `선택하신 버튼에서는 ${btnLabels.slice(0, 3).join('·')} 성향이 보였지만, 심층 답변에서는 "${aliveSnip}…"라는 또 다른 끌림이 읽혔어요. 그래서 이번 추천에는 현재 성향에 맞는 '${top1Name}' 같은 직업과, 심층 답변이 가리키는 '${narrJobNames.slice(0, 2).join("', '")}' 같은 직업을 함께 담았습니다. 이 두 갈래 중 어느 쪽에 더 마음이 가는지가 다음 선택의 핵심입니다.`
+        } else if (narrJobNames.length > 0) {
+          // 일치: 버튼과 서사가 같은 방향
+          recommendationNarrative = `버튼 선택(${btnLabels.slice(0, 2).join('·')})과 심층 답변이 같은 방향을 가리키고 있어요. '${narrJobNames.slice(0, 2).join("', '")}'처럼 당신이 직접 말한 지향이 상위 추천에 그대로 반영됐고, 그만큼 이번 결과의 확신도가 높습니다.`
+        }
+      }
+    } catch { /* 내러티브 생성 실패해도 추천 정상 반환 */ }
+
+    // ============================================
     // P4-1 (2026-07-07): 추천 카드 위키 데이터 결합 — 연봉·전망·되는법 (자기 위키 join)
     // 결과 페이지가 점수표 수준으로 부실하던 문제: 데이터는 위키에 다 있는데 join을 안 하고 있었음
     // ============================================
@@ -6844,6 +6869,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
       like_top10: sanitizeJobListOutput(likeTop10),
       can_top10: sanitizeJobListOutput(canTop10),
       premium_report: premiumReport,
+      recommendation_narrative: recommendationNarrative,  // P5: 재열람에도 유지
       search_profile: searchProfile,
       total_candidates: expansionResult.candidates.length,
       filtered_count: filteredJobs.length,
@@ -6963,6 +6989,7 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         search_duration_ms: expansionResult.search_duration_ms,
       },
       premium_report: premiumReport,
+      recommendation_narrative: recommendationNarrative,  // P5: 왜 이 순서인지 설명
       engine_version: RECOMMENDATION_ENGINE_VERSION,
       report_mode: reportMode,  // 'llm' | 'fallback' | 'none'
       search_profile_used: searchProfile,

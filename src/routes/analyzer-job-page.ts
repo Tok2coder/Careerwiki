@@ -4525,6 +4525,8 @@ analyzerJobPage.get('/', async (c, next) => {
                         analyzeData._report_deferred = recData.report_mode === 'deferred' && !recData.premium_report;
                         // 리포트 부재 시 v3 게이트(displayResults의 engine_version 판정) 통과 보장
                         analyzeData.result.engine_version = recData.engine_version || analyzeData.result.engine_version || 'v3';
+                        // P5: 추천 내러티브
+                        if (recData.recommendation_narrative) analyzeData.result.recommendation_narrative = recData.recommendation_narrative;
                         analyzeData._recommendation_mode = {
                             enabled: true,
                             total_candidates: recData.recommendations.total_candidates,
@@ -6916,6 +6918,14 @@ analyzerJobPage.get('/', async (c, next) => {
                         </div>
                     \` : ''}
 
+                    <!-- P5(2026-07-07): 추천 내러티브 — 왜 이 순서인지 설명 -->
+                    \${result.recommendation_narrative ? \`
+                        <div class="mt-6 p-4 rounded-xl" style="background: rgba(99,102,241,0.10); border: 1px solid rgba(99,102,241,0.3);">
+                            <h4 class="text-lg font-bold mb-2" style="color:#a5b4fc;">🧭 왜 이렇게 추천했나요?</h4>
+                            <p class="text-[15px] text-wiki-muted leading-relaxed">\${escapeHtmlJob(result.recommendation_narrative)}</p>
+                        </div>
+                    \` : ''}
+
                     <!-- TOP 3 직업 카드 (요약 탭) -->
                     \${overallTop5.length > 0 ? \`
                         <div class="mt-6 pt-4 border-t border-wiki-border/30">
@@ -8230,6 +8240,7 @@ analyzerJobPage.get('/', async (c, next) => {
                         analyzeData.result.premium_report = recommendData.premium_report;
                     }
                     analyzeData.result.engine_version = recommendData.engine_version || 'v3';
+                    if (recommendData.recommendation_narrative) analyzeData.result.recommendation_narrative = recommendData.recommendation_narrative;  // P5
                     analyzeData.request_id = recommendData.request_id;
                 } else {
                     throw new Error(recommendData.error || '추천 결과를 생성할 수 없습니다.');

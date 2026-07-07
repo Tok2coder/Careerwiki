@@ -32,7 +32,7 @@ import {
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct'
 const MAX_CANDIDATES_PER_BATCH = 5   // v3.11: 배치당 5개로 축소 → 개별 OpenAI 호출 절반 속도 (524 방지)
 const MAX_TOTAL_CANDIDATES = 30      // v3.19: 60→30 (Top10 뽑는데 60개 과잉, 6배치 병렬이면 충분)
-export const RECOMMENDATION_ENGINE_VERSION = 'v3.26.1'  // P4-0 잔존 fix: keywords 한국어 혼입부 TOKEN_TO_KOREAN 폴백 (creating/helping raw 에코)
+export const RECOMMENDATION_ENGINE_VERSION = 'v3.27.0'  // P5: 추천 내러티브 (버튼·서사 상충 설명, 결정적 생성)
 
 // ============================================
 // Types
