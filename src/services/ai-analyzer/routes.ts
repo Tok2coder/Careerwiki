@@ -6786,6 +6786,38 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // ============================================
+    // P4-1 (2026-07-07): 추천 카드 위키 데이터 결합 — 연봉·전망·되는법 (자기 위키 join)
+    // 결과 페이지가 점수표 수준으로 부실하던 문제: 데이터는 위키에 다 있는데 join을 안 하고 있었음
+    // ============================================
+    const cardInfoMap = new Map<string, { salary_text?: string; prospect_text?: string; way_text?: string }>()
+    try {
+      const topIdsForCard = topJobs.slice(0, 12).map((j: any) => j.job_id).filter(Boolean)
+      if (topIdsForCard.length > 0) {
+        const ph = topIdsForCard.map(() => '?').join(',')
+        const cardRows = await db.prepare(
+          `SELECT id,
+                  json_extract(merged_profile_json,'$.overviewSalary.sal') AS sal,
+                  json_extract(merged_profile_json,'$.overviewProspect.main') AS prospect,
+                  json_extract(merged_profile_json,'$.way') AS way
+           FROM jobs WHERE id IN (${ph})`
+        ).bind(...topIdsForCard).all<{ id: string; sal: string | null; prospect: string | null; way: string | null }>()
+        const stripForCard = (s: unknown, n: number): string | undefined => {
+          if (s == null) return undefined
+          const t = (Array.isArray(s) ? s.join(' ') : String(s)).replace(/\[\d+\]/g, '').replace(/\s+/g, ' ').trim()
+          if (!t) return undefined
+          return t.length > n ? t.slice(0, n).replace(/\S+$/, '').trim() + '…' : t
+        }
+        for (const r of cardRows.results || []) {
+          cardInfoMap.set(String(r.id), {
+            salary_text: stripForCard(r.sal, 170),
+            prospect_text: stripForCard(r.prospect, 150),
+            way_text: stripForCard(r.way, 170),
+          })
+        }
+      }
+    } catch { /* 카드 정보 실패해도 추천은 정상 반환 */ }
+
+    // ============================================
     // 7. 결과 저장 (ai_analysis_requests + ai_analysis_results)
     // ============================================
     const resultToSave = {
@@ -6804,6 +6836,10 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         rationale: job.rationale || null,
         like_reason: job.like_reason || null,
         can_reason: job.can_reason || null,
+        // P4-1: 위키 데이터 (재열람 시에도 카드 정보 유지)
+        salary_text: cardInfoMap.get(String(job.job_id))?.salary_text || null,
+        prospect_text: cardInfoMap.get(String(job.job_id))?.prospect_text || null,
+        way_text: cardInfoMap.get(String(job.job_id))?.way_text || null,
       }))),
       like_top10: sanitizeJobListOutput(likeTop10),
       can_top10: sanitizeJobListOutput(canTop10),
@@ -6915,6 +6951,10 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
           like_reason: job.like_reason || null,   // 좋아할 이유
           can_reason: job.can_reason || null,     // 잘할 이유
           evidence_quotes: job.evidence_quotes || [],
+          // P4-1: 위키 데이터 (연봉·전망·되는법)
+          salary_text: cardInfoMap.get(String(job.job_id))?.salary_text || null,
+          prospect_text: cardInfoMap.get(String(job.job_id))?.prospect_text || null,
+          way_text: cardInfoMap.get(String(job.job_id))?.way_text || null,
         })).sort((a, b) => b.fit_score - a.fit_score)),
         like_top10: sanitizeJobListOutput(likeTop10),
         can_top10: sanitizeJobListOutput(canTop10),

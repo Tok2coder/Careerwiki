@@ -1620,3 +1620,63 @@ export const MAJOR_MINI_MODULE_QUESTIONS = {
   persistence_anchor: PERSISTENCE_ANCHOR_QUESTIONS,  // Q14
   external_expectation: EXTERNAL_EXPECTATION_QUESTIONS, // Q15
 }
+
+// ============================================
+// P4-0 (2026-07-07): 토큰 → 한글 라벨 SSOT
+// 영어 토큰 ID(art/organizing/routine 등)가 화면·LLM 응답에 날것으로 노출되던 문제의 단일 해결점.
+// 질문 정의(text)가 라벨의 진실 — 새 토큰 추가 시 자동 반영.
+// ============================================
+const ALL_TOKEN_BANKS: MiniModuleQuestion[][] = [
+  INTEREST_QUESTIONS, VALUE_QUESTIONS, STRENGTH_QUESTIONS, CONSTRAINT_QUESTIONS,
+  WORKSTYLE_QUESTIONS, BACKGROUND_QUESTIONS, SACRIFICE_QUESTIONS, ENERGY_DRAIN_QUESTIONS,
+  ACHIEVEMENT_FEEDBACK_QUESTIONS, EXECUTION_STYLE_QUESTIONS, IMPACT_SCOPE_QUESTIONS,
+  FAILURE_RESPONSE_QUESTIONS, PERSISTENCE_ANCHOR_QUESTIONS, EXTERNAL_EXPECTATION_QUESTIONS,
+  MAJOR_CONSTRAINT_QUESTIONS,
+]
+
+const TOKEN_KO_MAP: Record<string, string> = (() => {
+  const m: Record<string, string> = {}
+  for (const bank of ALL_TOKEN_BANKS) {
+    for (const q of bank) {
+      if (q.token && q.text) m[q.token] = q.text
+    }
+  }
+  // 기존 마스터 맵(TOKEN_TO_KOREAN, 별칭 포함)이 우선 — 간결한 라벨
+  Object.assign(m, TOKEN_TO_KOREAN)
+  // 레거시/이형 토큰 보정 (시나리오·구버전 페이로드에서 관측된 것)
+  Object.assign(m, {
+    art: '예술·창작 활동',
+    creative: '창작/예술',
+    creating: '새로운 것을 만들거나 디자인하는 것',
+    analytical: '분석력',
+    analysis: '분석',
+    routine: '규칙적이고 반복적인 일',
+    helping: '사람들을 돕거나 가르치는 것',
+    organizing: '조직하고 체계적으로 관리하는 것',
+    research: '연구·탐구',
+    problem_solving: '문제 해결',
+    data_numbers: '데이터나 숫자를 다루는 것',
+    tech: '기술/IT',
+    communication: '소통력',
+    autonomy: '자율성',
+    growth: '성장',
+    expertise: '전문성',
+    stability: '안정성',
+    solo_deep: '혼자 깊이 몰입하는 방식',
+    structured: '체계적인 방식',
+    fast_learning: '빠른 학습력',
+    persistence: '끈기',
+  })
+  return m
+})()
+
+/** 토큰 1개 → 한글 라벨. 미등록 토큰은 언더스코어만 공백 처리해 반환 */
+export function tokenToKo(token?: string | null): string {
+  if (!token) return ''
+  return TOKEN_KO_MAP[token] || String(token).replace(/_/g, ' ')
+}
+
+/** 토큰 배열 → 한글 라벨 배열 */
+export function tokensToKo(tokens?: string[] | null): string[] {
+  return (tokens || []).map(t => tokenToKo(t))
+}

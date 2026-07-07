@@ -27,7 +27,7 @@ import type { D1Database, VectorizeIndex, Ai } from '@cloudflare/workers-types'
 import { preFilterByHardConstraints, type PreFilterResult } from './tag-filter'
 import type { UserConstraints } from './types'
 import type { MiniModuleResult } from './mini-module-questions'
-import { TOKEN_TO_ENGLISH } from './mini-module-questions'
+import { TOKEN_TO_ENGLISH, TOKEN_TO_KOREAN } from './mini-module-questions'
 import { generateOpenAIEmbedding, OPENAI_EMBEDDING_DIMENSIONS } from './openai-client'
 import { calculatePersonalizedBaseScores } from './personalized-scoring'
 import { calculateMajorPersonalizedBaseScores } from './personalized-scoring-major'
@@ -186,13 +186,15 @@ export function buildSearchProfileFromMiniModule(
   }
 
   // desiredThemes: 흥미 + 가치
+  // P4-0(2026-07-07): 로컬 맵 미커버 토큰(creating/influencing 등)이 영어 raw로 LLM 프롬프트에 들어가
+  // 응답에 에코되던 문제 — TOKEN_TO_KOREAN 폴백 추가
   const desiredThemes: string[] = [
-    ...(miniModule.interest_top || []).map(t => interestKorean[t] || t),
-    ...(miniModule.value_top || []).map(t => valueKorean[t] || t),
+    ...(miniModule.interest_top || []).map(t => interestKorean[t] || TOKEN_TO_KOREAN[t] || t),
+    ...(miniModule.value_top || []).map(t => valueKorean[t] || TOKEN_TO_KOREAN[t] || t),
   ]
 
   // strengthsHypothesis: 강점
-  const strengthsHypothesis: string[] = (miniModule.strength_top || []).map(t => strengthKorean[t] || t)
+  const strengthsHypothesis: string[] = (miniModule.strength_top || []).map(t => strengthKorean[t] || TOKEN_TO_KOREAN[t] || t)
 
   // hardConstraints: 제약 플래그
   const hardConstraints: string[] = miniModule.constraint_flags || []
@@ -215,7 +217,7 @@ export function buildSearchProfileFromMiniModule(
     multitask_drain: '멀티태스킹',
     uncertainty_drain: '불확실성',
   }
-  const dislikedThemes: string[] = (miniModule.energy_drain_flags || []).map(t => energyDrainKorean[t] || t)
+  const dislikedThemes: string[] = (miniModule.energy_drain_flags || []).map(t => energyDrainKorean[t] || TOKEN_TO_KOREAN[t] || t)
 
   return {
     desiredThemes,

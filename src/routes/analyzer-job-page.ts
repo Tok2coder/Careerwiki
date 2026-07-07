@@ -4499,6 +4499,10 @@ analyzerJobPage.get('/', async (c, next) => {
                             evidence_quotes: job.evidence_quotes || [],
                             risk_details: [],
                             evidence_links: [],
+                            // P4-1: 위키 데이터
+                            salary_text: job.salary_text || null,
+                            prospect_text: job.prospect_text || null,
+                            way_text: job.way_text || null,
                         });
 
                         if (recData.recommendations.top_jobs) {
@@ -6353,6 +6357,13 @@ analyzerJobPage.get('/', async (c, next) => {
             design: '디자인',
             writing: '글쓰기',
             hands_on: '손으로 만들기',
+            // P4-0(2026-07-07): 백엔드 흥미 토큰 4개 누락으로 영어 raw 노출되던 버그 fix (major 페이지와 동기화)
+            creating: '창작/만들기',
+            helping_teaching: '돕기/가르치기',
+            organizing: '조직/체계 관리',
+            influencing: '설득/영향력',
+            art: '예술/창작',
+            routine: '규칙적인 일',
         };
 
         // 강점 변환 맵 (백엔드 TOKEN_TO_KOREAN과 동기화)
@@ -6975,6 +6986,7 @@ analyzerJobPage.get('/', async (c, next) => {
                                                 <span class="text-base font-bold" style="color: rgb(\${idx === 0 ? '251,191,36' : idx === 1 ? '148,163,184' : '217,119,6'});">Fit \${fitScore}</span>
                                             </div>
                                             \${displayDescription ? \`<p class="text-base text-wiki-muted line-clamp-3 mb-3">\${escapeHtmlJob(displayDescription)}</p>\` : ''}
+                                            \${job.salary_text ? \`<p class="text-[13px] mb-2" style="color:#fbbf24;">💰 \${escapeHtmlJob(job.salary_text)}</p>\` : ''}
                                             <!-- 잘할 이유 + 좋아할 이유 -->
                                             \${hasReasons ? \`
                                                 <div class="space-y-1.5 mt-3 p-3 rounded-lg" style="background: rgba(0,0,0,0.2);">
@@ -6990,6 +7002,50 @@ analyzerJobPage.get('/', async (c, next) => {
                                 }).join('')}
                             </div>
                         </div>
+
+                        <!-- P4-2(2026-07-07): Top3 한눈에 비교 -->
+                        \${overallTop5.length >= 2 ? \`
+                            <div class="mt-6 pt-4 border-t border-wiki-border/30">
+                                <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2"><span>⚖️</span> Top 3 한눈에 비교</h4>
+                                <div class="overflow-x-auto rounded-xl" style="border:1px solid rgba(255,255,255,0.08);">
+                                    <table class="w-full text-[14px]" style="border-collapse:collapse; min-width:560px;">
+                                        <thead>
+                                            <tr style="background:rgba(255,255,255,0.04);">
+                                                <th class="p-3 text-left text-wiki-muted font-medium" style="width:80px;">항목</th>
+                                                \${overallTop5.slice(0, 3).map(j => \`<th class="p-3 text-left text-white font-semibold">\${escapeHtmlJob(j.job_name || '')}</th>\`).join('')}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="border-top:1px solid rgba(255,255,255,0.06);">
+                                                <td class="p-3 text-wiki-muted">적합도</td>
+                                                \${overallTop5.slice(0, 3).map(j => \`<td class="p-3 font-bold" style="color:#fbbf24;">\${j.fit_score || j.scores?.fit || '-'}</td>\`).join('')}
+                                            </tr>
+                                            <tr style="border-top:1px solid rgba(255,255,255,0.06);">
+                                                <td class="p-3 text-wiki-muted">💰 연봉</td>
+                                                \${overallTop5.slice(0, 3).map(j => \`<td class="p-3 text-wiki-muted leading-relaxed">\${j.salary_text ? escapeHtmlJob(j.salary_text) : '-'}</td>\`).join('')}
+                                            </tr>
+                                            <tr style="border-top:1px solid rgba(255,255,255,0.06);">
+                                                <td class="p-3 text-wiki-muted">📈 전망</td>
+                                                \${overallTop5.slice(0, 3).map(j => \`<td class="p-3 text-wiki-muted leading-relaxed">\${j.prospect_text ? escapeHtmlJob(j.prospect_text) : '-'}</td>\`).join('')}
+                                            </tr>
+                                            <tr style="border-top:1px solid rgba(255,255,255,0.06);">
+                                                <td class="p-3 text-wiki-muted">🎓 되는 법</td>
+                                                \${overallTop5.slice(0, 3).map(j => \`<td class="p-3 text-wiki-muted leading-relaxed">\${j.way_text ? escapeHtmlJob(j.way_text) : '-'}</td>\`).join('')}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        \` : ''}
+
+                        <!-- P4-3(2026-07-07): 오늘 할 수 있는 첫 걸음 -->
+                        \${(overallTop5[0] && overallTop5[0].way_text) ? \`
+                            <div class="mt-6 p-4 rounded-xl" style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25);">
+                                <h4 class="text-lg font-bold mb-2" style="color:#34d399;">🚀 오늘 할 수 있는 첫 걸음 — \${escapeHtmlJob(overallTop5[0].job_name || '')}</h4>
+                                <p class="text-[14px] text-wiki-muted leading-relaxed">\${escapeHtmlJob(overallTop5[0].way_text)}</p>
+                                <a href="/job/\${encodeURIComponent(overallTop5[0].slug || overallTop5[0].job_name || '')}" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 text-[13px] font-medium hover:underline" style="color:#34d399;">직업 상세에서 전체 로드맵 보기 →</a>
+                            </div>
+                        \` : ''}
                     \` : ''}
 
                 </div>
@@ -8149,6 +8205,7 @@ analyzerJobPage.get('/', async (c, next) => {
                             feasibility_score: job.feasibility_score || 0,
                             rationale: job.rationale || '', like_reason: job.like_reason || '', can_reason: job.can_reason || '',
                             evidence_quotes: job.evidence_quotes || [], risk_details: [], evidence_links: [],
+                            salary_text: job.salary_text || null, prospect_text: job.prospect_text || null, way_text: job.way_text || null,
                         }));
                     }
                     if (recommendData.recommendations.like_top10) {
@@ -8690,6 +8747,15 @@ analyzerJobPage.get('/', async (c, next) => {
 
                                 <!-- 직업 설명 -->
                                 \${displayDescription ? \`<p class="text-[16px] text-wiki-muted line-clamp-2 leading-relaxed mb-2">\${escapeHtmlJob(displayDescription)}</p>\` : ''}
+
+                                <!-- P4-1(2026-07-07): 위키 데이터 — 연봉·전망·되는법 -->
+                                \${(job.salary_text || job.prospect_text || job.way_text) ? \`
+                                    <div class="space-y-1 mt-2 mb-2 p-2.5 rounded-lg" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                                        \${job.salary_text ? \`<p class="text-[14px] leading-relaxed" style="color:#fbbf24;">💰 <span class="text-wiki-muted">\${escapeHtmlJob(job.salary_text)}</span></p>\` : ''}
+                                        \${job.prospect_text ? \`<p class="text-[14px] leading-relaxed" style="color:#93c5fd;">📈 <span class="text-wiki-muted">\${escapeHtmlJob(job.prospect_text)}</span></p>\` : ''}
+                                        \${job.way_text ? \`<p class="text-[14px] leading-relaxed" style="color:#6ee7b7;">🎓 <span class="text-wiki-muted">\${escapeHtmlJob(job.way_text)}</span></p>\` : ''}
+                                    </div>
+                                \` : ''}
 
                                 <!-- 매칭 태그 -->
                                 \${matchingTagsHtml}
