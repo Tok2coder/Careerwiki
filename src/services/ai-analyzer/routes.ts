@@ -6087,9 +6087,11 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
 
               // P3-6(2026-07-07): 서사 매치 직업은 관련성 캡 면제 — 심층 답변이 곧 관련성의 근거
               // (버튼 도메인 키워드 기반 캡이 서사 타깃 직업을 사후 제거하던 문제: 요리연구가 65→55 캡 실측)
-              // P5-2(2026-07-07): 면제 범위를 보너스 대상(top3)으로 축소 — 넓은 집합(12개) 면제가
-              // 서사 인접 노이즈(발효실관리원·광고판매관리자류)까지 캡을 피하게 하던 문제
-              if (narrativeTop3Ids.has(String((job as any).job_id))) continue
+              // P5-2(2026-07-07) → P5-5 절충: top3만 면제하니 서사 4~12위의 진짜 타깃(수간호사류)까지 캡 맞음(final2 실측 C1 4위·C2 5위 회귀).
+              // 면제 = 서사 top3 OR (서사 매치 AND Judge desire>=70) — 노이즈(desire 낮음)는 캡, 진짜 타깃은 보호
+              const jobIdStr = String((job as any).job_id)
+              if (narrativeTop3Ids.has(jobIdStr)) continue
+              if (narrativeMatchIds.has(jobIdStr) && ((job as any).like_score || 0) >= 70) continue
 
               // 1차: 명백한 노이즈 직업은 무조건 캡 (물리적 흥미가 없는 한)
               if (!hasPhysicalInterest && NOISE_JOB_PATTERNS.some(p => p.test(jobName))) {
