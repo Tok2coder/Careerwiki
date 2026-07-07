@@ -4619,10 +4619,18 @@ analyzerRoutes.post('/v3/round-questions', async (c) => {
     // (실증 결함: "분석 결과가 실제로 의사결정에그 경험을..." 깨진 문장 노출, "그 과정에서" 앵커 소실)
     // ============================================
     {
+      // 자동 수리: 첫 물음표 이후 꼬리 문장("그 이유도 궁금합니다" 등) 절단 — 폐기하면 문항 수가 깎이므로 수리 우선
+      const repairTailQuestion = (t: string): string => {
+        if (!t) return t
+        const m = t.search(/[?？]/)
+        if (m === -1) return t
+        const cut = t.slice(0, m + 1)
+        return cut.length >= 15 ? cut : t
+      }
+      result.questions = result.questions.map(q => ({ ...q, questionText: repairTailQuestion(q.questionText || '') }))
+
       const isLowQualityQuestion = (t: string): boolean => {
         if (!t) return false
-        const qMarks = (t.match(/[?？]/g) || []).length
-        if (qMarks > 1) return true                       // 꼬리 질문 (1질문 1물음 위반)
         if (t.length > 220) return true                   // 과도한 길이
         if (/^(그 |그런 |그때 |그 과정)/.test(t) && !/[''""「『]/.test(t)) return true  // 인용 없는 모호 지시어 시작
         return false
