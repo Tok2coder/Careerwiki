@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r70-b5",
+      "group_key": "cycle-R70-2026-07-08",
+      "agent_slug": "hangyeol",
+      "label": "R70 B5: 배추절단원~배출가스저감장치조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,15 +1,3 @@
-# 🚨 master skill spawn STRICT prompt template (v5, 2026-06-13)
-
-dispatcher가 sub-session spawn 시 이 헤더를 prompt 맨 앞에 그대로 prepend.
-
-v5 변경 (v4.1 대비) — **N직업-1세션 배치 복원 (기본 5직업/세션), Jason 결정 2026-06-13** (토큰 효율 회귀 수습):
-- 배경: v4(1직업-1세션, 2026-06-11)는 사망 반경 축소가 목적이었으나, 세션당 고정비(SKILL.md ~16.6K + CLAUDE.md ~8K + 템플릿/프롬프트 ~9K ≈ 40K 토큰)를 25번 재지불 + **prompt 캐시 파괴**로 cycle당 토큰이 ~5배(고정비 ~200K→~1M). "5h에 3 cycle"→"1 cycle도 미완"의 직접 원인. R46 실측 enhance 2.88M 토큰.
-- **복원: 5직업/세션 × 5세션** — 고정비를 세션당 1회로 amortize + SKILL.md 1회 로드 후 5직업 캐시 재사용.
-- **품질 불변(Jason 제약 "퀄리티 이상없게")**: 품질 게이트 전부 유지 — 직업당 validate pre-POST FAIL 3종(237ec3b) + audit-via-api CLEAN + 검증세션(sonnet) master-verify-cycle 전수 실측. 배치 크기는 폭발 반경에만 영향, 품질 하한은 스크립트가 강제.
-- **폭발 반경 수습 = 직업당 POST 체크포인트 + idempotent 재spawn**: 5직업을 1건씩 순차 POST(각 직업 완료 즉시 DB 기록). 세션이 중간 사망해도 완료분은 prod에 남고, 검증세션 전수 실측이 미완 직업을 식별 → 그 직업만 재spawn(중복 0). R44/R45/R46에서 검증된 패턴.
-- v4의 20룰 전부 유지 (직업 수 표현만 "할당 직업(아래 표 N건)" 으로 count-agnostic 치환). 검증 세션 sonnet 유지.
-
-```
 # 🚨 STRICT — 절대 룰 (위반 시 즉시 abort + 보고)
 
 1. **이 세션 할당 직업(아래 "처리 대상" 표의 직업) 외 직업 SELECT/POST/audit 절대 X.**
@@ -119,24 +107,55 @@ v5 변경 (v4.1 대비) — **N직업-1세션 배치 복원 (기본 5직업/세�
     - **배치 5직업 누적 tool-call 관리**: 직업당 ~40 tool-call 목표(5직업 ≈ 200 이내). R45 J12가 단일 직업 POST 후 검증 루프를 206 tool-call까지 돌다 session limit 사망 — 과검증이 사망 주원인. 배치 모드에선 직업당 검증 1라운드 엄수가 세션 생존의 핵심.
     - 한 직업 막히면(10 site 시도 후) 텍스트로 사유 보고 + 그 직업 skip하고 **다음 직업 계속** (세션 전체 abort 금지). 검증세션이 skip분 식별 → 재spawn.
 
-21. **🔴 룰 E — prod fetch 오류만으로 site-wide 장애 단정·전체 abort 금지** (2026-07-08, R70 B5 오탐 사고):
-    - Phase 0/6에서 `careerwiki.org` 페이지가 500/000/타임아웃으로 떠도 **그것만으로 "site-wide 장애"라 판단해 배치 전체를 0건 abort하지 말 것.**
-    - **Windows curl은 정상 200도 000(schannel TLS)로 떨어지고, edge 캐시 일시 blip·anti-bot으로 500/403이 뜰 수 있다.** 반드시 **node fetch(브라우저 UA)**로 재확인: `node -e 'fetch("https://careerwiki.org/job/<slug>",{headers:{"User-Agent":"Mozilla/5.0"}}).then(r=>r.text()).then(t=>console.log(r.status,t.length))'`. 대조군(소프트웨어개발자 등 무관 직업)도 같이 찍어 진짜 전역 장애인지 판별.
-    - node fetch로 200 확인되면 오탐 → **정상 진행.** 여러 직업·대조군이 node fetch로도 확정적으로 5xx일 때만 텍스트 보고 후 abort(그때도 데이터 손상 아님 — POST 안 했으면 marker=0, 재spawn으로 복구).
+---
 
 ---
 
-# 처리 대상 직업 (N직업-1세션 배치)
+# 🟢 활동 보고 (필수 — 생략 금지, 대시보드 '세부 작업' 실시간 가시화)
+
+이 세션은 대시보드에 1개의 wave 행으로 뜬다. 아래 2개를 **반드시** 실행한다(실패해도 배치는 계속 — emit 실패는 무해).
+
+- **STEP 0 (작업 시작 즉시, 첫 직업 처리 전):**
+  `node scripts/emit-activity.cjs --file data/cycle/r70_activity/b1.json --status running`
+- **STEP LAST (세션 종료 직전, 모든 직업 처리/보고 후):**
+  성공: `node scripts/emit-activity.cjs --file data/cycle/r70_activity/b1.json --status done --tool-calls <대략 tool-call 수> --detail "<완료직업수>/5 done"`
+  일부/실패: `node scripts/emit-activity.cjs --file data/cycle/r70_activity/b1.json --status failed --detail "<완료>/5, 미완=<slug 사유>"`
+
+(`--tool-calls`/`--detail`는 가능하면 채우고, 모르면 생략 가능. external_id·group_key·label·model은 base 파일에 이미 박혀 있으니 건드리지 않는다.)
+
+---
+
+# 처리 대상 직업 (R70_B1 — ENHANCE 모드, marker 미보유 신규, 5직업-1세션 배치)
 
 | # | name | id | slug | industry_class | URL pool hint |
 |---|---|---|---|---|---|
-| 1 | <name> | <id> | <slug> | <niche/minor/major> | site1, site2, ... (5+) |
-| 2 | ... | ... | ... | ... | ... |
+| 1 | 배수지관리원 | 1765285460327490 | 배수지관리원 | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | 산업 소관 부처(.go.kr)·직능 협회/학회(.or.kr)·대표 기업(.co.kr) deep page + KOSIS·언론 deep article 우선. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)** |
+| 2 | 배양반장 | 1765284847906428 | 배양반장 | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | 산업 소관 부처(.go.kr)·직능 협회/학회(.or.kr)·대표 기업(.co.kr) deep page + KOSIS·언론 deep article 우선. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)** |
+| 3 | 배재원 | 1765285433932217 | 배재원 | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | 산업 소관 부처(.go.kr)·직능 협회/학회(.or.kr)·대표 기업(.co.kr) deep page + KOSIS·언론 deep article 우선. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)** |
+| 4 | 배전계획원 | 1765284287583389 | 배전계획원 | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | 특화 pool: kepco.co.kr(한국전력) · khnp.co.kr(한국수력원자력) · kemco.or.kr(한국에너지공단) · motie.go.kr(산업통상자원부) · energy.or.kr + 추가 발굴. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)** |
+| 5 | 배전공사기술자 | 1765283841657489 | 배전공사기술자 | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | 특화 pool: kepco.co.kr(한국전력) · khnp.co.kr(한국수력원자력) · kemco.or.kr(한국에너지공단) · motie.go.kr(산업통상자원부) · energy.or.kr + 추가 발굴. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)** |
 
 # 처리 절차
 
-`.claude/skills/job-data-master/SKILL.md` Phase 0~7 흐름 따라 표의 직업을 **1건씩 순차** master 적용.
-POST endpoint: `https://careerwiki.org/api/job/{id}/edit`  /  인증: `X-Admin-Secret: careerwiki-admin-2026`
-직업 1건: 발굴 → 본문/출처 작성 → URL 생존 일괄 확인(룰 A) → validate(룰 C) → POST → audit+마커 1라운드(룰 D) → 1줄 보고 → 다음 직업.
+`.claude/skills/job-data-master/SKILL.md` Phase 0~7 흐름 (ENHANCE 모드). 위 표의 직업을 **1건씩 순차** 처리 — 한 직업을 POST·검증 완료한 뒤 다음 직업으로 (POST 체크포인트: 세션 중간 사망 시 완료분은 prod 보존, 검증세션이 미완분 식별).
+- POST: `https://careerwiki.org/api/job/{id}/edit` + `X-Admin-Secret: careerwiki-admin-2026`
+- POST body: 파일 기반 (인라인 한글 본문 절대 X — mojibake-block hook)
+- POST 전 `node scripts/validate-job-edit.cjs payload.json --class=<분류>` ALL PASS 의무 (룰 19 결정적 게이트)
+- POST 후 `node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal` CLEAN + 마커 확인 — **직업당 1라운드** (룰 20 과검증 금지, 세션 생존)
+- change_summary: `[job-data-master] enhance — way·trivia·detailReady·sidebar·youtubeLinks·...` (top-level camelCase)
+- distinct URL ≥ 18 + totalEntries ≥ 19 강제 (룰 4·15). 한 직업 막히면 사유 보고 + skip하고 다음 직업 계속(세션 전체 abort X).
+
 표의 직업 전부 끝나면 즉시 종료. 자동 다음 cycle 진입 X.
+
+# 보고 형식
+
+```
+R70_B1 결과:
+배수지관리원  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK
+배양반장  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK
+배재원  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK
+배전계획원  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK
+배전공사기술자  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK
+
+JOBS DONE: 5/5 ok   (미완 시: JOBS: M/5 ok, 미완=<slug + 사유>)
 ```

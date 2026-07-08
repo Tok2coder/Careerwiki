@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r70-b4",
+      "group_key": "cycle-R70-2026-07-08",
+      "agent_slug": "hangyeol",
+      "label": "R70 B4: 배전작업현장감독자~배지조제원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

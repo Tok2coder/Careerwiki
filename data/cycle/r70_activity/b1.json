@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r70-b1",
+      "group_key": "cycle-R70-2026-07-08",
+      "agent_slug": "hangyeol",
+      "label": "R70 B1: 배수지관리원~배전공사기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
