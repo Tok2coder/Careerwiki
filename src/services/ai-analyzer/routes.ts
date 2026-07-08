@@ -6121,8 +6121,12 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
 
         // Phase 6-C: Feasibility 코드 레벨 앵커 — Can부족 유저 보정
         // background_flags가 비어있으면(경험 없음) 시니어/전문가급 직업의 can_score 상한 적용
+        // v3.28.3: 경력 5년 미만도 캡 대상 — background가 있어도 저연차엔 아키텍트/시니어급이 과함 (CC 5년차 빅데이터아키텍처전문가 잔존 실측)
         const bgFlags = payload.mini_module_result?.background_flags || []
-        const hasNoBackground = bgFlags.length === 0
+        const yrsMatch = String(careerState?.career_stage_years || '').match(/\d+/)
+        const careerYears = yrsMatch ? parseInt(yrsMatch[0], 10) : null
+        const isJunior = careerYears !== null && careerYears < 6
+        const hasNoBackground = bgFlags.length === 0 || isJunior
         if (hasNoBackground) {
           // v3.28.0: 임원·관리자·컨설턴트·교장급 추가 — 무경력·학생에게 공공기관임원/교장/교육감이 노출되던 구멍 (career-state 테스트 실측)
           const SENIOR_KEYWORDS = ['수석', '책임', '시니어', '선임', '수장', '총괄', '관장', '원장', '소장', '부장', '팀장', '본부장', '실장', '이사', '전문가', '아키텍트', '리드', '매니저', '임원', '관리자', '컨설턴트', '교장', '교감', '교육감', '장학사', '고위']

@@ -447,7 +447,7 @@ export async function generatePremiumReportV3(
     const profileContext = buildProfileInterpretationContext(miniModuleResult)
 
     // 메타인지 분석용 컨텍스트 생성
-    const metaCognitionContext = buildMetaCognitionContext(miniModuleResult, narrativeFacts)
+    const metaCognitionContext = buildMetaCognitionContext(miniModuleResult, narrativeFacts, roundAnswers as any)
 
     // 병렬로 각 섹션 생성 (OpenAI 사용)
     const [
@@ -1324,7 +1324,8 @@ function createFallbackReport(
  */
 function buildMetaCognitionContext(
   miniModuleResult?: MiniModuleResult,
-  narrativeFacts?: NarrativeFacts
+  narrativeFacts?: NarrativeFacts,
+  roundAnswers?: Array<{ roundNumber: 1 | 2 | 3; questionId: string; answer: string }>
 ): string {
   if (!miniModuleResult) {
     return '[USER_DATA]\n프로필 정보 없음\n[/USER_DATA]'
@@ -1338,7 +1339,7 @@ function buildMetaCognitionContext(
     parts.push(`\n[흥미/관심사]`)
     mm.interest_top.forEach(token => {
       const label = TOKEN_TO_KOREAN[token] || token
-      parts.push(`- ${label} (${token})`)
+      parts.push(`- ${label}`)
     })
   }
 
@@ -1347,7 +1348,7 @@ function buildMetaCognitionContext(
     parts.push(`\n[강점]`)
     mm.strength_top.forEach(token => {
       const label = TOKEN_TO_KOREAN[token] || token
-      parts.push(`- ${label} (${token})`)
+      parts.push(`- ${label}`)
     })
   }
 
@@ -1356,7 +1357,7 @@ function buildMetaCognitionContext(
     parts.push(`\n[가치관]`)
     mm.value_top.forEach(token => {
       const label = TOKEN_TO_KOREAN[token] || token
-      parts.push(`- ${label} (${token})`)
+      parts.push(`- ${label}`)
     })
   }
 
@@ -1365,7 +1366,7 @@ function buildMetaCognitionContext(
     parts.push(`\n[제약/회피]`)
     mm.constraint_flags.forEach(token => {
       const label = TOKEN_TO_KOREAN[token] || token
-      parts.push(`- ${label} (${token})`)
+      parts.push(`- ${label}`)
     })
   }
 
@@ -1374,7 +1375,7 @@ function buildMetaCognitionContext(
     parts.push(`\n[에너지 소모원 - 스트레스 요인]`)
     mm.energy_drain_flags.forEach(token => {
       const label = TOKEN_TO_KOREAN[token] || token
-      parts.push(`- ${label} (${token})`)
+      parts.push(`- ${label}`)
     })
   }
 
@@ -1383,7 +1384,7 @@ function buildMetaCognitionContext(
     parts.push(`\n[성취 피드백 타입]`)
     mm.achievement_feedback_top.forEach(token => {
       const label = TOKEN_TO_KOREAN[token] || token
-      parts.push(`- ${label} (${token})`)
+      parts.push(`- ${label}`)
     })
   }
 
@@ -1415,6 +1416,14 @@ function buildMetaCognitionContext(
     }
     if (narrativeFacts.existentialAnswer) {
       parts.push(`\n[실존적 가치 선택]\n"${narrativeFacts.existentialAnswer}"`)
+    }
+  }
+
+  // 심층 인터뷰 답변 (2026-07-07: 메타인지가 얕고 일반적이던 문제 — 가장 풍부한 서사인 라운드 답변을 미사용했음)
+  if (roundAnswers && roundAnswers.length > 0) {
+    parts.push(`\n[심층 인터뷰 답변 — 아래 원문을 반드시 인용해 구체적이고 개인화된 통찰을 작성하세요]`)
+    for (const ra of roundAnswers) {
+      if (ra.answer && ra.answer.trim().length > 5) parts.push(`- "${ra.answer.trim()}"`)
     }
   }
 
@@ -2232,7 +2241,7 @@ export async function generateMajorPremiumReport(
     const profileContext = buildProfileInterpretationContext(miniModuleResult)
 
     // 메타인지 분석용 컨텍스트 생성
-    const metaCognitionContext = buildMetaCognitionContext(miniModuleResult, narrativeFacts)
+    const metaCognitionContext = buildMetaCognitionContext(miniModuleResult, narrativeFacts, roundAnswers as any)
 
     // 병렬로 각 섹션 생성 (전공용 프롬프트 사용)
     const [
