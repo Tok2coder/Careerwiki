@@ -6310,6 +6310,24 @@ analyzerJobPage.get('/', async (c, next) => {
         // ============================================
         
         // 영어 용어 → 한국어 변환 맵
+        // 2026-07-07: 한글 순도 하네스가 잡은 누락 45개 (백엔드 TOKEN_TO_KOREAN과 동기화)
+        // 복합 토큰(helping_others 등)이 부분치환으로 '_others' 잔재를 남기던 문제 — 전체 매치 우선
+        const EXTRA_LABELS = {
+            english: '영어', chinese: '중국어', japanese: '일본어', spanish: '스페인어',
+            french: '프랑스어', german: '독일어', vietnamese: '베트남어', thai: '태국어',
+            mastery: '숙련·전문성', planner: '계획형', improviser: '즉흥형',
+            specialist: '전문가형', wide_impact: '넓은 영향력', explorer: '탐험형',
+            analyze_improve: '분석·개선형', try_different: '다른 방식 시도', pivot_quickly: '빠른 전환', creative_pivot: '창의적 전환',
+            passion_anchor: '열정 기반', vision_anchor: '비전 기반',
+            meet_expectations: '기대 부응', ignore: '외부 기대 무시', selective_listen: '선택적 수용',
+            independent_path: '독립적 진로', seek_support: '주변 지원 요청', team_org: '팀·조직 중심',
+            helping_others: '타인 돕기', education: '교육', social_contribution: '사회 기여', social_impact: '사회적 영향',
+            art_design: '예술·디자인', media_content: '미디어·콘텐츠', business_management: '경영·관리',
+            leadership: '리더십', innovation: '혁신', financial_success: '경제적 성공',
+            prefer_wlb: '워라밸 우선', long_hours_ok: '장시간 근무 가능', unstable_hours: '불규칙 근무',
+            high_stress: '높은 업무 강도', balanced: '균형 지향', consider_carefully: '신중한 결정',
+            volunteer_experience: '봉사 경험', portfolio: '포트폴리오 보유', audience_response: '대중 반응 경험',
+        };
         const STAGE_LABELS = {
             job_explore: '탐색 단계',
             job_student: '학생 단계',
@@ -6483,6 +6501,7 @@ analyzerJobPage.get('/', async (c, next) => {
                 ...DRAIN_LABELS,
                 ...SACRIFICE_LABELS,
                 ...CONSTRAINT_LABELS,
+                ...EXTRA_LABELS,
             };
 
             // 정확히 일치하는 경우 먼저 처리
@@ -7015,40 +7034,7 @@ analyzerJobPage.get('/', async (c, next) => {
                             </div>
                         </div>
 
-                        <!-- P4-2(2026-07-07): Top3 한눈에 비교 -->
-                        \${overallTop5.length >= 2 ? \`
-                            <div class="mt-6 pt-4 border-t border-wiki-border/30">
-                                <h4 class="text-2xl font-bold mb-4 text-wiki-text flex items-center gap-2"><span>⚖️</span> Top 3 한눈에 비교</h4>
-                                <div class="overflow-x-auto rounded-xl" style="border:1px solid rgba(255,255,255,0.08);">
-                                    <table class="w-full text-[14px]" style="border-collapse:collapse; min-width:560px;">
-                                        <thead>
-                                            <tr style="background:rgba(255,255,255,0.04);">
-                                                <th class="p-3 text-left text-wiki-muted font-medium" style="width:80px;">항목</th>
-                                                \${overallTop5.slice(0, 3).map(j => \`<th class="p-3 text-left text-white font-semibold">\${escapeHtmlJob(j.job_name || '')}</th>\`).join('')}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr style="border-top:1px solid rgba(255,255,255,0.06);">
-                                                <td class="p-3 text-wiki-muted">적합도</td>
-                                                \${overallTop5.slice(0, 3).map(j => \`<td class="p-3 font-bold" style="color:#fbbf24;">\${j.fit_score || j.scores?.fit || '-'}</td>\`).join('')}
-                                            </tr>
-                                            <tr style="border-top:1px solid rgba(255,255,255,0.06);">
-                                                <td class="p-3 text-wiki-muted">💰 연봉</td>
-                                                \${overallTop5.slice(0, 3).map(j => \`<td class="p-3 text-wiki-muted leading-relaxed">\${j.salary_text ? escapeHtmlJob(j.salary_text) : '-'}</td>\`).join('')}
-                                            </tr>
-                                            <tr style="border-top:1px solid rgba(255,255,255,0.06);">
-                                                <td class="p-3 text-wiki-muted">📈 전망</td>
-                                                \${overallTop5.slice(0, 3).map(j => \`<td class="p-3 text-wiki-muted leading-relaxed">\${j.prospect_text ? escapeHtmlJob(j.prospect_text) : '-'}</td>\`).join('')}
-                                            </tr>
-                                            <tr style="border-top:1px solid rgba(255,255,255,0.06);">
-                                                <td class="p-3 text-wiki-muted">🎓 되는 법</td>
-                                                \${overallTop5.slice(0, 3).map(j => \`<td class="p-3 text-wiki-muted leading-relaxed">\${j.way_text ? escapeHtmlJob(j.way_text) : '-'}</td>\`).join('')}
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        \` : ''}
+                        <!-- P4-2 Top3 비교표: 추천 직업 Top3와 중복이라 제거 (2026-07-07 Jason 피드백) -->
 
                         <!-- P4-3(2026-07-07): 오늘 할 수 있는 첫 걸음 -->
                         \${(overallTop5[0] && (overallTop5[0].way_text || (result.related_guides || []).length > 0)) ? \`

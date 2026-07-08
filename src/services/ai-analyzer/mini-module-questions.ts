@@ -1198,6 +1198,33 @@ export const TOKEN_TO_KOREAN: Record<string, string> = {
   uncertainty_drain: '불확실성 스트레스',
   routine_drain: '반복 루틴 피로',
   bureaucracy_drain: '관료적 절차 스트레스',
+
+  // 2026-07-07: 한글 순도 하네스가 잡은 누락 45개 (시나리오·확장모듈·언어 전용 토큰)
+  // 언어(Q7)
+  english: '영어', chinese: '중국어', japanese: '일본어', spanish: '스페인어',
+  french: '프랑스어', german: '독일어', vietnamese: '베트남어', thai: '태국어',
+  // 성취 피드백(Q10)
+  mastery: '숙련·전문성',
+  // 실행 스타일(Q11)
+  planner: '계획형', improviser: '즉흥형',
+  // 영향 범위(Q12)
+  specialist: '전문가형', wide_impact: '넓은 영향력', explorer: '탐험형',
+  // 실패 대응(Q13)
+  analyze_improve: '분석·개선형', try_different: '다른 방식 시도', pivot_quickly: '빠른 전환', creative_pivot: '창의적 전환',
+  // 끈기 앵커(Q14)
+  passion_anchor: '열정 기반 지속', vision_anchor: '비전 기반 지속',
+  // 외부 기대(Q15)
+  meet_expectations: '기대 부응', ignore: '외부 기대 무시', selective_listen: '선택적 수용',
+  independent_path: '독립적 진로', seek_support: '주변 지원 요청', team_org: '팀·조직 중심',
+  // 흥미·가치(시나리오 별칭)
+  helping_others: '타인 돕기', education: '교육', social_contribution: '사회 기여', social_impact: '사회적 영향',
+  art_design: '예술·디자인', media_content: '미디어·콘텐츠', business_management: '경영·관리',
+  leadership: '리더십', innovation: '혁신', financial_success: '경제적 성공',
+  // 제약·근무 선호
+  prefer_wlb: '워라밸 우선', long_hours_ok: '장시간 근무 가능', unstable_hours: '불규칙 근무',
+  high_stress: '높은 업무 강도', balanced: '균형 지향', consider_carefully: '신중한 결정',
+  // 배경 플래그
+  volunteer_experience: '봉사 경험', portfolio: '포트폴리오 보유', audience_response: '대중 반응 경험',
 }
 
 // ============================================
