@@ -5432,8 +5432,8 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
         }
         recCacheHash = hash.toString(16).padStart(8, '0')
 
-        // 캐시 조회
-        const cached = await db.prepare(
+        // 캐시 조회 (nocache: 변동성 측정용 캐시 우회 — 2026-07-07 Judge 품질 국면)
+        const cached = (payload as any).nocache ? null : await db.prepare(
           'SELECT result_json, premium_report_json FROM recommendation_result_cache WHERE profile_hash = ? AND analysis_type = ? AND engine_version = ?'
         ).bind(recCacheHash, 'job', RECOMMENDATION_ENGINE_VERSION).first<{ result_json: string; premium_report_json?: string }>()
 
