@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r72-b3",
+      "group_key": "cycle-R72-2026-07-09",
+      "agent_slug": "hangyeol",
+      "label": "R72 B3: 범죄영상분석가~법의영상분석연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

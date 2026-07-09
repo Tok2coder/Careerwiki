@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r72-b5",
+      "group_key": "cycle-R72-2026-07-09",
+      "agent_slug": "hangyeol",
+      "label": "R72 B5: 벤처자금대출원~벽돌판매원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 버터교유기조작원                 | totalE=24 | distinct=10 | marker=OK | clean
+PASS 버터제조반장                   | totalE=24 | distinct=10 | marker=OK | clean
+WARN 버핑기조작원                   | totalE=25 | distinct=10 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.shoenet.org/main/9?action=view&no=29169&bbsId=104
+        [urlUnverified] tls: https://www.shoenet.org/main/4
+WARN 번역물품질관리사무원               | totalE=32 | distinct=18 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://kst-tct.org/testGiude_01.php
+        [urlUnverified] tls: https://kstinc.or.kr/kor/sub/notice.php?m=v&idx=305&pNo=1&code=notice
+WARN 벌꿀제조원                    | totalE=26 | distinct=10 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.korapis.or.kr/jsp/sub6-3_01.jsp?no=6942
+PASS 벌목원                      | totalE=19 | distinct=12 | marker=OK | clean
+PASS 벌초원                      | totalE=20 | distinct=11 | marker=OK | clean
+PASS 벌킹기운전원                   | totalE=20 | distinct=10 | marker=OK | clean
+WARN 범죄문서감정관                  | totalE=19 | distinct=10 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] timeout: https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART001045222
+        [urlUnverified] tls: https://ifds.co.kr/sub2/2_1.php
+WARN 범죄심리분석관                  | totalE=19 | distinct=10 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] timeout: https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003087421
+        [urlUnverified] timeout: https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003004306
+PASS 범죄영상분석가                  | totalE=20 | distinct=13 | marker=OK | clean
+WARN 법경제연구원                   | totalE=20 | distinct=12 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] timeout: https://www.kci.go.kr/kciportal/po/search/poCitaView.kci?sereId=SER000010215
+PASS 법무사무원                    | totalE=22 | distinct=10 | marker=OK | clean
+PASS 법원장                      | totalE=22 | distinct=10 | marker=OK | clean
+WARN 법의영상분석연구원                | totalE=21 | distinct=10 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] timeout: https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART001238575
+WARN 법의학자                     | totalE=26 | distinct=19 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] timeout: https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002043252
+PASS 법인유가증권거래중개인              | totalE=26 | distinct=18 | marker=OK | clean
+PASS 법학연구원                    | totalE=31 | distinct=19 | marker=OK | clean
+PASS 베이킹파우더혼합원                | totalE=26 | distinct=11 | marker=OK | clean
+PASS 베타테스터                    | totalE=31 | distinct=18 | marker=OK | clean
+PASS 벤처자금대출원                  | totalE=24 | distinct=19 | marker=OK | clean
+PASS 벨트성형원                    | totalE=20 | distinct=11 | marker=OK | clean
+PASS 벨트여과기조작원                 | totalE=21 | distinct=11 | marker=OK | clean
+PASS 벨트피복원                    | totalE=20 | distinct=10 | marker=OK | clean
+PASS 벽돌판매원                    | totalE=20 | distinct=10 | marker=OK | clean
+
+=== Summary: PASS 17/25, WARN 8 ===
+WARN: 버핑기조작원(urlUnverified(2)), 번역물품질관리사무원(urlUnverified(2)), 벌꿀제조원(urlUnverified(1)), 범죄문서감정관(urlUnverified(2)), 범죄심리분석관(urlUnverified(2)), 법경제연구원(urlUnverified(1)), 법의영상분석연구원(urlUnverified(1)), 법의학자(urlUnverified(1))
