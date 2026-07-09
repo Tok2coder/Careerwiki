@@ -98,6 +98,9 @@ v5 변경 (v4.1 대비) — **N직업-1세션 배치 복원 (기본 5직업/세�
     - 200 · 30x = OK.
     - 검증: `node scripts/skill-cache/audit-via-api.cjs <slug> --exclude-sal` (`urlDead`=FAIL / `urlUnverified`=WARN) — `urlDead` 발견 시 즉시 RETRY.
     - **생존 확인은 URL 목록 일괄 1회 node 호출로** (URL당 개별 Bash 호출 금지 — 18+ URL이면 18+ 콜 낭비, 룰 20 tool-call 경제. WebFetch 내용 검증 의무와는 별개 — 둘 다 수행하되 생존 체크만 일괄화).
+    - **🚫 dead-redirect 도메인 하드 블랙리스트 (WebFetch·등록 절대 금지)** — apex는 빠르게 301 응답하지만 리다이렉트 목적지가 무응답 black hole이라 WebFetch가 **하드 타임아웃 없이 물려 세션이 무한 정지·사망**하는 도메인. 접근 시도 자체를 하지 마라:
+      - `jmi.re.kr` / `www.jmi.re.kr` (apex 301 → `https://www.jmi.re.kr/` 7s+ TIMEOUT, R71 버섯연구원 B3 세션 사망 원인, 2026-07-09)
+      - 신규 발견 시 이 목록에 추가. dead-redirect 의심(apex 301인데 www/목적지 응답 지연) 시 **먼저 HEAD 프로브(하드 timeout 7s)로 목적지 생존 확인 후** WebFetch, 죽었으면 즉시 대체 출처로.
 
 18. **🔴 룰 B — 보고 7열 전 칸 의무 + 모호 표기 금지** (2026-06-10, R41 보고 형식 위반):
     - 완료 보고는 **7열 모두** 기재: `직업 | rev | distinct | totalE(정확 수치) | class | CLEAN | 마커OK`.
