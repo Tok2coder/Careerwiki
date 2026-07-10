@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r77-b5",
+      "group_key": "cycle-R77-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R77 B5: 부동산경매인~부동산신탁관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

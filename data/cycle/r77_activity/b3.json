@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r77-b3",
+      "group_key": "cycle-R77-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R77 B3: 봉제완구충전기조작원~부가가치통신망영업원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

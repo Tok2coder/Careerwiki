@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r77-b1",
+      "group_key": "cycle-R77-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R77 B1: 볼트도금원~볼트헤드원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

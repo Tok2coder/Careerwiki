@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r77-b2",
+      "group_key": "cycle-R77-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R77 B2: 봉수망어선원~봉제완구제조원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

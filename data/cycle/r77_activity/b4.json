@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r77-b4",
+      "group_key": "cycle-R77-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R77 B4: 부가서비스장비운용원~부동산개발자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
