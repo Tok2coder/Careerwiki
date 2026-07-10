@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r75-b1",
+      "group_key": "cycle-R75-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R75 B1: 보온단열재성형원~보일러검사원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

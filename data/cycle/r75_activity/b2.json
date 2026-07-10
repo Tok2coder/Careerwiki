@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r75-b2",
+      "group_key": "cycle-R75-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R75 B2: 보일러관체제작원~보일러수리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

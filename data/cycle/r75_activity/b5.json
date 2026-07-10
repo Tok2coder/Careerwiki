@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r75-b5",
+      "group_key": "cycle-R75-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R75 B5: 보험계약심사원~보험금지급관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

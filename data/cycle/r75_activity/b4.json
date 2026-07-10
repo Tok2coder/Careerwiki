@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r75-b4",
+      "group_key": "cycle-R75-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R75 B4: 보증보험구상사무원~보청기조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

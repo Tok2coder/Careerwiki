@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r75-b3",
+      "group_key": "cycle-R75-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R75 B3: 보일러시험원~보조출연자섭외원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
