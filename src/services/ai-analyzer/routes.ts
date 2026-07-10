@@ -5839,17 +5839,20 @@ analyzerRoutes.post('/v3/recommend', async (c) => {
     }
 
     // v3.9.5: 사전 필터된 상위 후보군 (Like/Can/Final 3축 분리로 다양한 후보 확보)
+    // v3.29.1: 동점 tie-break(job_id) 추가 — 점수 동률 직업이 slice(20) 경계에서 회차마다 들락날락해
+    // 후보 풀이 흔들리던 문제(풀 Jaccard 0.67 실측). tie-break로 선발을 결정론화.
+    const byIdAsc = (a: any, b: any) => String(a.job_id).localeCompare(String(b.job_id))
     // Like 편향 후보: like_score 상위 20개
     const likeBiasedJobs = [...filteredJobs]
-      .sort((a, b) => (b.like_score || 0) - (a.like_score || 0))
+      .sort((a, b) => (b.like_score || 0) - (a.like_score || 0) || byIdAsc(a, b))
       .slice(0, 20)
     // Can 편향 후보: can_score 상위 20개
     const canBiasedJobs = [...filteredJobs]
-      .sort((a, b) => (b.can_score || 0) - (a.can_score || 0))
+      .sort((a, b) => (b.can_score || 0) - (a.can_score || 0) || byIdAsc(a, b))
       .slice(0, 20)
     // Final 편향 후보: final_score 상위 20개 (개인화 점수 기반 종합 최적)
     const finalBiasedJobs = [...filteredJobs]
-      .sort((a, b) => (b.final_score || 0) - (a.final_score || 0))
+      .sort((a, b) => (b.final_score || 0) - (a.final_score || 0) || byIdAsc(a, b))
       .slice(0, 20)
     // P3(2026-07-07): 서사(심층답변)가 있으면 "서사가 가리키는 직업"을 전용 벡터 검색으로 직접 식별해 Judge 후보 예약
     // — 서사 타깃 직업이 버튼 기반 base 점수·히트카운트 보너스에 밀려 Judge에 도달조차 못 하던 문제 (상충 페르소나 3종 top10 0개 실측)

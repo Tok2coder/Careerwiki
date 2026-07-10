@@ -515,7 +515,7 @@ export async function searchCandidatesMultiQuery(
       const hitBonus = hits >= 3 ? Math.min(0.05, (hits - 2) * 0.015) : 0
       return { id, score: Math.min(1.0, score + hitBonus), hits }
     })
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => b.score - a.score || String(a.id).localeCompare(String(b.id)))
     .map(({ id, score }) => ({
       job_id: id,
       job_name: id,
@@ -3013,7 +3013,7 @@ export async function searchMajorCandidatesMultiQuery(
       const hitBonus = hits >= 3 ? Math.min(0.05, (hits - 2) * 0.015) : 0
       return { id, score: Math.min(1.0, score + hitBonus), hits }
     })
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => b.score - a.score || String(a.id).localeCompare(String(b.id)))
     .map(({ id, score }) => ({
       major_id: id,
       major_name: id,  // 실제 이름은 DB 조인에서 채움
