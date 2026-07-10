@@ -204,27 +204,78 @@ const INDUSTRY_POOL_MAP = [
   },
 ];
 
-// 직업명에서 산업별 특화 pool hint를 반환. 미매칭 시 null.
-function resolvePoolHint(jobName) {
+// 텍스트(직업명 or 산업분류)에서 매칭되는 INDUSTRY_POOL_MAP 항목을 반환. 미매칭 시 null.
+// (Tier 1: 산업분류 텍스트로 호출하면 이름 동음이의 함정 회피)
+function resolvePoolEntry(text) {
+  if (!text) return null;
   for (const entry of INDUSTRY_POOL_MAP) {
     for (const kw of entry.keywords) {
-      if (jobName.includes(kw)) {
-        return `특화 pool: ${entry.pool} + 추가 발굴`;
-      }
+      if (text.includes(kw)) return entry;
     }
   }
   return null;
 }
 
+// 직업명에서 산업별 특화 pool hint를 반환. 미매칭 시 null. (레거시 호환)
+function resolvePoolHint(jobName) {
+  const e = resolvePoolEntry(jobName);
+  return e ? `특화 pool: ${e.pool} + 추가 발굴` : null;
+}
+
+// ─── DB: cycle 직업들의 heroCategory(산업분류) 조회 → Map(id → 산업텍스트) ───
+// 명칭 함정 사전차단(Tier 1+2)의 진리 신호. merged_profile_json.heroCategory 는 single/multi 두 형태.
+function fetchHeroCategories(ids) {
+  if (!ids || !ids.length) return null;
+  const inList = ids.map((x) => String(x)).join(',');
+  const cmd = `npx wrangler d1 execute careerwiki-kr --remote --command "SELECT id, json_extract(merged_profile_json,'$.heroCategory') AS hc FROM jobs WHERE id IN (${inList});" --json`;
+  try {
+    const out = execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 32 * 1024 * 1024 });
+    const j = JSON.parse(out);
+    const rows = j[0]?.results || [];
+    const map = new Map();
+    for (const r of rows) {
+      let txt = null;
+      if (r.hc) {
+        try {
+          const o = typeof r.hc === 'string' ? JSON.parse(r.hc) : r.hc;
+          if (o && typeof o === 'object') {
+            if (o.value) txt = String(o.value);
+            else if (Array.isArray(o.values)) txt = o.values.map((v) => (v && v.value) || v).filter(Boolean).join(' / ');
+          } else if (typeof o === 'string') txt = o;
+        } catch { txt = String(r.hc); }
+      }
+      map.set(String(r.id), txt);
+    }
+    return map;
+  } catch (e) {
+    console.error('[warn] heroCategory 조회 실패 (명칭함정 사전차단 생략, 워커 Phase 0 방어에 의존):', e.message.slice(0, 100));
+    return null;
+  }
+}
+
 // ─── batch prompt 생성 (v5: 5직업-1세션, 순차 POST 체크포인트) ───
-function buildBatchPrompt(cycleNum, batchNum, jobs, strictBlock) {
+function buildBatchPrompt(cycleNum, batchNum, jobs, strictBlock, heroCatMap) {
   const sessionName = `R${cycleNum}_B${batchNum}`;
   const GENERIC_HINT = '산업 소관 부처(.go.kr)·직능 협회/학회(.or.kr)·대표 기업(.co.kr) deep page + KOSIS·언론 deep article 우선. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)**';
+  const TAIL = 'root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)**';
   const rows = jobs.map((job, i) => {
-    const specialized = resolvePoolHint(job.name);
-    const hint = specialized
-      ? `${specialized}. root/검색 URL 금지. **niche도 distinct≥10 필수(d<10 검증 FAIL)**`
-      : GENERIC_HINT;
+    // Tier 1: hint는 DB 산업분류(heroCategory) 기준으로 우선 생성 (이름 동음이의 함정 회피).
+    const industry = heroCatMap ? (heroCatMap.get(String(job.id)) || null) : null;
+    const nameEntry = resolvePoolEntry(job.name);
+    const indEntry = resolvePoolEntry(industry);
+    const indTag = industry ? `DB 산업분류(heroCategory): "${industry}". ` : '';
+    // Tier 2: 산업분류를 아는데 직업명 기반 pool이 그와 어긋나면(다른 pool이거나 산업분류는 미매칭) 명칭 함정.
+    const nameTrap = !!industry && !!nameEntry && nameEntry !== indEntry;
+    let hint;
+    if (nameTrap) {
+      const ref = indEntry
+        ? `참고 pool: ${indEntry.pool} + 추가 발굴`
+        : `map 특화 pool 없음 — 위 산업분류 텍스트 기준으로 소관부처(.go.kr)/협회·학회(.or.kr) deep page 직접 발굴`;
+      hint = `🔴 명칭 중의성 경고 — 직업명 기반 hint가 DB 산업분류와 불일치. **직업명 신호 무시**, ${indTag}이 산업분류 기준으로 실직무 확정 후 출처 발굴. ${ref}. ${TAIL}`;
+    } else {
+      const primary = indEntry || nameEntry; // 산업분류 매칭 우선, 없으면 이름 매칭 fallback
+      hint = primary ? `${indTag}특화 pool: ${primary.pool} + 추가 발굴. ${TAIL}` : `${indTag}${GENERIC_HINT}`;
+    }
     return `| ${i + 1} | ${job.name} | ${job.id} | ${job.slug} | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | ${hint} |`;
   }).join('\n');
   const reportRows = jobs.map((job) => `${job.slug}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK`).join('\n');
@@ -295,6 +346,10 @@ function generateCycle(cycleNum, opts = {}) {
   // DB cross-check (옵션)
   let processed = null;
   if (!opts.skipDb) processed = fetchProcessedSlugs();
+
+  // 명칭 함정 사전차단(Tier 1+2): cycle 직업들의 heroCategory(산업분류) 조회
+  let heroCatMap = null;
+  if (!opts.skipDb) heroCatMap = fetchHeroCategories(allJobs.map((j) => j.id));
   const alreadyDone = [];
   if (processed) {
     for (const j of allJobs) {
@@ -310,7 +365,7 @@ function generateCycle(cycleNum, opts = {}) {
   for (let bi = 0; bi < batches.length; bi++) {
     const bn = bi + 1;
     const jobs = batches[bi];
-    const prompt = buildBatchPrompt(cycleNum, bn, jobs, strictBlock);
+    const prompt = buildBatchPrompt(cycleNum, bn, jobs, strictBlock, heroCatMap);
     fs.writeFileSync(path.join(promptDir, `R${cycleNum}_B${bn}_prompt.md`), prompt);
     queueLines.push(`# B${bn} (${jobs.length}직업)`);
     jobs.forEach((j) => queueLines.push(`B${bn} | ${j.slug} | id=${j.id}`));

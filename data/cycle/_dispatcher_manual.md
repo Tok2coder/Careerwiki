@@ -78,6 +78,7 @@
 
 - **industry_class**: major(default — 금융·IT·법조·항공·의료·교육·건설 등 광범위 산업, distinct≥18 강제) / niche(단일 회사·공장·공정·폐지 자격증, distinct 6+ 허용). 모호 시 major. minor 분류는 폐지(R45).
 - **URL pool hint 5+ site**: 산업별 default pool 표는 helper가 프롬프트에 자동 주입(hint 구체화 d08a704). 주요 pool: 금융=fss/fsc/kafa, IT=kisa/pipc/nia, 의료=mohw/kma/koreanurse, 교육=moe/kice/kedi, 건설=molit/kict, 식품=mfds/kfia, 에너지=kepco/khnp, 반도체=ksia, 농축산=rda/mafra, 안전=kosha/moel + 각 위키. 추가 발굴은 세션 몫.
+- **명칭 함정 사전차단 (Tier 1+2, 2026-07-11 R78 후 적립)**: helper가 prep에서 각 직업 DB `merged_profile_json.heroCategory`(산업분류=진리 신호)를 조회 → **hint를 직업명이 아니라 산업분류 텍스트 기준으로 생성**(Tier 1). 직업명 기반 pool과 산업분류가 어긋나면(동음이의·중의어) 그 행에 **🔴 명칭 중의성 경고**를 주입해 "직업명 신호 무시, heroCategory 기준 실직무 확정"을 강제(Tier 2). 모든 행에 heroCategory 텍스트 노출. 근거: 부선원=浮選 선탄공정(코크스·연탄 제조업)인데 이름 `선(船)`→해양 오유도, 부동산정비사업관리자=이름 `정비사`→항공 오유도, 검사=inspect/prosecutor 등 R75~R78 매 cycle 1~2건. DB 오프라인이면 hint 산업태그 생략(워커 Phase 0 방어에 의존). helper: `resolvePoolEntry`(텍스트 매칭)·`fetchHeroCategories`·`buildBatchPrompt(heroCatMap)`.
 - 사전 분류 누락 = lazy abort 사고 재발 위험(Rpri1_B3).
 
 ## 7. 함정·사고 적립 아카이브 (요약 — 상세는 git log)
