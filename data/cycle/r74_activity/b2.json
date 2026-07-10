@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r74-b2",
+      "group_key": "cycle-R74-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R74 B2: 보도블럭설치원~보비너틀보기원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

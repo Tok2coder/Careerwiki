@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r74-b1",
+      "group_key": "cycle-R74-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R74 B1: 병원행정사무원~보건진료전담공무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

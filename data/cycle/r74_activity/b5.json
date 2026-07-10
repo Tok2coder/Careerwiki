@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r74-b5",
+      "group_key": "cycle-R74-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R74 B5: 보습학원강사~보온공",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

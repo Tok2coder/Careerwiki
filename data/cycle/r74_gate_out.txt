@@ -1,0 +1,32 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 병원행정사무원                  | totalE=32 | distinct=19 | marker=OK | clean
+PASS 보건관리자                    | totalE=30 | distinct=18 | marker=OK | clean
+PASS 보건전문간호사                  | totalE=28 | distinct=18 | marker=OK | clean
+PASS 보건정책연구원                  | totalE=30 | distinct=18 | marker=OK | clean
+PASS 보건진료전담공무원                | totalE=31 | distinct=18 | marker=OK | clean
+PASS 보도블럭설치원                  | totalE=24 | distinct=18 | marker=OK | clean
+PASS 보리엑기스추출원                 | totalE=24 | distinct=14 | marker=OK | clean
+PASS 보링기조작원                   | totalE=23 | distinct=11 | marker=OK | clean
+PASS 보망원                      | totalE=23 | distinct=10 | marker=OK | clean
+PASS 보비너틀보기원                  | totalE=24 | distinct=10 | marker=OK | clean
+PASS 보빈준비원                    | totalE=25 | distinct=12 | marker=OK | clean
+PASS 보석검사원                    | totalE=25 | distinct=12 | marker=OK | clean
+PASS 보석선별원                    | totalE=25 | distinct=10 | marker=OK | clean
+PASS 보석연마원                    | totalE=26 | distinct=10 | marker=OK | clean
+PASS 보석용해원                    | totalE=25 | distinct=10 | marker=OK | clean
+PASS 보석절단원                    | totalE=24 | distinct=12 | marker=OK | clean
+PASS 보석조립원                    | totalE=24 | distinct=10 | marker=OK | clean
+PASS 보석천공원                    | totalE=24 | distinct=11 | marker=OK | clean
+PASS 보석판매원                    | totalE=28 | distinct=11 | marker=OK | clean
+PASS 보세사                      | totalE=26 | distinct=12 | marker=OK | clean
+PASS 보습학원강사                   | totalE=28 | distinct=19 | marker=OK | clean
+PASS 보안순찰원                    | totalE=30 | distinct=19 | marker=OK | clean
+PASS 보안시스템기술자                 | totalE=27 | distinct=18 | marker=OK | clean
+PASS 보안프로그램개발자                | totalE=26 | distinct=18 | marker=OK | clean
+PASS 보온공                      | totalE=26 | distinct=12 | marker=OK | clean
+
+=== Summary: PASS 25/25 ===

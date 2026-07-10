@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r74-b4",
+      "group_key": "cycle-R74-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R74 B4: 보석절단원~보세사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

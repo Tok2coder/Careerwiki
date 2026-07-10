@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r74-b3",
+      "group_key": "cycle-R74-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R74 B3: 보빈준비원~보석용해원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
