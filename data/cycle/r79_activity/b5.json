@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r79-b5",
+      "group_key": "cycle-R79-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R79 B5: 불활성가스텅스텐아크용접원~브라운관봉입원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

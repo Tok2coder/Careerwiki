@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r79-b1",
+      "group_key": "cycle-R79-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R79 B1: 북한경제연구원~분단기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

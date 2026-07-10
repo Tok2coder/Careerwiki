@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r79-b4",
+      "group_key": "cycle-R79-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R79 B4: 분열방지밴드압입원~불림원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

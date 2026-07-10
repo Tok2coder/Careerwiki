@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r79-b3",
+      "group_key": "cycle-R79-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R79 B3: 분병원~분실물조사원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

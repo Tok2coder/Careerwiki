@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r79-b2",
+      "group_key": "cycle-R79-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R79 B2: 분말기조작원~분무시유원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
