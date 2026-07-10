@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r78-b5",
+      "group_key": "cycle-R78-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R78 B5: 부직포결합원~북수리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

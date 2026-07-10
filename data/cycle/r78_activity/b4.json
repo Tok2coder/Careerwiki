@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r78-b4",
+      "group_key": "cycle-R78-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R78 B4: 부실상장등록법인관리사무원~부잠사처리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
