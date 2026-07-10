@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r73-b5",
+      "group_key": "cycle-R73-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R73 B5: 병원사무장~병원청소원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r73-b2",
+      "group_key": "cycle-R73-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R73 B2: 변성기조립원~변전설비운전원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

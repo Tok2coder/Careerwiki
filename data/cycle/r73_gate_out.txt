@@ -1,0 +1,37 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 벽지-디자이너                  | totalE=19 | distinct=13 | marker=OK | clean
+PASS 벽지개발연구원                  | totalE=19 | distinct=11 | marker=OK | clean
+PASS 벽지검사원                    | totalE=19 | distinct=10 | marker=OK | clean
+PASS 벽지견본책제조원                 | totalE=21 | distinct=10 | marker=OK | clean
+PASS 벽지제조반장                   | totalE=19 | distinct=11 | marker=OK | clean
+WARN 변성기조립원                   | totalE=27 | distinct=12 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.koema.or.kr/koema/business/keeti.html
+PASS 변속기조립원                   | totalE=31 | distinct=18 | marker=OK | clean
+PASS 변압기설치원                   | totalE=31 | distinct=18 | marker=OK | clean
+PASS 변전기술연구원                  | totalE=30 | distinct=18 | marker=OK | clean
+PASS 변전설비운전원                  | totalE=31 | distinct=18 | marker=OK | clean
+PASS 변전운영계획관리자                | totalE=29 | distinct=20 | marker=OK | clean
+PASS 변전정비기술원                  | totalE=32 | distinct=19 | marker=OK | clean
+PASS 변호사사무원                   | totalE=28 | distinct=18 | marker=OK | clean
+PASS 병검사원                     | totalE=26 | distinct=12 | marker=OK | clean
+WARN 병리과전문의사                  | totalE=28 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] conn(000): https://www.ncc.re.kr/main.ncc?uri=ncc_check03
+PASS 병리학연구원                   | totalE=25 | distinct=19 | marker=OK | clean
+PASS 병아리감별사                   | totalE=23 | distinct=11 | marker=OK | clean
+PASS 병원배식원                    | totalE=24 | distinct=19 | marker=OK | clean
+PASS 병원보조원                    | totalE=28 | distinct=19 | marker=OK | clean
+WARN 병원보험사무원                  | totalE=26 | distinct=19 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://health.ync.ac.kr/health/CMS/Contents/Contents.do?mCode=MN034
+PASS 병원사무장                    | totalE=24 | distinct=18 | marker=OK | clean
+PASS 병원수가원                    | totalE=24 | distinct=18 | marker=OK | clean
+PASS 병원조리사                    | totalE=25 | distinct=18 | marker=OK | clean
+WARN 병원중앙공급실관리자               | totalE=26 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] conn(000): https://www.ncc.re.kr/main.ncc?uri=ncc_support19
+PASS 병원청소원                    | totalE=27 | distinct=18 | marker=OK | clean
+
+=== Summary: PASS 21/25, WARN 4 ===
+WARN: 변성기조립원(urlUnverified(1)), 병리과전문의사(urlUnverified(1)), 병원보험사무원(urlUnverified(1)), 병원중앙공급실관리자(urlUnverified(1))

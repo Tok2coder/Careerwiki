@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r73-b3",
+      "group_key": "cycle-R73-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R73 B3: 변전운영계획관리자~병리과전문의사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
