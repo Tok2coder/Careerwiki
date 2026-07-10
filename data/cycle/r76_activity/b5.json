@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r76-b5",
+      "group_key": "cycle-R76-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R76 B5: 복합운송주선인~볼압입원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

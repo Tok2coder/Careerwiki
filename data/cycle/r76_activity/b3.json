@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r76-b3",
+      "group_key": "cycle-R76-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R76 B3: 보험영업기획원~보험통계담당원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

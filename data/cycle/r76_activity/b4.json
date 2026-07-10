@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r76-b4",
+      "group_key": "cycle-R76-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R76 B4: 복권사무원~복층유리압착기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

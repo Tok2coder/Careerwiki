@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r76-b1",
+      "group_key": "cycle-R76-2026-07-10",
+      "agent_slug": "hangyeol",
+      "label": "R76 B1: 보험금지급원~보험모집인",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
