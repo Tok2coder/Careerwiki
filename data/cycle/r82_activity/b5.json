@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r82-b5",
+      "group_key": "cycle-R82-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R82 B5: 사별원~사슴사육사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

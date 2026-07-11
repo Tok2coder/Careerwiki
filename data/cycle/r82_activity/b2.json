@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r82-b2",
+      "group_key": "cycle-R82-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R82 B2: 사료원료혼합원~사무용기기기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

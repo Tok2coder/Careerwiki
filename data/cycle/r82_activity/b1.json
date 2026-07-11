@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r82-b1",
+      "group_key": "cycle-R82-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R82 B1: 빙과제조반장~사료검사원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

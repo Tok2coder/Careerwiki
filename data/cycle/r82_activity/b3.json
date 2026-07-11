@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r82-b3",
+      "group_key": "cycle-R82-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R82 B3: 사무용기기부품조립원~사무용기기조립현장감독자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

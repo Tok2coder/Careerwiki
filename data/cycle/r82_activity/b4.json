@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r82-b4",
+      "group_key": "cycle-R82-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R82 B4: 사무용기기판매원~사방작업원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
