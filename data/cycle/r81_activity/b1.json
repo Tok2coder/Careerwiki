@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r81-b1",
+      "group_key": "cycle-R81-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R81 B1: 비디오자키~비디오테이프검사원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

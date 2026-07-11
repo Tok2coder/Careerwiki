@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r81-b4",
+      "group_key": "cycle-R81-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R81 B4: 비스킷포장원~빅데이터아키텍처전문가",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

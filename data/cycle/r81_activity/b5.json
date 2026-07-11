@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r81-b5",
+      "group_key": "cycle-R81-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R81 B5: 빌딩정보모델링bim-매니저~빔운반원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r81-b2",
+      "group_key": "cycle-R81-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R81 B2: 비디오표준테이프제작원~비상계획관",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
