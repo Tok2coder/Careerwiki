@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r80-b5",
+      "group_key": "cycle-R80-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R80 B5: 비디오기기기술자~비디오시험원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

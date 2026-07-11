@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r80-b3",
+      "group_key": "cycle-R80-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R80 B3: 브레이크패드플레이트제조원~블로거",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r80-b2",
+      "group_key": "cycle-R80-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R80 B2: 브레이크슈공정원~브레이크패드제조반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

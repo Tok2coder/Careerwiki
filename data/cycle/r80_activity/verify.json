@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r80-verify",
+      "group_key": "cycle-R80-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R80 검증: 25직업 전수 실측",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

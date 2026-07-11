@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r80-b1",
+      "group_key": "cycle-R80-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R80 B1: 브라운관제조반장~브레이크라이닝공정원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

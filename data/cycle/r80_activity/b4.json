@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r80-b4",
+      "group_key": "cycle-R80-2026-07-11",
+      "agent_slug": "hangyeol",
+      "label": "R80 B4: 블로우압출기조작원~비뇨기과전문의사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
