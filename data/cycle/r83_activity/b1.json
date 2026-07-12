@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r83-b1",
+      "group_key": "cycle-R83-2026-07-12",
+      "agent_slug": "hangyeol",
+      "label": "R83 B1: 사업자금대출원~사용자경험기획자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

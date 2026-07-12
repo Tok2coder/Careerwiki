@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r83-b4",
+      "group_key": "cycle-R83-2026-07-12",
+      "agent_slug": "hangyeol",
+      "label": "R83 B4: 사진기조립원~사진제판반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

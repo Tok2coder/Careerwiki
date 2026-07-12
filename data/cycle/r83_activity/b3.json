@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r83-b3",
+      "group_key": "cycle-R83-2026-07-12",
+      "agent_slug": "hangyeol",
+      "label": "R83 B3: 사전연명의료의향서상담사~사진기제조현장감독자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

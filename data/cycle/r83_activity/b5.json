@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r83-b5",
+      "group_key": "cycle-R83-2026-07-12",
+      "agent_slug": "hangyeol",
+      "label": "R83 B5: 사진제판원~사침원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
