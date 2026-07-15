@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r84-b2",
+      "group_key": "cycle-R84-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R84 B2: 사회교사~사회보장보험료부과원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

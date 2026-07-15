@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r84-b1",
+      "group_key": "cycle-R84-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R84 B1: 사탕제조원~사회과학연구관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

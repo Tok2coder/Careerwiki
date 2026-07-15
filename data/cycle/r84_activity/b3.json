@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r84-b3",
+      "group_key": "cycle-R84-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R84 B3: 사회보장보험료징수원~사회사업단체임원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

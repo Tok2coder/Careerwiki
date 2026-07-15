@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r84-verify",
+      "group_key": "cycle-R84-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R84 검증: 25직업 전수 실측",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
