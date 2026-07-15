@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r85-b1",
+      "group_key": "cycle-R85-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R85 B1: 산림보호원~산림작업반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

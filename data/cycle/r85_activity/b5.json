@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r85-b5",
+      "group_key": "cycle-R85-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R85 B5: 산업전문간호사~산업폐수수거원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

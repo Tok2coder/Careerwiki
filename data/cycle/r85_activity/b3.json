@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r85-b3",
+      "group_key": "cycle-R85-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R85 B3: 산불진화대원~산업기반기술학원강사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
