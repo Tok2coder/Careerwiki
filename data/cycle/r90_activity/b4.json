@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r90-b4",
+      "group_key": "cycle-R90-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R90 B4: 선두유도원~선물옵션거래관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

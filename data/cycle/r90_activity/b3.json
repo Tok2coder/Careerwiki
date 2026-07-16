@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r90-b3",
+      "group_key": "cycle-R90-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R90 B3: 선거작업원~선교사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

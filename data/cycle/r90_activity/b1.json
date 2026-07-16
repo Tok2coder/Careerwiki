@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r90-b1",
+      "group_key": "cycle-R90-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R90 B1: 석제품제작원~석탄혼합원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

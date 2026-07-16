@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r90-b5",
+      "group_key": "cycle-R90-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R90 B5: 선물옵션시장분석가~선물환사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
