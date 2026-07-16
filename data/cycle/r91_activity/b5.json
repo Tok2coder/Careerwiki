@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r91-b5",
+      "group_key": "cycle-R91-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R91 B5: 선박사상원~선박수압검사원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

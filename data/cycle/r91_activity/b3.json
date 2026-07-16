@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r91-b3",
+      "group_key": "cycle-R91-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R91 B3: 선박기관시운전원~선박도장공",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

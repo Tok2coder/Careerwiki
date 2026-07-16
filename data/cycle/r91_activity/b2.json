@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r91-b2",
+      "group_key": "cycle-R91-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R91 B2: 선박급유원~선박기관설치원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
