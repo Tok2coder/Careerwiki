@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r89-b3",
+      "group_key": "cycle-R89-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R89 B3: 석유화학지식재산권관리자~석유화학현장공정관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

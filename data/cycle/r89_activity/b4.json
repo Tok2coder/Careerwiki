@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r89-b4",
+      "group_key": "cycle-R89-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R89 B4: 석유화학환경관리사무원~석재모방가공원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

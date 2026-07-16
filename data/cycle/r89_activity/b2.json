@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r89-b2",
+      "group_key": "cycle-R89-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R89 B2: 석유화학유틸리티관리자~석유화학제품시험분석원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

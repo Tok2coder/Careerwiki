@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r89-b5",
+      "group_key": "cycle-R89-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R89 B5: 석재연마원~석재평삭기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

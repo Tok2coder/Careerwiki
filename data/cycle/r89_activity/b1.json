@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r89-b1",
+      "group_key": "cycle-R89-2026-07-16",
+      "agent_slug": "hangyeol",
+      "label": "R89 B1: 석유화학소재연구개발자~석유화학연구기획자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
