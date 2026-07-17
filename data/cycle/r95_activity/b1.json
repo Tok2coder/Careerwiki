@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r95-b1",
+      "group_key": "cycle-R95-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R95 B1: 소결원~소결원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -411,6 +411,7 @@ function generateCycle(cycleNum, opts = {}) {
   for (let bi = 0; bi < batches.length; bi++) {
     const bn = bi + 1;
     const b = batches[bi];
+    if (!b || b.length === 0) continue; // 빈 배치(듬성듬성한 master_list 슬롯: R94=19·R95=1 등) skip — crash 방지
     writeBase(`r${cycleNum}-b${bn}`, `R${cycleNum} B${bn}: ${b[0].slug}~${b[b.length - 1].slug}`);
   }
   writeBase(`r${cycleNum}-verify`, `R${cycleNum} 검증: ${allJobs.length}직업 전수 실측`);
