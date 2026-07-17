@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r93-b1",
+      "group_key": "cycle-R93-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R93 B1: 선재압연원~선체정비원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

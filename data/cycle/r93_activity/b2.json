@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r93-b2",
+      "group_key": "cycle-R93-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R93 B2: 선탄기조작원~섬유가공설비개발기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

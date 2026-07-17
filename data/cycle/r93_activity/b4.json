@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r93-b4",
+      "group_key": "cycle-R93-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R93 B4: 섬유기술-컨설턴트~섬유소재개발기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

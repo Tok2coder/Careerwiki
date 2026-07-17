@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r93-b3",
+      "group_key": "cycle-R93-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R93 B3: 섬유가공설비개발시험원~섬유교반기운전원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

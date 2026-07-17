@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r93-b5",
+      "group_key": "cycle-R93-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R93 B5: 섬유소재개발시험원~섬유유연제이차반응기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
