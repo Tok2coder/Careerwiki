@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r97-b4",
+      "group_key": "cycle-R97-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R97 B4: 송전기술연구원~송풍기도장공",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

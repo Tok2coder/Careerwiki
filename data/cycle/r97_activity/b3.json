@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r97-b3",
+      "group_key": "cycle-R97-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R97 B3: 솔질원~송변전설비전자제어원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

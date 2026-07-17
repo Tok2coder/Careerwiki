@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r97-b1",
+      "group_key": "cycle-R97-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R97 B1: 소형컴퓨터시스템연구원~속옷-디자이너",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
