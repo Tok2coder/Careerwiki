@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r96-b4",
+      "group_key": "cycle-R96-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R96 B4: 소주제성원~소품담당원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

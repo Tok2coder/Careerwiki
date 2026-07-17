@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r96-b2",
+      "group_key": "cycle-R96-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R96 B2: 소셜네트워크서비스마케터~소수력발전토목설비안전관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

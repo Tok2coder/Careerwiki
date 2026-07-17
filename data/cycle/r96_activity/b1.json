@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r96-b1",
+      "group_key": "cycle-R96-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R96 B1: 소비자분석연구원~소성로조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

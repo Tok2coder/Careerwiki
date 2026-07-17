@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r96-b5",
+      "group_key": "cycle-R96-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R96 B5: 소품용가발제작원~소형엔진조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
