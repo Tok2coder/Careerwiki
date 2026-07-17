@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r94-b4",
+      "group_key": "cycle-R94-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R94 B4: 세탁보조원~센서개발자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

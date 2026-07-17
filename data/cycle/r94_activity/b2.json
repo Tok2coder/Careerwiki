@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r94-b2",
+      "group_key": "cycle-R94-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R94 B2: 성교육강사~세당작업원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

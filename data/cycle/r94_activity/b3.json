@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r94-b3",
+      "group_key": "cycle-R94-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R94 B3: 세모기운전원~세탁물접수원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

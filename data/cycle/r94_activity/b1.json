@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r94-b1",
+      "group_key": "cycle-R94-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R94 B1: 섬유유연제일차반응기조작원~섬유조합원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
