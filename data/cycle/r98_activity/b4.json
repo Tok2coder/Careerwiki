@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r98-b4",
+      "group_key": "cycle-R98-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R98 B4: 수도용수판매관리원~수동스크린날염원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

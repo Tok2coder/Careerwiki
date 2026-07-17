@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r98-b1",
+      "group_key": "cycle-R98-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R98 B1: 쇼트원~수경연출-디자이너",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

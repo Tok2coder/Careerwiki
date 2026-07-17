@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r98-b3",
+      "group_key": "cycle-R98-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R98 B3: 수도계측제어설비기술자~수도설비운영관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

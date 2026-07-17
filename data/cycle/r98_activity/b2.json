@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r98-b2",
+      "group_key": "cycle-R98-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R98 B2: 수금관리사무원~수도계량기관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
