@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r92-b4",
+      "group_key": "cycle-R92-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R92 B4: 선박환경설비기술자~선상가열원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

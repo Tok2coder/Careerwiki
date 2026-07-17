@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r92-b1",
+      "group_key": "cycle-R92-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R92 B1: 선박용접로봇조작원~선박의장정비원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

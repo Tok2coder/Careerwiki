@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r92-b3",
+      "group_key": "cycle-R92-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R92 B3: 선박커미셔닝-엔지니어~선박환경검사원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

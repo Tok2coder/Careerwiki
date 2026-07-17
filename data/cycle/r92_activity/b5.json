@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r92-b5",
+      "group_key": "cycle-R92-2026-07-17",
+      "agent_slug": "hangyeol",
+      "label": "R92 B5: 선석플래너~선재생산원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
