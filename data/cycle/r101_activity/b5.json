@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r101-b5",
+      "group_key": "cycle-R101-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R101 B5: 수치제어보링기조작원~수필가",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

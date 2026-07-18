@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r101-b3",
+      "group_key": "cycle-R101-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R101 B3: 수출입안전관리우수업체공인심사원~수출입화물검수사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r101-b4",
+      "group_key": "cycle-R101-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R101 B4: 수출입화물검수운영사무원~수치제어밀링기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r101-b1",
+      "group_key": "cycle-R101-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R101 B1: 수족관관리자~수지배합원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

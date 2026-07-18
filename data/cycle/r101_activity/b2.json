@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r101-b2",
+      "group_key": "cycle-R101-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R101 B2: 수지제조원~수출업무금융사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
