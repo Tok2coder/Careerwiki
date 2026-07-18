@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r102-b1",
+      "group_key": "cycle-R102-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R102 B1: 수필속기사~숙성탱크조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

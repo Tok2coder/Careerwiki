@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r102-b3",
+      "group_key": "cycle-R102-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R102 B3: 스낵성형원~스마트그리드망운영원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

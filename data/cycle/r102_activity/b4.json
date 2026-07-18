@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r102-b4",
+      "group_key": "cycle-R102-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R102 B4: 스마트그리드제품개발원~스마트물류플랫폼설계자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

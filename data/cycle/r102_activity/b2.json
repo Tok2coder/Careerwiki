@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r102-b2",
+      "group_key": "cycle-R102-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R102 B2: 숲길등산지도사~슈퍼마켓판매원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

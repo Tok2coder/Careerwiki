@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r102-b5",
+      "group_key": "cycle-R102-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R102 B5: 스마트섬유연구원~스케이트얼음판관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
