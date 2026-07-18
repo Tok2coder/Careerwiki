@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r103-b4",
+      "group_key": "cycle-R103-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R103 B4: 스톱모션애니메이션캐릭터제작원~스파이럴강관조관원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

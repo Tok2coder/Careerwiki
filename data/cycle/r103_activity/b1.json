@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r103-b1",
+      "group_key": "cycle-R103-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R103 B1: 스크럼마스터~스킨아티스트",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

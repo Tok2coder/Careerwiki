@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r103-b5",
+      "group_key": "cycle-R103-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R103 B5: 스펀지제조원~스포츠클라이밍강사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

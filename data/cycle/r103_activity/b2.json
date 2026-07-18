@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r103-b2",
+      "group_key": "cycle-R103-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R103 B2: 스타킹편직원~스테이플절단원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
