@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r99-b5",
+      "group_key": "cycle-R99-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R99 B5: 수산종묘관리기사~수소에너지연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

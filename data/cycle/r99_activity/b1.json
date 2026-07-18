@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r99-b1",
+      "group_key": "cycle-R99-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R99 B1: 수력발전설비유지보수원~수력발전전기설비안전관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

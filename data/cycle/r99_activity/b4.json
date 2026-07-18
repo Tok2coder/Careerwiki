@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r99-b4",
+      "group_key": "cycle-R99-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R99 B4: 수산물판매원~수산업교사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

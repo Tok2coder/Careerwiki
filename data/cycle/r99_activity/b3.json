@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r99-b3",
+      "group_key": "cycle-R99-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R99 B3: 수목전지원~수산물채취원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

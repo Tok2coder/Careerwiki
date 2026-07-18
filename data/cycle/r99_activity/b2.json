@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r99-b2",
+      "group_key": "cycle-R99-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R99 B2: 수렵장관리원~수목관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
