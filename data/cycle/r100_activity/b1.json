@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r100-b1",
+      "group_key": "cycle-R100-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R100 B1: 수소연료전지-개발자~수술대제작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r100-b5",
+      "group_key": "cycle-R100-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R100 B5: 수자원시설지반구조연구원~수정진동자조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

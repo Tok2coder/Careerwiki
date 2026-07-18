@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r100-b3",
+      "group_key": "cycle-R100-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R100 B3: 수신총괄사무원~수용지보상원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r100-b4",
+      "group_key": "cycle-R100-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R100 B4: 수의과학연구원~수자원개발기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

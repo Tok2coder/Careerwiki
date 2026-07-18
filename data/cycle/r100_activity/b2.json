@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r100-b2",
+      "group_key": "cycle-R100-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R100 B2: 수신금리기획원~수신제도기획원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
