@@ -47,7 +47,7 @@ jobDetailRoutes.get('/job/:slug', async (c) => {
         const normalizedSlug = decodedSlug.toLowerCase().replace(/-/g, '')
 
         result = await db.prepare(
-          `SELECT id, name, is_active FROM jobs WHERE LOWER(REPLACE(slug, "-", "")) = ? ${activeCondition} LIMIT 1`
+          `SELECT id, name, is_active FROM jobs WHERE slug_normalized = ? ${activeCondition} LIMIT 1`
         ).bind(normalizedSlug).first() as { id: string; name: string; is_active: number } | null
       }
 
