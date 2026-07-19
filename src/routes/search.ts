@@ -6,6 +6,7 @@ import {
   escapeHtml, createMetaDescription, renderLayoutWithContext, cleanGuidePrefix
 } from '../utils/shared-helpers'
 import { logSearchQuery } from '../services/searchQueryLogger'
+import { withKvCache } from '../services/cacheService'
 
 const searchRoutes = new Hono<AppEnv>()
 
@@ -41,50 +42,6 @@ searchRoutes.get('/search', async (c) => {
     return normalized.length > 220 ? `${normalized.slice(0, 217)}…` : normalized
   }
 
-  if (keyword && c.env?.DB) {
-    try {
-      // RAG 통합 검색 (임베딩 1회, Vectorize 1회, D1 병렬 보강)
-      const ragResult = await ragSearchUnified(c.env, keyword, {
-        jobsLimit: 5,
-        majorsLimit: 5,
-        howtosLimit: 5,
-      })
-
-      jobCardsHtml = ragResult.jobs.items
-        .slice(0, 5)
-        .map((entry) => renderJobCard(entry))
-        .join('')
-
-      majorCardsHtml = ragResult.majors.items
-        .slice(0, 5)
-        .map((entry) => renderMajorCard(entry))
-        .join('')
-
-      // RAG howto 결과를 기존 howtoResults 형식으로 변환
-      howtoResults = ragResult.howtos.map(h => ({
-        href: `/howto/${h.slug}`,
-        title: h.title,
-        summary: h.summary,
-        thumbnailUrl: h.thumbnailUrl,
-        tags: h.tags,
-      }))
-
-      // 검색어 로깅 (비동기, 응답 블로킹 없음)
-      const totalResults = ragResult.jobs.items.length + ragResult.majors.items.length + ragResult.howtos.length
-      if (c.executionCtx && 'waitUntil' in c.executionCtx) {
-        c.executionCtx.waitUntil(
-          logSearchQuery(c.env.DB, {
-            query: keyword,
-            resultCount: totalResults,
-            searchType: 'all',
-            role: (c.get('user') as { role?: string } | undefined)?.role,
-          })
-        )
-      }
-    } catch (error) {
-    }
-  }
-
   // HowTo 검색 - D1 pages 테이블에서만 검색
   // 🔍 HowTo 키워드 토큰화 함수
   const tokenizeHowtoKeyword = (kw: string): string[] => {
@@ -111,73 +68,143 @@ searchRoutes.get('/search', async (c) => {
     return [...new Set(tokens)].filter(t => t !== normalizedKw && t.length >= 2)
   }
 
-  if (keyword && c.env?.DB && howtoResults.length === 0) {
-    // RAG 결과가 없을 때만 LIKE 폴백으로 HowTo 검색
+  if (keyword && c.env?.DB) {
+    // 검색어 경로 전체(RAG + HowTo 폴백)를 KV 캐시로 래핑 (정규화 키)
+    const normalizedKey = keyword.toLowerCase().replace(/\s+/g, ' ').trim()
+    const cacheKey = `search:v2:${normalizedKey}`
+
     try {
-      const db = c.env.DB as any
-      const howtoTokens = tokenizeHowtoKeyword(keyword)
+      const { value: payload } = await withKvCache(
+        c.env.KV,
+        cacheKey,
+        async () => {
+          let jobsHtml = ''
+          let majorsHtml = ''
+          let howtos: Array<{ href: string; title: string; summary?: string; thumbnailUrl?: string; tags?: string[] }> = []
+          let total = 0
 
-      // 토큰 검색 조건 생성
-      let tokenConditions = ''
-      const tokenBindings: string[] = []
-      if (howtoTokens.length > 0) {
-        const tokenClauses = howtoTokens.map(() => `title LIKE ?`).join(' OR ')
-        tokenConditions = ` OR (${tokenClauses})`
-        for (const token of howtoTokens) {
-          tokenBindings.push(`%${token}%`)
-        }
+          // RAG 통합 검색 (임베딩 1회, Vectorize 1회, D1 병렬 보강)
+          try {
+            const ragResult = await ragSearchUnified(c.env, keyword, {
+              jobsLimit: 5,
+              majorsLimit: 5,
+              howtosLimit: 5,
+            })
+
+            jobsHtml = ragResult.jobs.items
+              .slice(0, 5)
+              .map((entry) => renderJobCard(entry))
+              .join('')
+
+            majorsHtml = ragResult.majors.items
+              .slice(0, 5)
+              .map((entry) => renderMajorCard(entry))
+              .join('')
+
+            howtos = ragResult.howtos.map(h => ({
+              href: `/howto/${h.slug}`,
+              title: h.title,
+              summary: h.summary,
+              thumbnailUrl: h.thumbnailUrl,
+              tags: h.tags,
+            }))
+
+            total = ragResult.jobs.items.length + ragResult.majors.items.length + ragResult.howtos.length
+          } catch (error) {
+          }
+
+          // RAG howto 결과가 없을 때만 LIKE 폴백으로 HowTo 검색
+          if (howtos.length === 0) {
+            try {
+              const db = c.env.DB as any
+              const howtoTokens = tokenizeHowtoKeyword(keyword)
+
+              // 토큰 검색 조건 생성
+              let tokenConditions = ''
+              const tokenBindings: string[] = []
+              if (howtoTokens.length > 0) {
+                const tokenClauses = howtoTokens.map(() => `title LIKE ?`).join(' OR ')
+                tokenConditions = ` OR (${tokenClauses})`
+                for (const token of howtoTokens) {
+                  tokenBindings.push(`%${token}%`)
+                }
+              }
+
+              // 우선순위 기반 정렬 쿼리 (guide: prefix가 붙은 corrupted slug 제외)
+              const howtoQuery = `
+                SELECT id, slug, title, summary,
+                  COALESCE(json_extract(meta_data, '$.thumbnailUrl'), '') as thumbnail_url,
+                  COALESCE(json_extract(meta_data, '$.tags'), '[]') as tags_json,
+                  CASE
+                    WHEN LOWER(title) = LOWER(?) THEN 0
+                    WHEN LOWER(title) LIKE LOWER(?) THEN 1
+                    WHEN LOWER(title) LIKE LOWER(?) THEN 2
+                    ELSE 3
+                  END as priority
+                FROM pages
+                WHERE page_type = 'guide'
+                  AND status = 'published'
+                  AND slug NOT LIKE 'guide:%'
+                  AND (title LIKE ? OR summary LIKE ?${tokenConditions})
+                ORDER BY priority, updated_at DESC
+                LIMIT 5
+              `
+
+              const howtoResult = await db.prepare(howtoQuery).bind(
+                keyword,                    // 완전 일치
+                `${keyword}%`,              // 시작 일치
+                `%${keyword}%`,             // 부분 일치
+                `%${keyword}%`,             // WHERE title
+                `%${keyword}%`,             // WHERE summary
+                ...tokenBindings            // 토큰 검색
+              ).all()
+
+              howtos = (howtoResult.results || []).map((row: any) => {
+                let tags: string[] = []
+                try {
+                  tags = JSON.parse(row.tags_json || '[]')
+                } catch { tags = [] }
+
+                // slug에서 guide: prefix 제거
+                const cleanSlug = cleanGuidePrefix(row.slug || '')
+
+                return {
+                  href: `/howto/${encodeURIComponent(cleanSlug)}`,
+                  title: row.title,
+                  summary: row.summary || '',
+                  thumbnailUrl: row.thumbnail_url || '',
+                  tags: Array.isArray(tags) ? tags : []
+                }
+              })
+            } catch (error) {
+            }
+          }
+
+          return { jobsHtml, majorsHtml, howtos, total }
+        },
+        { staleSeconds: 300, maxAgeSeconds: 3600, version: 'v2' }
+      )
+
+      jobCardsHtml = payload.jobsHtml
+      majorCardsHtml = payload.majorsHtml
+      howtoResults = payload.howtos
+
+      // 검색어 로깅 (비동기, 응답 블로킹 없음)
+      if (c.executionCtx && 'waitUntil' in c.executionCtx) {
+        c.executionCtx.waitUntil(
+          logSearchQuery(c.env.DB, {
+            query: keyword,
+            resultCount: payload.total,
+            searchType: 'all',
+            role: (c.get('user') as { role?: string } | undefined)?.role,
+          })
+        )
       }
-
-      // 우선순위 기반 정렬 쿼리 (guide: prefix가 붙은 corrupted slug 제외)
-      const howtoQuery = `
-        SELECT id, slug, title, summary,
-          COALESCE(json_extract(meta_data, '$.thumbnailUrl'), '') as thumbnail_url,
-          COALESCE(json_extract(meta_data, '$.tags'), '[]') as tags_json,
-          CASE
-            WHEN LOWER(title) = LOWER(?) THEN 0
-            WHEN LOWER(title) LIKE LOWER(?) THEN 1
-            WHEN LOWER(title) LIKE LOWER(?) THEN 2
-            ELSE 3
-          END as priority
-        FROM pages
-        WHERE page_type = 'guide'
-          AND status = 'published'
-          AND slug NOT LIKE 'guide:%'
-          AND (title LIKE ? OR summary LIKE ?${tokenConditions})
-        ORDER BY priority, updated_at DESC
-        LIMIT 5
-      `
-
-      const howtoResult = await db.prepare(howtoQuery).bind(
-        keyword,                    // 완전 일치
-        `${keyword}%`,              // 시작 일치
-        `%${keyword}%`,             // 부분 일치
-        `%${keyword}%`,             // WHERE title
-        `%${keyword}%`,             // WHERE summary
-        ...tokenBindings            // 토큰 검색
-      ).all()
-
-      howtoResults = (howtoResult.results || []).map((row: any) => {
-        let tags: string[] = []
-        try {
-          tags = JSON.parse(row.tags_json || '[]')
-        } catch { tags = [] }
-
-        // slug에서 guide: prefix 제거
-        const cleanSlug = cleanGuidePrefix(row.slug || '')
-
-        return {
-          href: `/howto/${encodeURIComponent(cleanSlug)}`,
-          title: row.title,
-          summary: row.summary || '',
-          thumbnailUrl: row.thumbnail_url || '',
-          tags: Array.isArray(tags) ? tags : []
-        }
-      })
     } catch (error) {
-      howtoResults = []
     }
-  } else if (c.env?.DB && !keyword) {
+  }
+
+  if (c.env?.DB && !keyword) {
     // 검색어 없을 때만 최신 HowTo 표시 (검색어 있으면 RAG 결과 유지)
     try {
       const db = c.env.DB as any
