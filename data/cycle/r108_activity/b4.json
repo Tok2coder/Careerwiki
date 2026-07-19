@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r108-b4",
+      "group_key": "cycle-R108-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R108 B4: 신골압출기조작원~신발재단사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

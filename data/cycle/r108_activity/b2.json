@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r108-b2",
+      "group_key": "cycle-R108-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R108 B2: 신골가공원~신발원가전문가",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

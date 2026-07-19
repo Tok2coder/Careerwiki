@@ -253,6 +253,51 @@ function fetchHeroCategories(ids) {
   }
 }
 
+// ─── v6-disperse: 형제직업 배치 분산 편성 (2026-07-19, R103~R107 형제 verbatim 복붙 5연속 사고 대책) ───
+// 실증: 검출된 verbatim 복붙쌍은 100% 같은 배치(같은 워커 세션) 내부에서만 발생 (R107 탈취원=타배치 미오염이 결정적 증거).
+// → 형제군(name 앞 2글자 클러스터)을 배치에 라운드로빈 분산해 같은 세션에 형제가 몰리는 것을 차단.
+// --no-disperse 플래그로 현행(master_list pre-baked 배치) 폴백.
+function clusterKey(name) {
+  return name.length >= 2 ? name.slice(0, 2) : name;
+}
+function disperseBatches(allJobs, numBatches) {
+  const cap = Math.ceil(allJobs.length / numBatches);
+  // 클러스터링 (배열 순서 = 가나다순 유지)
+  const clusters = new Map();
+  for (const j of allJobs) {
+    const k = clusterKey(j.name);
+    if (!clusters.has(k)) clusters.set(k, []);
+    clusters.get(k).push(j);
+  }
+  // 형제 메타: 클러스터 크기≥2면 형제군. 대표(rep)=가나다 첫 직업 → 산업 통계 직접 인용 허용.
+  for (const [, members] of clusters) {
+    if (members.length < 2) continue;
+    members.forEach((j, idx) => {
+      j._sib = { key: clusterKey(j.name), all: members.map((m) => m.name), rep: idx === 0 };
+    });
+  }
+  // 큰 클러스터부터, 각 멤버를 "(해당 클러스터 최소 보유, 전체 최소 보유, 낮은 번호)" 배치에 그리디 배정
+  const batches = Array.from({ length: numBatches }, () => []);
+  const clusterCount = Array.from({ length: numBatches }, () => new Map());
+  const sorted = [...clusters.entries()].sort((a, b) => b[1].length - a[1].length);
+  for (const [key, members] of sorted) {
+    for (const j of members) {
+      let best = -1;
+      for (let b = 0; b < numBatches; b++) {
+        if (batches[b].length >= cap) continue;
+        if (best === -1) { best = b; continue; }
+        const cb = clusterCount[b].get(key) || 0, cBest = clusterCount[best].get(key) || 0;
+        if (cb < cBest || (cb === cBest && batches[b].length < batches[best].length)) best = b;
+      }
+      batches[best].push(j);
+      clusterCount[best].set(key, (clusterCount[best].get(key) || 0) + 1);
+    }
+  }
+  // 배치 내 가나다순 정렬 (재현성)
+  for (const b of batches) b.sort((x, y) => x.name.localeCompare(y.name, 'ko'));
+  return batches.filter((b) => b.length > 0);
+}
+
 // ─── batch prompt 생성 (v5: 5직업-1세션, 순차 POST 체크포인트) ───
 function buildBatchPrompt(cycleNum, batchNum, jobs, strictBlock, heroCatMap) {
   const sessionName = `R${cycleNum}_B${batchNum}`;
@@ -276,7 +321,18 @@ function buildBatchPrompt(cycleNum, batchNum, jobs, strictBlock, heroCatMap) {
       const primary = indEntry || nameEntry; // 산업분류 매칭 우선, 없으면 이름 매칭 fallback
       hint = primary ? `${indTag}특화 pool: ${primary.pool} + 추가 발굴. ${TAIL}` : `${indTag}${GENERIC_HINT}`;
     }
-    return `| ${i + 1} | ${job.name} | ${job.id} | ${job.slug} | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | ${hint} |`;
+    // v6-disperse: 형제직업 복붙 방지 경고 (형제군은 배치 분산됨 — 잔존 same-batch 형제 포함 명시)
+    let sibNote = '';
+    if (job._sib) {
+      const others = job._sib.all.filter((n) => n !== job.name);
+      const inBatch = jobs.filter((o) => o !== job && o._sib && o._sib.key === job._sib.key).map((o) => o.name);
+      const where = others.map((n) => (inBatch.includes(n) ? `${n}(이 세션)` : `${n}(다른 세션)`)).join('·');
+      const repTag = job._sib.rep
+        ? ' **[산업 통계 인용 대표]** — 이 형제군에서 산업 공유 통계문장(시장규모·생산량 등) 직접 인용은 이 직업만 허용.'
+        : ' 산업 공유 통계문장 직접 인용 금지 — 대표 형제가 인용하므로 이 직업은 통계 재인용 대신 **이 직업 공정·직무 맥락으로만** 서술.';
+      sibNote = ` 🔴 형제직업: ${where}. 산업 공유 통계·자격·안전(산안법 관리감독자 등) 보일러플레이트 문장을 직업명만 치환해 재사용 절대 금지(문장단위 Jaccard 검증에 걸림).${repTag}`;
+    }
+    return `| ${i + 1} | ${job.name} | ${job.id} | ${job.slug} | (자체 분류: niche/major — 모호 시 default major. minor 금지: 게이트 외 분류) | ${hint}${sibNote} |`;
   }).join('\n');
   const reportRows = jobs.map((job) => `${job.slug}  | rev=NNNN | distinct=NN | totalE=NN | class | CLEAN | 마커OK`).join('\n');
 
@@ -343,6 +399,18 @@ function generateCycle(cycleNum, opts = {}) {
   const strictBlock = loadStrictBlock();
   const allJobs = batches.flat();
 
+  // v6-disperse: 형제직업 배치 분산 (--no-disperse로 폴백)
+  let effBatches = batches;
+  let disperseInfo = null;
+  if (!hasFlag('no-disperse')) {
+    effBatches = disperseBatches(allJobs, batches.length);
+    const sibClusters = new Map();
+    for (const j of allJobs) if (j._sib) {
+      if (!sibClusters.has(j._sib.key)) sibClusters.set(j._sib.key, j._sib.all);
+    }
+    disperseInfo = sibClusters;
+  }
+
   // DB cross-check (옵션)
   let processed = null;
   if (!opts.skipDb) processed = fetchProcessedSlugs();
@@ -362,9 +430,9 @@ function generateCycle(cycleNum, opts = {}) {
   fs.mkdirSync(promptDir, { recursive: true });
 
   const queueLines = [];
-  for (let bi = 0; bi < batches.length; bi++) {
+  for (let bi = 0; bi < effBatches.length; bi++) {
     const bn = bi + 1;
-    const jobs = batches[bi];
+    const jobs = effBatches[bi];
     const prompt = buildBatchPrompt(cycleNum, bn, jobs, strictBlock, heroCatMap);
     fs.writeFileSync(path.join(promptDir, `R${cycleNum}_B${bn}_prompt.md`), prompt);
     queueLines.push(`# B${bn} (${jobs.length}직업)`);
@@ -373,10 +441,22 @@ function generateCycle(cycleNum, opts = {}) {
   fs.writeFileSync(path.join(ROOT, `data/cycle/R${cycleNum}_queue.txt`), queueLines.join('\n'));
 
   // ─── 보고 ───
-  console.log(`\n=== ${cycleKey} cycle 생성 완료 (v5: 5직업-1세션 배치 복원) ===`);
-  console.log(`직업: ${allJobs.length}건 → 배치 ${batches.length}개 (각 ~${Math.round(allJobs.length / batches.length)}직업/세션) — 전량 일괄 enqueue (데몬 워커풀 동시성 7, 슬롯 비는 대로 연속 투입)`);
+  console.log(`\n=== ${cycleKey} cycle 생성 완료 (v6-disperse: 형제 분산 편성${hasFlag('no-disperse') ? ' OFF(--no-disperse)' : ''}) ===`);
+  console.log(`직업: ${allJobs.length}건 → 배치 ${effBatches.length}개 (각 ~${Math.round(allJobs.length / effBatches.length)}직업/세션) — 전량 일괄 enqueue (데몬 워커풀 동시성 7, 슬롯 비는 대로 연속 투입)`);
+  if (disperseInfo && disperseInfo.size) {
+    console.log(`\n🔀 형제군 분산 (${disperseInfo.size}개 클러스터, name 앞2글자 기준):`);
+    for (const [key, all] of disperseInfo) {
+      const dist = effBatches.map((b, i) => {
+        const c = b.filter((j) => j._sib && j._sib.key === key).length;
+        return c ? `B${i + 1}×${c}` : null;
+      }).filter(Boolean).join(', ');
+      console.log(`   - "${key}" ${all.length}직 → ${dist}  [통계인용 대표: ${all[0]}]`);
+    }
+  } else if (disperseInfo) {
+    console.log(`\n🔀 형제군 없음 — 분산 편성 결과 = 가나다순과 동일 수준`);
+  }
   console.log(`queue:        data/cycle/R${cycleNum}_queue.txt`);
-  console.log(`prompt:       data/cycle/r${cycleNum}_prompts/R${cycleNum}_B{1..${batches.length}}_prompt.md`);
+  console.log(`prompt:       data/cycle/r${cycleNum}_prompts/R${cycleNum}_B{1..${effBatches.length}}_prompt.md`);
 
   if (alreadyDone.length) {
     console.log(`\n⚠️  이미 master 적용된 직업 ${alreadyDone.length}건 (cross-check):`);
@@ -385,11 +465,11 @@ function generateCycle(cycleNum, opts = {}) {
     console.log(`\n✓ ${allJobs.length} 직업 모두 미적용 (정상 신규 enhance 대상)`);
   }
 
-  console.log(`\n=== Dispatcher spawn 명령 (5직업-1세션 × ${batches.length} 배치, 전량 일괄 enqueue) ===`);
-  console.log(`${batches.length}개 배치 세션을 한 번에 작업큐에 투입 — 데몬 워커풀(동시성 7)이 슬롯 비는 대로 연속 처리:`);
-  for (let bi = 0; bi < batches.length; bi++) {
+  console.log(`\n=== Dispatcher spawn 명령 (5직업-1세션 × ${effBatches.length} 배치, 전량 일괄 enqueue) ===`);
+  console.log(`${effBatches.length}개 배치 세션을 한 번에 작업큐에 투입 — 데몬 워커풀(동시성 7)이 슬롯 비는 대로 연속 처리:`);
+  for (let bi = 0; bi < effBatches.length; bi++) {
     const bn = bi + 1;
-    const slugs = batches[bi].map((j) => j.slug).join(', ');
+    const slugs = effBatches[bi].map((j) => j.slug).join(', ');
     console.log(`  B${bn}: cat data/cycle/r${cycleNum}_prompts/R${cycleNum}_B${bn}_prompt.md  → prompt (${slugs})`);
   }
 
@@ -408,16 +488,16 @@ function generateCycle(cycleNum, opts = {}) {
       path.join(activityDir, `${extId.replace(`r${cycleNum}-`, '')}.json`),
       JSON.stringify({ events: [{ source: 'batch', external_id: extId, group_key: groupKey, agent_slug: 'hangyeol', label, model: 'sonnet', status: 'running' }] }, null, 2),
     );
-  for (let bi = 0; bi < batches.length; bi++) {
+  for (let bi = 0; bi < effBatches.length; bi++) {
     const bn = bi + 1;
-    const b = batches[bi];
+    const b = effBatches[bi];
     if (!b || b.length === 0) continue; // 빈 배치(듬성듬성한 master_list 슬롯: R94=19·R95=1 등) skip — crash 방지
     writeBase(`r${cycleNum}-b${bn}`, `R${cycleNum} B${bn}: ${b[0].slug}~${b[b.length - 1].slug}`);
   }
   writeBase(`r${cycleNum}-verify`, `R${cycleNum} 검증: ${allJobs.length}직업 전수 실측`);
   console.log(`\n=== Activity 가시화 (wave 단위, 옵션 A) — base 이벤트 파일 생성 완료 ===`);
-  console.log(`group_key: ${groupKey}  (B1~B${batches.length} + verify = ${batches.length + 1}개 유닛이 한 그룹으로 묶임)`);
-  console.log(`base dir:  data/cycle/r${cycleNum}_activity/  (b1..b${batches.length}.json + verify.json)`);
+  console.log(`group_key: ${groupKey}  (B1~B${effBatches.length} + verify = ${effBatches.length + 1}개 유닛이 한 그룹으로 묶임)`);
+  console.log(`base dir:  data/cycle/r${cycleNum}_activity/  (b1..b${effBatches.length}.json + verify.json)`);
   console.log(`각 배치 세션은 prompt의 STEP0/STEP_LAST에서 자동 emit (running→done). 검증 세션은 아래 명령 사용:`);
   console.log(`  검증 running: node scripts/emit-activity.cjs --file data/cycle/r${cycleNum}_activity/verify.json --status running`);
   console.log(`  검증 done:    node scripts/emit-activity.cjs --file data/cycle/r${cycleNum}_activity/verify.json --status done --detail "<25/25 PASS, KPI ...>"`);
@@ -525,6 +605,16 @@ function resumeCycle(n) {
     process.exit(1);
   }
   const allJobs = batches.flatMap((b, bi) => (b || []).map((j) => ({ ...j, batch: bi + 1 })));
+  // v6-disperse: 분산 편성으로 생성된 cycle이면 R{N}_queue.txt의 실제 배치 라벨이 진리 — 우선 적용
+  const queuePath = path.join(ROOT, `data/cycle/R${n}_queue.txt`);
+  if (fs.existsSync(queuePath)) {
+    const qmap = new Map();
+    for (const line of fs.readFileSync(queuePath, 'utf8').split('\n')) {
+      const m = line.match(/^B(\d+)\s*\|\s*.+?\|\s*id=(\S+)/);
+      if (m) qmap.set(m[2], parseInt(m[1], 10));
+    }
+    if (qmap.size) for (const j of allJobs) if (qmap.has(String(j.id))) j.batch = qmap.get(String(j.id));
+  }
   let statusMap;
   try {
     statusMap = fetchResumeStatus(allJobs.map((j) => String(j.id)));

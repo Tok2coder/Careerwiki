@@ -29,6 +29,7 @@
 
 1. **go 확인** → **preflight 3종 실측**: ①KPI(admin 쿼리) ②max master rev ③기록상 max rev **이후** master rev 존재 여부(25건+이면 그 cycle 이미 완료). 영구 메모리·복제본과 불일치 시 시작 금지, DB 기준 재구성 후 사용자 보고.
 2. 준비 Agent(sonnet, fg): `--cycle=N`(helper) 실행 + 명단 name|id|slug 산출만 — 작업·POST 금지.
+   **v6-disperse (2026-07-19, R108~)**: helper가 형제군(name 앞2글자 클러스터)을 배치에 라운드로빈 자동 분산 + 프롬프트에 형제 경고·클러스터당 통계인용 대표 1직 주입. 근거: R103~R107 verbatim 복붙 5연속이 100% 같은 배치(같은 워커) 내부 발생(R107 탈취원=타배치 미오염이 증거). 폴백 `--no-disperse`. `--resume`은 R{N}_queue.txt 배치 라벨 우선(분산 반영). 분산 후에도 초대형 클러스터(16직+)는 배치당 3~4직 잔존 → opus 문장단위 Jaccard 검증은 계속 안전망.
 3. dispatcher가 명단을 배치 프롬프트 표에 직접 삽입(세션이 스스로 찾게 하지 않음) + **{도메인 주의} 작성**: 계열 복붙쌍(배치 간 분리), 동음이의, 분류 후보.
 4. B1~B5 Agent(sonnet, **run_in_background:false**, 한 메시지 동시 spawn) — 각 세션 prompt = `{r|m}{N}_prompts/*_B{n}_prompt.md`(STRICT 전문+5건 표). **건당 순차 POST 체크포인트**(idempotent 경계 — 죽어도 완료분 보존).
 5. 완료마다 결과 기록 + **의심 포인트 번호 적립**(totalE/class/마커 미보고, 부등호 보고, 최소기준 hugging, 균일값, WARN→INFO 합리화).

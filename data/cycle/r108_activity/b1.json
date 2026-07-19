@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r108-b1",
+      "group_key": "cycle-R108-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R108 B1: 신문제작국장~신발채산규격전문가",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

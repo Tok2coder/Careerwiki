@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r108-b3",
+      "group_key": "cycle-R108-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R108 B3: 신골마무리원~신발자재구매관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

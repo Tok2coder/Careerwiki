@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r108-b5",
+      "group_key": "cycle-R108-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R108 B5: 신경과전문의사~신발제화원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
