@@ -832,9 +832,9 @@ export async function preFilterByHardConstraints(
           }
           
           const result = await db.prepare(`
-            SELECT ja.job_id, j.job_name
+            SELECT ja.job_id, j.name AS job_name
             FROM job_attributes ja
-            LEFT JOIN jobs j ON ja.job_id = j.job_id
+            LEFT JOIN jobs j ON ja.job_id = j.id
             WHERE ${condition}
           `).all<{ job_id: string; job_name: string }>()
           
@@ -899,7 +899,7 @@ export async function getAllowedJobIdsForRag(
   // 전체 jobs에서 제외 목록을 빼고 반환
   // (Vectorize 검색 시 filter로 사용)
   try {
-    const allJobs = await db.prepare('SELECT job_id FROM jobs').all<{ job_id: string }>()
+    const allJobs = await db.prepare('SELECT id AS job_id FROM jobs').all<{ job_id: string }>()
     const allowedIds: string[] = []
     
     for (const row of allJobs.results || []) {
