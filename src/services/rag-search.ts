@@ -921,25 +921,19 @@ async function keywordSearchJobIds(
   limit: number = 30
 ): Promise<KeywordSearchHit[]> {
   try {
-    // 이름 + 카테고리 + merged_profile_json 내 카테고리명으로 검색
-    // json_extract로 display.categoryName도 매칭 (카테고리 컬럼이 빈 경우 보완)
+    // exact + prefix 범위검색 (idx_jobs_name 활용, 풀스캔 회피)
+    // 이전 구현은 존재하지 않는 j.category 참조로 쿼리 자체가 에러 → 항상 [] 반환하던 버그.
+    // merged_profile_json json_extract WHERE는 6.9k row 풀 JSON 스캔이라 제거.
+    const upper = query + String.fromCharCode(0xffff)
     const result = await db.prepare(`
-      SELECT j.id, j.name,
-        (CASE WHEN j.name = ?1 THEN 100
-              WHEN j.name LIKE ?2 THEN 80
-              WHEN j.name LIKE ?3 THEN 60
-              ELSE 0 END +
-         CASE WHEN j.category LIKE ?3 THEN 20
-              WHEN json_extract(j.merged_profile_json, '$.display.categoryName') LIKE ?3 THEN 20
-              ELSE 0 END)
-        as keyword_score
+      SELECT j.id,
+        (CASE WHEN j.name = ?1 THEN 100 ELSE 80 END) as keyword_score
       FROM jobs j
       WHERE j.is_active = 1
-        AND (j.name LIKE ?3 OR j.category LIKE ?3
-          OR json_extract(j.merged_profile_json, '$.display.categoryName') LIKE ?3)
+        AND j.name >= ?1 AND j.name < ?2
       ORDER BY keyword_score DESC
-      LIMIT ?4
-    `).bind(query, `${query}%`, `%${query}%`, limit).all<{
+      LIMIT ?3
+    `).bind(query, upper, limit).all<{
       id: string
       keyword_score: number
     }>()
