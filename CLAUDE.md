@@ -136,6 +136,11 @@ curl -X POST https://careerwiki.org/api/job/{id}/edit \
 ### Vectorize
 - topK 쿼리 시 Vectorize 상한 100개 → Multi-Query 배치로 우회
 
+### D1 Query 성능 (2026-07-19 billing spike 후속)
+- **신규/수정 D1 쿼리는 `EXPLAIN QUERY PLAN`으로 검증 — 비인덱스 `SCAN TABLE` 금지** (인덱스 `SEARCH`만 허용)
+- **선행 와일드카드 `LIKE '%q%'` 금지** — 전체 스캔 유발. 검색은 Vectorize(의미) + prefix(`LIKE 'q%'`, 인덱스) 조합으로만
+- **사용자-facing 고빈도 라우트(`/search` 등)는 KV 캐시 필수** (정규화 키, stale 5m/max 1h)
+
 ### 배포
 - **main 브랜치만** — worktree 배포 시 다음 main 배포에서 롤백됨
 - `safe-deploy.cjs`가 tsc → build → deploy 한 번에 실행
