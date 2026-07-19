@@ -1080,8 +1080,6 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
       alertWayTruncResult,
       alertSrcOrderBadResult,
       alertYtLowResult,
-      alertOriginNullResult,
-      skillAppliedResult,
       userVerifiedResult,
     ] = await Promise.all([
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active = 1`).first<{ count: number }>(),
@@ -1099,71 +1097,75 @@ adminRoutes.get('/admin/job-equalize', requireAdmin, async (c) => {
         ? db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND json_extract(merged_profile_json,'$._sources') IS NOT NULL AND json_array_length(json_extract(merged_profile_json,'$._sources')) > 0 AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%커리어넷%' AND json_extract(merged_profile_json,'$._sources[0].text') NOT LIKE '%career%'`).first<{ count: number }>()
         : Promise.resolve({ count: 0 } as { count: number }),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND merged_profile_json IS NOT NULL AND (json_extract(merged_profile_json,'$.youtubeLinks') IS NULL OR json_array_length(json_extract(merged_profile_json,'$.youtubeLinks')) = 0) AND (json_extract(merged_profile_json,'$._youtubeSearchNote') IS NULL OR length(json_extract(merged_profile_json,'$._youtubeSearchNote'))=0)`).first<{ count: number }>(),
-      // originNull = master 직업(latest revision = [job-data-master])인데 merged.sources(origin 레이어) 비었음.
-      //   2026-05-24 PITR rollback 비대칭 guard 버그(31 직업 origin 드롭) 추적 KPI. major 탭은 0.
-      isJob && masterMarkerLike
-        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN jobs j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL AND j.merged_profile_json IS NOT NULL AND (json_extract(j.merged_profile_json,'$.sources') IS NULL OR json_array_length(json_extract(j.merged_profile_json,'$.sources')) = 0)`).bind(entityType, masterMarkerLike).first<{ count: number }>()
-        : Promise.resolve({ count: 0 } as { count: number }),
-      // skillApplied = [job-data-master] 단독 (major 탭은 [major-data-master], 2026-07-02 분기).
-      // 2026-05-24 rollback v2: 옛 "마커 존재" 카운트는 fake revisions가 page_revisions에 살아있어
-      // RESTORE/정당인용 직업까지 master로 잡혀 over-count (1,324 vs 진짜 ~484).
-      // → 각 entity의 LATEST revision이 [job-data-master] 마커인 경우만 카운트.
-      // 2026-06-04: [sidebar-fill] housekeeping rev은 latest 판정에서 제외 (최신 content revision 기준).
-      //   사이드바 보강 rev이 latest가 되면 master 직업이 KPI에서 탈락하던 버그 수정 (1283→1268 사고).
-      masterMarkerLike
-        ? db.prepare(`WITH latest AS (SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id) SELECT COUNT(DISTINCT pr.entity_id) as count FROM page_revisions pr JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id JOIN ${tableName} j ON j.id = pr.entity_id WHERE pr.change_summary LIKE ? AND j.user_contributed_json IS NOT NULL`).bind(entityType, masterMarkerLike).first<{ count: number }>()
-        : Promise.resolve({ count: 0 } as { count: number }),
       db.prepare(`SELECT COUNT(*) as count FROM ${tableName} WHERE is_active=1 AND skill_verified_by_user=1`).first<{ count: number }>(),
     ])
 
     const totalJobs = totalResult?.count || 0
-    const qualityAlerts = {
-      wayIsArray: alertWayIsArrayResult?.count || 0,
-      imageUrlBad: alertImageUrlBadResult?.count || 0,
-      wayTrunc: alertWayTruncResult?.count || 0,
-      srcOrderBad: alertSrcOrderBadResult?.count || 0,
-      ytLow: alertYtLowResult?.count || 0,
-      originNull: alertOriginNullResult?.count || 0,
-    }
-    const skillAppliedCount = skillAppliedResult?.count || 0
     const userVerifiedCount = userVerifiedResult?.count || 0
 
-    // 2. [job-data-master] 마커 보유 entity_id → 최근 적용 시각 맵 (skillApplied + 정렬용)
+    // 2. [job-data-master] 마커 보유 entity_id → 최근 적용 시각 맵 + skillApplied + originNull
+    //    2026-07-19 D1 billing spike 후속(Jason 승인): 이 셋이 각자 별도 쿼리로 동일한
+    //    "latest non-sidebar-fill revision per entity" CTE(page_revisions entity_type 전체 스캔,
+    //    실측 rows_read ~22k/scan)를 3회 중복 실행하던 것을 1회 스캔으로 통합.
+    //    - 기존: originNull 쿼리 1회 + skillApplied 쿼리 1회 + loadMarkerMap 쿼리 1회 = latest CTE 3스캔
+    //    - 변경: latest CTE 1스캔 → 행 단위로 is_master/origin_null을 SQL 스칼라 함수로 계산해
+    //      한 결과셋으로 반환, JS에서는 스칼라 값만 집계 (merged_profile_json bulk JSON.parse 없음 — 기존
+    //      "Worker CPU 한도 회피" 원칙 유지, json_extract는 SQLite 네이티브 실행이라 동일 성격).
     //    2026-05-12 WL-FULL: 옛 enhanceAppliedMap 제거. master 단독 기준.
+    //    2026-05-24 rollback v2: latest revision이 마커인 경우만 master로 표시(fake revision over-count 방지).
+    //    2026-06-04: [sidebar-fill] housekeeping rev은 건너뛰고 최신 content revision으로 판정.
+    //    2026-05-24 PITR rollback origin guard 추적용 originNull은 job 탭만 의미 있음(major는 항상 0).
     //    created_at은 'YYYY-MM-DD HH:MM:SS' 포맷이라 문자열 비교로 시간순 정렬 가능.
-    //    2026-07-03 성능: 배치 500→3000 (마커 보유 entity job ~2.1k → 현재 1회 왕복).
-    //      LIMIT 3000 + OFFSET 루프 유지 — 마커 entity가 3000 넘어도 silent cap 없이 전부 로드.
-    async function loadMarkerMap(markerLike: string | null): Promise<Map<string, string>> {
-      const map = new Map<string, string>()
-      if (!markerLike) return map
-      // 2026-05-24 rollback v2: latest revision이 [job-data-master] 인 경우만 master로 표시.
-      // 2026-06-04: [sidebar-fill] housekeeping rev은 건너뛰고 최신 content revision으로 판정.
+    //    LIMIT 3000 + OFFSET 루프 유지 — 마커 entity가 3000 넘어도 silent cap 없이 전부 로드.
+    type LatestMasterRow = { entity_id: string; last_at: string; is_master: number; origin_null: number }
+    async function loadLatestMasterInfo(markerLike: string | null): Promise<LatestMasterRow[]> {
+      const rows: LatestMasterRow[] = []
+      if (!markerLike) return rows
+      const originNullExpr = isJob
+        ? `CASE WHEN j.merged_profile_json IS NOT NULL AND (json_extract(j.merged_profile_json,'$.sources') IS NULL OR json_array_length(json_extract(j.merged_profile_json,'$.sources')) = 0) THEN 1 ELSE 0 END`
+        : `0`
       let offset = 0
       while (true) {
         const batch = await db.prepare(
           `WITH latest AS (
              SELECT entity_id, MAX(id) AS max_id FROM page_revisions WHERE entity_type = ? AND change_summary NOT LIKE '%[sidebar-fill]%' GROUP BY entity_id
            )
-           SELECT pr.entity_id, pr.created_at AS last_at FROM page_revisions pr
+           SELECT pr.entity_id AS entity_id, pr.created_at AS last_at,
+             CASE WHEN pr.change_summary LIKE ? THEN 1 ELSE 0 END AS is_master,
+             ${originNullExpr} AS origin_null
+           FROM page_revisions pr
            JOIN latest l ON l.entity_id = pr.entity_id AND l.max_id = pr.id
            JOIN ${tableName} j ON j.id = pr.entity_id
-           WHERE pr.change_summary LIKE ?
-             AND j.user_contributed_json IS NOT NULL
+           WHERE j.user_contributed_json IS NOT NULL
            ORDER BY pr.entity_id LIMIT 3000 OFFSET ?`
-        ).bind(entityType, markerLike, offset).all<{ entity_id: string; last_at: string }>()
-        const rows = batch.results || []
-        for (const r of rows) {
-          if (r.entity_id) map.set(r.entity_id, r.last_at ?? '')
-        }
-        if (rows.length < 3000) break
+        ).bind(entityType, markerLike, offset).all<LatestMasterRow>()
+        const batchRows = batch.results || []
+        rows.push(...batchRows)
+        if (batchRows.length < 3000) break
         offset += 3000
       }
-      return map
+      return rows
     }
 
-    // master 마커 맵만 로드 (major 탭은 [major-data-master] 기준)
-    const masterAppliedMap = await loadMarkerMap(masterMarkerLike)
+    const latestMasterRows = await loadLatestMasterInfo(masterMarkerLike)
+    const masterAppliedMap = new Map<string, string>()
+    let skillAppliedCount = 0
+    let originNullCount = 0
+    for (const r of latestMasterRows) {
+      if (!r.is_master) continue
+      skillAppliedCount++
+      if (r.entity_id) masterAppliedMap.set(r.entity_id, r.last_at ?? '')
+      if (r.origin_null) originNullCount++
+    }
     const skillAppliedMap = masterAppliedMap
+    const qualityAlerts = {
+      wayIsArray: alertWayIsArrayResult?.count || 0,
+      imageUrlBad: alertImageUrlBadResult?.count || 0,
+      wayTrunc: alertWayTruncResult?.count || 0,
+      srcOrderBad: alertSrcOrderBadResult?.count || 0,
+      ytLow: alertYtLowResult?.count || 0,
+      originNull: originNullCount,
+    }
 
     // 3. 엔티티 목록 — D1 SQL이 12-field 카운팅·quality flag 모두 계산해 scalar로 반환
     //    Worker CPU 한도 회피: merged_profile_json bulk JSON.parse 제거.

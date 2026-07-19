@@ -54,6 +54,11 @@ function loadCycles() {
 }
 
 // ─── DB: master 적용 slug Set + 카운트 ───
+// 2026-07-19 D1 billing spike 후속(Jason 승인): fetchMasterCount()(A/B UNION 풀스캔, page_revisions
+// entity_type='job' 전체 재스캔) 제거. 이 A/B 수치는 스킬/매뉴얼 룰상 "over-count, 사용자 보고 절대 금지"로
+// 이미 못박혀 있었고(§656 원 주석) --status가 매번 이걸 계산만 하고 버렸음 — 순수 낭비 쿼리였다.
+// 권위 KPI는 admin job-equalize CTE(캐시 적용)만 사용. fetchProcessedSlugs()는 cycle 위치 계산에
+// 실사용되므로 유지.
 function fetchProcessedSlugs() {
   const cmd = `npx wrangler d1 execute careerwiki-kr --remote --command "SELECT DISTINCT pr.entity_id FROM page_revisions pr WHERE pr.entity_type='job' AND pr.change_summary LIKE '%[job-data-master]%enhance%' AND pr.change_summary NOT LIKE '%yt-fill%';" --json`;
   try {
@@ -64,22 +69,6 @@ function fetchProcessedSlugs() {
   } catch (e) {
     console.error('[warn] DB 쿼리 실패 (오프라인이면 --cycle=N 명시 사용):', e.message.slice(0, 120));
     return null;
-  }
-}
-
-function fetchMasterCount() {
-  // A = 모든 master 마커 (yt-fill/cleanup 포함) — 메모리 "누적" 정의
-  // B = enhance 풀 사이클만 (yt-fill 제외) — 진짜 보강 완료 직업
-  const cmd = `npx wrangler d1 execute careerwiki-kr --remote --command "SELECT 'A' AS def, COUNT(DISTINCT entity_id) AS cnt FROM page_revisions WHERE entity_type='job' AND change_summary LIKE '%[job-data-master]%' UNION ALL SELECT 'B', COUNT(DISTINCT entity_id) FROM page_revisions WHERE entity_type='job' AND change_summary LIKE '%[job-data-master]%enhance%' AND change_summary NOT LIKE '%yt-fill%';" --json`;
-  try {
-    const out = execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024 });
-    const j = JSON.parse(out);
-    const rows = j[0]?.results || [];
-    const a = rows.find((r) => r.def === 'A')?.cnt ?? null;
-    const b = rows.find((r) => r.def === 'B')?.cnt ?? null;
-    return { a, b };
-  } catch (e) {
-    return { a: null, b: null };
   }
 }
 
@@ -543,11 +532,11 @@ function findNextCycle() {
 
 // ─── --status ───
 function showStatus() {
-  const { a, b } = fetchMasterCount();
   console.log('=== CareerWiki master cycle 현황 ===');
-  console.log(`A. 모든 master 마커 (yt-fill/cleanup 포함, DISTINCT 직업): ${a ?? 'DB 쿼리 실패'}   ← 메모리 "누적 진행" 정의`);
-  console.log(`B. enhance 풀 사이클만 (yt-fill 제외, DISTINCT 직업):    ${b ?? 'DB 쿼리 실패'}   ← 실제 보강 완료`);
-  if (a != null && b != null) console.log(`   차이 ${a - b} = yt-fill/cleanup만 적용 (풀 enhance 미완)`);
+  // 2026-07-19 D1 billing spike 후속(Jason 승인): 여기서 A/B UNION 풀스캔(fetchMasterCount)을 돌려
+  // 화면에 찍기만 하고 버리던 걸 제거함 — 그 수치는 애초에 "사용자 보고 절대 금지, over-count" 룰이
+  // 걸려 있어 실사용된 적이 없었다(순수 D1 read 낭비). 권위 KPI는 admin job-equalize 페이지에서 확인.
+  console.log(`권위 KPI(단일 진실): https://careerwiki.org/admin/job-equalize (10분 KV 캐시, ?fresh=1로 즉시 갱신)`);
 
   // 마지막 처리 / 다음 cycle 위치 (DB 진리값)
   const processed = fetchProcessedSlugs();
@@ -560,7 +549,7 @@ function showStatus() {
   }
 
   console.log(`\n다음 단계: data/cycle/_dispatcher_manual.md 의 ENTRY POINT 6 step 따라 진행.`);
-  console.log(`(보조 메모리: agent/memory/project_careerwiki_cycle_progress.md — drift 시 A 값으로 갱신)`);
+  console.log(`(보조 메모리: agent/memory/project_careerwiki_cycle_progress.md — drift 시 admin KPI 값으로 갱신)`);
 }
 
 // ─── 마커 판정 ───
