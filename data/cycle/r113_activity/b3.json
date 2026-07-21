@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r113-b3",
+      "group_key": "cycle-R113-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R113 B3: 알루미늄연속주조원~애견핸들러",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r113-b4",
+      "group_key": "cycle-R113-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R113 B4: 알루미늄코일중합기조작원~애견혈통관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

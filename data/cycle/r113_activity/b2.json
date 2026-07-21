@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r113-b2",
+      "group_key": "cycle-R113-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R113 B2: 알아이폐기물관리원~애니메이션라이팅원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

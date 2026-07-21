@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r113-b5",
+      "group_key": "cycle-R113-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R113 B5: 암면성형원~애니메이션-배경-디자이너",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

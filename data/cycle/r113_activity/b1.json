@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r113-b1",
+      "group_key": "cycle-R113-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R113 B1: 암벽화수선원~애니메이션-캐릭터-디자이너",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

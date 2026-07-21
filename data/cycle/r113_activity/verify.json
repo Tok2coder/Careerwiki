@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r113-verify",
+      "group_key": "cycle-R113-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R113 검증: 25직업 전수 실측",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
