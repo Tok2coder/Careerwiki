@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r114-b5",
+      "group_key": "cycle-R114-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R114 B5: 애니메이션모델러~야생동물생태복원사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

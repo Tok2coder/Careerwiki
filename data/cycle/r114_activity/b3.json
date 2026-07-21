@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r114-b3",
+      "group_key": "cycle-R114-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R114 B3: 애니메이션리깅원~야구비디오판독관",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

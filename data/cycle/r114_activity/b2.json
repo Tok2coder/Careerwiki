@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r114-b2",
+      "group_key": "cycle-R114-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R114 B2: 애니메이션레이아웃작가~야광제도포원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

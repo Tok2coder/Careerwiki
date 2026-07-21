@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r114-b4",
+      "group_key": "cycle-R114-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R114 B4: 애니메이션맵핑원~야드크레인사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r114-b1",
+      "group_key": "cycle-R114-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R114 B1: 애니메이션라인프로듀서~앰풀검사기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
