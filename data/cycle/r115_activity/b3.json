@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r115-b3",
+      "group_key": "cycle-R115-2026-07-22",
+      "agent_slug": "hangyeol",
+      "label": "R115 B3: 야생동물재활사~양봉원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

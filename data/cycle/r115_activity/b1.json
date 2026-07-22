@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r115-b1",
+      "group_key": "cycle-R115-2026-07-22",
+      "agent_slug": "hangyeol",
+      "label": "R115 B1: 약용작물연구원~양묘관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
