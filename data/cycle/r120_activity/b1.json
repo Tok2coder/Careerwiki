@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r120-b1",
+      "group_key": "cycle-R120-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R120 B1: 연료전지소재부품연구원~연속주조보조원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

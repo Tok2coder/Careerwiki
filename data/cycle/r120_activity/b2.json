@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r120-b2",
+      "group_key": "cycle-R120-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R120 B2: 연도원~연소기구조립반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

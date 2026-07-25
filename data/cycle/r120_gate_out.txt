@@ -1,0 +1,34 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 연료전지소재부품연구원              | totalE=19 | distinct=13 | marker=OK | clean
+PASS 연료전지주변기기조립원              | totalE=19 | distinct=11 | marker=OK | clean
+PASS 연마기조작원                   | totalE=19 | distinct=10 | marker=OK | clean
+PASS 연마숫돌품질검사원                | totalE=20 | distinct=10 | marker=OK | clean
+PASS 연속주조보조원                  | totalE=28 | distinct=10 | marker=OK | clean
+PASS 연도원                      | totalE=19 | distinct=19 | marker=OK | clean
+PASS 연료전지스택연구원                | totalE=20 | distinct=20 | marker=OK | clean
+PASS 연마반장                     | totalE=19 | distinct=19 | marker=OK | clean
+PASS 연마제배합원                   | totalE=19 | distinct=19 | marker=OK | clean
+PASS 연소기구조립반장                 | totalE=19 | distinct=19 | marker=OK | clean
+PASS 연료전지스택컨디셔닝조작원            | totalE=19 | distinct=12 | marker=OK | clean
+PASS 연마숫돌납부착원                 | totalE=19 | distinct=10 | marker=OK | clean
+PASS 연마지접착제도포기조작원             | totalE=19 | distinct=10 | marker=OK | clean
+PASS 연사틀보기원                   | totalE=19 | distinct=10 | marker=OK | clean
+PASS 연소기구조립원                  | totalE=19 | distinct=10 | marker=OK | clean
+PASS 연료전지스택품질검사원              | totalE=22 | distinct=11 | marker=OK | clean
+PASS 연마숫돌세공기조작원               | totalE=20 | distinct=10 | marker=OK | clean
+PASS 연마포지제조원                  | totalE=21 | distinct=10 | marker=OK | clean
+PASS 연삭기조작원                   | totalE=20 | distinct=10 | marker=OK | clean
+PASS 연소신발전연구원                 | totalE=27 | distinct=18 | marker=OK | clean
+WARN 연료전지시스템연구원               | totalE=27 | distinct=19 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://h2korea.or.kr/ko/business/page02_03
+PASS 연마숫돌연마원                  | totalE=27 | distinct=12 | marker=OK | clean
+PASS 연마포후가공원                  | totalE=27 | distinct=11 | marker=OK | clean
+PASS 연설문작성가                   | totalE=30 | distinct=11 | marker=OK | clean
+PASS 연속염색기운전원                 | totalE=27 | distinct=11 | marker=OK | clean
+
+=== Summary: PASS 24/25, WARN 1 ===
+WARN: 연료전지시스템연구원(urlUnverified(1))

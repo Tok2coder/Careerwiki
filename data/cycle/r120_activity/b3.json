@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r120-b3",
+      "group_key": "cycle-R120-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R120 B3: 연료전지스택컨디셔닝조작원~연소기구조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r120-b4",
+      "group_key": "cycle-R120-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R120 B4: 연료전지스택품질검사원~연소신발전연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
