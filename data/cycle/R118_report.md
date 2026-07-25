@@ -59,4 +59,7 @@
 - admin: https://careerwiki.org/admin/job-equalize (KPI 3321)
 - 표본: careerwiki.org/job/여신심사사무원 · /job/여론조사분석가 · /job/엘이디조명기술개발자
 
-R119는 go 주면 시작. (여신사무관리자 enrichment는 별도 판단)
+## 후속 조치 (Jason 지시 — 당일 완료)
+- **여신사무관리자 major급 enrich 완료**: rev 22705 → **22717**, distinct 11→**21**, totalE 31, major, audit clean. 은행 여신 도메인 deep 출처 10건 추가(여신금융협회·금융위 여신심사가이드라인·한국은행 금통위·은행연합회 모범규준·토스뱅크/하나은행 채용 등, 전 URL node fetch 200). sal/careerTree 미접촉. **KPI 3321 불변**(benign dup, latest master). prod 200 + 신규 키워드 렌더 확인. → soft-flag 해소.
+
+R119는 go 주면 시작.
