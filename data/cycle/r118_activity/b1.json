@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r118-b1",
+      "group_key": "cycle-R118-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R118 B1: 엘이디조명-컨설턴트~여행-컨설턴트",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

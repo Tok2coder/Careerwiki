@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r118-b2",
+      "group_key": "cycle-R118-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R118 B2: 엘이디조명광학설계기술자~여행호텔관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

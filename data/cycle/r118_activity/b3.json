@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r118-b3",
+      "group_key": "cycle-R118-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R118 B3: 엘이디조명기구설계기술자~여신사무관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

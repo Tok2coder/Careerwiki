@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r118-b5",
+      "group_key": "cycle-R118-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R118 B5: 엘이디조명기술개발자~여신사후관리사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

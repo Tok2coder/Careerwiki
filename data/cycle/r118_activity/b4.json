@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r118-b4",
+      "group_key": "cycle-R118-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R118 B4: 엘이디조명기구품질검사원~여신사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

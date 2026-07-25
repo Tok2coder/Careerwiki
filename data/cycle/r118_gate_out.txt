@@ -1,0 +1,53 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+WARN 엘이디조명-컨설턴트               | totalE=19 | distinct=12 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.kopti.re.kr/ko/research/bussiness.do
+WARN 엘이디조명제품방열설계기술자           | totalE=20 | distinct=11 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.kopti.re.kr/ko/research/bussiness.do
+PASS 여과기조립원                   | totalE=20 | distinct=11 | marker=OK | clean
+PASS 여신심사사무원                  | totalE=25 | distinct=20 | marker=OK | clean
+PASS 여행-컨설턴트                  | totalE=22 | distinct=10 | marker=OK | clean
+WARN 엘이디조명광학설계기술자             | totalE=19 | distinct=12 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] http-403(anti-bot 가능): https://www.keysight.com/us/en/products/software/optical-solutions-software/optical-design-solutions/lighttools.html
+        [urlUnverified] tls: https://edu.kopti.re.kr/edu/apply/program/detailView.do?emKey=392
+PASS 여과압착기조작원                 | totalE=20 | distinct=10 | marker=OK | clean
+PASS 여신금리기획원                  | totalE=26 | distinct=18 | marker=OK | clean
+PASS 여신제도기획원                  | totalE=26 | distinct=18 | marker=OK | clean
+WARN 여행호텔관리자                  | totalE=27 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.ktc.ac.kr/page/ktc/overview/attached/ncs
+PASS 엘이디조명기구설계기술자             | totalE=23 | distinct=11 | marker=OK | clean
+PASS 엠보싱기조작원                  | totalE=22 | distinct=10 | marker=OK | clean
+WARN 여객서비스조사원                 | totalE=22 | distinct=10 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] conn(000): https://www.koti.re.kr/user/bbs/asmList.do
+WARN 여과기시험원                   | totalE=21 | distinct=10 | marker=OK | WARN:urlUnverified(5)
+        [urlUnverified] tls: https://www.kwwa.or.kr/kr/contents/safety_certification_info/view.do
+        [urlUnverified] tls: https://www.kwwa.or.kr/kr/board/notify_11/boardList.do
+        [urlUnverified] tls: https://www.kwwa.or.kr/kr/contents/KS_product_certification/view.do
+        [urlUnverified] tls: https://www.kwwa.or.kr/kr/contents/education/view.do
+        [urlUnverified] tls: https://www.kwwa.or.kr/kr/contents/group_standard_certification/view.do
+PASS 여신사무관리자                  | totalE=21 | distinct=11 | marker=OK | clean
+WARN 엘이디조명기구품질검사원             | totalE=20 | distinct=12 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.kopti.re.kr/sp/light/sub4.do
+        [urlUnverified] tls: https://www.kopti.re.kr/sp/certification/sub2.do
+WARN 여객선개찰원                   | totalE=20 | distinct=10 | marker=OK | WARN:urlUnverified(4)
+        [urlUnverified] conn(000): https://www.theksa.or.kr/site/main/content/sub03_09
+        [urlUnverified] conn(000): https://www.theksa.or.kr/site/main/content/sub03_10
+        [urlUnverified] conn(000): https://www.theksa.or.kr/site/main/content/sub05_02_02
+        [urlUnverified] conn(000): https://www.theksa.or.kr/site/passenger/content/sub02_02_02
+PASS 여과기정화원                   | totalE=20 | distinct=10 | marker=OK | clean
+PASS 여론조사분석가                  | totalE=24 | distinct=20 | marker=OK | clean
+PASS 여신사무원                    | totalE=25 | distinct=20 | marker=OK | clean
+WARN 엘이디조명기술개발자               | totalE=21 | distinct=18 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.kopti.re.kr/sp/certification/sub2.do
+        [urlUnverified] tls: https://www.kopti.re.kr/ko/research/bussiness.do
+PASS 여객전무                     | totalE=21 | distinct=18 | marker=OK | clean
+WARN 여과기제조기술자                 | totalE=20 | distinct=10 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://hankookfilter.kr/layout/res/home.php?go=page1.1
+PASS 여수신총괄사무원                 | totalE=25 | distinct=20 | marker=OK | clean
+PASS 여신사후관리사무원                | totalE=25 | distinct=19 | marker=OK | clean
+
+=== Summary: PASS 15/25, WARN 10 ===
+WARN: 엘이디조명-컨설턴트(urlUnverified(1)), 엘이디조명제품방열설계기술자(urlUnverified(1)), 엘이디조명광학설계기술자(urlUnverified(2)), 여행호텔관리자(urlUnverified(1)), 여객서비스조사원(urlUnverified(1)), 여과기시험원(urlUnverified(5)), 엘이디조명기구품질검사원(urlUnverified(2)), 여객선개찰원(urlUnverified(4)), 엘이디조명기술개발자(urlUnverified(2)), 여과기제조기술자(urlUnverified(1))
