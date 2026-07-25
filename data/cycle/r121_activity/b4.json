@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r121-b4",
+      "group_key": "cycle-R121-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R121 B4: 연쇄점모집영업원~열압성형기운전원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

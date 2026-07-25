@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r121-b3",
+      "group_key": "cycle-R121-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R121 B3: 연속증류탑조작원~열배관정보운용원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r121-b1",
+      "group_key": "cycle-R121-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R121 B1: 연속주조압연원~연탄제조반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

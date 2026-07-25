@@ -1,0 +1,36 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 연속주조압연원                  | totalE=20 | distinct=19 | marker=OK | clean
+PASS 연애코치                     | totalE=19 | distinct=11 | marker=OK | clean
+PASS 연예프로그램진행자                | totalE=25 | distinct=18 | marker=OK | clean
+PASS 연육배합기조작원                 | totalE=20 | distinct=11 | marker=OK | clean
+PASS 연탄제조반장                   | totalE=19 | distinct=10 | marker=OK | clean
+PASS 연속주조작업원                  | totalE=25 | distinct=16 | marker=OK | clean
+PASS 연유제조원                    | totalE=21 | distinct=10 | marker=OK | clean
+PASS 연조기보전원                   | totalE=23 | distinct=10 | marker=OK | clean
+PASS 연탄제조원                    | totalE=21 | distinct=10 | marker=OK | clean
+PASS 열배관관리기술자                 | totalE=28 | distinct=18 | marker=OK | clean
+PASS 연속증류탑조작원                 | totalE=24 | distinct=11 | marker=OK | clean
+PASS 연신기운전원                   | totalE=24 | distinct=11 | marker=OK | clean
+PASS 연조반장                     | totalE=23 | distinct=11 | marker=OK | clean
+PASS 열간압연원                    | totalE=25 | distinct=11 | marker=OK | clean
+PASS 열배관정보운용원                 | totalE=23 | distinct=10 | marker=OK | clean
+PASS 연쇄점모집영업원                 | totalE=25 | distinct=18 | marker=OK | clean
+PASS 연신반장                     | totalE=23 | distinct=10 | marker=OK | clean
+WARN 연육결착원                    | totalE=23 | distinct=10 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://fishsci.pknu.ac.kr/kor/view.do?no=20
+PASS 연조틀보기원                   | totalE=21 | distinct=10 | marker=OK | clean
+PASS 열압성형기운전원                 | totalE=23 | distinct=10 | marker=OK | clean
+PASS 연승어선원                    | totalE=21 | distinct=13 | marker=OK | clean
+PASS 연예인총괄관리자                 | totalE=22 | distinct=13 | marker=OK | clean
+WARN 연육기조작원                   | totalE=20 | distinct=11 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: http://www.kcma.or.kr/sub_info/info_1_1_3.asp
+WARN 연탄제조관리자                  | totalE=22 | distinct=11 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] timeout: http://www.kocoal.or.kr/main/contents.do?menuNo=200088
+PASS 열유체시스템연구원                | totalE=22 | distinct=19 | marker=OK | clean
+
+=== Summary: PASS 22/25, WARN 3 ===
+WARN: 연육결착원(urlUnverified(1)), 연육기조작원(urlUnverified(1)), 연탄제조관리자(urlUnverified(1))

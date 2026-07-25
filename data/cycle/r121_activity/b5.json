@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r121-b5",
+      "group_key": "cycle-R121-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R121 B5: 연승어선원~열유체시스템연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

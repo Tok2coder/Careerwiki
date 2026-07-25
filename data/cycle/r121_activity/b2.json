@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r121-b2",
+      "group_key": "cycle-R121-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R121 B2: 연속주조작업원~열배관관리기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
