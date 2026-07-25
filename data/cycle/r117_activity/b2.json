@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r117-b2",
+      "group_key": "cycle-R117-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R117 B2: 얼음판매원~엘이디led조명품질관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

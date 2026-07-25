@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r117-b5",
+      "group_key": "cycle-R117-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R117 B5: 언론정책연구원~엘리베이터설치원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

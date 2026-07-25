@@ -1,0 +1,43 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 언어재활사                    | totalE=27 | distinct=19 | marker=OK | clean
+PASS 에너지공정연구원                 | totalE=29 | distinct=19 | marker=OK | clean
+PASS 에이징원                     | totalE=30 | distinct=19 | marker=OK | clean
+PASS 에프알피선박건조재료제조현장감독자        | totalE=25 | distinct=11 | marker=OK | clean
+PASS 엘리베이터유지관리원               | totalE=26 | distinct=11 | marker=OK | clean
+PASS 얼음판매원                    | totalE=20 | distinct=11 | marker=OK | clean
+PASS 에너지기기시험성능평가원             | totalE=20 | distinct=18 | marker=OK | clean
+PASS 에이치씨아이-컨설턴트              | totalE=22 | distinct=18 | marker=OK | clean
+PASS 에프알피선박수지적층원              | totalE=19 | distinct=11 | marker=OK | clean
+PASS 엘이디led조명품질관리원            | totalE=21 | distinct=11 | marker=OK | clean
+WARN 에너지저장연구원                 | totalE=27 | distinct=18 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.keri.re.kr/kor/contents/research-10-03-01.do
+        [urlUnverified] tls: https://www.keri.re.kr/kor/contents/research-10-01-01.do?gotoMenuNo=research-10-01
+PASS 에어백제조원                   | totalE=28 | distinct=19 | marker=OK | clean
+PASS 에이치티엠엘html코딩원            | totalE=26 | distinct=19 | marker=OK | clean
+PASS 엔진검사원                    | totalE=31 | distinct=18 | marker=OK | clean
+PASS 엘이디제조원                   | totalE=31 | distinct=18 | marker=OK | clean
+WARN 어촌지도사                    | totalE=27 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://lems.seaman.or.kr/MFS/MFSExamSubject/selectMFSExamSubjectView.do
+PASS 에너지정책연구원                 | totalE=29 | distinct=18 | marker=OK | clean
+WARN 에스컬레이터설치원                | totalE=28 | distinct=18 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.kola.or.kr/elevstat/floor
+        [urlUnverified] tls: https://www.kola.or.kr/pages/34/27
+PASS 에지밴딩기조작원                 | totalE=28 | distinct=11 | marker=OK | clean
+WARN 엔진조립원                    | totalE=26 | distinct=12 | marker=OK | WARN:urlUnverified(4)
+        [urlUnverified] tls: https://www.katech.re.kr/page/b47e31df-c48d-4bbf-89e5-69dfc8276ad3
+        [urlUnverified] tls: https://www.katech.re.kr/page/9598b2cf-4e02-4a81-a3f6-fd572223fc9c
+        [urlUnverified] tls: https://www.katech.re.kr/page/f784c8d5-c806-4f8c-b6ef-ea056418b2a9
+        [urlUnverified] tls: https://www.katech.re.kr/page/80713244-26b5-490a-a367-b500b1106bad
+PASS 언론정책연구원                  | totalE=20 | distinct=19 | marker=OK | clean
+PASS 에너지진단사                   | totalE=22 | distinct=19 | marker=OK | clean
+PASS 에스코esco사업관리사무원           | totalE=23 | distinct=18 | marker=OK | clean
+PASS 엔n스크린서비스개발자              | totalE=24 | distinct=18 | marker=OK | clean
+WARN 엘리베이터설치원                 | totalE=23 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://kola.or.kr/pages/61/68/bbs/2976
+
+=== Summary: PASS 20/25, WARN 5 ===
+WARN: 에너지저장연구원(urlUnverified(2)), 어촌지도사(urlUnverified(1)), 에스컬레이터설치원(urlUnverified(2)), 엔진조립원(urlUnverified(4)), 엘리베이터설치원(urlUnverified(1))

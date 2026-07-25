@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r117-b4",
+      "group_key": "cycle-R117-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R117 B4: 어촌지도사~엔진조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
