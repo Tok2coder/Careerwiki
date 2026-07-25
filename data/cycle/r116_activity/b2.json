@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r116-b2",
+      "group_key": "cycle-R116-2026-07-22",
+      "agent_slug": "hangyeol",
+      "label": "R116 B2: 양수장관리원~어업자원조사연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r116-b4",
+      "group_key": "cycle-R116-2026-07-22",
+      "agent_slug": "hangyeol",
+      "label": "R116 B4: 양식장작업원~어염건어물제조원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

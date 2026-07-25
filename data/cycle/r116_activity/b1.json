@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r116-b1",
+      "group_key": "cycle-R116-2026-07-22",
+      "agent_slug": "hangyeol",
+      "label": "R116 B1: 양식기술개발원~어육정형원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

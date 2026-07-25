@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r116-b3",
+      "group_key": "cycle-R116-2026-07-22",
+      "agent_slug": "hangyeol",
+      "label": "R116 B3: 양식장관리원~어업잠수부",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

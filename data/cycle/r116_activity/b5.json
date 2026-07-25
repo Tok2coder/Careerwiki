@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r116-b5",
+      "group_key": "cycle-R116-2026-07-22",
+      "agent_slug": "hangyeol",
+      "label": "R116 B5: 양육비이행모니터링수행원~어음교환제도기획원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
