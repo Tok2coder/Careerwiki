@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r119-b1",
+      "group_key": "cycle-R119-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R119 B1: 여행사대리점영업원~연구원일반",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

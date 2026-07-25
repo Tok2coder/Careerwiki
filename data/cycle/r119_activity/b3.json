@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r119-b3",
+      "group_key": "cycle-R119-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R119 B3: 여행영업기획관리원~연기금정책평가원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

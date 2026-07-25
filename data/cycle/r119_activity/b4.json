@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r119-b4",
+      "group_key": "cycle-R119-2026-07-25",
+      "agent_slug": "hangyeol",
+      "label": "R119 B4: 여행작가~연단기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
