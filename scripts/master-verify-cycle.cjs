@@ -271,6 +271,12 @@ function parseJaccardPairs() {
       if (live.unverified.length) warns.push(`urlUnverified(${live.unverified.length})`);
       job._urlDead = live.dead;
       job._urlUnverified = live.unverified;
+      job._urlSet = [...new Set(stats.urls)];
+      // R122 게이트 보강 ①: domain-diversity — distinct≥18(major급)인데 도메인 ≤3이면
+      // 사이트 페이지 walking으로 바를 채운 padding 의심 (염료개발기술자 dyetec 12 + kofoti 6 = 18)
+      const hosts = new Set(job._urlSet.map((u) => { try { return new URL(u).host.replace(/^www\./, ''); } catch { return u; } }));
+      job._hostCount = hosts.size;
+      if (distinct >= 18 && hosts.size <= 3) warns.push(`lowDomainDiversity(${hosts.size}dom/${distinct}url)`);
     }
 
     job._totalE = totalE;
@@ -285,6 +291,29 @@ function parseJaccardPairs() {
     );
     (job._urlDead || []).forEach((u) => console.log(`        [urlDead] ${u.reason}: ${u.url}`));
     (job._urlUnverified || []).forEach((u) => console.log(`        [urlUnverified] ${u.reason}: ${u.url}`));
+  }
+
+  // ─── R122 게이트 보강 ②: cross-job URL-set 동일성 ───
+  // 같은 cycle 내 두 직업의 _sources URL 집합 Jaccard ≥0.9 = 세션이 소스 풀을 재사용한 것
+  // (R122 열차기관사일반:열차승무지도원:열차운행계획원 91.7~100% — distinct 19가 직무별 발굴이 아님)
+  const urlSetRows = rows.filter((r) => (r.job._urlSet || []).length > 0);
+  let urlSetFail = 0;
+  if (urlSetRows.length > 1) {
+    const dup = [];
+    for (let i = 0; i < urlSetRows.length; i++) {
+      for (let j = i + 1; j < urlSetRows.length; j++) {
+        const A = new Set(urlSetRows[i].job._urlSet), B = new Set(urlSetRows[j].job._urlSet);
+        const inter = [...A].filter((u) => B.has(u)).length;
+        const uni = new Set([...A, ...B]).size;
+        const sim = uni ? inter / uni : 0;
+        if (sim >= 0.9) dup.push({ a: urlSetRows[i].job.slug, b: urlSetRows[j].job.slug, sim, inter });
+      }
+    }
+    if (dup.length) {
+      urlSetFail = dup.length;
+      console.log(`\n=== URL-set 동일성 (≥0.9 FAIL — 소스 풀 재사용) ===`);
+      dup.forEach((d) => console.log(`FAIL ${d.a} : ${d.b} — ${(d.sim * 100).toFixed(1)}% (교집합 ${d.inter})`));
+    }
   }
 
   // ─── jaccard pair 비교 ───
@@ -315,6 +344,7 @@ function parseJaccardPairs() {
   if (fail.length) console.log(`FAIL: ${fail.map((r) => `${r.job.slug}(${r.reasons.join('/')})`).join(', ')}`);
   if (warn.length) console.log(`WARN: ${warn.map((r) => `${r.job.slug}(${r.warns.join('/')})`).join(', ')}`);
   if (jaccardFail) console.log(`JACCARD FAIL: ${jaccardFail} pair ≥0.5`);
+  if (urlSetFail) console.log(`URL-SET FAIL: ${urlSetFail} pair ≥0.9 (소스 풀 재사용)`);
 
-  process.exit(fail.length > 0 || jaccardFail > 0 ? 1 : 0);
+  process.exit(fail.length > 0 || jaccardFail > 0 || urlSetFail > 0 ? 1 : 0);
 })();

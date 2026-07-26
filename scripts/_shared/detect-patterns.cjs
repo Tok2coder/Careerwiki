@@ -339,6 +339,11 @@ const LIST_PAGE_PATTERNS = [
   /^https?:\/\/[^\/?#]+\/(?:[^?#]+\/)?(search|list)(\.[a-z]{1,5})?\?[^#]*\b(query|keyword|q|searchword|searchKeyword|searchvalue|searchValue|text|word|kw|kwd|term|sw)=/i,
   // 게시판 검색결과 사고: klnews.co.kr/news/articleList.html?sc_word=...
   /^https?:\/\/[^\/?#]+\/(?:[^?#]+\/)?articleList(\.[a-z]{1,5})?\?[^#]*\b(sc_word|searchword|searchKeyword|sc_section|sc_sub_section|searchValue)=/i,
+  // 게시판 목록 페이지 사고 (R122 염료개발기술자 — boardList.do?Code=... 3건이 디텍터 갭으로 통과):
+  // *List.do / boardList.* / bbsList.* 등 "목록" 액션 URL은 개별 글 식별자(nttNo/artiId/idx/seq/bbsId 등) 없으면 목록
+  /^https?:\/\/[^\/?#]+\/(?:[^?#]+\/)?(board|bbs|notice|data|article|news)?_?list(\.[a-z]{1,5}|\.do|\.php|\.asp|\.jsp)?(\?(?!.*\b(nttNo|artiId|articleNo|idx|seq|no|bbsIdx|nttSn|wr_id|bo_idx|documentSrl)=)[^#]*)?(\#.*)?$/i,
+  // 게시판 페이지네이션 목록: ?bo_table=xxx&page=2 형태(개별 글 id 없음)
+  /^https?:\/\/[^\/?#]+\/[^?#]*\?[^#]*\bbo_table=[^&#]*(&[^#]*)?\bpage=\d+/i,
   // 커리어넷 신형 검색 사고: career.go.kr/cloud/w/search/intro?text=...
   /^https?:\/\/(www\.)?career\.go\.kr\/cloud\/w\/search\//i,
   // 워크피디아 검색 form 사고: wagework.go.kr/pt/b/a/retrieveOccpSrch... or retrieveJobSrch...
