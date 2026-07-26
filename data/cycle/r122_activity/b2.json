@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r122-b2",
+      "group_key": "cycle-R122-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R122 B2: 열차기관사일반~염료건조원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

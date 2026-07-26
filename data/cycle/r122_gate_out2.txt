@@ -1,0 +1,46 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 열차검수승무원                  | totalE=20 | distinct=10 | marker=OK | clean
+PASS 열차승무원                    | totalE=19 | distinct=10 | marker=OK | clean
+PASS 열차운전계획원                  | totalE=19 | distinct=10 | marker=OK | clean
+PASS 열차화물사무원                  | totalE=21 | distinct=10 | marker=OK | clean
+PASS 염료개발연구원                  | totalE=21 | distinct=12 | marker=OK | clean
+PASS 열차기관사일반                  | totalE=25 | distinct=19 | marker=OK | clean
+PASS 열차승무지도원                  | totalE=22 | distinct=19 | marker=OK | clean
+PASS 열차운행계획원                  | totalE=23 | distinct=19 | marker=OK | clean
+PASS 열처리검사원                   | totalE=20 | distinct=10 | marker=OK | clean
+PASS 염료건조원                    | totalE=21 | distinct=10 | marker=OK | clean
+PASS 열전기시설관리원                 | totalE=27 | distinct=19 | marker=OK | clean
+WARN 열차기관조사                   | totalE=29 | distinct=20 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] conn(000): https://www.koti.re.kr/user/bbs/anytmRsrchReprtView.do?bbs_no=845
+WARN 열차신호원                    | totalE=29 | distinct=18 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.ui-line.com/html/safeSkill/safe02/safe_02_00.php
+        [urlUnverified] conn(000): https://www.koti.re.kr/user/bbs/anytmRsrchReprtView.do?bbs_no=845
+WARN 열차운행관리원                  | totalE=27 | distinct=18 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] conn(000): https://www.koti.re.kr/user/bbs/anytmRsrchReprtView.do?bbs_no=845
+        [urlUnverified] timeout: https://edulife.ut.ac.kr/edulife/sub04_05.do
+PASS 열처리반장                    | totalE=26 | distinct=18 | marker=OK | clean
+PASS 열차수송원                    | totalE=24 | distinct=12 | marker=OK | clean
+PASS 열차여객관리원                  | totalE=22 | distinct=10 | marker=OK | clean
+PASS 열차차량정비관리원                | totalE=22 | distinct=10 | marker=OK | clean
+PASS 열처리원                     | totalE=24 | distinct=11 | marker=OK | clean
+PASS 열탕살균원                    | totalE=22 | distinct=10 | marker=OK | clean
+PASS 열차승무운용원                  | totalE=22 | distinct=19 | marker=OK | clean
+WARN 열차운용원                    | totalE=23 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.krsea.or.kr/bbs/board.php?bo_table=b14&wr_id=492&sst=wr_datetime&sod=asc&sop=and&page=24
+WARN 열차홈안내원                   | totalE=24 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.krsea.or.kr/bbs/board.php?bo_table=b14&wr_id=492&sst=wr_datetime&sod=asc&sop=and&page=24
+PASS 열환경안전관리원                 | totalE=24 | distinct=18 | marker=OK | clean
+WARN 염료개발기술자                  | totalE=21 | distinct=18 | marker=OK | WARN:lowDomainDiversity(2dom/18url)
+
+=== URL-set 동일성 (≥0.9 FAIL — 소스 풀 재사용) ===
+FAIL 열차기관사일반 : 열차승무지도원 — 100.0% (교집합 19)
+FAIL 열차기관사일반 : 열차운행계획원 — 100.0% (교집합 19)
+FAIL 열차승무지도원 : 열차운행계획원 — 100.0% (교집합 19)
+
+=== Summary: PASS 19/25, WARN 6 ===
+WARN: 열차기관조사(urlUnverified(1)), 열차신호원(urlUnverified(2)), 열차운행관리원(urlUnverified(2)), 열차운용원(urlUnverified(1)), 열차홈안내원(urlUnverified(1)), 염료개발기술자(lowDomainDiversity(2dom/18url))
+URL-SET FAIL: 3 pair ≥0.9 (소스 풀 재사용)

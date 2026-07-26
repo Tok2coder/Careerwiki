@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r122-b3",
+      "group_key": "cycle-R122-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R122 B3: 열전기시설관리원~열처리반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

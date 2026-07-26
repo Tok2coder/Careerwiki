@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r122-b1",
+      "group_key": "cycle-R122-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R122 B1: 열차검수승무원~염료개발연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
