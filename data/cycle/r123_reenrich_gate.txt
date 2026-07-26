@@ -1,0 +1,17 @@
+[master-verify-cycle] 대상 10 직업
+
+WARN 엽상기조작원                   | totalE=20 | distinct=11 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 염색용얼음제조원                 | totalE=22 | distinct=10 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 영상필름관리원                  | totalE=24 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 영상통신연구원                  | totalE=20 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 영양교사                     | totalE=24 | distinct=21 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 염료표준화원                   | totalE=23 | distinct=19 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 염료합성원                    | totalE=24 | distinct=19 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 염료분산기조작원                 | totalE=19 | distinct=19 | marker=? | WARN:id-unknown(DB검사 skip), WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.kcma.or.kr/sub_info/info_1_5_3_v2.asp?pDP1=1&pDP2=1
+        [urlUnverified] tls: https://www.kcma.or.kr/sub_info/info_1_5_3_v2.asp?pDP1=2&pDP2=1
+WARN 염료여과기조작원                 | totalE=25 | distinct=19 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 염료조액원                    | totalE=22 | distinct=20 | marker=? | WARN:id-unknown(DB검사 skip)
+
+=== Summary: PASS 0/10, WARN 10 ===
+WARN: 엽상기조작원(id-unknown(DB검사 skip)), 염색용얼음제조원(id-unknown(DB검사 skip)), 영상필름관리원(id-unknown(DB검사 skip)), 영상통신연구원(id-unknown(DB검사 skip)), 영양교사(id-unknown(DB검사 skip)), 염료표준화원(id-unknown(DB검사 skip)), 염료합성원(id-unknown(DB검사 skip)), 염료분산기조작원(id-unknown(DB검사 skip)/urlUnverified(2)), 염료여과기조작원(id-unknown(DB검사 skip)), 염료조액원(id-unknown(DB검사 skip))
