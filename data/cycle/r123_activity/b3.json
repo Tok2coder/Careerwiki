@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r123-b3",
+      "group_key": "cycle-R123-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R123 B3: 염료분산기조작원~영업판매관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

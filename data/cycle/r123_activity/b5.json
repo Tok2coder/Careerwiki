@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r123-b5",
+      "group_key": "cycle-R123-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R123 B5: 염료조액원~영양교사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r123-b2",
+      "group_key": "cycle-R123-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R123 B2: 염료합성원~영상필름관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

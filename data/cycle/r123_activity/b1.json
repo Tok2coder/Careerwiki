@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r123-b1",
+      "group_key": "cycle-R123-2026-07-26",
+      "agent_slug": "hangyeol",
+      "label": "R123 B1: 염료표준화원~영상통신연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
