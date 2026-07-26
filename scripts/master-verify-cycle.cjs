@@ -274,9 +274,26 @@ function parseJaccardPairs() {
       job._urlSet = [...new Set(stats.urls)];
       // R122 게이트 보강 ①: domain-diversity — distinct≥18(major급)인데 도메인 ≤3이면
       // 사이트 페이지 walking으로 바를 채운 padding 의심 (염료개발기술자 dyetec 12 + kofoti 6 = 18)
-      const hosts = new Set(job._urlSet.map((u) => { try { return new URL(u).host.replace(/^www\./, ''); } catch { return u; } }));
+      // R123 보정: 기존 `distinct>=18 && hosts<=3` 조건은 niche 직업(distinct 10~11)을
+      // 전부 면제해 염색용얼음제조원(11 distinct 전량 casenote.kr 1도메인)이 clean 통과했다.
+      // → distinct 하한을 8로 낮추고, 단일 도메인 점유율(≥50%) 기준을 추가한다.
+      // 뉴스 신디케이션 호스트(naver/daum)는 한 호스트 아래 서로 다른 언론사 기사가 모이므로
+      // 호스트 집중도로 padding을 판정하면 false positive가 난다(R123 영업지원사무원 naver 13/19 —
+      // 실제로는 13개 서로 다른 언론사 기사). 기사 경로까지 포함해 별도 키로 센다.
+      const SYNDICATION = /(^|\.)(n\.news\.naver\.com|news\.naver\.com|v\.daum\.net|news\.daum\.net)$/;
+      const hostCounts = {};
+      job._urlSet.forEach((u) => {
+        let h;
+        try { h = new URL(u).host.replace(/^www\./, ''); } catch { h = u; }
+        if (SYNDICATION.test(h)) { hostCounts[`${h}#${u}`] = 1; return; }
+        hostCounts[h] = (hostCounts[h] || 0) + 1;
+      });
+      const hosts = new Set(Object.keys(hostCounts));
       job._hostCount = hosts.size;
-      if (distinct >= 18 && hosts.size <= 3) warns.push(`lowDomainDiversity(${hosts.size}dom/${distinct}url)`);
+      const topHost = Object.entries(hostCounts).sort((a, b) => b[1] - a[1])[0] || ['', 0];
+      const topShare = distinct ? topHost[1] / distinct : 0;
+      if (distinct >= 8 && hosts.size <= 3) warns.push(`lowDomainDiversity(${hosts.size}dom/${distinct}url)`);
+      else if (distinct >= 8 && topShare >= 0.5) warns.push(`singleDomainDominance(${topHost[0]} ${topHost[1]}/${distinct})`);
     }
 
     job._totalE = totalE;
@@ -293,9 +310,15 @@ function parseJaccardPairs() {
     (job._urlUnverified || []).forEach((u) => console.log(`        [urlUnverified] ${u.reason}: ${u.url}`));
   }
 
-  // ─── R122 게이트 보강 ②: cross-job URL-set 동일성 ───
-  // 같은 cycle 내 두 직업의 _sources URL 집합 Jaccard ≥0.9 = 세션이 소스 풀을 재사용한 것
-  // (R122 열차기관사일반:열차승무지도원:열차운행계획원 91.7~100% — distinct 19가 직무별 발굴이 아님)
+  // ─── R122 게이트 보강 ②: cross-job URL-set 동일성 (R123 재calibration) ───
+  // 같은 cycle 내 두 직업의 _sources URL 집합이 크게 겹치면 세션이 소스 풀을 재사용한 것.
+  // R122 최초 도입 시 임계 Jaccard ≥0.9 는 사실상 도달 불가였고, R123에서
+  // 염료표준화원:엽상기조작원(Jaccard 38.1%, 교집합 8 = 엽상기조작원 10개 중 80% 재사용)이
+  // "0쌍"으로 통과하는 false negative를 냈다. → 두 축으로 판정한다.
+  //   · Jaccard ≥0.30                 (양쪽 규모가 비슷할 때)
+  //   · 작은 쪽 집합 피복률 ≥0.60      (niche가 major의 풀을 베껴올 때 — 위 사례가 여기 해당)
+  // 정상 형제군 재사용 상한 실측: 염료합성원:염료분산기조작원 Jaccard 15.2% / 피복률 26%.
+  const URLSET_JAC = 0.30, URLSET_COVER = 0.60;
   const urlSetRows = rows.filter((r) => (r.job._urlSet || []).length > 0);
   let urlSetFail = 0;
   if (urlSetRows.length > 1) {
@@ -306,13 +329,16 @@ function parseJaccardPairs() {
         const inter = [...A].filter((u) => B.has(u)).length;
         const uni = new Set([...A, ...B]).size;
         const sim = uni ? inter / uni : 0;
-        if (sim >= 0.9) dup.push({ a: urlSetRows[i].job.slug, b: urlSetRows[j].job.slug, sim, inter });
+        const cover = inter / Math.min(A.size, B.size);
+        if (sim >= URLSET_JAC || cover >= URLSET_COVER) {
+          dup.push({ a: urlSetRows[i].job.slug, b: urlSetRows[j].job.slug, sim, cover, inter });
+        }
       }
     }
     if (dup.length) {
       urlSetFail = dup.length;
-      console.log(`\n=== URL-set 동일성 (≥0.9 FAIL — 소스 풀 재사용) ===`);
-      dup.forEach((d) => console.log(`FAIL ${d.a} : ${d.b} — ${(d.sim * 100).toFixed(1)}% (교집합 ${d.inter})`));
+      console.log(`\n=== URL-set 재사용 (Jaccard ≥${URLSET_JAC} 또는 작은쪽 피복률 ≥${URLSET_COVER} FAIL) ===`);
+      dup.forEach((d) => console.log(`FAIL ${d.a} : ${d.b} — Jaccard ${(d.sim * 100).toFixed(1)}% / 피복률 ${(d.cover * 100).toFixed(0)}% (교집합 ${d.inter})`));
     }
   }
 
