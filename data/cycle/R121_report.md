@@ -33,11 +33,15 @@
 - admin: https://careerwiki.org/admin/job-equalize (KPI 3396)
 - 표본: careerwiki.org/job/연예프로그램진행자 · /job/열유체시스템연구원 · /job/연속주조작업원
 
-## soft-flag enrichment 백로그 (누적 3건)
-| cycle | 직업 | 현 distinct | 사유 |
-|---|---|---|---|
-| R119 | 연금재정추계분석원 | 13 | 형제 연금 2직 18달성, deferred |
-| R120 | 연료전지소재부품연구원 | 13 | R&D 형제 major 20/19 |
-| R121 | 연예인총괄관리자 | 13 | minor→major 재판정, 형제 연예진행자 18 |
+## soft-flag enrichment 백로그 — ✅ 전건 해소 (Jason 지시, 2026-07-26 일괄 처리)
+| cycle | 직업 | distinct | 결과 |
+|---|---|---:|---|
+| R119 | 연금재정추계분석원 | 13 → **19** | rev 22758 → **22873**, totalE 25, major, audit clean |
+| R120 | 연료전지소재부품연구원 | 13 → **19** | rev 22770 → **22874**, totalE 25, major, audit clean |
+| R121 | 연예인총괄관리자 | 13 → **20** | rev 22839 → **22872**, totalE 29, major, audit clean |
+
+- 3건 모두 sonnet 단일직업 세션 병렬 처리, POST 각 1회. sal/wage·careerTree(박진영 421) 미접촉.
+- dispatcher 독립 검증: latest=master 마커 3/3, `audit-via-api` **0/3 FAIL(clean)**, distinct/totalE 실측 일치, **KPI 3396 불변**(benign dup, KPI 중립).
+- 백로그 잔여 **0건**.
 
 R122는 go 주면 시작.
