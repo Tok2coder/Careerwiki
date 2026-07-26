@@ -1,0 +1,22 @@
+[master-verify-cycle] 대상 16 직업
+
+WARN 열차기관사일반                  | totalE=24 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차승무지도원                  | totalE=23 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차운행계획원                  | totalE=23 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차검수승무원                  | totalE=30 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차승무원                    | totalE=30 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차운전계획원                  | totalE=31 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차화물사무원                  | totalE=30 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차수송원                    | totalE=30 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차여객관리원                  | totalE=30 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열차차량정비관리원                | totalE=30 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열처리원                     | totalE=31 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 염료개발연구원                  | totalE=28 | distinct=19 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 염료건조원                    | totalE=30 | distinct=19 | marker=? | WARN:id-unknown(DB검사 skip), WARN:urlUnverified(1)
+        [urlUnverified] tls: https://edu.kcma.or.kr/sub_1/1_1_3.asp
+WARN 염료개발기술자                  | totalE=25 | distinct=23 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열처리검사원                   | totalE=29 | distinct=19 | marker=? | WARN:id-unknown(DB검사 skip)
+WARN 열탕살균원                    | totalE=28 | distinct=18 | marker=? | WARN:id-unknown(DB검사 skip)
+
+=== Summary: PASS 0/16, WARN 16 ===
+WARN: 열차기관사일반(id-unknown(DB검사 skip)), 열차승무지도원(id-unknown(DB검사 skip)), 열차운행계획원(id-unknown(DB검사 skip)), 열차검수승무원(id-unknown(DB검사 skip)), 열차승무원(id-unknown(DB검사 skip)), 열차운전계획원(id-unknown(DB검사 skip)), 열차화물사무원(id-unknown(DB검사 skip)), 열차수송원(id-unknown(DB검사 skip)), 열차여객관리원(id-unknown(DB검사 skip)), 열차차량정비관리원(id-unknown(DB검사 skip)), 열처리원(id-unknown(DB검사 skip)), 염료개발연구원(id-unknown(DB검사 skip)), 염료건조원(id-unknown(DB검사 skip)/urlUnverified(1)), 염료개발기술자(id-unknown(DB검사 skip)), 열처리검사원(id-unknown(DB검사 skip)), 열탕살균원(id-unknown(DB검사 skip))
