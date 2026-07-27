@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r124-b2",
+      "group_key": "cycle-R124-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R124 B2: 영화라인프로듀서~예비박피원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r124-b4",
+      "group_key": "cycle-R124-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R124 B4: 영화배급원~예방의학과전문의사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

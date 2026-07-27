@@ -1,0 +1,39 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+WARN 영화기술감독                   | totalE=29 | distinct=19 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] timeout: https://www.kobis.or.kr/kobis/business/main/main.do
+PASS 영화상영기획원                  | totalE=28 | distinct=18 | marker=OK | clean
+PASS 영화제-프로그래머                | totalE=31 | distinct=18 | marker=OK | clean
+PASS 영화필름인화원                  | totalE=25 | distinct=11 | marker=OK | clean
+PASS 예비군지휘관                   | totalE=29 | distinct=18 | marker=OK | clean
+PASS 영화라인프로듀서                 | totalE=19 | distinct=19 | marker=OK | clean
+PASS 영화스토리보드작가                | totalE=19 | distinct=19 | marker=OK | clean
+PASS 영화제작자                    | totalE=19 | distinct=19 | marker=OK | clean
+PASS 영화필름현상원                  | totalE=19 | distinct=13 | marker=OK | clean
+PASS 예비박피원                    | totalE=19 | distinct=12 | marker=OK | clean
+PASS 영유아안전장치설치원               | totalE=19 | distinct=14 | marker=OK | clean
+WARN 영화배급관리자                  | totalE=21 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] timeout: https://www.kobis.or.kr/kobis/business/stat/them/findMonthlyTotalList.do
+PASS 영화연출스크립터                 | totalE=20 | distinct=18 | marker=OK | clean
+PASS 영화큐레이터                   | totalE=20 | distinct=18 | marker=OK | clean
+PASS 영화홍보마케터                  | totalE=20 | distinct=18 | marker=OK | clean
+PASS 영화배급원                    | totalE=19 | distinct=19 | marker=OK | clean
+PASS 영화예고편제작자                 | totalE=19 | distinct=19 | marker=OK | clean
+PASS 영화편집기사                   | totalE=19 | distinct=18 | marker=OK | clean
+PASS 예능작가                     | totalE=19 | distinct=18 | marker=OK | clean
+PASS 예방의학과전문의사                | totalE=19 | distinct=18 | marker=OK | clean
+WARN 영화복원원                    | totalE=29 | distinct=19 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] conn(000): https://m.riss.kr/search/detail/DetailView.do?p_mat_type=be54d9b8bc7cdb09&control_no=6698b344b404c445ffe0bdc3ef48d419
+PASS 영화자막제작원                  | totalE=28 | distinct=20 | marker=OK | clean
+WARN 영화프로듀서                   | totalE=28 | distinct=19 | marker=OK | WARN:urlUnverified(1), WARN:lowDomainDiversity(4dom/19url)
+        [urlUnverified] conn(000): https://www.riss.kr/search/detail/DetailView.do?p_mat_type=1a0202e37d52c72d&control_no=c378fb26df0cd73dc85d2949c297615a
+WARN 예능학원강사                   | totalE=29 | distinct=20 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://pia.ac.kr/page/contents/contents_View.php?TREE_NO=5036&DEPTH=3
+WARN 예술모델                     | totalE=32 | distinct=20 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://fineart.kmu.ac.kr/fineart/6628/subview.do
+
+=== Summary: PASS 19/25, WARN 6 ===
+WARN: 영화기술감독(urlUnverified(1)), 영화배급관리자(urlUnverified(1)), 영화복원원(urlUnverified(1)), 영화프로듀서(urlUnverified(1)/lowDomainDiversity(4dom/19url)), 예능학원강사(urlUnverified(1)), 예술모델(urlUnverified(1))

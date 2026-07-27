@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r124-b5",
+      "group_key": "cycle-R124-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R124 B5: 영화복원원~예술모델",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

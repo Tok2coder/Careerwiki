@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r124-b3",
+      "group_key": "cycle-R124-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R124 B3: 영유아안전장치설치원~영화홍보마케터",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

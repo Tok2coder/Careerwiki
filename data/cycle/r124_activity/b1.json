@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r124-b1",
+      "group_key": "cycle-R124-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R124 B1: 영화기술감독~예비군지휘관",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
