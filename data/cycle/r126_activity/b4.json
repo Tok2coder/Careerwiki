@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r126-b4",
+      "group_key": "cycle-R126-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R126 B4: 온실가스인증사무원~외국변호사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

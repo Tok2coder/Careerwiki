@@ -1,0 +1,35 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 온실가스관리-컨설턴트              | totalE=19 | distinct=18 | marker=OK | clean
+PASS 온실가스저감장치기술자              | totalE=19 | distinct=18 | marker=OK | clean
+PASS 온에어프로모션-디자이너             | totalE=19 | distinct=18 | marker=OK | clean
+PASS 와이어커팅기조작원                | totalE=19 | distinct=12 | marker=OK | clean
+PASS 왁스모형제작반장                 | totalE=19 | distinct=11 | marker=OK | clean
+PASS 온실가스에너지목표관리제검증심사원        | totalE=38 | distinct=19 | marker=OK | clean
+PASS 온실가스저감장치설치원              | totalE=38 | distinct=18 | marker=OK | clean
+PASS 와이어포밍기조작원                | totalE=31 | distinct=10 | marker=OK | clean
+PASS 와인감별사                    | totalE=38 | distinct=19 | marker=OK | clean
+PASS 왁스모형제작원                  | totalE=37 | distinct=18 | marker=OK | clean
+PASS 온실가스인벤토리검증심사원            | totalE=32 | distinct=21 | marker=OK | clean
+PASS 온실가스측정기개발자               | totalE=34 | distinct=18 | marker=OK | clean
+WARN 왁서                       | totalE=33 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.kca.go.kr/home/sub.do?menukey=4002&mode=view&no=1000259120
+PASS 왁스모형조립반장                 | totalE=28 | distinct=10 | marker=OK | clean
+PASS 외국민속공예가                  | totalE=34 | distinct=19 | marker=OK | clean
+PASS 온실가스인증사무원                | totalE=25 | distinct=19 | marker=OK | clean
+PASS 온실가스포집기술연구원              | totalE=19 | distinct=19 | marker=OK | clean
+PASS 왁스모형조립원                  | totalE=19 | distinct=12 | marker=OK | clean
+PASS 완구모조장식품판매원               | totalE=21 | distinct=18 | marker=OK | clean
+PASS 외국변호사                    | totalE=21 | distinct=18 | marker=OK | clean
+PASS 온실가스저감기술연구원              | totalE=19 | distinct=19 | marker=OK | clean
+PASS 온실가스포집설비기술자              | totalE=19 | distinct=18 | marker=OK | clean
+PASS 와이어조작원                   | totalE=19 | distinct=11 | marker=OK | clean
+WARN 외과전문의사                   | totalE=19 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] conn(000): https://www.ncc.re.kr/main.ncc?uri=ncc_stomach&centercd=GS
+PASS 외국어교사                    | totalE=19 | distinct=18 | marker=OK | clean
+
+=== Summary: PASS 23/25, WARN 2 ===
+WARN: 왁서(urlUnverified(1)), 외과전문의사(urlUnverified(1))

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r126-b3",
+      "group_key": "cycle-R126-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R126 B3: 온실가스인벤토리검증심사원~외국민속공예가",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

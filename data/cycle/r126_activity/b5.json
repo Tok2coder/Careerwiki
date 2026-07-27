@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r126-b5",
+      "group_key": "cycle-R126-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R126 B5: 온실가스저감기술연구원~외국어교사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

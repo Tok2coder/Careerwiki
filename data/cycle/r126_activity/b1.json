@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r126-b1",
+      "group_key": "cycle-R126-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R126 B1: 온실가스관리-컨설턴트~왁스모형제작반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

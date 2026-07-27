@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r126-b2",
+      "group_key": "cycle-R126-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R126 B2: 온실가스에너지목표관리제검증심사원~왁스모형제작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
