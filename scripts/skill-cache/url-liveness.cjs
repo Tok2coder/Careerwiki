@@ -57,7 +57,7 @@ function request(urlStr, method, redirectsLeft = 5, minimalHeaders = false) {
           return resolve({ kind: 'status', status });
         }
         res.resume();
-        return request(nextUrl, method, redirectsLeft - 1).then(resolve);
+        return request(nextUrl, method, redirectsLeft - 1, minimalHeaders).then(resolve);
       }
       res.resume(); // drain
       resolve({ kind: 'status', status });
