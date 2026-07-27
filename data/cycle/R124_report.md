@@ -28,8 +28,15 @@
 | `url-liveness` | 풀 헤더 GET에 404 shell을 주는 서버 때문에 live URL을 dead로 오판 | **404/410 선언 직전 최소 헤더 GET 1회 재확인** | 실사고 URL은 dead 해제, **진짜 404 2건은 dead 유지**(검출력 손실 0) |
 | `master-verify-cycle` 도메인 | 기존 `hosts≤3 / topShare≥0.5`가 영화프로듀서(4dom, riss 32%·wiki 32%) padding을 **PASS로 통과** | distinct≥18(major)은 **hosts≤5 또는 topShare≥0.35**로 강화 | R124 재실행 시 **영화프로듀서 1건만 검출, 나머지 24직 오탐 0** |
 
-## soft-flag 1직
-- **영화프로듀서**(4dom/19url, riss 32%·위키 32%) — 강화 게이트가 새로 검출. 직업당 1 POST 원칙으로 이번 cycle 미수습, 재보강 백로그.
+## soft-flag 1직 — ✅ 같은 cycle 안에서 해소 (Jason 지시: soft-flag까지 해결하고 cycle 마감)
+| slug | rev | distinct | 도메인 | 최대 비중 | 게이트 |
+|---|---|---:|---:|---:|---|
+| 영화프로듀서 | 23044 → **23056** | 20 | **4 → 11** | riss 32%·위키 32% → **dart 25%**(riss·위키 각 15%) | **PASS/clean** |
+
+- riss.kr 6→3건, 위키백과 6→3건 교체. **신규 도메인 7개**(CJ ENM·PGK 공식·NEW 공식·뉴시스·문체부·중앙대 첨단영상대학원·filmmakers).
+- **fact 정정 1건**: 모태펀드 영화계정 설립 **2006→2005년**(교차검증 후 1차 출처로 교체).
+- careerTree(차승재 id422)·sal 미접촉. URL-set 재사용 영화 22직 대조 max Jaccard 5.4%.
+- **dispatcher 게이트 재실행 실측**: 영화프로듀서 PASS/clean, 도메인 WARN 0, URL-set FAIL 0, **KPI 3471 불변**. → **soft-flag 잔여 0.**
 
 ## 부작용 없음
 sal/wage 미접촉(0/25), baseline 이탈 0, 명단 밖 무접촉. careerTree 신규 1(영화프로듀서→차승재 id422).

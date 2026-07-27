@@ -34,7 +34,11 @@
 4. B1~B5 Agent(sonnet, **run_in_background:false**, 한 메시지 동시 spawn) — 각 세션 prompt = `{r|m}{N}_prompts/*_B{n}_prompt.md`(STRICT 전문+5건 표). **건당 순차 POST 체크포인트**(idempotent 경계 — 죽어도 완료분 보존).
 5. 완료마다 결과 기록 + **의심 포인트 번호 적립**(totalE/class/마커 미보고, 부등호 보고, 최소기준 hugging, 균일값, WARN→INFO 합리화).
 6. **검증 이원화 (2026-07-03 효율화 ④)**: ①dispatcher가 결정적 게이트를 직접 실행·저장(측정 행위 — 작업 아님): `{master|major}-verify-cycle.cjs --cycle=N` 출력 + audit 전건 루프 출력을 `data/cycle/{r|m}{N}_gate_out.txt`로 저장 ②검증 Agent(**opus**, fg)는 게이트 출력 파일을 Read해 의심#n 판별·urlUnverified 3분류·결함 수정만 수행(스크립트 전수 재실행 금지 — 수정한 entity만 재게이트). **검증자도 불신** — 기준 미달 임의 PASS는 §5-C 위반, 수습 세션 추가.
-7. 잔여 결함 0 + KPI 정확 일치 → §4 보고 → **종료 갱신 2곳(같은 턴)** → activity done 재emit → 정지(다음 go 대기).
+7. **잔여 결함 0 + soft-flag 0** + KPI 정확 일치 → §4 보고 → **종료 갱신 2곳(같은 턴)** → activity done 재emit → 정지(다음 go 대기).
+   - 🔴 **soft-flag 해소도 cycle 완료 조건 (Jason 지시 2026-07-26)**: opus/게이트가 낸 soft-flag(under-enrichment·도메인 집중·소스풀 재사용·연번 수확·padding 등)는 **다음 cycle로 미루지 않고 그 cycle 안에서 재보강 세션을 띄워 해소**한 뒤 완료 선언한다. 사용자에게 "지금 할까요?"라고 묻지 않는다(백로그 누적 금지 — R119~R124에서 3~16직씩 쌓였던 패턴 종결).
+   - 재보강 세션 프롬프트에는 **①무엇이 왜 결함인지 ②게이트 수치 기준(distinct·도메인≥6·최대비중≤30%·URL-set Jaccard<0.30/피복률<0.60) ③직업별 pool 힌트 ④정직 원칙(미달 시 padding 금지, 실측 보고)** 을 반드시 명시(R122·R123 실증 — 이걸 넣으면 같은 실패를 반복하지 않는다).
+   - 배치 세션의 "fix POST 직업당 1회" 제한은 **배치 내부 규칙**이며, dispatcher가 지시한 수습·재보강 POST는 별도 단계로 허용(benign dup, latest master 유지 → KPI 중립).
+   - 재보강 후 **dispatcher가 게이트를 직접 재실행**해 해소를 실측 확인(워커 자가보고 불신).
 
 ## 3. 수습 패턴 (실증 적립)
 
