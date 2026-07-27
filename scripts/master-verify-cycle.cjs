@@ -292,8 +292,11 @@ function parseJaccardPairs() {
       job._hostCount = hosts.size;
       const topHost = Object.entries(hostCounts).sort((a, b) => b[1] - a[1])[0] || ['', 0];
       const topShare = distinct ? topHost[1] / distinct : 0;
-      if (distinct >= 8 && hosts.size <= 3) warns.push(`lowDomainDiversity(${hosts.size}dom/${distinct}url)`);
-      else if (distinct >= 8 && topShare >= 0.5) warns.push(`singleDomainDominance(${topHost[0]} ${topHost[1]}/${distinct})`);
+      // R124 후속: major 티어(distinct≥18)는 배치 프롬프트 기준(도메인≥6, 최대비중≤30%)에 맞춰 더 엄격.
+      // 기존 임계(hosts≤3 / topShare≥0.5)는 영화프로듀서(4dom, riss 32%·wiki 32%) 같은 padding을 통과시켰다.
+      const [domMin, shareMax] = distinct >= 18 ? [5, 0.35] : [3, 0.5];
+      if (distinct >= 8 && hosts.size <= domMin) warns.push(`lowDomainDiversity(${hosts.size}dom/${distinct}url)`);
+      else if (distinct >= 8 && topShare >= shareMax) warns.push(`singleDomainDominance(${topHost[0]} ${topHost[1]}/${distinct})`);
     }
 
     job._totalE = totalE;

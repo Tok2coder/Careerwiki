@@ -24,7 +24,7 @@ const BROWSER_UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 
 // 단일 요청 (HEAD 또는 GET). resolve never rejects.
-function request(urlStr, method, redirectsLeft = 5) {
+function request(urlStr, method, redirectsLeft = 5, minimalHeaders = false) {
   return new Promise((resolve) => {
     let parsed;
     try { parsed = new URL(urlStr); } catch (e) {
@@ -39,11 +39,13 @@ function request(urlStr, method, redirectsLeft = 5) {
       hostname: parsed.hostname,
       port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
       path: (parsed.pathname || '/') + parsed.search,
-      headers: {
-        'User-Agent': BROWSER_UA,
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'ko,en;q=0.9',
-      },
+      headers: minimalHeaders
+        ? { 'User-Agent': BROWSER_UA, 'Accept': 'text/html,*/*;q=0.8' }
+        : {
+            'User-Agent': BROWSER_UA,
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'ko,en;q=0.9',
+          },
       timeout: TIMEOUT_MS,
     };
     const req = lib.request(opts, (res) => {
@@ -86,6 +88,13 @@ async function checkUrl(urlStr) {
     const g = await request(urlStr, 'GET');
     // GET 결과를 우선 채택 (HEAD 거부 서버 흔함)
     r = g;
+  }
+  // R124 실사고: staffingbridge.co.kr/feeds/10 이 풀 헤더(Accept-Language 등) GET에는 404 shell(4.7KB),
+  // 최소 헤더 GET에는 200 실콘텐츠(42KB)를 반환 → urlDead FAIL 오탐.
+  // dead 선언 직전에만 최소 헤더로 1회 재확인 (통과분엔 영향 없음, 진짜 dead는 그대로 404).
+  if (r.kind === 'status' && (r.status === 404 || r.status === 410)) {
+    const m = await request(urlStr, 'GET', 5, true);
+    if (m.kind === 'status' && m.status >= 200 && m.status < 400) r = m;
   }
   return classify(urlStr, r);
 }
