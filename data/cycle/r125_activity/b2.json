@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r125-b2",
+      "group_key": "cycle-R125-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R125 B2: 예술품운송설치원~오버로크재봉사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

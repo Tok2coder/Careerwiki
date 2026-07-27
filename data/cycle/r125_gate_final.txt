@@ -1,0 +1,40 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 예술제본가                    | totalE=24 | distinct=19 | marker=OK | clean
+PASS 예체능교수                    | totalE=21 | distinct=18 | marker=OK | clean
+PASS 오락용승차기구보조원               | totalE=28 | distinct=18 | marker=OK | clean
+PASS 오리사육사                    | totalE=23 | distinct=18 | marker=OK | clean
+PASS 온라인평판관리원                 | totalE=27 | distinct=18 | marker=OK | clean
+PASS 예술품운송설치원                 | totalE=19 | distinct=18 | marker=OK | clean
+PASS 예식장종사원                   | totalE=19 | distinct=18 | marker=OK | clean
+PASS 예체능연구관리자                 | totalE=19 | distinct=18 | marker=OK | clean
+WARN 오락용승차기구조작원               | totalE=19 | distinct=18 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.kca.go.kr/home/sub.do?menukey=4002&mode=view&no=1000269435
+        [urlUnverified] tls: https://www.kca.go.kr/kca/sub.do?menukey=5084&mode=view&no=1002686471
+PASS 오버로크재봉사                  | totalE=19 | distinct=12 | marker=OK | clean
+PASS 예약접수원                    | totalE=24 | distinct=19 | marker=OK | clean
+PASS 오락장비대여원                  | totalE=21 | distinct=10 | marker=OK | clean
+PASS 오토바이판매원                  | totalE=25 | distinct=19 | marker=OK | clean
+PASS 옥외광고매체기획원                | totalE=26 | distinct=18 | marker=OK | clean
+PASS 온돌공                      | totalE=26 | distinct=18 | marker=OK | clean
+PASS 예열기조작원                   | totalE=19 | distinct=13 | marker=OK | clean
+PASS 오락장서비스원                  | totalE=25 | distinct=18 | marker=OK | clean
+PASS 오프셋인쇄기조작원                | totalE=23 | distinct=18 | marker=OK | clean
+PASS 옥외광고판설계원                 | totalE=24 | distinct=18 | marker=OK | clean
+PASS 온돌공조공                    | totalE=26 | distinct=18 | marker=OK | clean
+WARN 예술사진작가                   | totalE=19 | distinct=19 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.pask.net/bbs/board.php?bo_table=chair&wr_id=176
+        [urlUnverified] tls: https://pask.net/bbs/board.php?bo_table=contest&wr_id=9754
+WARN 예인선파송원                   | totalE=19 | distinct=19 | marker=OK | WARN:urlUnverified(3)
+        [urlUnverified] conn(000): https://www.theksa.or.kr/site/main/content/sub05_02_02
+        [urlUnverified] tls: https://www.alime.or.kr/member/board/sttlCnts_boardView.do?boardId=BRD_ID0000309
+        [urlUnverified] tls: https://lems.seaman.or.kr/Lems/SShipPilots/selectSShipPilotsView.do
+PASS 옥피사별기조작원                 | totalE=19 | distinct=13 | marker=OK | clean
+PASS 온돌편수                     | totalE=19 | distinct=18 | marker=OK | clean
+PASS 온라인전기자동차연구원              | totalE=19 | distinct=19 | marker=OK | clean
+
+=== Summary: PASS 22/25, WARN 3 ===
+WARN: 오락용승차기구조작원(urlUnverified(2)), 예술사진작가(urlUnverified(2)), 예인선파송원(urlUnverified(3))

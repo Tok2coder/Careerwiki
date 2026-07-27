@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r125-verify",
+      "group_key": "cycle-R125-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R125 검증: 25직업 전수 실측",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

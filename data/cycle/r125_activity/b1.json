@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r125-b1",
+      "group_key": "cycle-R125-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R125 B1: 예술제본가~온라인평판관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

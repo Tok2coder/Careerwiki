@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r125-b4",
+      "group_key": "cycle-R125-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R125 B4: 예열기조작원~온돌공조공",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

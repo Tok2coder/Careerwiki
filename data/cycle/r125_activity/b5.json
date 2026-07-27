@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r125-b5",
+      "group_key": "cycle-R125-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R125 B5: 예술사진작가~온라인전기자동차연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

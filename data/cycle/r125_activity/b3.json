@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r125-b3",
+      "group_key": "cycle-R125-2026-07-27",
+      "agent_slug": "hangyeol",
+      "label": "R125 B3: 예약접수원~온돌공",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
