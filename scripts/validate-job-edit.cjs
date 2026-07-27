@@ -33,6 +33,7 @@ const {
   detectTriviaInlineFootnote,
   // 2026-04-29 source-policy 강화 (deep audit 발견)
   detectListPageUrl,
+  detectAiContentFarm,
   classifySourceHosts,
   detectOriginDomain,
   detectOrphanSourceIdx,
@@ -1172,6 +1173,13 @@ function validate(data, opts = {}) {
           errors.push(
             `[listPageURL] sources["${fieldKey}"][${i}].url 이 인덱스/카테고리 페이지: "${src.url}" — ` +
             `직업 식별자(seq/code/jobsCd 등)가 포함된 구체적 직업 페이지로 교체 필요`
+          );
+        }
+        // 룰 AF) AI 생성 콘텐츠팜 차단 (R125 jaenung.net 사고)
+        if (src && src.url && detectAiContentFarm(src.url)) {
+          errors.push(
+            `[aiContentFarm] sources["${fieldKey}"][${i}].url 이 AI 생성 콘텐츠팜: "${src.url}" — ` +
+            `사람이 작성한 한국 1차 출처(정부/협회/학술/기업 deep page)로 교체 필요`
           );
         }
       }

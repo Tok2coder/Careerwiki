@@ -344,6 +344,9 @@ const LIST_PAGE_PATTERNS = [
   /^https?:\/\/[^\/?#]+\/(?:[^?#]+\/)?(board|bbs|notice|data|article|news)?_?list(\.[a-z]{1,5}|\.do|\.php|\.asp|\.jsp)?(\?(?!.*\b(nttNo|artiId|articleNo|idx|seq|no|bbsIdx|nttSn|wr_id|bo_idx|documentSrl)=)[^#]*)?(\#.*)?$/i,
   // 게시판 페이지네이션 목록: ?bo_table=xxx&page=2 형태(개별 글 id 없음)
   /^https?:\/\/[^\/?#]+\/[^?#]*\?[^#]*\bbo_table=[^&#]*(&[^#]*)?\bpage=\d+/i,
+  // 쇼핑몰 카테고리·상품목록 페이지 (R126 적발: kolami.co.kr/category/…, blog.daara.co.kr/sell_list)
+  // — 개별 상품/글 식별자 없이 목록만 나열하는 상거래 페이지는 fact 출처로 부적격
+  /^https?:\/\/[^\/?#]+\/(?:[^?#]+\/)?(category|categories|goods_list|sell_list|product_list|item_list|shop_list)(\/[^?#]*)?(\?[^#]*)?(\#.*)?$/i,
   // 커리어넷 신형 검색 사고: career.go.kr/cloud/w/search/intro?text=...
   /^https?:\/\/(www\.)?career\.go\.kr\/cloud\/w\/search\//i,
   // 워크피디아 검색 form 사고: wagework.go.kr/pt/b/a/retrieveOccpSrch... or retrieveJobSrch...
@@ -353,6 +356,28 @@ const LIST_PAGE_PATTERNS = [
 function detectListPageUrl(url) {
   if (!url || typeof url !== 'string') return false;
   return LIST_PAGE_PATTERNS.some(p => p.test(url));
+}
+
+// ── 룰 AF: AI 생성 콘텐츠팜 출처 차단 (R125 실사고, 2026-07-27) ──────────────
+//
+// R125 옥피사별기조작원에서 jaenung.net/tree/{id} 가 trivia·wlbDetail·technKnow
+// **3개 영역의 단독 근거**로 등록돼 있었다. 해당 페이지 하단에 "재능넷의 독점 AI 기술로
+// 생성"이 명시된 AI 생성 콘텐츠팜 — 1차 출처가 아니며 fact 검증 불가.
+// 사람이 쓴 1차 자료가 아니므로 출처로 절대 부적격(등록 시 FAIL).
+//
+// 추가 시 원칙: "AI가 자동 생성한다고 사이트가 스스로 밝힌 도메인"만 등재한다.
+// (블로그·위키처럼 사람이 쓰는 UGC는 여기 넣지 않는다 — wikiQuota 등 별도 룰 소관)
+const AI_CONTENT_FARM_HOSTS = [
+  'jaenung.net',        // 재능넷 — "독점 AI 기술로 생성" 명시 (R125 적발)
+  'nepla.ai',           // 네플라 "콘텐츠 팩토리" — 생성자 표기 0, 법령 별표를 재게시 (R126 적발,
+                        //   왁스모형조립반장에서 6개 영역 8회 단독 근거로 사용됨. 1차는 law.go.kr)
+];
+
+function detectAiContentFarm(url) {
+  if (!url || typeof url !== 'string') return false;
+  let host;
+  try { host = new URL(url).host.toLowerCase().replace(/^www\./, ''); } catch { return false; }
+  return AI_CONTENT_FARM_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
 }
 
 // ── 룰 F: origin 도메인 (정부 산하 직업정보 포털) 탐지 ─────────────────────────
@@ -1512,6 +1537,9 @@ module.exports = {
   // 룰 E/F/G/H/I (2026-04-29 source-policy 강화)
   detectListPageUrl,
   LIST_PAGE_PATTERNS,
+  // 룰 AF (2026-07-27 R125 — AI 생성 콘텐츠팜 출처 차단)
+  detectAiContentFarm,
+  AI_CONTENT_FARM_HOSTS,
   classifySourceHosts,
   SELF_DOMAINS,
   ORIGIN_DATA_DOMAINS,
