@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r129-b4",
+      "group_key": "cycle-R129-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R129 B4: 운동코치~원단접착기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

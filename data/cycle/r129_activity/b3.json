@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r129-b3",
+      "group_key": "cycle-R129-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R129 B3: 운동시설관리자~원목검척원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

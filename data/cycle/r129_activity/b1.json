@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r129-b1",
+      "group_key": "cycle-R129-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R129 B1: 운송관리자~원모선별원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

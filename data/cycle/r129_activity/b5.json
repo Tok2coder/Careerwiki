@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r129-b5",
+      "group_key": "cycle-R129-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R129 B5: 운송고객관리사무원~원모선별반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
