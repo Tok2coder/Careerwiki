@@ -1,0 +1,97 @@
+온실가스관리-컨설턴트 | 수치 25건 | FOUND 20 | UNIT_MISMATCH 3 | NOT_FOUND 0 | UNFETCHABLE 2 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "국내 배출권거래제는 2015년 1월 시행돼 현재 제4차 계획기간(2026~2030년)에 들어섰으며, 무상할당 비율이 1차 100%에서 4차 85" claim="2026~2030년" source=https://www.keco.or.kr/web/lay1/S1T164C1007/contents.do
+  [UNIT_MISMATCH] field=overviewProspect.main "배출권거래제 할당업체 중 중소·중견기업을 대상으로 한 온실가스·에너지 감축설비 지원사업은 2017년부터 이어지고 있으며 사업계획서 검토와 현장조" claim="2017년" source=https://www.energy.or.kr/front/conts/105003001003000.do
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "건물부문 온실가스 목표관리제의 관리업체 지정 기준(3년 평균 배출량 5만 tCO2eq 이상 또는 사업장 1만5천 tCO2eq 이상)과 지정·목표" claim="5만" source=https://www.energy.or.kr/front/conts/105003002004000.do
+온실가스에너지목표관리제검증심사원 | 수치 11건 | FOUND 8 | UNIT_MISMATCH 1 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "한국에너지공단에 따르면 관리업체 지정 기준은 연간 온실가스 배출량 5만 톤CO2 이상 업체 또는 1만5000톤CO2 이상 사업장이다[2]." claim="5만" source=https://www.energy.or.kr/front/conts/105003001001000.do
+  [UNIT_MISMATCH] field=trivia "한국에너지공단에 따르면 관리업체 지정 기준은 연간 온실가스 배출량 5만 톤CO2 이상 업체 또는 1만5000톤CO2 이상 사업장이다[2]." claim="1만" source=https://www.energy.or.kr/front/conts/105003001001000.do
+  [NOT_FOUND] field=trivia "한국에너지공단에 따르면 관리업체 지정 기준은 연간 온실가스 배출량 5만 톤CO2 이상 업체 또는 1만5000톤CO2 이상 사업장이다[2]." claim="5000톤" source=https://www.energy.or.kr/front/conts/105003001001000.do
+온실가스인벤토리검증심사원 | 수치 12건 | FOUND 8 | UNIT_MISMATCH 4 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "등록 신청 시에는 신분증 사본과 경력증명서를 제출해야 하며 처리에는 약 7개월이 걸린다.[4]" claim="7개월" source=https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A03006&CappBizCD=14800000422&tp_seq=
+  [UNIT_MISMATCH] field=trivia "국내 온실가스 검증심사원 제도는 환경부가 2011년 양성교육을 본격 시행하면서 첫발을 뗐다.[1]" claim="2011년" source=https://www.korea.kr/briefing/pressReleaseView.do?newsId=155711659
+  [UNIT_MISMATCH] field=trivia "한국인정기구(KOLAS)가 ISO/IEC 17029·ISO 14065에 따라 국내 기관을 검증기관으로 인정하는 절차도 병행돼, 2024년 한국경" claim="2024년" source=https://www.smarttoday.co.kr/news/articleView.html?idxno=41551
+  [UNIT_MISMATCH] field=overviewProspect.main "2026년부터 적용되는 제4차 배출권거래제 계획기간은 발전 부문의 유상할당 비율을 대폭 상향하고 배출효율기준(BM) 할당 비중을 전체의 75% " claim="2026년" source=https://www.hkbs.co.kr/news/articleView.html?idxno=783775
+온실가스인증사무원 | 수치 24건 | FOUND 18 | UNIT_MISMATCH 5 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "기후에너지환경부는 2025년 12월 772개 할당대상 업체를 대상으로 제4차 계획기간(2026~2030) 배출권 할당을 완료했으며, 발전 부문과" claim="2025년" source=https://www.korea.kr/briefing/pressReleaseView.do?newsId=156737066
+  [UNIT_MISMATCH] field=overviewProspect.main "기후에너지환경부는 2025년 12월 772개 할당대상 업체를 대상으로 제4차 계획기간(2026~2030) 배출권 할당을 완료했으며, 발전 부문과" claim="5년" source=https://www.korea.kr/briefing/pressReleaseView.do?newsId=156737066
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "온실가스 배출권의 할당 및 거래에 관한 법률은 2017년 7월 26일 시행됐으며, 이후 여러 차례 개정을 거치며 인증·검증 관련 조문이 보완돼 " claim="2017년" source=https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=195335
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "온실가스 배출권의 할당 및 거래에 관한 법률은 2017년 7월 26일 시행됐으며, 이후 여러 차례 개정을 거치며 인증·검증 관련 조문이 보완돼 " claim="26일" source=https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=195335
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "시행령은 2023년 12월 타법개정을 거쳤으며 무상할당 비율이 계획기간별로 달라지는 규정 등을 담고 있어, 할당 근거 규정의 최신 버전을 확인하" claim="2023년" source=https://www.law.go.kr/lsInfoP.do?lsiSeq=256653
+  [NOT_FOUND] field=detailWlb.wlbDetail "배출권은 한국거래소를 통한 장내거래와 협의에 의한 장외거래로 나뉘며, 각 이행연도 배출권은 다음 해 8월 31일까지만 거래할 수 있어 마감 시기" claim="31일" source=https://ets.krx.co.kr/contents/OPN/01/01050401/OPN01050401.jsp
+온실가스저감기술연구원 | 수치 10건 | FOUND 10 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+온실가스저감장치기술자 | 수치 19건 | FOUND 15 | UNIT_MISMATCH 3 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "한국산업기술기획평가원은 2026년 예산 기준 탄소중립산업핵심기술개발 등에 2,572억 원(전체 예산의 6.2%)을 배정해 저감장치 관련 국가 R" claim="2026년" source=https://www.keit.re.kr/menu.es?mid=a10108000000
+  [UNIT_MISMATCH] field=way "한국산업기술기획평가원은 2026년 예산 기준 탄소중립산업핵심기술개발 등에 2,572억 원(전체 예산의 6.2%)을 배정해 저감장치 관련 국가 R" claim="2,572억" source=https://www.keit.re.kr/menu.es?mid=a10108000000
+  [UNIT_MISMATCH] field=overviewProspect.main "한국석유공사에 따르면 2035년 국가감축목표 달성을 위해 탄소배출량을 53~61% 줄여야 해 CCS·CCUS를 포함한 저감장치 기술 수요가 앞으" claim="2035년" source=https://www.knoc.co.kr/sub03/sub03_9.jsp
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "니켈산화물 촉매와 기계화학 공정을 결합해 아산화질소를 42℃의 저온에서도 99.98% 전환율로 분해하는 기술처럼, 기존 고온 촉매 공정을 대체할" claim="42℃" source=https://v.daum.net/v/20251021080125470
+온실가스저감장치설치원 | 수치 11건 | FOUND 8 | UNIT_MISMATCH 0 | NOT_FOUND 3 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "건설기계 DPF 부착사업은 2011년부터 시행돼 2022년 기준 덤프트럭 약 4천여 대가 저공해조치를 완료했다[2]." claim="2011년" source=https://www.aea.or.kr/biz/constrEquipDPF.do
+  [NOT_FOUND] field=trivia "건설기계 DPF 부착사업은 2011년부터 시행돼 2022년 기준 덤프트럭 약 4천여 대가 저공해조치를 완료했다[2]." claim="2022년" source=https://www.aea.or.kr/biz/constrEquipDPF.do
+  [NOT_FOUND] field=trivia "건설기계 저공해사업은 노후 건설기계뿐 아니라 지게차의 전동화 개조에도 최대 4,322만원을 지원하는 등 지원 범위를 넓히고 있다[7]." claim="4,322만" source=https://news.seoul.go.kr/env/archives/506104
+온실가스측정기개발자 | 수치 6건 | FOUND 3 | UNIT_MISMATCH 3 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "개발한 장비가 시장에 유통되려면 국립환경과학원의 환경측정기기 형식승인·정도검사를 통과해야 하며, 이 고시는 2020년 1월 1일부터 시행되고 있" claim="2020년" source=https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000185252
+  [UNIT_MISMATCH] field=way "개발한 장비가 시장에 유통되려면 국립환경과학원의 환경측정기기 형식승인·정도검사를 통과해야 하며, 이 고시는 2020년 1월 1일부터 시행되고 있" claim="1일" source=https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000185252
+  [UNIT_MISMATCH] field=trivia "KRISS가 개발한 표준가스 제조용 전자동 무게측정기술은 2017년 미국(NIST)·영국(NPL)·중국(NIM)·싱가포르(A*STAR)·남아공(" claim="2017년" source=https://www.kriss.re.kr/gallery.es?mid=a10501030000&bid=0018&b_list=10&act=view&list_no=2308&nPage=11&vlist_no_npage=21&keyField=&orderby=
+온실가스포집기술연구원 | 수치 34건 | FOUND 27 | UNIT_MISMATCH 5 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "이산화탄소 포집·수송·저장 및 활용에 관한 법률이 2024년 2월 제정돼 2025년 2월 시행되면서, 포집설비 설치·운영은 신고, 수송은 주무부" claim="2024년" source=https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=259701
+  [UNIT_MISMATCH] field=way "이산화탄소 포집·수송·저장 및 활용에 관한 법률이 2024년 2월 제정돼 2025년 2월 시행되면서, 포집설비 설치·운영은 신고, 수송은 주무부" claim="2025년" source=https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=259701
+  [UNIT_MISMATCH] field=way "한국석유공사 등 공기업은 2035년 국가감축목표 달성을 위한 핵심 수단으로 CCS 연구개발비를 확보해 실증을 이어가고 있다.[3]" claim="2035년" source=https://www.knoc.co.kr/sub03/sub03_9.jsp
+  [UNIT_MISMATCH] field=trivia "산업통상자원부는 2021년 4월 'K-CCUS(이산화탄소 포집·활용·저장) 추진단'을 발족시켜 민관 협력 연구 체계를 갖췄다.[1]" claim="2021년" source=https://www.korea.kr/news/pressReleaseView.do?newsId=156445279
+  [NOT_FOUND] field=overviewProspect.main "과학기술정보통신부의 CCU 메가프로젝트는 2026년부터 2030년까지 국비 2,380억원을 투입해 포항제철소에서 하루 50톤, 연간 1만6,50" claim="50톤" source=https://idsn.co.kr/news/view/1065576851917442
+  [NOT_FOUND] field=overviewProspect.main "과학기술정보통신부의 CCU 메가프로젝트는 2026년부터 2030년까지 국비 2,380억원을 투입해 포항제철소에서 하루 50톤, 연간 1만6,50" claim="6,500톤" source=https://idsn.co.kr/news/view/1065576851917442
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "한전 전력연구원과 발전사가 보령화력본부에 설치한 10MW급 습식 CO2 포집플랜트는 하루 190톤의 이산화탄소를 포집하며 2021년 5월까지 누" claim="2021년" source=https://www.epj.co.kr/news/articleView.html?idxno=28137
+온실가스포집설비기술자 | 수치 14건 | FOUND 14 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+온에어프로모션-디자이너 | 수치 5건 | FOUND 5 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+와이어조작원 | 수치 4건 | FOUND 4 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+와이어커팅기조작원 | 수치 13건 | FOUND 13 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+와이어포밍기조작원 | 수치 4건 | FOUND 2 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "스프링 제본에 쓰이는 원통 코일스프링의 설계 기준은 국가기술표준원이 관리하는 KS B 2400에 규정돼 있으며, 이 표준은 1976년 제정된 뒤" claim="1976년" source=https://www.standard.go.kr/KSCI/standardIntro/getStandardSearchView.do?menuId=503&topMenuId=502&ksNo=KSB2400&tmprKsNo=KSB2400&reformNo=08
+  [NOT_FOUND] field=trivia "㈜에이텍은 1984년 설립돼 42년째 스프링 성형기계와 와이어 성형기계를 전문 제조해 온 것으로 소개된다[5]." claim="42년" source=https://www.springmachine.kr/intro
+와인감별사 | 수치 18건 | FOUND 12 | UNIT_MISMATCH 6 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "한국국제소믈리에협회(KISA)는 2026년 제22회 '한국 국가대표 소믈리에 경기대회' 접수를 2026년 7월 20일부터 8월 13일까지 진행한" claim="20일" source=http://www.winekisa.com/front/contest/contest4
+  [UNIT_MISMATCH] field=trivia "한국국제소믈리에협회(KISA)는 2026년 제22회 '한국 국가대표 소믈리에 경기대회' 접수를 2026년 7월 20일부터 8월 13일까지 진행한" claim="13일" source=http://www.winekisa.com/front/contest/contest4
+  [UNIT_MISMATCH] field=trivia "2025년 열린 제21회 한국 국가대표 소믈리에 경기대회에서는 롯데호텔앤리조트 소속 소믈리에들이 금상과 동상을 휩쓸며 3관왕을 차지했다[3]." claim="2025년" source=https://www.newsis.com/view/NISX20251104_0003388754
+  [UNIT_MISMATCH] field=trivia "아영FBC는 2025년 1월 커클랜드 와인 수입사인 와인나라IB를 흡수합병해 유통구조를 줄이는 재무구조 개선에 나섰다[6]." claim="2025년" source=https://www.news1.kr/industry/distribution/5659617
+  [UNIT_MISMATCH] field=overviewProspect.main "롯데호텔앤리조트 소속 소믈리에 3명이 2025년 대회에서 나란히 수상할 만큼 특급호텔들이 소믈리에 육성에 투자를 이어가고 있다[1]." claim="3명" source=https://www.news1.kr/industry/distribution/5963807
+  [UNIT_MISMATCH] field=overviewProspect.main "롯데호텔앤리조트 소속 소믈리에 3명이 2025년 대회에서 나란히 수상할 만큼 특급호텔들이 소믈리에 육성에 투자를 이어가고 있다[1]." claim="2025년" source=https://www.news1.kr/industry/distribution/5963807
+왁서 | 수치 30건 | FOUND 21 | UNIT_MISMATCH 4 | NOT_FOUND 1 | UNFETCHABLE 4 | NO_FOOTNOTE 0
+  [INFO][compoundAmbiguous] field=trivia "60대 이상 시니어의 피부미용실 이용액은 2022년 대비 60대는 21%, 70대는 42% 급증했고 60대의 1회 평균 소비액은 26만4천원으로" claim="26만 + 4천" source=https://v.daum.net/v/20250217175804535
+  [UNIT_MISMATCH] field=trivia "60대 이상 시니어의 피부미용실 이용액은 2022년 대비 60대는 21%, 70대는 42% 급증했고 60대의 1회 평균 소비액은 26만4천원으로" claim="1회" source=https://v.daum.net/v/20250217175804535
+  [INFO][compoundAmbiguous] field=trivia "KOTRA에 따르면 미국의 제모 시장은 2022년 52억5천만 달러에서 2031년 80억7천만 달러로 성장할 전망이며, 매장형 서비스도 향후 5" claim="80억 + 7천" source=https://dream.kotra.or.kr/kotranews/cms/news/actionKotraBoardDetail.do?MENU_ID=170&pNttSn=203870
+  [UNIT_MISMATCH] field=trivia "국내에서는 한국산 제모제의 홍콩 수입 규모가 2021년 기준 1,984만 달러로 3년 사이 345% 증가해 수입국 2위로 올라섰다.[4]" claim="345%" source=https://kcia.or.kr/home/industry/industry_01.php?type=view&no=14574
+  [UNIT_MISMATCH] field=overviewProspect.main "국내 서비스업 사업체 수는 2023년 기준 416만 개를 넘어설 만큼 저변이 넓고, 미용업도 그 안에서 꾸준히 자리를 넓혀가는 업종으로 꼽힌다." claim="2023년" source=https://kosis.kr/visual/nsportalStats/detailContents.do?statJipyoId=3729&listId=N&vStatJipyoId=4870
+  [NOT_FOUND] field=overviewProspect.main "국내 서비스업 사업체 수는 2023년 기준 416만 개를 넘어설 만큼 저변이 넓고, 미용업도 그 안에서 꾸준히 자리를 넓혀가는 업종으로 꼽힌다." claim="416만" source=https://kosis.kr/visual/nsportalStats/detailContents.do?statJipyoId=3729&listId=N&vStatJipyoId=4870
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "미용업을 운영하려면 영업신고 전 3시간의 위생교육을 이수해야 하고, 소독하지 않은 기구와 소독한 기구를 구분 보관하는 등 매 시술마다 위생관리를" claim="3시간" source=https://www.jongno.go.kr/Health.do?menuNo=401361
+왁스모형제작반장 | 수치 8건 | FOUND 5 | UNIT_MISMATCH 0 | NOT_FOUND 3 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "성종사는 세계에서 유일하게 사형주조·펩세트주조·밀랍주조 3가지 주조공법을 모두 사용하는 범종 제작사로, 밀랍(왁스)주조공법은 원광식 대표만이 보" claim="2건" source=http://www.sungjongsa.co.kr/bbs/board.php?bo_table=104010&wr_id=5
+  [NOT_FOUND] field=overviewAbilities.technKnow "성종사가 신라시대 실전된 밀랍(왁스)주조공법을 1997년 재현하는 데 성공한 사례처럼, 왁스모형 제작 공정은 문양·배합 비율에 따라 완성품 품질" claim="1997년" source=http://www.sungjongsa.co.kr/bbs/board.php?bo_table=104020&wr_id=1
+  [NOT_FOUND] field=detailWlb.socialDetail "왁스모형제작반장이 관리하는 정밀주조 공정은 국가뿌리산업진흥센터가 지정한 8대 주조 기술 중 하나로, 자동차·기계·전자 등 거의 모든 산업의 중간" claim="8대" source=https://www.kpic.re.kr/html/?pmode=business_intro
+왁스모형제작원 | 수치 13건 | FOUND 11 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "정밀주조업 등 뿌리산업을 지원하는 법적 근거인 뿌리산업 진흥과 첨단화에 관한 법률은 2025년 10월 1일 자로 개정 시행됐다[4]." claim="2025년" source=https://www.law.go.kr/lsInfoP.do?lsiSeq=276515&efYd=20251001
+  [UNIT_MISMATCH] field=trivia "정밀주조업 등 뿌리산업을 지원하는 법적 근거인 뿌리산업 진흥과 첨단화에 관한 법률은 2025년 10월 1일 자로 개정 시행됐다[4]." claim="1일" source=https://www.law.go.kr/lsInfoP.do?lsiSeq=276515&efYd=20251001
+왁스모형조립반장 | 수치 6건 | FOUND 4 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "성종사는 신라시대 실전됐던 밀랍(왁스)주조공법을 1997년 재현하는 데 성공했으며, 이 공법은 원광식 대표만이 보유한 발명 특허 2건으로 5m " claim="1997년" source=http://www.sungjongsa.co.kr/bbs/board.php?bo_table=104020&wr_id=1
+  [UNIT_MISMATCH] field=trivia "성종사는 신라시대 실전됐던 밀랍(왁스)주조공법을 1997년 재현하는 데 성공했으며, 이 공법은 원광식 대표만이 보유한 발명 특허 2건으로 5m " claim="5m" source=http://www.sungjongsa.co.kr/bbs/board.php?bo_table=104020&wr_id=1
+왁스모형조립원 | 수치 1건 | FOUND 0 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=overviewProspect.main "주조는 뿌리산업 진흥과 첨단화에 관한 법률이 정한 6대 뿌리기술 중 하나로 분류돼, 왁스모형조립 같은 기초 공정도 국가 지원 대상으로 공식 인정" claim="6대" source=https://www.law.go.kr/LSW/lsInfoP.do?urlMode=lsInfoP&lsId=011436
+완구모조장식품판매원 | 수치 22건 | FOUND 19 | UNIT_MISMATCH 3 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "한국콘텐츠진흥원에 따르면 2025년 캐릭터산업은 수출액이 12.8% 늘며 콘텐츠산업 수출 증가를 이끈 3대 분야 중 하나로 꼽혀, 캐릭터 완구 " claim="3대" source=https://www.kocca.kr/kocca/koccanews/reportview.do?nttNo=1128&menuNo=204767
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "완구·모조장식품 매장 판매직은 오전 10시부터 저녁 8시까지 등 하루 8~10시간 근무가 일반적이며, 6개월에서 1년 이상 근무 조건으로 채용되" claim="8~10시간" source=https://www.albamon.com/jobs/brand/normal/2010003
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "완구 인증 건수는 2019년 4만8,000건에서 2023년 10만1,000건으로 2배 이상 늘었고 업체당 KC인증 비용이 수천만원에서 수억원에 " claim="2배" source=https://www.hankyung.com/article/2025050429131
+외과전문의사 | 수치 12건 | FOUND 9 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 1 | NO_FOOTNOTE 2
+외국민속공예가 | 수치 5건 | FOUND 1 | UNIT_MISMATCH 4 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "한국공예디자인문화진흥원의 2022년 공예산업 실태조사는 사업체·매출·정부지원 현황까지 담아 공예 정책 수립의 기초자료로 활용된다.[4]" claim="2022년" source=https://www.kcdf.or.kr/brd/board/334/L/menu/256?brdType=R&bbIdx=6758
+  [UNIT_MISMATCH] field=overviewProspect.main "2015년 제정된 공예문화산업 진흥법은 공예문화산업 진흥의 법적 근거를 마련해 정부 지원 정책의 토대가 됐다.[2]" claim="2015년" source=https://www.law.go.kr/lsInfoP.do?lsiSeq=171102
+  [UNIT_MISMATCH] field=overviewProspect.main "2021년 한국공예디자인문화진흥원의 전통문화산업 실태조사에서도 공예를 포함한 전통문화산업 전반의 정책 서비스 개선점이 꾸준히 발굴되고 있다.[5" claim="2021년" source=https://library.kcdf.kr/library/10110/contents/5020154
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "경산시 평생학습관 등 지자체 강좌는 대부분 주 1회 오전·오후 시간대로 개설돼, 여러 기관에서 강사로 활동하면 기관별 시간표에 맞춰 이동하며 수" claim="1회" source=https://www.gbgs.go.kr/lll/edu/detail.tc?mn=2391&eduNo=10221
+외국변호사 | 수치 19건 | FOUND 13 | UNIT_MISMATCH 6 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "법무부가 공시한 외국법자문사 자격승인 현황은 국제법무정책과가 주기적으로 갱신해 공개하며, 최신 자료는 2025년 7월 3일 기준으로 발표됐다.[" claim="2025년" source=https://www.cppb.go.kr/bbs/moj/111/596766/artclView.do
+  [UNIT_MISMATCH] field=trivia "외국법자문법률사무소 현황 역시 별도로 고시되는데, 2025년 4월 25일 기준 자료에는 사무소 대표자 변경 사항까지 반영돼 있다.[2]" claim="2025년" source=https://www.immigration.go.kr/bbs/moj/111/594950/artclView.do
+  [UNIT_MISMATCH] field=overviewProspect.main "법무부는 2022년 11월 한국과 영국의 합작 법무법인 설립을 처음 인가하며 법률시장 3단계 개방을 현실화했는데, 이는 외국 로펌이 국내 로펌과" claim="2022년" source=https://www.newsworks.co.kr/news/articleView.html?idxno=616966
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "서울국제중재센터는 국내 재판(약 5년)보다 짧은 2년 안팎의 단심제로 국제 분쟁을 처리할 수 있는 심리 인프라를 제공해, 외국법자문사가 관여하는" claim="5년" source=https://www.kcabinternational.or.kr/kor/publications/annual_report.do
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "서울국제중재센터는 국내 재판(약 5년)보다 짧은 2년 안팎의 단심제로 국제 분쟁을 처리할 수 있는 심리 인프라를 제공해, 외국법자문사가 관여하는" claim="2년" source=https://www.kcabinternational.or.kr/kor/publications/annual_report.do
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "법무부가 배포하는 외국법자문사 제도 소개 책자는 2016년 개정법 해설서와 영문판까지 함께 제공해, 제도의 신뢰성과 투명성을 높이려 하고 있다." claim="2016년" source=https://www.cppb.go.kr/bbs/moj/114/237923/artclView.do
+외국어교사 | 수치 6건 | FOUND 4 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 1 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "2012년부터는 한중 교류 목적의 원어민중국어보조교사(CPIK) 사업도 함께 시행하고 있다[2]." claim="2012년" source=https://www.niied.go.kr/web/niied/contents/niied_fles_cpik
+---
+Summary | 직업 25건(에러 0) | 수치 332건 | FOUND 254 | UNIT_MISMATCH 51 | NOT_FOUND 17 | UNFETCHABLE 8 | NO_FOOTNOTE 2
