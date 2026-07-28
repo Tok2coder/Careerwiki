@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r127-b5",
+      "group_key": "cycle-R127-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R127 B5: 외국어학원강사~용역계약관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

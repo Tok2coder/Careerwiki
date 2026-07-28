@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r127-b4",
+      "group_key": "cycle-R127-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R127 B4: 외화대출사무원~용압반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
