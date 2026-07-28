@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r128-b2",
+      "group_key": "cycle-R128-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R128 B2: 용접반장~운동경기정찰원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

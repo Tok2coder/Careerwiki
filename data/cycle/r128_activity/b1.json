@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r128-b1",
+      "group_key": "cycle-R128-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R128 B1: 용접공학기술자~운동경기기록원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

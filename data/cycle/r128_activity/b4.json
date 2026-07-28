@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r128-b4",
+      "group_key": "cycle-R128-2026-07-28",
+      "agent_slug": "hangyeol",
+      "label": "R128 B4: 용융유황제조원~운동선수-매니저",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
