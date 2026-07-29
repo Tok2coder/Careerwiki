@@ -1,0 +1,60 @@
+{
+  "fields": {
+    "overviewProspect": {
+      "main": "우리나라는 일일 294만 배럴, 연간 10억 배럴 이상의 원유를 수입하고 있어[1], 원유 도입·정제 산업의 규모는 앞으로도 상당한 수준을 유지할 것으로 보인다. 석유제품에 대한 품질검사 체계도 의무검사·수시검사로 이원화돼 지속적으로 운영되고 있다.[2] 관련 법령인 「석유 및 석유대체연료 사업법 시행규칙」도 계속 정비되고 있다.[3] 대한석유협회도 매년 원유도입물량·금액·단가 추이를 통계로 공개하고 있다.[4] 2026년 7월에도 중동 정세 긴장으로 정부가 원유 수급상황을 긴급 점검했는데, 당시 국내 정유업계가 확보한 7~8월 원유 도입물량은 전년대비 100% 이상이어서 단기 수급 영향은 제한적일 것으로 평가됐다.[5] 「석유 및 석유대체연료 사업법 시행령」은 품질검사의 절차와 기준을 구체적으로 정하고 있다.[6]"
+    },
+    "overviewAbilities": {
+      "technKnow": "시약과 초자기구, 시험분석기기를 사용해 원유의 순도·불순물 함유량·침전물을 시험하고 시험성적서·검사성적서를 작성하는 지식이 필요하다. 석유제품 품질기준에는 탄화수소 조성비·황분·증기압 등 세부 수치 기준이 있어[1], 유사한 정량적 품질기준 해석 능력이 요구된다. 「석유 및 석유대체연료 사업법」 체계에 대한 이해도 필요하다.[2] 원유는 API도에 따라 등급이 나뉘는데, API도 30 이하는 중질원유, 34 이상은 경질원유로 분류되며 황함유율이 1% 이하면 저유황, 2% 이상이면 고유황 원유로 구분된다.[3] 원유·석유제품의 유동점을 재는 KS M ISO 3016 같은 국가표준 시험법도 검사 업무의 기준이 된다.[4]",
+      "eduLevel": "14년 초과 ~ 16년 이하(대졸 정도)",
+      "skillYear": "2년 초과 ~ 4년 이하"
+    },
+    "trivia": "많은 사람이 한국이 가장 많이 수입하는 원유를 두바이유로 알고 있지만 이는 오해다. 두바이유는 가격 결정 과정이 투명하고 거래 유동성이 높아 중동산 원유의 기준유종(벤치마크 크루드) 역할을 할 뿐, 실제로 한국이 가장 많이 수입하는 유종은 쿠웨이트산·사우디아라비아산 등이다.[1] 정유업계에서는 석유제품 가격에서 원유 가격과 수송·운영비 등을 뺀 값을 '정제마진'이라 부르며 수익성을 가늠하는 핵심 지표로 삼는다.[2] 석유제품 중 LPG는 계절에 따라 품질기준이 다르게 적용되는 등 세부 규정이 촘촘하다.[3] 석유제품 품질관리제도를 다루는 학술 논문도 발표돼 있어, 원유·석유제품 품질검사 체계는 학계에서도 다뤄지는 주제다.[4]",
+    "detailReady": {
+      "training": [
+        "석유제품 의무검사는 생산공장 월 1회 이상, 공장 밖 저장시설 분기 1회 이상의 주기로 실시된다 [1]",
+        "한국석유관리원은 전국을 10개 지역본부로 나눠 검사업무를 수행한다 [2]",
+        "화학물질을 다루는 시험 업무에서는 보호구를 상시 점검하고 이상이 있으면 교체해야 한다 [3]",
+        "한국석유공사가 운영하는 페트로넷은 원유수입·제품수출입 등 석유수급 통계를 국내석유통계·국제석유통계 메뉴로 나눠 제공한다 [4]"
+      ]
+    },
+    "detailWlb": {
+      "wlbDetail": "작업장은 실내·외에 걸쳐 있으며 선박·송유관·저유탱크 등에서 시료를 채취하는 만큼 균형감각이 요구되는 야외 작업도 포함된다. 화학물질을 다루는 시험 업무이므로 보호구를 상시 점검·관리해 착용해야 한다.[1] 한국석유관리원은 전국 10개 지역본부 단위로 검사인력을 배치해 운영한다.[2] 한국석유공사도 Petronet을 통해 원유수입 등 석유수급 정보를 집계해 제공한다.[3]"
+    },
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "탐색어: '원유품질검사원 현직자 인터뷰', '석유 시료채취 실무', '한국석유관리원 검사원 채용', '원유품질검사 자격증', '정유공장 품질관리 진로', '석유 품질검사 강의'. 카테고리 커버: 현직자·인터뷰 / 직무·실무 / 강의·교육 / 진로·채용 4개 모두 검색. title-verified(oembed 200 + 한국어 제목 매칭) 가능한 원유품질검사원 특화 한국어 영상 확보 실패하여 공란 유지 (R130 재보강 S2b 재확인)."
+  },
+  "sources": {
+    "overviewProspect.main": [
+      { "text": "산업통상자원부 — 해외자원개발정보", "url": "https://www.motir.go.kr/kor/contents/47" },
+      { "text": "한국석유관리원 — 품질검사 체계", "url": "http://www.kpetro.or.kr/lay1/S1T119C272/sublink.do" },
+      { "text": "국가법령정보센터 — 석유 및 석유대체연료 사업법 시행규칙", "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%84%9D%EC%9C%A0%EB%B0%8F%EC%84%9D%EC%9C%A0%EB%8C%80%EC%B2%B4%EC%97%B0%EB%A3%8C%EC%82%AC%EC%97%85%EB%B2%95%EC%8B%9C%ED%96%89%EA%B7%9C%EC%B9%99" },
+      { "text": "대한석유협회 — 원유도입물량·금액·단가 추이(2024)", "url": "https://www.petroleum.or.kr/statistics/list_1?ca_id=10103010&mode=read" },
+      { "text": "산업통상자원부 — 정부, 중동정세 긴장 재고조에 원유 수급상황 긴급 점검", "url": "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/172016/view" },
+      { "text": "국가법령정보센터 — 석유 및 석유대체연료 사업법 시행령", "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%84%9D%EC%9C%A0%EB%B0%8F%EC%84%9D%EC%9C%A0%EB%8C%80%EC%B2%B4%EC%97%B0%EB%A3%8C%EC%82%AC%EC%97%85%EB%B2%95%EC%8B%9C%ED%96%89%EB%A0%B9" }
+    ],
+    "overviewAbilities.technKnow": [
+      { "text": "한국석유관리원 — 품질기준(LPG)", "url": "http://www.kpetro.or.kr/lay1/S1T119C125/sublink.do" },
+      { "text": "국가법령정보센터 — 석유 및 석유대체연료 사업법", "url": "https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%84%9D%EC%9C%A0%EB%B0%8F%EC%84%9D%EC%9C%A0%EB%8C%80%EC%B2%B4%EC%97%B0%EB%A3%8C%EC%82%AC%EC%97%85%EB%B2%95" },
+      { "text": "대한석유협회 — 원유의 종류와 품질", "url": "https://www.petroleum.or.kr/industry/story_1_8" },
+      { "text": "한국표준정보망(KSSN) — KS M ISO 3016 유동점 시험방법", "url": "https://www.kssn.net/search/stddetail.do?itemNo=K001010132578" }
+    ],
+    "trivia": [
+      { "text": "대한석유협회 — 수입 원유의 대부분을 차지하는 dubai유(?)", "url": "https://www.petroleum.or.kr/kor/industry/commonsense?viewMode=view&idx=39" },
+      { "text": "대한석유협회 — 정제마진이란?", "url": "https://www.petroleum.or.kr/kor/industry/commonsense?viewMode=view&idx=43" },
+      { "text": "한국석유관리원 — 품질기준(LPG)", "url": "http://www.kpetro.or.kr/lay1/S1T119C125/sublink.do" },
+      { "text": "KoreaScience — 석유제품의 품질관리제도", "url": "https://koreascience.kr/article/JAKO199071254615757.pdf" }
+    ],
+    "detailReady.training": [
+      { "text": "한국석유관리원 — 품질검사 체계", "url": "http://www.kpetro.or.kr/lay1/S1T119C272/sublink.do" },
+      { "text": "한국석유관리원 — 본부별 검사업무 관할구역", "url": "http://www.kpetro.or.kr/lay1/S1T119C134/contents.do" },
+      { "text": "한국안전교육원 — 보호구의 종류 및 관리 교안", "url": "https://www.safety.or.kr/safety/cmmn/file/fileDown.do?atchFileId=MFILE_000000000026241&fileSn=25920" },
+      { "text": "한국석유공사 — 페트로넷(Petronet)", "url": "https://www.petronet.co.kr/v4/main.jsp" }
+    ],
+    "detailWlb.wlbDetail": [
+      { "text": "한국안전교육원 — 보호구의 종류 및 관리 교안", "url": "https://www.safety.or.kr/safety/cmmn/file/fileDown.do?atchFileId=MFILE_000000000026241&fileSn=25920" },
+      { "text": "한국석유관리원 — 본부별 검사업무 관할구역", "url": "http://www.kpetro.or.kr/lay1/S1T119C134/contents.do" },
+      { "text": "한국석유공사 — Petronet 정보 안내", "url": "https://www.knoc.co.kr/sub03/sub03_6_2_1.jsp" }
+    ]
+  },
+  "changeSummary": "[job-data-master] 출처 보강 (R130 재보강)"
+}
