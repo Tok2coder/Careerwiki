@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r130-b2",
+      "group_key": "cycle-R130-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R130 B2: 원목관리원~원자력기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
