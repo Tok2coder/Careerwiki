@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "way": "원목방부처리원이 되기 위한 별도의 학력 제한은 없으며, 통상 고졸 정도의 학력을 갖추고 짧은 현장 실습을 거쳐 방부처리 공정에 투입된다. 방부처리 대상 목재제품은 「목재의 지속가능한 이용에 관한 법률」 제20조에 따라 한국임업진흥원 등 지정 검사기관의 규격·품질검사를 통과해야 판매·유통할 수 있다.[1] 이 검사에서 확인하는 침윤도(약액 침투 깊이, ㎜)·흡수량(㎏/㎥) 등 품질 기준을 숙지하고 작업지시서에 따라 방부제 배합·주입 공정을 수행하는 능력이 요구된다.[2] 국립산림과학원이 고시한 「목재의 방부·방충처리 기준」도 함께 참고해야 한다.[3] 국립산림과학원 목재산업연구과는 품질표시 대상 목재제품의 규격·품질기준을 국제표준(ISO) 동향에 맞춰 개선하는 연구를 맡고 있어, 관련 기준이 계속 갱신된다는 점을 알아 둬야 한다[4]. 방부처리한 목재는 화학물질 처리 목재·건축물 해체 목재와 마찬가지로 목재펠릿 원료로는 쓸 수 없다는 규정처럼, 방부처리 목재의 용도 제한도 함께 숙지해야 한다[5].",
+    "overviewProspect": {
+      "main": "목재제품 규격·품질검사 제도가 시행되면서 방부처리 목재도 지정 검사기관의 검사를 통과해야 유통되도록 관리가 강화되고 있다.[1] 다만 이 직업이 다뤄온 원목의 전통적 수요처였던 광산 갱도 지지목(갱목) 수요는 국내 석탄산업 위축과 함께 줄어드는 추세로 보인다. 국내 유일의 석탄 공기업인 대한석탄공사는 화순광업소(2023년)·장성광업소(2024년)에 이어 2025년 마지막 도계광업소마저 문을 닫으며 사실상 폐업했다.[2] 관련 품질기준 고시는 2016년 시행 이후로도 계속 개정되고 있어 지속적인 숙지가 필요하다.[3] 국립산림과학원이 고시한 「방부목재의 규격과 품질」은 2014년 12월 31일 시행 기준으로 일부개정을 거쳐 지금도 적용되고 있다[4]. 공공데이터포털에는 산림청이 등록한 목재자원관리 보고서통계처럼 목재산업 현황을 담은 데이터셋도 공개돼 있다[5]."
+    },
+    "overviewAbilities": {
+      "technKnow": "방부제(ACQ·CUAZ·CB-HDO 등)의 특성과 배합 농도를 이해하고, 침윤도(약액이 침투한 깊이, ㎜ 단위)·흡수량(㎏/㎥ 단위) 등 방부처리 품질 기준을 이해해 샘플 검사로 방부 상태를 점검하는 능력이 필요하다.[1] 과거 사용됐던 CCA 방부제가 2006년 국내에서 금지된 배경과 대체 약제의 특성을 이해하는 것도 요구된다.[2] 이러한 지식은 국립산림과학원이 고시한 「목재의 방부·방충처리 기준」에 근거한다.[3] 국가표준 KS F 2219(목재의 가압식 방부 처리 방법, 1982년 제정)는 목재 내구성 향상을 위한 가압식 방부처리 방법을 규정해 실무의 기준이 된다[4]. 국립산림과학원이 펴낸 방부목재 가이드북은 사용환경등급을 H1(실내 건조)부터 H5(바닷물과 접하는 목재)까지 5단계로 구분해 안내한다[5]."
+    },
+    "trivia": [
+      "과거 원목 방부처리에는 구리·크롬·비소 화합물(CCA)이 널리 쓰였지만 인체 유해성 논란으로 국내에서는 2006년부터 CCA처리제의 사용이 금지됐다.[1] 이후에는 구리·알킬암모늄화합물(ACQ)이 가장 많은 비중을 차지하는 방부제로 자리잡았고 구리·아졸화합물(CUAZ)과 CB-HDO 등도 함께 쓰이며, 보존처리목재의 사용환경 범주는 H1~H5로 나뉘어 이 중 H2~H5 등급에 해당하는 목재는 반드시 가압방부 처리를 거쳐야 한다.[2] 실제로 CCA 방부처리 목재에서는 크롬·구리·비소가 빗물 등에 의해 용탈될 수 있다는 연구 결과도 발표된 바 있다.[3] 한국목재보존협회는 2006년 8월 31일 CCA 방부처리재 생산 중단을 발표하며 2년 내 대체약제로 전환하겠다는 계획을 내놓았고[4], 같은 해 10월 20일에는 산림청도 이 협회 회원업체의 자율 결의를 바탕으로 CCA 사용 중단을 공식 발표했다[5]."
+    ],
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=PqCFxztdZlc", "title": "NO.122-목재 방부 처리법"}
+    ],
+    "_youtubeSearchNote": "'원목방부처리원' 0개 직접매칭, '방부목재 가압방부처리'(직무·실무) 검색에서 'NO.122-목재 방부 처리법' 확인해 채택, '방부처리원 현직자 인터뷰'(현직자·인터뷰) 무관 결과만, '목재 방부처리 기술사 강의'(강의·교육) 유관 블로그만 확인, '목재가공 진로 취업'(진로·면접) 일반 결과만 (2026-07-29, DDG html 경유 확인, WebSearch 예산 소진으로 대체 검색)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "한국임업진흥원 — 목재제품규격·품질검사 소개", "url": "https://www.kofpi.or.kr/service/introduceInfo_04.do"},
+      {"id": 2, "text": "한국목재신문 — 방부목 제대로 알고 쓰십니까", "url": "https://www.woodkorea.co.kr/news/articleView.html?idxno=15672"},
+      {"id": 3, "text": "국가법령정보센터 — 목재의 방부·방충처리 기준(국립산림과학원고시)", "url": "https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000092691"},
+      {"id": 4, "text": "국립산림과학원 — 목재산업연구과 연구분야(품질표시 규격·품질기준 개선)", "url": "https://nifos.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_003500&mn=UKFR_02_02_13"},
+      {"id": 5, "text": "KATRI시험연구원 — 목재펠릿 원료 제한(방부처리 목재 사용불가)", "url": "https://katri.re.kr/kr/example/contentsid/1787/index.do"}
+    ],
+    "overviewProspect.main": [
+      {"id": 6, "text": "산림청 — 목재제품 품질표시제도", "url": "https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001016&mn=AR01_04_01_06"},
+      {"id": 7, "text": "YTN 사이언스 — 국내 1호 공기업 석탄공사 폐업", "url": "https://m.science.ytn.co.kr/program/view_today.php?s_mcd=0082&key=202507021107154470"},
+      {"id": 8, "text": "국가법령정보센터 — 목재의 방부·방충처리 기준(국립산림과학원고시)", "url": "https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000092691"},
+      {"id": 9, "text": "국가법령정보센터 — 방부목재의 규격과 품질(국립산림과학원고시 제2014-5호)", "url": "https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2200000033622"},
+      {"id": 10, "text": "공공데이터포털 — 산림청 목재자원관리 보고서통계", "url": "https://www.data.go.kr/data/15120571/fileData.do"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 11, "text": "한국목재신문 — 방부목 제대로 알고 쓰십니까", "url": "https://www.woodkorea.co.kr/news/articleView.html?idxno=15672"},
+      {"id": 12, "text": "나무신문 — 목재방부제 2", "url": "https://www.imwood.co.kr/news/articleView.html?idxno=21967"},
+      {"id": 13, "text": "국가법령정보센터 — 목재의 방부·방충처리 기준(국립산림과학원고시)", "url": "https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000092691"},
+      {"id": 14, "text": "e나라표준인증 — KS F 2219 목재의 가압식 방부 처리 방법", "url": "https://www.standard.go.kr/KSCI/standardIntro/getStandardSearchView.do?menuId=919&topMenuId=502&upperMenuId=503&ksNo=KSF2219&tmprKsNo=KSF2219&reformNo=09&displayBlock=none&displayBlock2=block"},
+      {"id": 15, "text": "국립산림과학원 — 방부목재 가이드북 개정판(사용환경등급 H1~H5)", "url": "https://book.nifos.go.kr/library/10110/contents/5808197"}
+    ],
+    "trivia": [
+      {"id": 16, "text": "나무신문 — 목재방부제 2", "url": "https://www.imwood.co.kr/news/articleView.html?idxno=21967"},
+      {"id": 17, "text": "한국목재신문 — 방부목 제대로 알고 쓰십니까", "url": "https://www.woodkorea.co.kr/news/articleView.html?idxno=15672"},
+      {"id": 18, "text": "환경독성보건학회지 — CCA방부처리 목재로부터 크롬,구리 및 비소의 용탈 특성", "url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART001216276"},
+      {"id": 19, "text": "한국목재신문 — CCA 방부 목재 사라지나(2006년)", "url": "https://www.woodkorea.co.kr/news/articleView.html?idxno=9162"},
+      {"id": 20, "text": "대한민국 정책브리핑 — 산림청 목재방부제 CCA 사용 중단 보도자료(2006년)", "url": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=155143108"}
+    ]
+  },
+  "changeSummary": "[job-data-master] 출처 보강 (R130 재보강) — way·overviewProspect.main·overviewAbilities.technKnow·trivia에 신규 8 distinct URL 추가",
+  "_jobSlug": "원목방부처리원",
+  "_jobId": "1765284611128121"
+}

@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "way": "원석할석원은 별도 학력제한 없이 채용되는 현장 기능직으로, 채석장이나 석재가공업체에서 할석기·다이아몬드 톱날을 다루며 실무를 익힌다. 광산 현장의 안전을 다루는 광산안전통합서비스가 별도로 운영될 만큼, 채석·할석 작업은 광업 안전관리 체계 아래 놓인다[1]. 국내 산업수요가 높은 대표광물 15개를 선정해 가격변동을 관리하는 광물종합지수 체계도 원석 공급가에 영향을 준다[2]. 국립 광물자원 연구기관은 비금속광 수급분석과 광업광산물통계연보를 매년 갱신하며 원석 공급 현황을 추적한다[3]. 국가기술자격인 석공예기능사(한국산업인력공단 시행)를 취득하면 채용이나 승진에서 유리하다[4]. 골재채취법은 2025년 10월 1일 시행 기준으로 골재 채취업 등록과 관리 근거를 규정해, 채석 현장에서 일하려는 사람이 알아둬야 할 기본 법령이다[5].",
+    "overviewProspect": {
+      "main": "국립기관은 석회석·고령토 등 비금속광 수급을 특별호로 분석하고 광업 광산물 통계연보를 매년 갱신할 만큼, 비금속 광물제품 제조업의 통계 관리가 꾸준히 이뤄지고 있다[1]. 원석할석원 같은 절단·가공 작업은 2026년 3월 기준으로 시행 중인 산업안전보건기준에 관한 규칙의 적용을 받아 안전기준이 계속 갱신되는 산업이다[2]. 대표광물 15개를 추려 가격변동성을 재는 광물종합지수 체계가 운영되는 것도 원석 원가 변동을 조기에 파악하려는 취지다[3]. 공공데이터포털에는 경기도의 채석신고 현황처럼 지자체별 채석장 정보(업체명·면적·매장량 등)를 담은 데이터셋도 공개돼 있다[4]. 학계 조사에 따르면 2018년 세계 석재 생산량은 1억5,300만톤(전년 대비 0.8% 증가)에 이르고, 석재 부산물이 전체 생산량의 71%를 차지할 만큼 할석 이후 부산물 관리도 비중이 크다[5]."
+    },
+    "overviewAbilities": {
+      "technKnow": "원석할석원은 화강암의 모스 경도가 5.5~7에 이른다는 점을 알아야 톱날 마모도와 교체 주기를 가늠할 수 있다[1]. 광상지질연구센터 같은 연구기관이 광체 구조와 광물 잠재성을 연구하는 것처럼, 원석의 결·강도를 미리 파악하는 지식도 할석 품질을 좌우한다[2]. 익산 함열·황등 지역처럼 산지별로 화강암 성질이 달라 산지에 따라 할석 방식을 조정하는 지식도 필요하다[3]. 석재는 산지에서 분리된 암석을 사용목적에 따라 여러 형태로 가공한 것으로 정의될 만큼, 할석은 그 가공의 첫 단계를 담당한다[4]. 2010년 출원된 한 석재 채석용 절단기 특허는 와이어톱이 암반을 회전 절단하도록 설계해 자연 파괴를 최소화하는 채석 방식을 제시한 바 있다[5]. 학계에서는 GSI(지질강도지수) 분류법으로 석회석 광산의 암반 특성을 연구하는 등, 암반 강도를 정량적으로 평가하는 방법도 발전해 왔다[6].",
+      "eduLevel": "9년 초과 ~ 12년 이하(고졸 정도)",
+      "skillYear": "1년 초과 ~ 2년 이하"
+    },
+    "detailWlb": {
+      "wlbDetail": "원석할석원은 광산안전통합서비스가 별도로 관리할 만큼 안전관리가 중요한 현장에서 호이스트·지게차·크레인으로 무거운 원석을 옮기는 육체노동을 한다[1]. 광물탐사개발연구센터가 디지털 트윈·무인 전자탐사 기술까지 개발하는 것과 달리, 할석 현장은 여전히 사람이 직접 원석을 대차에 고정하고 톱날을 조작하는 수작업 비중이 크다[2]. 2026년 3월 기준 시행 중인 산업안전보건기준에 관한 규칙도 할석기 같은 절단 설비의 방호조치를 규율한다[3]. 한국산업안전보건공단이 공개한 재해사례에 따르면 2024년 4월 전북 익산시의 한 채석장에서는 원석 재단과 굴삭기 운반 작업 중 넘어지는 원석과 석벽 사이에 끼이는 사고가 발생해, 위험구역 출입통제와 무전기 지급 등의 예방대책이 제시됐다[4]. 익산시가 2013년 경남 거창의 석재단지를 벤치마킹하러 약 40명 규모의 현장 방문을 갔던 것처럼, 지역 석재산업 간 인력·기술 교류도 이어지고 있다[5]."
+    },
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=ZghnUEEQWJ4", "title": "극한직업 - Extreme JOB, 화강암 채석장 2부"}
+    ],
+    "_youtubeSearchNote": "'원석할석원' 0개, '할석기 조작' 0개, '채석장 석재 절단 작업'(직무·실무) 0개 직접매칭, '원석할석원 현직자 인터뷰'(현직자·인터뷰) 무관 결과만, '석공예기능사 실기 강의'(강의·교육) 유관하나 별개 직종, '채석장 취업 진로'(진로·면접) 검색에서 EBS 극한직업 화강암 채석장 2부 확인해 채택 (2026-07-29, DDG html 경유 확인, WebSearch 예산 소진으로 대체 검색)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "한국광해광업공단 — 광산안전통합서비스", "url": "https://www.komir.or.kr:6700/kor/article/ATCL1b7bcb0be"},
+      {"id": 2, "text": "한국자원정보서비스 — 광물종합지수(대표광물 15개)", "url": "https://www.komis.or.kr/Komis/MnrlIndc/IndxMin"},
+      {"id": 3, "text": "한국지질자원연구원 — 비금속광 수급분석·통계연보", "url": "https://www.kigam.re.kr/mici/"},
+      {"id": 4, "text": "Q-net — 석공예기능사 국가자격 상세정보", "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=6792"},
+      {"id": 5, "text": "국가법령정보센터 — 골재채취법 시행일자", "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=000240&ancYnChk=0"}
+    ],
+    "overviewProspect.main": [
+      {"id": 6, "text": "한국지질자원연구원 — 비금속광 수급분석·통계연보 갱신", "url": "https://www.kigam.re.kr/mici/"},
+      {"id": 7, "text": "국가법령정보센터 — 산업안전보건기준에 관한 규칙 시행일", "url": "https://www.law.go.kr/LSW//lsInfoP.do?lsId=007363&ancYnChk=0"},
+      {"id": 8, "text": "한국자원정보서비스 — 광물종합지수 대표광물 15개", "url": "https://www.komis.or.kr/Komis/MnrlIndc/IndxMin"},
+      {"id": 9, "text": "공공데이터포털 — 경기도 채석신고 현황", "url": "https://www.data.go.kr/data/15119862/fileData.do"},
+      {"id": 10, "text": "한국연구재단(KCI) — 석재산업 및 부산물 동향 조사(광물과 암석, 2022)", "url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002827454"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 11, "text": "위키백과 — 화강암 모스 경도", "url": "https://ko.wikipedia.org/wiki/화강암"},
+      {"id": 12, "text": "한국지질자원연구원 — 광상지질연구센터", "url": "https://www.kigam.re.kr/menu.es?mid=a10402070000"},
+      {"id": 13, "text": "위키백과 — 익산 산지별 화강암", "url": "https://ko.wikipedia.org/wiki/익산시"},
+      {"id": 14, "text": "위키백과 — 석재 정의", "url": "https://ko.wikipedia.org/wiki/석재"},
+      {"id": 15, "text": "Google 특허 — 석재 채석용 절단기(KR20110105211A)", "url": "https://patents.google.com/patent/KR20110105211A/ko"},
+      {"id": 16, "text": "KISS(한국학술정보) — 석회석 광산 GSI 암반특성연구(한국암반공학회, 2004)", "url": "https://kiss.kstudy.com/DetailOa/Ar?key=50673755"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 17, "text": "한국광해광업공단 — 광산안전통합서비스(안전관리)", "url": "https://www.komir.or.kr:6700/kor/article/ATCL1b7bcb0be"},
+      {"id": 18, "text": "한국지질자원연구원 — 광물탐사개발연구센터", "url": "https://www.kigam.re.kr/menu.es?mid=a10402060000"},
+      {"id": 19, "text": "국가법령정보센터 — 산업안전보건기준 시행 현황", "url": "https://www.law.go.kr/LSW//lsInfoP.do?lsId=007363&ancYnChk=0"},
+      {"id": 20, "text": "한국산업안전보건공단(KOSHA) — 채석 중 원석 깔림 재해사례(2024)", "url": "https://oshri.kosha.or.kr/kosha/data/machine.do?mode=download&articleNo=450278&attachNo=255740"},
+      {"id": 21, "text": "전라일보 — 익산시 거창석재단지 벤치마킹", "url": "https://www.jeollailbo.com/news/articleView.html?idxno=397642"}
+    ]
+  },
+  "changeSummary": "[job-data-master] 출처 보강 (R130 재보강) — way·overviewProspect.main·overviewAbilities.technKnow·detailWlb.wlbDetail에 신규 8 distinct URL 추가",
+  "_jobSlug": "원석할석원",
+  "_jobId": "1765285252686185"
+}

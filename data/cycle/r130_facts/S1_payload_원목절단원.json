@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "way": "원목절단원은 산림기능사 실기교육 16시간(주말반 기준 토·일 09시30분~18시)만 이수해도 체인톱 절단 실무를 익힐 수 있는 진입 문턱이 낮은 현장직이다[1]. 산림기술 관련 상위 직무로 올라서려면 신규교육과 정기교육을 각각 35시간 이상 이수해야 하며 정기교육은 3년마다 반복된다[2]. 「목재의 지속가능한 이용에 관한 법률」은 원목절단이 속하는 제재 공정을 포함한 목재생산업을 경영하려는 자에게 관할 관청 등록 의무를 지운다[3]. 절단된 목재가 소비자에게 닿는 산림조합 임산물직매장이 전국 43곳에 이를 만큼 유통망도 갖춰져 있다[4]. 「목재및나무제품제조업안전작업지침」(노동부고시 제33호, 2001년 5월 16일 시행)은 원목절단원이 속한 제재·목재가공 현장의 표준 안전수칙을 별도로 규정한다[5]. 학계에서도 낙엽송 원목의 용도별 조재율(원목을 제품으로 전환할 때의 이용률) 모델을 개발하는 등, 절단·제재 효율을 높이려는 연구가 이어지고 있다[6].",
+    "overviewProspect": {
+      "main": "제재업은 자본금 3천만원에서 5천만원 이상을 갖춰야 등록할 수 있어[1] 소규모 창업보다는 일정 규모의 사업장에서 원목절단원을 채용하는 구조가 자리잡고 있다. 제재목을 포함한 목재제품은 KCL 등 지정기관에서 방부목재·집성재 등 7개 품목에 대한 규격·품질검사를 받아야 유통할 수 있어, 절단 단계부터 규격을 맞추는 역할의 중요성이 크다[2]. 산림 관련 상위 기술직으로 이어지려면 신규·정기교육을 각 35시간 이상 채워야 하므로, 원목절단원에서 경력을 쌓아 이직하는 경로도 있다[3]. 국가기술표준원은 목공용 손 톱(KSB3150) 등 임산물 관련 한국산업표준(KS)을 주기적으로 개정 고시하며, 2017년에는 이런 표준 62종이 한 번에 개정됐다[4]. 산림청은 원목의 규격 기준을 담은 「원목 규격 고시」를 두고 있으며, 가장 최근 개정은 2025년 2월 21일 시행됐다[5]."
+    },
+    "overviewAbilities": {
+      "technKnow": "원목절단원은 방부목재·합판 등 7개 품목이 규격·품질검사 대상이라는 점을 알아야 절단 단계에서부터 규격 미달을 줄일 수 있다[1]. 「목재의 지속가능한 이용에 관한 법률」 제20조·제24조는 품질검사와 목재생산업 등록 의무를 함께 규정하고 있어[2] 절단 기록 관리도 법적 근거를 갖는다. 2001년부터 시행된 벌목작업표준안전작업지침은 체인톱을 다루는 절단 작업의 기본 안전수칙을 담고 있다[3]. 목재가공용 둥근톱기계는 노동부고시(2001년 5월 16일 시행) 「목재가공용둥근톱기계의안전기준에관한기술상의지침」의 적용을 받아 톱날 접촉을 막는 안전장치를 갖춰야 한다[4]. 한국산업안전보건공단도 노즈 가드처럼 톱날 접촉을 막는 구체적 안전장치 규격을 담은 기술지침(KOSHA GUIDE M-179-2014)을 통해 수동 둥근톱 안전 사용법을 안내한다[5]."
+    },
+    "detailWlb": {
+      "wlbDetail": "목재펠릿·목재칩 등 5개 품목은 통관 전 규격·품질검사를 받아야 할 만큼[1] 절단·가공 단계의 품질 관리 부담이 크고, 원목절단원은 체인톱을 오래 다루는 육체노동을 한다. 제재업 등록에 필요한 자본금이 3천만원 이상으로 규정될 만큼, 소규모 사업장이 많아 근무 인원과 설비가 넉넉하지 않은 경우가 있다[2]. 목재생산업 등록 의무를 규정한 「목재의 지속가능한 이용에 관한 법률」제24조도 소규모 사업장의 영세성을 관리하려는 취지로 볼 수 있다[3]. 한국임업진흥원의 목재제품 규격·품질검사는 접수 후 토·일·공휴일을 제외하고 10~25일 이내 결과가 통지돼[4], 절단 이후에도 검사 대기 일정까지 고려해야 한다. 2023년 10월 20일부터는 이 진흥원이 인터넷으로 시험성적서를 간편하게 발급하는 서비스를 도입해 서류 확인 부담이 다소 줄었다[5]."
+    },
+    "youtubeLinks": [
+      {"url": "https://www.youtube.com/watch?v=OhOlEftugXU", "title": "체인톱 목재 절단 작업 기술"},
+      {"url": "https://www.youtube.com/shorts/H9W2bWrvGp8", "title": "체인톱 나무 절단 작업"}
+    ]
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "text": "강원팜산업교육원 — 산림기능사 실기 교육시간", "url": "https://www.gardenak.com/course/class_view.jsp?id=48&clid=144"},
+      {"id": 2, "text": "한국산림기술인회 — 산림기술자 신규·정기교육 이수시간", "url": "https://www.tkfea.or.kr/ko/business/business_training_category"},
+      {"id": 3, "text": "법제처 — 목재생산업 등록 의무 법령해석", "url": "https://moleg.go.kr/lawinfo/lawAnalysis/nwLwAnList?csSeq=392078&rowIdx=829"},
+      {"id": 4, "text": "산림청 — 임산물직매장 전국 43곳", "url": "https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001063&mn=AR01_05_01_05"},
+      {"id": 5, "text": "국가법령정보센터 — 목재및나무제품제조업안전작업지침(노동부고시 제33호)", "url": "https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2361"},
+      {"id": 6, "text": "DBpia — 낙엽송 원목의 용도별 조재율 모델 개발(한국산림과학회지)", "url": "https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12228236"}
+    ],
+    "overviewProspect.main": [
+      {"id": 7, "text": "산림청 — 제재업 등록 자본금 요건", "url": "https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001017&mn=AR01_04_01_04"},
+      {"id": 8, "text": "한국건설생활환경시험연구원(KCL) — 목재제품 규격·품질검사 대상", "url": "https://www.kcl.re.kr/site/homepage/menu/viewMenu.do?menuid=001012001004002"},
+      {"id": 9, "text": "한국산림기술인회 — 신규·정기교육 35시간", "url": "https://www.tkfea.or.kr/ko/business/business_training_category"},
+      {"id": 10, "text": "국가기술표준원(e나라표준인증) — KS고시 2017-111 목공용 손 톱 등 62종 개정", "url": "https://www.standard.go.kr/KSCI/ksNotification/getKsNotificationView.do?ntfcManageNo=2017-00918&menuId=921&topMenuId=502"},
+      {"id": 11, "text": "국가법령정보센터 — 원목 규격 고시(산림청고시 제2025-22호)", "url": "https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000256668"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 12, "text": "KCL — 목재제품 규격·품질검사 대상 7개 품목", "url": "https://www.kcl.re.kr/site/homepage/menu/viewMenu.do?menuid=001012001004002"},
+      {"id": 13, "text": "법제처 — 목재이용법 제20조·제24조 해석", "url": "https://moleg.go.kr/lawinfo/lawAnalysis/nwLwAnList?csSeq=392078&rowIdx=829"},
+      {"id": 14, "text": "국가법령정보센터 — 벌목작업표준안전작업지침", "url": "https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2343"},
+      {"id": 15, "text": "국가법령정보센터 — 목재가공용둥근톱기계의안전기준에관한기술상의지침", "url": "https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2360"},
+      {"id": 16, "text": "한국산업안전보건공단(KOSHA GUIDE M-179-2014) — 목재가공용 수동 둥근톱 안전기술지침", "url": "https://oshri.kosha.or.kr/extappKosha/kosha/guidance/fileDownload.do?sfhlhTchnlgyManualNo=M-179-2014&fileOrdrNo=3"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 17, "text": "산림청 — 목재펠릿 등 통관전 검사 품목", "url": "https://forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001016&mn=AR01_04_01_06"},
+      {"id": 18, "text": "산림청 — 제재업 자본금 규정", "url": "https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001017&mn=AR01_04_01_04"},
+      {"id": 19, "text": "법제처 — 목재생산업 등록의무 제24조 해석", "url": "https://moleg.go.kr/lawinfo/lawAnalysis/nwLwAnList?csSeq=392078&rowIdx=829"},
+      {"id": 20, "text": "한국임업진흥원 — 시험·인증 결과통지 기간(10~25일)", "url": "https://www.kofpi.or.kr/service/introduceInfo_05.do"},
+      {"id": 21, "text": "한국목재신문 — 목재제품 시험성적서 인터넷 발급 서비스", "url": "https://www.woodkorea.co.kr/news/articleView.html?idxno=75906"}
+    ]
+  },
+  "changeSummary": "[job-data-master] 출처 보강 (R130 재보강) — way·overviewProspect.main·overviewAbilities.technKnow·detailWlb.wlbDetail에 신규 8 distinct URL 추가(forest.go.kr 편중 50%→27.8% 완화)",
+  "_jobSlug": "원목절단원",
+  "_jobId": "1765285487848909"
+}
