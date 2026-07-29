@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r112-b5",
+      "group_key": "cycle-R112-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R112 B5: 아쿠아리스트~안정기조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

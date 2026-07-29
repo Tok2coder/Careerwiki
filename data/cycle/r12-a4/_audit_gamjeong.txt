@@ -1,0 +1,5 @@
+[audit-via-api] --exclude-sal: sal-protection 영역(overviewSalary.sal) 검증 skip
+OK   감정평가사                          urlCountInsufficient(12<18)
+
+=== Summary: 0/1 FAIL ===
+AUDIT_DONE rc=0

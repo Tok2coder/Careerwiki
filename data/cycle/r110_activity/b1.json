@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r110-b1",
+      "group_key": "cycle-R110-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R110 B1: 실린더밸브수리원~아동보호전담요원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

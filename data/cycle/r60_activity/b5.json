@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r60-b5",
+      "group_key": "cycle-R60-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R60 B5: 반도체계측검사공정연구원~반도체광학재료개발연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r107-b5",
+      "group_key": "cycle-R107-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R107 B5: 식품조미원~식품훈제원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

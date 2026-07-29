@@ -1,0 +1,5 @@
+패션모델 | id=1765284154102933 | totalE=18 | distinct=18
+편집-디자이너 | id=17652842068717 | totalE=18 | distinct=14
+편집기자 | id=1765284132161439 | totalE=18 | distinct=12
+푸드-브로커 | id=U_푸드-브로커_mjginndj | totalE=18 | distinct=12
+플랜트기계공학기술자 | id=1765283444356586 | totalE=17 | distinct=14

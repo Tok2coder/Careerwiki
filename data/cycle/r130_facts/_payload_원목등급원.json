@@ -1,0 +1,68 @@
+{
+  "fields": {
+    "way": "원목등급원은 특별한 학력 제한 없이 산림사업법인이나 목재유통업체에 채용되어 현장에서 원목 검척·등급 판정 실무를 익히며 입직하는 경우가 많다. 산림청은 산림조합중앙회를 교육 위탁기관으로 지정해 기능인영림단·임업기계조종사·산림경영기능인 등 임업기능인 양성교육을 운영하며, 2026년에는 1월부터 12월까지 8,805명 규모의 교육을 계획하고 있다[1]. 산림기술정보통합관리시스템(FTIMS)에는 강원대학교·경상국립대학교·산림조합중앙회 계열 교육원 등 전국 11개 산림청 지정 전문교육기관의 임업기능인 교육과정이 안내돼 있다[2]. 국가기술자격인 산림기능사(한국산업인력공단 시행, 산림청 소관)를 취득하면 채용과 승진에서 우대받는다[3]. 입직 후에는 산림청이 고시한 원목 규격(산림청고시 제2018-90호, 2018년 10월 8일 시행)에 따라 지름·길이·결점을 판정하는 실무를 반복하며 숙련도를 쌓는다[4].",
+    "trivia": "산림청 조사에 따르면 2023년 국산 목재이용량은 530만㎥로 전년(505만㎥) 대비 25만㎥ 늘었고, 목재자급률은 15.1%에서 18.6%로 3.5%포인트 올랐다[1]. 이 통계는 2007년부터 매년 실시되는 목재이용실태조사에서 나온 것으로, 조사 규모는 2개 품목·646개소에서 2024년 기준 22개 품목·5,353개소로 확대됐다[2]. e-나라지표는 원목만 따로 집계한 '원목 자급률'을 목재 전체 자급률과 별도로 공표하는데, 2019년 기준 원목 자급률(62.0%)은 목재 전체 자급률(16.6%)보다 훨씬 높았다[3].",
+    "overviewProspect": {
+      "main": "국립산림과학원 산림정책연구과는 2024 산림임업 전망 대회에서 그해 원목 소비량이 전년 대비 1.9% 감소한 564만5천㎥, 원목 수입량은 3.1% 감소한 206만9천㎥에 이를 것으로 내다봤다[1]. 산림청은 목재수급통계를 통해 국산재·수입재 이용 추이를 매년 공개한다[2]. 산림임업통계플랫폼에서도 관련 통계 자료를 제공한다[3]. 2023년 국산 목재이용량은 전년 대비 늘어난 530만㎥를 기록했다[4]."
+    },
+    "overviewAbilities": {
+      "technKnow": "원목등급원은 산림청이 고시한 원목 규격(산림청고시 제2018-90호, 2018년 10월 8일 시행)에 따라 원목의 지름·길이와 결점을 판별하는 지식이 필요하다[1]. 목재의 지속가능한 이용에 관한 법률은 목재제품의 규격·품질표시를 국립산림과학원 고시로 뒷받침하도록 규정해 이 법 체계에 대한 이해도 요구된다[2]. 산림자원의 조성 및 관리에 관한 법률은 임산물의 정의와 국유림 경영·관리 사업의 근거를 담고 있어 원목이 생산·유통되는 법적 틀을 알아야 한다[3]. 국립산림과학원은 산림환경·임산공학·산림자원·임목육종·임업생산기술 분야의 시험·연구·조사를 맡는 산림청 소속 책임운영기관으로, 산하 임산자원이용연구부가 목재산업·목재공학 연구를 수행한다[4]. 이 기관은 1949년 중앙임업시험장으로 출범해 2004년 현재의 명칭으로 개편됐다[5]."
+    },
+    "detailWlb": {
+      "wlbDetail": "원목등급원은 벌목장·집재지·저장소 등 산림 현장에서 실외 작업을 하며, 측정기로 원목을 찌르거나 육안으로 결점을 확인하는 신체활동이 수반된다. 산림청이 위탁한 2026년 임업기능인양성 교육에는 기능인영림단·임업기계조종사 교육과 별도로 산림사업장 안전사고 예방교육이 7,800명 규모로 편성돼 있어, 현장 안전관리가 임업 인력양성의 핵심 축으로 다뤄진다[1]. 공공데이터포털에는 2010년부터 2021년까지 벌채·숲가꾸기·임도 등 산림사업 유형별 산업재해 발생 건수와 요양기간을 담은 산림청 산업재해 현황 통계가 공개돼 있다[2]. 산림임업통계플랫폼은 이런 산림사업 현황 통계를 한데 모아 제공한다[3].",
+      "socialDetail": "원목등급원이 매기는 원목 등급은 이후 제재·가공을 거쳐 유통되는 목재제품의 규격·품질표시제도와 맞닿아 있다. 산림청은 제재목·방부목재·난연목재 등 15개 품목의 규격·품질기준을 국립산림과학원 고시로 정하고, 검사받은 제품을 유통하는 사업자에게 소비자가 알아볼 수 있는 위치에 품질을 표시하도록 하며 검사서류를 3년간 보관하게 한다[1]. 한국건설생활환경시험연구원(KCL)은 국립산림과학원이 지정한 목재제품 검사기관으로, 방부목재·합판·파티클보드·섬유판·목재펠릿 등 7개 품목의 규격·품질검사를 수행한다[2]. 목재제지 분야에는 KS인증제도라는 별도의 국가 표준 인증 체계도 있다[3]. 한국임업진흥원은 이 KS인증의 신규인증심사·정기심사·시판품조사와 목재제품규격·품질검사 사업을 함께 수행한다[4]."
+    },
+    "sidebarCerts": ["산림기능사", "산림기사"],
+    "detailReady": {
+      "training": [
+        "산림조합중앙회가 수탁 운영하는 2026년 임업기능인양성 교육(기능인영림단·임업기계조종사·산림경영기능인 등, 8,805명 규모) [1]",
+        "산림기술정보통합관리시스템(FTIMS)에 안내된 강원대학교·경상국립대학교 등 전국 11개 산림청 지정 전문교육기관 교육과정 [2]"
+      ]
+    },
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "KEIS '원목등급원' 0개, '원목 등급 판정 실무' 0개, '산림 원목 검척' 0개, '임업기능사 현직자 인터뷰' 0개, '산림청 임업기능인 교육' 0개, '목재 등급 검사 직무' 0개 (2026-07-29 확인, 한국어 영상 부재)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "url": "https://www.forest.go.kr/kfsweb/cop/bbs/selectBoardArticle.do?nttId=3215441&bbsId=BBSMSTR_1032&mn=NKFS_04_01_02", "text": "산림청 — 2026년 임업기능인양성 교육 위탁기관 공고"},
+      {"id": 2, "url": "https://ftims.forest.go.kr/FTIMS/edu/frmEduEdinsGdnc.do?menuNo=2600100000", "text": "산림기술정보통합관리시스템 — 산림청 지정 전문교육기관 안내"},
+      {"id": 3, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=7632", "text": "Q-net — 산림기능사 국가자격 종목별 상세정보"},
+      {"id": 4, "url": "https://law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000174131", "text": "국가법령정보센터 — 원목 규격 고시(산림청고시 제2018-90호)"}
+    ],
+    "trivia": [
+      {"id": 5, "url": "https://www.newsis.com/view/NISX20241107_0002950368", "text": "뉴시스 — 산림청 목재자급률 18.6% 국산목재 이용량 증가"},
+      {"id": 6, "url": "https://www.kofpi.or.kr/info/imupStory/statistics_03.do", "text": "한국임업진흥원 — 목재이용실태조사 개요"},
+      {"id": 7, "url": "https://www.index.go.kr/unity/potal/main/EachDtlPageDetail.do?idx_cd=1303", "text": "e-나라지표 — 목재수급(원목포함) 실적"}
+    ],
+    "overviewProspect.main": [
+      {"id": 8, "url": "https://www.imwood.co.kr/news/articleView.html?idxno=32268", "text": "나무신문 — 2024 산림임업 전망 대회 목재수요 전망"},
+      {"id": 9, "url": "https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_000808&mn=AR01_04_03_04", "text": "산림청 — 목재수급통계"},
+      {"id": 10, "url": "https://kfss.forest.go.kr/stat/", "text": "산림청 — 산림임업통계플랫폼"},
+      {"id": 11, "url": "https://www.newsis.com/view/NISX20241107_0002950368", "text": "뉴시스 — 산림청 목재자급률 18.6% 국산목재 이용량 증가"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 12, "url": "https://law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000174131", "text": "국가법령정보센터 — 원목 규격 고시(산림청고시 제2018-90호)"},
+      {"id": 13, "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=211911", "text": "국가법령정보센터 — 목재의 지속가능한 이용에 관한 법률"},
+      {"id": 14, "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=90981", "text": "국가법령정보센터 — 산림자원의 조성 및 관리에 관한 법률"},
+      {"id": 15, "url": "https://ko.wikipedia.org/wiki/%EA%B5%AD%EB%A6%BD%EC%82%B0%EB%A6%BC%EA%B3%BC%ED%95%99%EC%9B%90", "text": "위키백과 — 국립산림과학원"},
+      {"id": 16, "url": "https://encykorea.aks.ac.kr/Article/E0047547", "text": "한국민족문화대백과사전 — 국립산림과학원"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 17, "url": "https://www.forest.go.kr/kfsweb/cop/bbs/selectBoardArticle.do?nttId=3215441&bbsId=BBSMSTR_1032&mn=NKFS_04_01_02", "text": "산림청 — 2026년 임업기능인양성 교육 위탁기관 공고"},
+      {"id": 18, "url": "https://www.data.go.kr/data/15110264/fileData.do", "text": "공공데이터포털 — 산림청 산림사업 산업재해 현황"},
+      {"id": 19, "url": "https://kfss.forest.go.kr/stat/", "text": "산림청 — 산림임업통계플랫폼"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 20, "url": "https://forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001016&mn=AR01_04_01_06", "text": "산림청 — 목재제품 품질표시제도"},
+      {"id": 21, "url": "https://www.kcl.re.kr/site/homepage/menu/viewMenu.do?menuid=001012001004002", "text": "한국건설생활환경시험연구원(KCL) — 목재제품 규격·품질검사"},
+      {"id": 22, "url": "https://winz.forest.go.kr/usr/crf/ksCrtfcSystm.do", "text": "목재정보서비스 — 목재제지 KS인증제도"},
+      {"id": 23, "url": "https://www.kofpi.or.kr/service/introduceInfo_47.do", "text": "한국임업진흥원 — 목재제품규격·품질검사 사업안내"}
+    ],
+    "detailReady.training": [
+      {"id": 24, "url": "https://www.forest.go.kr/kfsweb/cop/bbs/selectBoardArticle.do?nttId=3215441&bbsId=BBSMSTR_1032&mn=NKFS_04_01_02", "text": "산림청 — 2026년 임업기능인양성 교육 위탁기관 공고"},
+      {"id": 25, "url": "https://ftims.forest.go.kr/FTIMS/edu/frmEduEdinsGdnc.do?menuNo=2600100000", "text": "산림기술정보통합관리시스템 — 산림청 지정 전문교육기관 안내"}
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewProspect.main·overviewAbilities.technKnow·detailWlb.wlbDetail·detailWlb.socialDetail·sidebarCerts·detailReady.training·youtubeLinks (신규 19 distinct URL). summary/overviewWork.main/abilityList는 CareerNet 원본 보존, sidebarOrgs/sidebarMajors/careerTree는 범위 밖 후속 사이클",
+  "_jobSlug": "원목등급원"
+}

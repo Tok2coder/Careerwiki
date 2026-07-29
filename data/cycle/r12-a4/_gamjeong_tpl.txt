@@ -1,0 +1,175 @@
+=== way ===
+감정평가사가 되려면 국토교통부 주관·한국산업인력공단 시행의 감정평가사시험(제1차·제2차)에 합격해야 하며, 학력·경력 제한은 없다.[1] 자격 취득 후 1년 이상의 실무수습(1차 면제자는 4주)을 마치고 국토교통부에 등록한다.[2] 한국감정평가사협회·한국부동산원 또는 감정평가법인·개인사무소에서 부동산·동산·무형자산 가치평가 업무를 수행한다.[3]
+
+=== trivia ===
+감정평가사 1차 시험 지원자는 2023년 6484명으로 관련 시험 도입 이후 역대 최대를 기록했다.[1] 한국감정평가사협회는 1989년 설립된 이후 부동산·광업·산림·기계기구·무형자산 등 다양한 자산에 대한 감정평가 직역의 전문성 강화와 제도 개선을 추진해왔다.[2]
+
+=== detailWlb.wlbDetail ===
+감정평가사는 감정평가법인 또는 개인 사무소에서 평가 의뢰 일정에 따라 현장 조사와 보고서 작성 업무를 진행한다. 평가 보고서 마감 시기에 야근이 잦은 편이나, 평소에는 일정 자율성이 높아 전반적 워라밸은 양호하다.[1]
+
+=== detailWlb.socialDetail ===
+감정평가사는 부동산·세무·금융 분야의 객관적 가치평가를 담당하는 사회적 신뢰 직업으로, 공시지가 평가·법원 경매·금융 담보 평가 등 공공·민간 모두에서 수요가 안정적이다.[1]
+
+=== _sources ===
+{
+ "overviewWork.main": [
+  {
+   "id": 1,
+   "text": "한국감정평가사협회(KAPA) — 감정평가 업무·동산·부동산·무형자산 안내",
+   "url": "https://www.kapanet.or.kr/about/business_introduction.asp"
+  },
+  {
+   "id": 2,
+   "text": "한국부동산원 — 공시지가·세금·담보·경매 평가",
+   "url": "https://www.reb.or.kr/recruit/main.do"
+  },
+  {
+   "id": 3,
+   "text": "한국감정평가사협회 — 감정평가 절차·감정서 작성 안내",
+   "url": "https://www.kapanet.or.kr/infomation/association.asp"
+  }
+ ],
+ "overviewProspect.main": [
+  {
+   "id": 4,
+   "text": "위키백과 — 감정평가사 (직무·자격)",
+   "url": "https://ko.wikipedia.org/wiki/%EA%B0%90%EC%A0%95%ED%8F%89%EA%B0%80%EC%82%AC"
+  },
+  {
+   "id": 5,
+   "text": "한국경제 — 8대 전문직 응시 6484명 역대급",
+   "url": "https://plus.hankyung.com/apps/newsinside.view?aid=2024030336001&sns=y"
+  }
+ ],
+ "detailWlb.wlbDetail": [
+  {
+   "id": 6,
+   "text": "한국감정평가사협회 — 감정평가법인·사무소 업무 안내",
+   "url": "https://www.kapanet.or.kr/about/business_introduction.asp"
+  }
+ ],
+ "detailWlb.socialDetail": [
+  {
+   "id": 7,
+   "text": "한국감정평가사협회 — 사회적 가치·공공·민간 수요 안내",
+   "url": "https://www.kapanet.or.kr/infomation/association.asp"
+  }
+ ],
+ "trivia": [
+  {
+   "id": 8,
+   "text": "한국경제 — 감정평가사 1차 응시 역대 최대",
+   "url": "https://plus.hankyung.com/apps/newsinside.view?aid=2024030336001&sns=y"
+  },
+  {
+   "id": 9,
+   "text": "한국감정평가사협회 — 사업소개",
+   "url": "https://www.kapanet.or.kr/about/business_introduction.asp"
+  }
+ ],
+ "overviewAbilities.technKnow": [
+  {
+   "id": 10,
+   "text": "Q-Net — 감정평가사 자격(jmCd=9745, 국토부 주관·산업인력공단 시행)",
+   "url": "https://www.q-net.or.kr/crf005.do?id=crf00505&jmCd=9745"
+  },
+  {
+   "id": 11,
+   "text": "Q-Net — 감정평가사 시험과목·1차·2차 안내",
+   "url": "https://www.q-net.or.kr/crf005.do?id=crf00509&jmCd=9745"
+  },
+  {
+   "id": 12,
+   "text": "법제처 국가법령정보 — 감정평가법(자산·법규)",
+   "url": "https://www.law.go.kr/법령/감정평가및감정평가사에관한법률"
+  },
+  {
+   "id": 13,
+   "text": "한국감정평가사협회 — 감정평가관리·징계위원회·합격자 통계",
+   "url": "https://www.kapanet.or.kr/infomation/association.asp"
+  }
+ ],
+ "way": [
+  {
+   "id": 14,
+   "text": "Q-Net — 감정평가사 자격 안내(jmCd=9745)",
+   "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9745"
+  },
+  {
+   "id": 15,
+   "text": "법제처 국가법령정보 — 감정평가법(실무수습·국토부 등록)",
+   "url": "https://www.law.go.kr/법령/감정평가및감정평가사에관한법률"
+  },
+  {
+   "id": 16,
+   "text": "한국감정평가사협회 — 협회·법인·사무소 진로 안내",
+   "url": "https://www.kapanet.or.kr/about/business_introduction.asp"
+  }
+ ],
+ "detailReady.curriculum": [
+  {
+   "id": 17,
+   "text": "위키백과 — 감정평가사",
+   "url": "https://ko.wikipedia.org/wiki/감정평가사"
+  },
+  {
+   "id": 18,
+   "text": "Q-Net — 감정평가사 국가전문자격",
+   "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9745"
+  },
+  {
+   "id": 19,
+   "text": "한국감정평가사협회 — 사업소개",
+   "url": "https://www.kapanet.or.kr/about/business_introduction.asp"
+  }
+ ],
+ "detailReady.recruit": [
+  {
+   "id": 20,
+   "text": "한국부동산원 — 채용 안내",
+   "url": "https://www.reb.or.kr/recruit/main.do"
+  },
+  {
+   "id": 21,
+   "text": "한국감정평가사협회 — 채용정보",
+   "url": "https://www.kapanet.or.kr/notice/recruit.asp"
+  },
+  {
+   "id": 22,
+   "text": "한국감정평가사협회 — 협회개요",
+   "url": "https://www.kapanet.or.kr/infomation/association.asp"
+  }
+ ],
+ "detailReady.training": [
+  {
+   "id": 23,
+   "text": "한국감정평가사협회 — 협회개요(실무수습 안내)",
+   "url": "https://www.kapanet.or.kr/infomation/association.asp"
+  },
+  {
+   "id": 24,
+   "text": "국토교통부 — 감정평가사 자격시험 정책정보",
+   "url": "https://www.molit.go.kr/USR/policyData/m_34681/dtl?id=560"
+  },
+  {
+   "id": 25,
+   "text": "위키백과 — 감정평가사 (국제 자격 RICS·MAI)",
+   "url": "https://ko.wikipedia.org/wiki/감정평가사"
+  }
+ ]
+}
+
+=== _careerTreeNote ===
+"탐색 카테고리 ≥3개: 학계·연구(서울대·고려대 부동산학·감정평가학 교수진) / 한국감정평가사협회 KAPAA 임원 / 감정평가법인 대표(한국·태평양·하나감정평가법인 등) — 한국인 공인 인물 후보 풀, 다음 사이클 위키 cross-check 후 careerTree DB 등록 예정."
+
+=== youtubeLinks ===
+[
+ {
+  "url": "https://www.youtube.com/watch?v=JU83uKeq9V0",
+  "title": "억대 연봉 직업 감정평가사 — 실무자 인터뷰"
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=9T5IbLGIGRM",
+  "title": "[비상교육] 직업정보_감정 평가사"
+ }
+]

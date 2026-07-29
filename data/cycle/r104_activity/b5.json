@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r104-b5",
+      "group_key": "cycle-R104-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R104 B5: 시계제조기술자~시계판매원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+통신장비기사 | id=176528339068947 | totalE=16 | distinct=7
+통역가 | id=1765283391237480 | totalE=17 | distinct=10
+특수교육교사 | id=1765283457403180 | totalE=15 | distinct=9
+특수학교교사 | id=1765284039496232 | totalE=18 | distinct=11
+판사 | id=1765283393158842 | totalE=18 | distinct=9

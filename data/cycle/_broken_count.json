@@ -1,0 +1,8 @@
+
+ ⛅️ wrangler 4.57.0 (update available 4.94.0)
+─────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database careerwiki-kr (1dbc57d6-0ce3-4a7e-8d2e-3159b0df1315):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+

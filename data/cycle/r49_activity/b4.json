@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r49-b4",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R49 B4: 매립가스플랜트설비기술자~매트리스스프링가공원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

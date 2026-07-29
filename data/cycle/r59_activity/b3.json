@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r59-b3",
+      "group_key": "cycle-R59-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R59 B3: 바이오화학분석연구원~바이오화학제품균주관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

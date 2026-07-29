@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r66-b3",
+      "group_key": "cycle-R66-2026-06-30",
+      "agent_slug": "hangyeol",
+      "label": "R66 B3: 발전용수분석원~발전용연료전지유지보수원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

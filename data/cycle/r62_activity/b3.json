@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r62-b3",
+      "group_key": "cycle-R62-2026-06-22",
+      "agent_slug": "hangyeol",
+      "label": "R62 B3: 반도체식각장비기술자~반도체연삭공정기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

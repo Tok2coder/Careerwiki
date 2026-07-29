@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r61-b4",
+      "group_key": "cycle-R61-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R61 B4: 반도체세정공정기술자~반도체세정장비부분품연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

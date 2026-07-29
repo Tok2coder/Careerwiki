@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r104-b1",
+      "group_key": "cycle-R104-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R104 B1: 스포츠프로그램프로듀서~슬라브정정원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

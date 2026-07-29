@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r104-b4",
+      "group_key": "cycle-R104-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R104 B4: 승용조랑말관리원~시계수리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

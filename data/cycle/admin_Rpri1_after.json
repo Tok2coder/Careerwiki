@@ -1,0 +1,13 @@
+{
+  "ts": "2026-05-25T06:49:12.412Z",
+  "master_applied": "559",
+  "total": "6,939",
+  "rate_pct": "8.1",
+  "alert": {
+    "wayIsArray": "0",
+    "imageUrlBad": "0",
+    "wayTrunc": "0",
+    "srcOrderBad": "0",
+    "ytLow": "6,330"
+  }
+}

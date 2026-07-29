@@ -1,0 +1,401 @@
+
+ ⛅️ wrangler 4.57.0 (update available 4.95.0)
+─────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database careerwiki-kr (1dbc57d6-0ce3-4a7e-8d2e-3159b0df1315):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+🚣 Executed 1 command in 26.84ms
+[
+  {
+    "results": [
+      {
+        "id": "1765284087997177",
+        "slug": "법인유가증권거래중개인",
+        "name": "법인유가증권거래중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284088347400",
+        "slug": "선물거래중개인",
+        "name": "선물거래중개인",
+        "is_active": 1
+      },
+      {
+        "id": "176528408866071",
+        "slug": "유가증권대차거래중개인",
+        "name": "유가증권대차거래중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284088967613",
+        "slug": "증권사채권중개인",
+        "name": "증권사채권중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284089711563",
+        "slug": "채권매매중개인",
+        "name": "채권매매중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284090033432",
+        "slug": "투자신탁상품매매중개인",
+        "name": "투자신탁상품매매중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284090305723",
+        "slug": "파생상품중개인",
+        "name": "파생상품중개인",
+        "is_active": 1
+      },
+      {
+        "id": "176528411861732",
+        "slug": "전력수요관리중개자",
+        "name": "전력수요관리중개자",
+        "is_active": 1
+      },
+      {
+        "id": "1765284120318716",
+        "slug": "골동품경매사",
+        "name": "골동품경매사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284120561393",
+        "slug": "농수산물경매사",
+        "name": "농수산물경매사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284120830568",
+        "slug": "미술품경매사",
+        "name": "미술품경매사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284121317846",
+        "slug": "상품중개인",
+        "name": "상품중개인",
+        "is_active": 0
+      },
+      {
+        "id": "1765284121562681",
+        "slug": "선박매매중개인",
+        "name": "선박매매중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284121868430",
+        "slug": "용선중개인",
+        "name": "용선중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284122146155",
+        "slug": "회원권중개인",
+        "name": "회원권중개인",
+        "is_active": 1
+      },
+      {
+        "id": "176528412238552",
+        "slug": "부동산경매인",
+        "name": "부동산경매인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284301853964",
+        "slug": "종합무역중개인",
+        "name": "종합무역중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284436915293",
+        "slug": "부동산중개보조원",
+        "name": "부동산중개보조원",
+        "is_active": 1
+      },
+      {
+        "id": "1765284499398120",
+        "slug": "보험중개인",
+        "name": "보험중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283325500110",
+        "slug": "선물중개인",
+        "name": "선물중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283370618711",
+        "slug": "정보중개인",
+        "name": "정보중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283376465995",
+        "slug": "증권중개인",
+        "name": "증권중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283317262867",
+        "slug": "부동산중개인",
+        "name": "부동산중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283330799690",
+        "slug": "손해사정사",
+        "name": "손해사정사",
+        "is_active": 1
+      },
+      {
+        "id": "1765283430510688",
+        "slug": "보험대리인-및-중개인",
+        "name": "보험대리인 및 중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283487501141",
+        "slug": "상품중개인-및-경매사",
+        "name": "상품중개인 및 경매사",
+        "is_active": 1
+      },
+      {
+        "id": "1775053184413",
+        "slug": "농수산물중개인",
+        "name": "농수산물중개인",
+        "is_active": 1
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 26.844
+      },
+      "duration": 26.844,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 986562560,
+      "rows_read": 7035,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]
+FIND3B_DONE rc=0
+
+ ⛅️ wrangler 4.57.0 (update available 4.95.0)
+─────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database careerwiki-kr (1dbc57d6-0ce3-4a7e-8d2e-3159b0df1315):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+🚣 Executed 1 command in 27.69ms
+[
+  {
+    "results": [
+      {
+        "id": "1765283280870166",
+        "slug": "감정평가사",
+        "name": "감정평가사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284120318716",
+        "slug": "골동품경매사",
+        "name": "골동품경매사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284120561393",
+        "slug": "농수산물경매사",
+        "name": "농수산물경매사",
+        "is_active": 1
+      },
+      {
+        "id": "1775053184413",
+        "slug": "농수산물중개인",
+        "name": "농수산물중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284120830568",
+        "slug": "미술품경매사",
+        "name": "미술품경매사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284087997177",
+        "slug": "법인유가증권거래중개인",
+        "name": "법인유가증권거래중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283430510688",
+        "slug": "보험대리인-및-중개인",
+        "name": "보험대리인 및 중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284499398120",
+        "slug": "보험중개인",
+        "name": "보험중개인",
+        "is_active": 1
+      },
+      {
+        "id": "176528412238552",
+        "slug": "부동산경매인",
+        "name": "부동산경매인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284436915293",
+        "slug": "부동산중개보조원",
+        "name": "부동산중개보조원",
+        "is_active": 1
+      },
+      {
+        "id": "1765283317262867",
+        "slug": "부동산중개인",
+        "name": "부동산중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284121317846",
+        "slug": "상품중개인",
+        "name": "상품중개인",
+        "is_active": 0
+      },
+      {
+        "id": "1765283487501141",
+        "slug": "상품중개인-및-경매사",
+        "name": "상품중개인 및 경매사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284088347400",
+        "slug": "선물거래중개인",
+        "name": "선물거래중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283325500110",
+        "slug": "선물중개인",
+        "name": "선물중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284121562681",
+        "slug": "선박매매중개인",
+        "name": "선박매매중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283330799690",
+        "slug": "손해사정사",
+        "name": "손해사정사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284121868430",
+        "slug": "용선중개인",
+        "name": "용선중개인",
+        "is_active": 1
+      },
+      {
+        "id": "176528408866071",
+        "slug": "유가증권대차거래중개인",
+        "name": "유가증권대차거래중개인",
+        "is_active": 1
+      },
+      {
+        "id": "176528411861732",
+        "slug": "전력수요관리중개자",
+        "name": "전력수요관리중개자",
+        "is_active": 1
+      },
+      {
+        "id": "1765283370618711",
+        "slug": "정보중개인",
+        "name": "정보중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284301853964",
+        "slug": "종합무역중개인",
+        "name": "종합무역중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284088967613",
+        "slug": "증권사채권중개인",
+        "name": "증권사채권중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765283376465995",
+        "slug": "증권중개인",
+        "name": "증권중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284089711563",
+        "slug": "채권매매중개인",
+        "name": "채권매매중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284116662102",
+        "slug": "커피향미감정평가사",
+        "name": "커피향미감정평가사",
+        "is_active": 1
+      },
+      {
+        "id": "1765284090033432",
+        "slug": "투자신탁상품매매중개인",
+        "name": "투자신탁상품매매중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284090305723",
+        "slug": "파생상품중개인",
+        "name": "파생상품중개인",
+        "is_active": 1
+      },
+      {
+        "id": "1765284122146155",
+        "slug": "회원권중개인",
+        "name": "회원권중개인",
+        "is_active": 1
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 27.6904
+      },
+      "duration": 27.6904,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 986562560,
+      "rows_read": 7035,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r86-b3",
+      "group_key": "cycle-R86-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R86 B3: 상수도관망시설운영관리사~상품공간스토리텔러",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

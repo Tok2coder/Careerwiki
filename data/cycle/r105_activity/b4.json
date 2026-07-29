@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r105-b4",
+      "group_key": "cycle-R105-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R105 B4: 시설특수경비원~시스템-소프트웨어-엔지니어",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

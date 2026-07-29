@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r62-b5",
+      "group_key": "cycle-R62-2026-06-22",
+      "agent_slug": "hangyeol",
+      "label": "R62 B5: 반도체웨이퍼재료공정연구원~반도체이온주입장비기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

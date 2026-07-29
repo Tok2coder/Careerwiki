@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r71-b1",
+      "group_key": "cycle-R71-2026-07-09",
+      "agent_slug": "hangyeol",
+      "label": "R71 B1: 배취롤러조작원~백화점운영부서관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

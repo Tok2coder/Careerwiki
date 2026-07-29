@@ -1,0 +1,4 @@
+한약사 | id=1765283465677930 | totalE=17 | distinct=9
+호스피스전문간호사 | id=1765283401390211 | totalE=17 | distinct=11
+e스포츠기자 | id=1765284130726390 | totalE=18 | distinct=10
+mlops-엔지니어 | id=U_mlops엔지니어_mn8yypfr | totalE=18 | distinct=10

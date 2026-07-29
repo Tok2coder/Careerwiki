@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r86-b4",
+      "group_key": "cycle-R86-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R86 B4: 상품권판매대행사무원~색부기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

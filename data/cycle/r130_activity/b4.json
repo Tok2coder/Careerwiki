@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r130-b4",
+      "group_key": "cycle-R130-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R130 B4: 원목박피기조작원~원예종묘시험원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

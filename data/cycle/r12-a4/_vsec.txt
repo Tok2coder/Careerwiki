@@ -1,0 +1,71 @@
+    if (val && typeof val === 'string' && val.length > 20) {
+      errors.push(`[라벨] ${fieldPath}가 "${val.substring(0, 30)}..." — 짧은 라벨이어야 함 (20자 이하)`);
+    }
+  }
+
+  // ── 3. 공식 통계 전용 필드 ──
+
+  for (const fieldPath of STATS_ONLY_FIELDS) {
+    const val = getNestedField(fields, fieldPath);
+    if (val && val !== null) {
+      // sources에 해당 필드의 출처가 있는지 확인
+      const sourceKey = fieldPath.includes('.') ? fieldPath : fieldPath;
+      if (!sources[sourceKey] && !sources[fieldPath]) {
+        errors.push(`[통계전용] ${fieldPath}에 값이 있지만 출처가 없음 — 공식 통계만 허용`);
+      }
+    }
+  }
+
+  // ── 4. 각주 검증 ──
+
+  const textFields = ['way', 'overviewSalary.sal', 'overviewProspect.main', 'trivia', 'summary',
+    'detailWlb.wlbDetail', 'detailWlb.socialDetail', 'overviewAbilities.technKnow'];
+
+  for (const fieldPath of textFields) {
+    const text = getNestedField(fields, fieldPath);
+    if (!text || typeof text !== 'string') continue;
+
+    const footnoteMatches = text.match(/\[(\d+)\]/g);
+    if (!footnoteMatches) continue;
+
+    // [markerCluster] sentence-level cluster 검사 — 본질: 한 sentence(의미 단위) = 1 마커
+    // 같은 문장(마침표/!/?/줄바꿈 사이) 안에 마커 2+ → FAIL.
+    // chained-at-end (`[1][2]`, `[1]·[2]`), mid-sentence comma (`...전망되며[1], ...있다[2]`) 모두 catch.
+    // 해결: 본문을 의미 단위로 분리 + 각 sentence에 마커 1개. 가운뎃점 분리는 본질 미해결 (deprecated).
+    // audit: node scripts/skill-cache/audit-sentence-clusters.cjs --slug={X}
+    const sentenceClusters = detectSentenceClusters(text);
+    if (sentenceClusters.length > 0) {
+      const c = sentenceClusters[0];
+      errors.push(`[markerCluster] ${fieldPath}: sentence-level cluster ${sentenceClusters.length}개 (예: "${c.markers}" in "${c.sentence.slice(0, 100)}${c.sentence.length > 100 ? '...' : ''}"). 한 sentence 안에 마커 ${c.count}개 — 본문을 의미 단위로 분리 + 각 sentence에 마커 1개 매핑 필요.`);
+    }
+
+    // 각주 중복 검사
+    const counts = {};
+    footnoteMatches.forEach(m => { counts[m] = (counts[m] || 0) + 1; });
+    const dupes = Object.entries(counts).filter(([_, c]) => c > 1);
+    if (dupes.length > 0) {
+      errors.push(`[각주] ${fieldPath}: 중복 발견! ${dupes.map(([n, c]) => `${n}이 ${c}회`).join(', ')}`);
+    }
+
+    // sources 대응 확인
+    const sourceKey = getSourceKey(fieldPath);
+    if (!sources[sourceKey]) {
+      errors.push(`[출처] ${fieldPath}에 [N] 각주가 있지만 sources["${sourceKey}"]가 없음`);
+    } else {
+      const srcArr = sources[sourceKey];
+      if (Array.isArray(srcArr)) {
+        // blob 체크 — 하나의 항목에 [1]...[2]... 가 다 들어있으면 blob
+        for (const src of srcArr) {
+          const srcText = typeof src === 'string' ? src : src.text;
+          if (srcText && (srcText.match(/\[\d+\]/g) || []).length > 1) {
+            errors.push(`[출처blob] sources["${sourceKey}"]에 blob 발견: "${srcText.substring(0, 60)}..." — 개별 항목으로 분리 필요`);
+          }
+        }
+        // text/url 분리 체크
+        for (const src of srcArr) {
+          if (typeof src === 'object' && src.text && src.text.includes('http')) {
+            errors.push(`[출처형식] sources["${sourceKey}"]의 text에 URL이 포함됨 — text와 url을 분리해야 함`);
+          }
+          // text가 URL로 시작하면 FAIL (기관명이어야 함)
+          if (typeof src === 'object' && src.text && /^https?:\/\//.test(src.text.replace(/^\[\d+\]\s*/, ''))) {
+            errors.push(`[출처형식] sources["${sourceKey}"]의 text가 URL로 시작 — "[N] 기관명" 형식 사용 필요`);

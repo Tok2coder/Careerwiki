@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r59-b2",
+      "group_key": "cycle-R59-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R59 B2: 바이오의약품품질시험원~바이오플라스틱연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

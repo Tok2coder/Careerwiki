@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r106-b3",
+      "group_key": "cycle-R106-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R106 B3: 시험비행조종사~식물기반대체식품연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

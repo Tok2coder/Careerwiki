@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r107-b4",
+      "group_key": "cycle-R107-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R107 B4: 식품영업원~식품정제기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

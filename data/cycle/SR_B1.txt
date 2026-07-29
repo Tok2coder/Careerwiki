@@ -1,0 +1,5 @@
+가사관리사 | id=1765283485383403 | totalE=18 | distinct=12
+가수 | id=1765283278379444 | totalE=15 | distinct=8
+가스수도전기-계기-검침원-및-안전점검원 | id=1765283278683691 | totalE=18 | distinct=7
+가향기조작원 | id=1765284880876159 | totalE=16 | distinct=9
+가호반장 | id=1765284902859226 | totalE=16 | distinct=7

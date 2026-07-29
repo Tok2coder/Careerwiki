@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r109-b3",
+      "group_key": "cycle-R109-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R109 B3: 신발화공전문가~신탁기획원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

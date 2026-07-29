@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r105-b5",
+      "group_key": "cycle-R105-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R105 B5: 시스템반도체소자공정연구원~시유기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

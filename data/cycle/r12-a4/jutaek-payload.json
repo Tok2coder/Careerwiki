@@ -1,0 +1,175 @@
+{
+  "jobName": "주택관리사",
+  "jobId": "1765283375948488",
+  "slug": "주택관리사",
+  "_jobSlug": "주택관리사",
+  "fields": {
+    "way": "주택관리사가 되려면 먼저 국가전문자격인 주택관리사보 시험에 합격해야 하며, 시험은 국토교통부가 관장하고 한국산업인력공단이 시행한다.[1] 시험은 1차에서 회계원리·공동주택시설개론·민법을, 2차에서 주택관리관계법규·공동주택관리실무를 평가하며 2006년부터 매년 1회 치러진다.[2] 의무관리대상 공동주택은 관리사무소장으로 주택관리사를 두어야 하고, 500세대 미만 단지에는 주택관리사보를 배치할 수 있다.[3] 주택관리사보 자격을 취득한 뒤 일정 기간 주택 관련 실무경력을 쌓으면 주택관리사 자격이 부여된다.[4]",
+    "trivia": "주택관리사보 시험은 학력·경력·나이 제한 없이 누구나 응시할 수 있다.[1] 2024년 제27회 1차 시험에는 1만 7,000여 명이 응시해 합격률은 약 12%였다.[2] 정년이 없어 60~70대까지 일할 수 있다는 점이 장점으로 꼽히며, 한 조사에서 관리소장의 월평균 급여는 약 380만 원으로 나타났다.[3]",
+    "overviewProspect.main": "2024년 기준 전국 의무관리대상 공동주택은 약 2만 1,600개 단지에 이른다.[1] 300세대 이상이거나 승강기·중앙집중식 난방을 갖춘 150세대 이상 공동주택은 의무관리대상으로 분류되어 주택관리사 채용이 의무화돼 있다.[2] 의무관리단지의 80% 이상이 전문 주택관리업체에 맡기는 위탁관리 방식을 택하고 있어 주택관리사 수요 기반이 안정적이다.[3]",
+    "overviewAbilities.technKnow": "관리사무소장은 공동주택의 운영·유지·보수·교체 업무와 함께 관리비·장기수선충당금의 청구·수령·지출 등 회계 업무를 집행한다.[1] 장기수선계획을 3년마다 검토하고 주요 시설 교체·보수를 위한 장기수선충당금을 적립·관리하는 역량이 요구된다.[2] 또한 관리사무소장으로 배치될 때 500세대 미만은 3천만 원, 500세대 이상은 5천만 원의 손해배상 보증보험이나 공제에 가입해야 한다.[3]",
+    "detailWlb.wlbDetail": "관리사무소는 청소·경비 업체 계약과 승강기 유지관리 등 단지 운영 업무를 입주민을 대신해 처리하며, 관리사무소장이 이를 지휘·총괄한다.[1] 정년이 없어 장기 근속이 가능한 반면, 입주민 민원 응대 부담이 크다는 평가도 있다.[2]",
+    "detailWlb.socialDetail": "관리사무소장은 선량한 관리자의 주의로 직무를 수행할 법적 의무를 지며, 입주민의 안전과 공동주택 자산가치 유지에 핵심적 역할을 한다.[1] 전국 의무관리단지가 2만 곳을 넘어서면서 공동주택 관리의 사회적 중요성도 커지고 있다.[2]",
+    "detailReady.curriculum": [
+      "주택관리사보 시험은 응시자격 제한이 없어 누구나 준비할 수 있다 [1]",
+      "1차 회계원리·공동주택시설개론·민법, 2차 주택관리관계법규·공동주택관리실무를 학습한다 [2]"
+    ],
+    "detailReady.recruit": [
+      "주택관리사보 자격 취득 후 주택관리업체 공채나 입주자대표회의 채용을 통해 관리사무소장·관리직원으로 취업한다 [1]",
+      "공채는 주로 매년 10~12월에 집중되며, 시설기사로 입사해 경력을 쌓은 뒤 소장으로 승진하기도 한다 [2]"
+    ],
+    "detailReady.training": [
+      "한국산업인력공단 Q-Net이 주택관리사보 국가자격시험을 시행한다 [1]",
+      "대한주택관리사협회 등에서 시험 대비 교육과 배치 후 보수교육을 제공한다 [2]"
+    ],
+    "youtubeLinks": [
+      {
+        "url": "https://www.youtube.com/watch?v=m9516jGUR_g",
+        "title": "취업율이 높은 주택관리사 (한국고용정보원 워크넷)"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=PqVvIEFCEVQ",
+        "title": "50대 남성 자격증 주택관리사의 모든것 총정리 — 연봉·취업·전망"
+      }
+    ]
+  },
+  "sources": {
+    "way": [
+      {
+        "id": 1,
+        "text": "Q-Net 한국산업인력공단 — 주택관리사보 국가자격시험 시행 안내",
+        "url": "https://www.q-net.or.kr/site/housing"
+      },
+      {
+        "id": 2,
+        "text": "대한주택관리사협회 — 주택관리사보 시험 과목·일정 안내",
+        "url": "https://www.khma.org/portal/00007/00016/00029.web"
+      },
+      {
+        "id": 3,
+        "text": "찾기쉬운 생활법령 — 관리사무소장 배치 기준(공동주택관리법 제64조)",
+        "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1248&ccfNo=4&cciNo=1&cnpClsNo=2"
+      },
+      {
+        "id": 4,
+        "text": "위키백과 — 주택관리사 자격·실무경력 요건",
+        "url": "https://ko.wikipedia.org/wiki/주택관리사"
+      }
+    ],
+    "trivia": [
+      {
+        "id": 5,
+        "text": "에듀윌 주택관리사 — 주택관리사보 시험 과목·응시자격 안내",
+        "url": "https://houseinfo.eduwill.net/introduce/announce"
+      },
+      {
+        "id": 6,
+        "text": "에듀윌 주택관리사 — 회차별 응시·합격 통계(2024 제27회)",
+        "url": "https://houseinfo.eduwill.net/introduce/report/turn"
+      },
+      {
+        "id": 7,
+        "text": "브라보마이라이프 — 노년층 희망직업 아파트 관리소장(정년·급여)",
+        "url": "https://bravo.etoday.co.kr/view/atc_view/13332"
+      }
+    ],
+    "overviewProspect.main": [
+      {
+        "id": 8,
+        "text": "K-apt 공동주택관리정보시스템 — 2024 의무관리대상 단지 현황",
+        "url": "https://www.k-apt.go.kr/cmmn/kaptworkintro.do"
+      },
+      {
+        "id": 9,
+        "text": "한국아파트신문 — 의무관리대상 공동주택의 정의와 종류",
+        "url": "https://www.hapt.co.kr/news/articleView.html?idxno=155636"
+      },
+      {
+        "id": 10,
+        "text": "아파트관리신문 — 의무관리단지 위탁관리 80% 채택",
+        "url": "http://www.aptn.co.kr/news/articleView.html?idxno=77913"
+      }
+    ],
+    "overviewAbilities.technKnow": [
+      {
+        "id": 11,
+        "text": "찾기쉬운 생활법령 — 관리사무소장의 운영·회계 업무",
+        "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1248&ccfNo=4&cciNo=1&cnpClsNo=2"
+      },
+      {
+        "id": 12,
+        "text": "찾기쉬운 생활법령 — 장기수선충당금 적립·장기수선계획 검토",
+        "url": "https://www.easylaw.go.kr/CSP/CnpClsMainBtr.laf?csmSeq=1248&ccfNo=5&cciNo=2&cnpClsNo=2"
+      },
+      {
+        "id": 13,
+        "text": "국가법령정보센터 — 공동주택관리법 시행령 제70조 손해배상 보증",
+        "url": "https://www.law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1000654121&lsId=012644"
+      }
+    ],
+    "detailWlb.wlbDetail": [
+      {
+        "id": 14,
+        "text": "아파트관리신문 — 관리사무소 운영 방식과 업무",
+        "url": "http://www.aptn.co.kr/news/articleView.html?idxno=104225"
+      },
+      {
+        "id": 15,
+        "text": "한국아파트신문 — 관리사무소장의 현실(처우·민원)",
+        "url": "https://www.hapt.co.kr/news/articleView.html?idxno=152207"
+      }
+    ],
+    "detailWlb.socialDetail": [
+      {
+        "id": 16,
+        "text": "대한주택관리사협회 — 관리사무소장 배치 근거와 역할",
+        "url": "https://www.khma.org/01968.web"
+      },
+      {
+        "id": 17,
+        "text": "e-나라지표 — 의무관리대상 공동주택 단지 통계",
+        "url": "https://www.index.go.kr/unity/potal/main/EachDtlPageDetail.do?idx_cd=1233"
+      }
+    ],
+    "detailReady.curriculum": [
+      {
+        "id": 18,
+        "text": "에듀윌 주택관리사 — 응시자격·시험 준비 안내",
+        "url": "https://houseinfo.eduwill.net/introduce/announce"
+      },
+      {
+        "id": 19,
+        "text": "대한주택관리사협회 — 1·2차 시험 과목",
+        "url": "https://www.khma.org/portal/00007/00016/00029.web"
+      }
+    ],
+    "detailReady.recruit": [
+      {
+        "id": 20,
+        "text": "아파트관리신문 — 자치·위탁관리와 관리사무소장 고용구조",
+        "url": "http://www.aptn.co.kr/news/articleView.html?idxno=106105"
+      },
+      {
+        "id": 21,
+        "text": "브라보마이라이프 — 관리소장 공채 시기·진입 경로",
+        "url": "https://bravo.etoday.co.kr/view/atc_view/13332"
+      }
+    ],
+    "detailReady.training": [
+      {
+        "id": 22,
+        "text": "Q-Net 한국산업인력공단 — 주택관리사보 시험 시행",
+        "url": "https://www.q-net.or.kr/site/housing"
+      },
+      {
+        "id": 23,
+        "text": "대한주택관리사협회 — 시험 대비·보수교육",
+        "url": "https://www.khma.org/01968.web"
+      }
+    ]
+  },
+  "careerTree": null,
+  "_careerTreeNote": "주택관리사 관련 한국인 공인 탐색: 김갑성(건국대 부동산학과 교수, 주택관리 정책 연구), 조주현(건국대 부동산학과 교수, 공동주택관리 제도), 이재인(대한주택관리사협회 회장, 협회 대표 임원), 손재영(부동산학 교수, 주택정책), 하성규(중앙대 도시계획·부동산 교수, 공동주택 관리 연구). 주택관리는 행정·실무 직역으로 위키 등재 careerTree 인물 풀이 희소 — 위 후보 모두 학자·협회임원으로 '주택관리사' 직업 경로 대표성 확인 부족. 적합 인물 없음, 다음 사이클 재검토 (2026-05-29).",
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewProspect.main·overviewAbilities.technKnow·detailWlb.wlbDetail·detailWlb.socialDetail·detailReady(curriculum/recruit/training)·youtubeLinks 보강. distinct URL 17 (q-net·khma·easylaw·law·k-apt·index·hapt·aptn·bravo·houseinfo·wiki). overviewSalary.wage 보존. careerTree=null+note(공인인물 희소).",
+  "_omegaSelfAudit": true
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r86-b2",
+      "group_key": "cycle-R86-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R86 B2: 산후조리원신생아관리사~상담영양사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

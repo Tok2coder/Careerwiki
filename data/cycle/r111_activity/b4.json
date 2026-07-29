@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r111-b4",
+      "group_key": "cycle-R111-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R111 B4: 아보리스트~아이스크림원료배합기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

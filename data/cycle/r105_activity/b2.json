@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r105-b2",
+      "group_key": "cycle-R105-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R105 B2: 시렉스기조작원~시멘트품질분석연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

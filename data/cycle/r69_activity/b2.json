@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r69-b2",
+      "group_key": "cycle-R69-2026-07-04",
+      "agent_slug": "hangyeol",
+      "label": "R69 B2: 방송중계회선기사~방송통신기기제작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

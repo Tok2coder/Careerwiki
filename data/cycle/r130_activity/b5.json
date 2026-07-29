@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r130-b5",
+      "group_key": "cycle-R130-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R130 B5: 원목방부처리원~원유품질검사원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

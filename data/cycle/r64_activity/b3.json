@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r64-b3",
+      "group_key": "cycle-R64-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R64 B3: 반도체칩접합장비공정연구원~반도체화학기상증착공정기술자",
+      "model": "sonnet",
+      "status": "done",
+      "jobs_ok": 5,
+      "jobs_total": 5,
+      "revisions": [19916, 19930, 19932, 19934, 19938]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r86-b1",
+      "group_key": "cycle-R86-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R86 B1: 산업폐수영업사무원~산후관리사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

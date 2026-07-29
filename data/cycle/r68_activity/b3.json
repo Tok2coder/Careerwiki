@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r68-b3",
+      "group_key": "cycle-R68-2026-07-03",
+      "agent_slug": "hangyeol",
+      "label": "R68 B3: 방송국견학안내원~방송기술연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

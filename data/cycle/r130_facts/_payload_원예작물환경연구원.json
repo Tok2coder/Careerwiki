@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "way": "원예작물환경연구원은 대학원 이상의 학력(원예학·농학·환경과학 등 관련 전공 석박사)이 요구되며, 농촌진흥청 산하 국립원예특작과학원 같은 국가 연구기관의 연구직으로 채용되는 경로가 일반적이다. 농촌진흥청은 '농업생명기술 혁신으로 국민의 풍요로운 미래를 선도'한다는 미션 아래 농업과학기술개발·보급·교육을 수행하는 소관 기관이다[1]. 국립원예특작과학원은 기획조정과·원예특작환경과 등 본부 부서와 원예작물부·인삼특작부, 온난화대응농업연구소·시설원예연구소 등 전문 연구소로 구성돼 있어, 근권환경·토양·병해충·기후변화 대응 등 세부 전공에 따라 배치되는 부서가 달라진다[2]. 시설원예연구소는 원예시설 재해 경감, 에너지 절감, 수경재배, 복합환경 제어, 스마트팜 기술을 연구하는 전문 조직이다[3]. 관련 학회인 한국원예학회는 원예과학과 원예산업 선진화를 목적으로 1963년 창립된 농학 계열 최대 학회로, 국제 학술지 'Horticulture, Environment, and Biotechnology'와 '원예과학기술지'를 발행한다[4].",
+    "trivia": "농촌진흥청은 2024년 주요 연구성과에서 약 16억 건의 농업 데이터를 수집하고 2세대 스마트팜 플랫폼 '아라온실'을 완성했다고 밝혔다[1]. 국립원예특작과학원 북부원예시험장은 지난 7월 23일 강원 철원군에서 개소식을 열었는데, 총 부지면적 15만4528㎡에 노지채소·과수·화훼 시험 재배지를 갖췄다[2]. 근권 전이온농도(EC)를 활용한 수경재배 양액 자동제어 특허는 EC 비율이 1.5~1.75인 정상 범위를 벗어나면 급액량이나 양액 농도를 10~20% 조정하도록 설계돼 있다[3].",
+    "overviewProspect": {
+      "main": "농림축산식품부에 따르면 2023년 말 기준 전체 시설원예 농가면적 약 5만5000ha 중 스마트온실 도입 면적은 7,716ha로 보급률이 약 14%에 그쳤다[1]. 농촌진흥청은 기후변화 시나리오(SSP5-8.5)를 근거로 2090년대에는 강원 산간을 제외한 전국에서 녹차용 차나무 재배가 가능해지고, 올리브도 충남 서산·경북 상주·강원 강릉 등 중부지역까지 재배적지가 확대될 것으로 전망하며 2027년까지 21개 작목을 추가 연구한다[2]. 실제로 강원 지역 사과 재배면적은 2020년 517ha에서 2024년 1,226ha로 137.1% 늘었고, 농촌진흥청은 이에 대응해 철원군에 북부원예시험장을 새로 열었다[3]."
+    },
+    "overviewAbilities": {
+      "technKnow": "원예작물환경연구원은 토양정보포털 흙토람에서 제공하는 전국 농경지 필지별 토양특성정보와 작물별 비료사용량 자료를 활용해 시비 처방을 검토하는 지식이 필요하다[1]. 흙토람은 농업환경 보전과 농작물 안전 생산의 전국적인 기반 구축을 목표로 국립농업과학원이 구축·운영하는 시스템이다[2]. 온난화대응농업연구소는 제주에 자리해 아열대 작물 품종 개발과 난지권 농업환경 변화 예측 기술을 연구하는데, 이런 기후변화 적응 지식도 원예작물환경연구원의 업무와 맞닿아 있다[3]."
+    },
+    "detailWlb": {
+      "wlbDetail": "원예작물환경연구원은 실내·외를 오가며 웅크린 자세로 토양·작물 상태를 살피는 작업이 많고, 시험장·연구포장 현장 조사도 수반된다. 북부원예시험장은 부지 8만2644㎡에 시험포 3만3057㎡ 규모로 조성돼 육묘용 시설하우스 등 현장 시험 인프라를 갖췄다[1]. 스마트팜 데이터마트는 딸기·토마토·방울토마토·오이·파프리카 등 5개 품목의 온도·습도·CO2 등 환경정보와 관수·환기 등 제어정보를 60개 데이터셋으로 제공해, 연구원이 현장 데이터를 분석하는 업무 환경을 뒷받침한다[2]. 공공데이터포털의 시설채소 온실현황 통계는 26행 규모의 국가승인통계로 관리되며 누적 3,399회 내려받아졌다[3].",
+      "socialDetail": "원예작물환경연구원의 연구는 비료관리법 체계 안에서 이뤄진다. 비료관리법은 1983년 3월 1일 법률 제3598호로 시행된 이래 비료 품질을 관리해 왔다[1]. 농약관리법은 2025년 8월 7일 시행판을 기준으로 병해충 방제에 쓰이는 농약의 관리 체계를 정한다[2]. 한국토양비료학회는 2023년 24개국 275명이 참가한 국제토양안보컨퍼런스(GSS2023)를 열었고, 2025년에는 제10회 흙의 날 행사와 제11회 토양조사경진대회를 진행했다[3]. 스마트팜 작기별 생산환경 데이터는 2023년 8월 등록돼 2025년 기준 402건의 활용신청을 받았다[4]."
+    },
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "KEIS '원예작물환경연구원' 0개, '원예 근권환경 연구' 0개, '시설원예 스마트팜 연구원' 0개, '국립원예특작과학원 현직자' 0개, '원예작물 토양비료 연구' 0개, '원예 병해충 방제 연구' 0개 (2026-07-29 확인, 한국어 영상 부재)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "url": "https://www.rda.go.kr/board/board.do?mode=sub_main&menu_id=org&menu_nm=%EA%B8%B0%EA%B4%80%EC%86%8C%EA%B0%9C", "text": "농촌진흥청 — 기관소개(미션·비전)"},
+      {"id": 2, "url": "https://www.nihhs.go.kr/usr/nihhs/intro_Organization.do?t_cd=0101&mc=MN0000000129", "text": "국립원예특작과학원 — 기관소개(조직)"},
+      {"id": 3, "url": "https://www.nihhs.go.kr/usr/nihhs/intro_Introview.do?t_cd=5", "text": "국립원예특작과학원 — 시설원예연구소 소개"},
+      {"id": 4, "url": "https://www.horticulture.or.kr/staticdata/static/society/history/", "text": "한국원예학회 — 학회 연혁"}
+    ],
+    "trivia": [
+      {"id": 5, "url": "https://www.rda.go.kr/org/gud/gud_rsachoutcomeQuery_2024.do", "text": "농촌진흥청 — 2024년 주요 연구성과"},
+      {"id": 6, "url": "https://www.hkbs.co.kr/news/articleView.html?idxno=802387", "text": "한겨레(지역판) — 북부원예시험장 개소식"},
+      {"id": 7, "url": "https://patents.google.com/patent/KR20200073352A/ko", "text": "구글 특허 — 근권 EC 기반 수경재배 양액 제어 방법"}
+    ],
+    "overviewProspect.main": [
+      {"id": 8, "url": "https://www.mafra.go.kr/bbs/home/793/572350/artclView.do", "text": "농림축산식품부 — 시설원예 스마트팜 보급 현황"},
+      {"id": 9, "url": "https://www.econonews.co.kr/news/articleView.html?idxno=370301", "text": "이코노뉴스 — 아열대 작목 재배지 확대 전망"},
+      {"id": 10, "url": "https://v.daum.net/v/20250818050110971", "text": "다음뉴스 — 원예작물 재배적지 북상"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 11, "url": "https://soil.rda.go.kr/sis/summary.do", "text": "흙토람 — 시스템 개요"},
+      {"id": 12, "url": "https://soil.rda.go.kr/soilact/soilInfo.do", "text": "흙토람 — 토양의 정의와 기능"},
+      {"id": 13, "url": "https://www.nihhs.go.kr/usr/nihhs/intro_Introview.do?t_cd=4", "text": "국립원예특작과학원 — 온난화대응농업연구소 소개"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 14, "url": "https://v.daum.net/v/20250818050110971", "text": "다음뉴스 — 원예작물 재배적지 북상"},
+      {"id": 15, "url": "https://smartfarmkorea.net/contents/view.do?menuId=M11010101", "text": "스마트팜코리아 — 스마트농업 소개"},
+      {"id": 16, "url": "https://www.data.go.kr/data/15052489/fileData.do", "text": "공공데이터포털 — 시설채소 온실현황"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 17, "url": "https://law.go.kr/lsInfoP.do?lsiSeq=1882", "text": "국가법령정보센터 — 비료관리법"},
+      {"id": 18, "url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=259911", "text": "국가법령정보센터 — 농약관리법"},
+      {"id": 19, "url": "http://ksssf.org/staticdata/static/society/history/", "text": "한국토양비료학회 — 학회 연혁"},
+      {"id": 20, "url": "https://www.data.go.kr/data/15121324/openapi.do", "text": "공공데이터포털 — 스마트팜 작기별 생산환경 데이터"}
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewProspect.main·overviewAbilities.technKnow·detailWlb.wlbDetail·detailWlb.socialDetail·youtubeLinks (신규 19 distinct URL, 명칭 중의성 정정: 농장 재배원 아님, 시설원예 환경 R&D 연구직). summary/overviewWork.main/abilityList는 CareerNet 원본 보존, sidebarCerts/detailReady/sidebarOrgs/sidebarMajors/careerTree는 범위 밖 후속 사이클",
+  "_jobSlug": "원예작물환경연구원"
+}

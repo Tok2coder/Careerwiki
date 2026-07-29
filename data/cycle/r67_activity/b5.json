@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r67-b5",
+      "group_key": "cycle-R67-2026-07-01",
+      "agent_slug": "hangyeol",
+      "label": "R67 B5: 방사선연구원~방사성폐기물자체관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

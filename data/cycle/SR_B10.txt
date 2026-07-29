@@ -1,0 +1,5 @@
+안경사 | id=1765283339011562 | totalE=18 | distinct=7
+연극연출가 | id=1765283343467158 | totalE=17 | distinct=10
+운동감독 | id=1765283347979133 | totalE=18 | distinct=7
+운동처방사 | id=176528401511584 | totalE=18 | distinct=9
+웹-개발자 | id=1765283436042446 | totalE=18 | distinct=13

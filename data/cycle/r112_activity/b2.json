@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r112-b2",
+      "group_key": "cycle-R112-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R112 B2: 아트토이디렉터~안테나조립반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

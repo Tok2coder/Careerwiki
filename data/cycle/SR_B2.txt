@@ -1,0 +1,5 @@
+가호원 | id=1765284903183244 | totalE=16 | distinct=7
+각끌기조작원 | id=1765285469493951 | totalE=16 | distinct=7
+각초냉각기조작원 | id=1765284881668762 | totalE=16 | distinct=8
+건축공학기술자 | id=1765283282556876 | totalE=17 | distinct=16
+경리사무원 | id=1765283418922102 | totalE=17 | distinct=10

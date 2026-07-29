@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r66-b4",
+      "group_key": "cycle-R66-2026-06-30",
+      "agent_slug": "hangyeol",
+      "label": "R66 B4: 발전운영계획관리자~발전전기설비정비현장감독자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

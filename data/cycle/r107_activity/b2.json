@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r107-b2",
+      "group_key": "cycle-R107-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R107 B2: 식용유탈취원~식품미생물공학연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

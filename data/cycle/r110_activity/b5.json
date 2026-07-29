@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r110-b5",
+      "group_key": "cycle-R110-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R110 B5: 실기교사~아리안스기조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

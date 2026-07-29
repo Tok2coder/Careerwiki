@@ -1,0 +1,5 @@
+법원공무원 | id=1765283415778123 | totalE=18 | distinct=9
+변호사 | id=1765283315034317 | totalE=18 | distinct=13
+병원코디네이터 | id=1765283315326388 | totalE=18 | distinct=10
+보육교사 | id=1765283316406834 | totalE=16 | distinct=11
+분장사 | id=1765283317844191 | totalE=17 | distinct=8

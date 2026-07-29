@@ -1,0 +1,5 @@
+대중가수 | id=1765284187813579 | totalE=18 | distinct=18
+동물조련사 | id=1765283301032565 | totalE=15 | distinct=15
+드라마프로듀서 | id=1765284142048798 | totalE=18 | distinct=18
+바리스타 | id=1765283309704378 | totalE=18 | distinct=5
+박물관관리자 | id=1765283566026939 | totalE=17 | distinct=10

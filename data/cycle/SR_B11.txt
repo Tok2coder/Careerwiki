@@ -1,0 +1,5 @@
+웹툰배경작가 | id=1765284183039359 | totalE=17 | distinct=12
+웹툰작가 | id=1765284127013890 | totalE=18 | distinct=11
+웹툰pd | id=1765284129748467 | totalE=18 | distinct=10
+은행개인금융상담역 | id=1765284381471459 | totalE=18 | distinct=7
+은행사무원 | id=1765283429959345 | totalE=18 | distinct=7

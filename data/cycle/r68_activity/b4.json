@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r68-b4",
+      "group_key": "cycle-R68-2026-07-03",
+      "agent_slug": "hangyeol",
+      "label": "R68 B4: 방송기자재배정원~방송모니터요원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

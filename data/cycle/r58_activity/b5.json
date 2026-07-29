@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r58-b5",
+      "group_key": "cycle-R58-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R58 B5: 바이오의약품분석법개발원~바이오의약품완제포장원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

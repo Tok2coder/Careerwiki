@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r60-b1",
+      "group_key": "cycle-R60-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R60 B1: 박막트랜지스터노광현상원~박막트랜지스터봉지원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

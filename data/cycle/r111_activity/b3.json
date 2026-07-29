@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r111-b3",
+      "group_key": "cycle-R111-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R111 B3: 아말감제련원~아이스크림포장원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

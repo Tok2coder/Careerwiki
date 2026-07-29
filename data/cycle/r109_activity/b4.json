@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r109-b4",
+      "group_key": "cycle-R109-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R109 B4: 신발캐드사~신탁대출사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

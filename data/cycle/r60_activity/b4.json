@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r60-b4",
+      "group_key": "cycle-R60-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R60 B4: 박제및표본제작공~반도체계측검사공정기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

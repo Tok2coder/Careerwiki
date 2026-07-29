@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r111-b1",
+      "group_key": "cycle-R111-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R111 B1: 아스팔트믹싱플랜트조종사~아이스크림제조중앙통제장치조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

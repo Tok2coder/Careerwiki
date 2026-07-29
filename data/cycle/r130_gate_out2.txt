@@ -1,0 +1,35 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 원목공급원                    | totalE=21 | distinct=20 | marker=OK | clean
+WARN 원목분류원                    | totalE=24 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] conn(000): http://iforest.nfcf.or.kr/forest/user.tdf?a=common.HtmlApp&c=3001&page=/cyber/Sanju/machine01.html&mc=CYB_MWS_IIZ_INT
+PASS 원목절단원                    | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원석할석원                    | totalE=28 | distinct=18 | marker=OK | clean
+PASS 원자력계측제어정비원               | totalE=19 | distinct=18 | marker=OK | clean
+PASS 원목관리원                    | totalE=21 | distinct=19 | marker=OK | clean
+PASS 원목운반원                    | totalE=21 | distinct=19 | marker=OK | clean
+PASS 원목절삭기조작원                 | totalE=22 | distinct=19 | marker=OK | clean
+PASS 원심분리기조작원                 | totalE=21 | distinct=18 | marker=OK | clean
+WARN 원자력기술자                   | totalE=20 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.knfc.co.kr/board/view?pageNum=1&rowCnt=999999&no1=3&linkId=49168&menuId=MENU00327&schType=0&categoryId=09
+PASS 원목등급원                    | totalE=25 | distinct=19 | marker=OK | clean
+PASS 원목인양기조종원                 | totalE=23 | distinct=19 | marker=OK | clean
+PASS 원사투입원                    | totalE=19 | distinct=19 | marker=OK | clean
+PASS 원액현장감독자                  | totalE=20 | distinct=18 | marker=OK | clean
+PASS 원예작물환경연구원                | totalE=20 | distinct=19 | marker=OK | clean
+PASS 원목박피기조작원                 | totalE=30 | distinct=18 | marker=OK | clean
+PASS 원목인양반장                   | totalE=31 | distinct=18 | marker=OK | clean
+PASS 원산지관리사                   | totalE=33 | distinct=18 | marker=OK | clean
+WARN 원염용해조조작원                 | totalE=28 | distinct=12 | marker=OK | WARN:singleDomainDominance(data.go.kr 8/12)
+WARN 원예종묘시험원                  | totalE=25 | distinct=10 | marker=OK | WARN:singleDomainDominance(data.go.kr 7/10)
+PASS 원목방부처리원                  | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원목인양원                    | totalE=30 | distinct=18 | marker=OK | clean
+PASS 원색분해기조작원                 | totalE=30 | distinct=19 | marker=OK | clean
+PASS 원예치료사                    | totalE=21 | distinct=10 | marker=OK | clean
+PASS 원유품질검사원                  | totalE=21 | distinct=11 | marker=OK | clean
+
+=== Summary: PASS 21/25, WARN 4 ===
+WARN: 원목분류원(urlUnverified(1)), 원자력기술자(urlUnverified(1)), 원염용해조조작원(singleDomainDominance(data.go.kr 8/12)), 원예종묘시험원(singleDomainDominance(data.go.kr 7/10))

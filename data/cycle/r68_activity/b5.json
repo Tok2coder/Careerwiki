@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r68-b5",
+      "group_key": "cycle-R68-2026-07-03",
+      "agent_slug": "hangyeol",
+      "label": "R68 B5: 방송설비기술자~방송연출보조원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

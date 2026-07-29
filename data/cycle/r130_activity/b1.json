@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r130-b1",
+      "group_key": "cycle-R130-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R130 B1: 원목공급원~원자력계측제어정비원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

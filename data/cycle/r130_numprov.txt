@@ -1,0 +1,127 @@
+원목공급원 | 수치 33건 | FOUND 24 | UNIT_MISMATCH 1 | NOT_FOUND 3 | UNFETCHABLE 4 | NO_FOOTNOTE 1
+  [INFO][compoundAmbiguous] field=trivia "2024년 원목 수입량은 206만9천㎥으로 전년보다 3.1% 줄었지만 국내 원목 생산량(357만6천㎥)도 함께 줄어 공급 여건이 넉넉하지 않다[" claim="206만 + 9천" source=https://www.imwood.co.kr/news/articleView.html?idxno=32268
+  [INFO][compoundAmbiguous] field=trivia "2024년 원목 수입량은 206만9천㎥으로 전년보다 3.1% 줄었지만 국내 원목 생산량(357만6천㎥)도 함께 줄어 공급 여건이 넉넉하지 않다[" claim="357만 + 6천" source=https://www.imwood.co.kr/news/articleView.html?idxno=32268
+  [NOT_FOUND] field=trivia "산림청은 국토의 65%가 산림이면서도 향후 50년이 지나도 목재자급률이 50%에 그칠 것으로 내다본다[4]." claim="65%" source=https://www.woodkorea.co.kr/news/articleView.html?idxno=70914
+  [NOT_FOUND] field=trivia "산림청은 국토의 65%가 산림이면서도 향후 50년이 지나도 목재자급률이 50%에 그칠 것으로 내다본다[4]." claim="50년" source=https://www.woodkorea.co.kr/news/articleView.html?idxno=70914
+  [NOT_FOUND] field=trivia "산림청은 국토의 65%가 산림이면서도 향후 50년이 지나도 목재자급률이 50%에 그칠 것으로 내다본다[4]." claim="50%" source=https://www.woodkorea.co.kr/news/articleView.html?idxno=70914
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "원목공급원은 목재유통센터처럼 연간 원목 소요량이 1만8천~3만㎥에 이르는 사업장에서 지게차와 윈치를 다루며 실내외를 오가는 육체노동을 한다[1]" claim="3만" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_000810&mn=AR01_04_02_01
+원목관리원 | 수치 3건 | FOUND 1 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "2009년 경기 양평에 문화재복원용 제1호 저목장이, 2010년 강원 홍천에 한옥부재용 제2호 저목장이 조성됐으며 입고된 원목마다 라벨을 붙여 " claim="2009년" source=https://www.korea.kr/briefing/policyBriefingView.do?newsId=148704391
+  [UNIT_MISMATCH] field=trivia "2009년 경기 양평에 문화재복원용 제1호 저목장이, 2010년 강원 홍천에 한옥부재용 제2호 저목장이 조성됐으며 입고된 원목마다 라벨을 붙여 " claim="2010년" source=https://www.korea.kr/briefing/policyBriefingView.do?newsId=148704391
+원목등급원 | 수치 33건 | FOUND 26 | UNIT_MISMATCH 3 | NOT_FOUND 0 | UNFETCHABLE 4 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "입직 후에는 산림청이 고시한 원목 규격(산림청고시 제2018-90호, 2018년 10월 8일 시행)에 따라 지름·길이·결점을 판정하는 실무를 반" claim="2018년" source=https://law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000174131
+  [UNIT_MISMATCH] field=trivia "이 통계는 2007년부터 매년 실시되는 목재이용실태조사에서 나온 것으로, 조사 규모는 2개 품목·646개소에서 2024년 기준 22개 품목·5," claim="2007년" source=https://www.kofpi.or.kr/info/imupStory/statistics_03.do
+  [INFO][compoundAmbiguous] field=overviewProspect.main "국립산림과학원 산림정책연구과는 2024 산림임업 전망 대회에서 그해 원목 소비량이 전년 대비 1.9% 감소한 564만5천㎥, 원목 수입량은 3." claim="564만 + 5천" source=https://www.imwood.co.kr/news/articleView.html?idxno=32268
+  [INFO][compoundAmbiguous] field=overviewProspect.main "국립산림과학원 산림정책연구과는 2024 산림임업 전망 대회에서 그해 원목 소비량이 전년 대비 1.9% 감소한 564만5천㎥, 원목 수입량은 3." claim="206만 + 9천" source=https://www.imwood.co.kr/news/articleView.html?idxno=32268
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "원목등급원은 산림청이 고시한 원목 규격(산림청고시 제2018-90호, 2018년 10월 8일 시행)에 따라 원목의 지름·길이와 결점을 판별하는 " claim="2018년" source=https://law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000174131
+원목박피기조작원 | 수치 7건 | FOUND 5 | UNIT_MISMATCH 0 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "한국임업진흥원은 대학·협동조합·협회 등 25곳 이상의 전문교육기관과 제휴해 임업인 대상 교육과정을 운영하고 있어, 현장 숙련 외에 이론 교육을 " claim="25곳" source=https://www.kofpi.or.kr/service/edu_05.do
+  [NOT_FOUND] field=overviewProspect.main "산림청은 벌채·집재 단계에 쓰이는 고성능임업기계를 2025년까지 170대 이상 보급할 계획이다.[2]" claim="2025년" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_000999&mn=AR01_04_03_01
+원목방부처리원 | 수치 6건 | FOUND 3 | UNIT_MISMATCH 1 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=overviewProspect.main "국내 유일의 석탄 공기업인 대한석탄공사는 화순광업소(2023년)·장성광업소(2024년)에 이어 2025년 마지막 도계광업소마저 문을 닫으며 사실" claim="2023년" source=https://m.science.ytn.co.kr/program/view_today.php?s_mcd=0082&key=202507021107154470
+  [NOT_FOUND] field=overviewProspect.main "국내 유일의 석탄 공기업인 대한석탄공사는 화순광업소(2023년)·장성광업소(2024년)에 이어 2025년 마지막 도계광업소마저 문을 닫으며 사실" claim="2024년" source=https://m.science.ytn.co.kr/program/view_today.php?s_mcd=0082&key=202507021107154470
+  [UNIT_MISMATCH] field=overviewProspect.main "관련 품질기준 고시는 2016년 시행 이후로도 계속 개정되고 있어 지속적인 숙지가 필요하다.[3]" claim="2016년" source=https://www.law.go.kr/admRulLsInfoP.do?admRulSeq=2100000092691
+원목분류원 | 수치 57건 | FOUND 36 | UNIT_MISMATCH 6 | NOT_FOUND 14 | UNFETCHABLE 0 | NO_FOOTNOTE 1
+  [UNIT_MISMATCH] field=way "산림조합의 임업기계지원센터는 가선집재 26대·운반 20대 등 총 112대의 장비를 7개 지역센터에서 임업인에게 대여해 원목 분류·집재 현장의 진" claim="26대" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001020&mn=AR01_04_03_05
+  [UNIT_MISMATCH] field=way "산림조합의 임업기계지원센터는 가선집재 26대·운반 20대 등 총 112대의 장비를 7개 지역센터에서 임업인에게 대여해 원목 분류·집재 현장의 진" claim="112대" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001020&mn=AR01_04_03_05
+  [UNIT_MISMATCH] field=trivia "2022년 조사에서 산림작업자 적정임금은 보통인부 16만3,376원, 특별인부 22만1,407원, 벌목부 23만9,863원으로 건설업 시중노임단" claim="16만" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=trivia "2022년 조사에서 산림작업자 적정임금은 보통인부 16만3,376원, 특별인부 22만1,407원, 벌목부 23만9,863원으로 건설업 시중노임단" claim="3,376원" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=trivia "2022년 조사에서 산림작업자 적정임금은 보통인부 16만3,376원, 특별인부 22만1,407원, 벌목부 23만9,863원으로 건설업 시중노임단" claim="22만" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=trivia "2022년 조사에서 산림작업자 적정임금은 보통인부 16만3,376원, 특별인부 22만1,407원, 벌목부 23만9,863원으로 건설업 시중노임단" claim="1,407원" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=trivia "2022년 조사에서 산림작업자 적정임금은 보통인부 16만3,376원, 특별인부 22만1,407원, 벌목부 23만9,863원으로 건설업 시중노임단" claim="23만" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=trivia "2022년 조사에서 산림작업자 적정임금은 보통인부 16만3,376원, 특별인부 22만1,407원, 벌목부 23만9,863원으로 건설업 시중노임단" claim="9,863원" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=overviewProspect.main "2026년 산림일자리 고용 목표는 3만5,110명으로 잡혀 있고 1분기에만 1만5,680개의 일자리가 새로 만들어졌다[2]." claim="5,110명" source=https://forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_000455&mn=AR01_07_02
+  [UNIT_MISMATCH] field=overviewProspect.main "2026년 산림일자리 고용 목표는 3만5,110명으로 잡혀 있고 1분기에만 1만5,680개의 일자리가 새로 만들어졌다[2]." claim="1분" source=https://forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_000455&mn=AR01_07_02
+  [UNIT_MISMATCH] field=overviewProspect.main "2026년 산림일자리 고용 목표는 3만5,110명으로 잡혀 있고 1분기에만 1만5,680개의 일자리가 새로 만들어졌다[2]." claim="1만" source=https://forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_000455&mn=AR01_07_02
+  [NOT_FOUND] field=overviewProspect.main "청년인턴 취업률도 2020년 30.1%에서 2021년 45.9%로 뛰며, 청년층의 산림 현장 유입이 늘고 있다[3]." claim="2020년" source=https://www.fowi.or.kr/user/contents/contentsView.do?cntntsId=244
+  [NOT_FOUND] field=overviewProspect.main "청년인턴 취업률도 2020년 30.1%에서 2021년 45.9%로 뛰며, 청년층의 산림 현장 유입이 늘고 있다[3]." claim="2021년" source=https://www.fowi.or.kr/user/contents/contentsView.do?cntntsId=244
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "원목분류원은 국립산림과학원고시(제2013-2호)로 2013년 6월부터 시행된 원목규격에 따른 수종·품질 구분 기준을 알아야 한다[1]." claim="2013년" source=https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2000000093585
+  [NOT_FOUND] field=detailWlb.wlbDetail "원목분류원과 함께 일하는 벌목부·작업반장의 2022년 적정임금은 각각 23만9,863원, 25만45원으로 산정될 만큼[1] 현장 노동강도가 높은" claim="23만" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=detailWlb.wlbDetail "원목분류원과 함께 일하는 벌목부·작업반장의 2022년 적정임금은 각각 23만9,863원, 25만45원으로 산정될 만큼[1] 현장 노동강도가 높은" claim="9,863원" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=detailWlb.wlbDetail "원목분류원과 함께 일하는 벌목부·작업반장의 2022년 적정임금은 각각 23만9,863원, 25만45원으로 산정될 만큼[1] 현장 노동강도가 높은" claim="25만" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=detailWlb.wlbDetail "원목분류원과 함께 일하는 벌목부·작업반장의 2022년 적정임금은 각각 23만9,863원, 25만45원으로 산정될 만큼[1] 현장 노동강도가 높은" claim="45원" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002972693
+  [NOT_FOUND] field=detailWlb.socialDetail "산림복지 분야의 민간 일자리는 2019년 3,312명에서 2021년 5,172명으로 늘며[1] 원목분류원 같은 현장직에 대한 사회적 관심도 조금" claim="2019년" source=https://www.fowi.or.kr/user/contents/contentsView.do?cntntsId=244
+  [NOT_FOUND] field=detailWlb.socialDetail "산림복지 분야의 민간 일자리는 2019년 3,312명에서 2021년 5,172명으로 늘며[1] 원목분류원 같은 현장직에 대한 사회적 관심도 조금" claim="2021년" source=https://www.fowi.or.kr/user/contents/contentsView.do?cntntsId=244
+원목운반원 | 수치 8건 | FOUND 4 | UNIT_MISMATCH 2 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "건설기계조종사면허는 국토교통부 산하 기관에서 발급하며 처리기간은 약 1개월이 소요된다.[3]" claim="1개월" source=https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A03005&CappBizCD=15000000380
+  [UNIT_MISMATCH] field=trivia "2006년 7월 11일 북부지방산림청 수원국유림관리소는 경기 양평군 청운면의 리기다소나무 수종갱신지에서 관계공무원과 산림조합원, 7개 영림단을 " claim="2006년" source=https://west.forest.go.kr/kfsweb/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_1036&nttId=401735&mn=UWST_03_02
+  [NOT_FOUND] field=overviewAbilities.technKnow "화물자동차의 적재중량은 구조·성능상 적재중량의 110% 이내여야 하고, 적재 길이는 자동차 길이에 그 10분의 1을 더한 길이, 높이는 지상에서" claim="4.2m" source=https://www.easylaw.go.kr/CSP/CnpClsMainBtr.laf?popMenu=ov&csmSeq=684&ccfNo=1&cciNo=2&cnpClsNo=2&menuType=cnpcls
+  [NOT_FOUND] field=detailWlb.wlbDetail "화물선에 실려 온 수입 원목은 하역 후 10일 안에 식물검역 신고를 마쳐야 하는데,[1] 이 검역·통관 일정에 맞춰 운송 트럭을 배차하다 보니 " claim="10일" source=https://www.qia.go.kr/plant/imQua/plant_rule_imp.jsp
+원목인양기조종원 | 수치 25건 | FOUND 15 | UNIT_MISMATCH 8 | NOT_FOUND 0 | UNFETCHABLE 2 | NO_FOOTNOTE 0
+  [INFO][compoundAmbiguous] field=trivia "목재정보서비스 집계에 따르면 2023년 기준 수입목재 이용량은 2,091만8천㎥에 달했다[2]." claim="2,091만 + 8천" source=https://winz.forest.go.kr/usr/inf/tmbrUsFfnsr.do
+  [UNIT_MISMATCH] field=trivia "전국의 목재 수입·유통업소는 2,246곳으로, 산림청 목재산업과가 인허가 정보를 관리한다[3]." claim="2,246곳" source=https://www.data.go.kr/data/15044960/fileData.do
+  [UNIT_MISMATCH] field=trivia "산림청은 2007년부터 매년 목재이용실태조사를 실시해 왔으며, 조사 규모는 2024년 기준 22개 품목·5,353개소로 확대됐다[4]." claim="2007년" source=https://www.kofpi.or.kr/info/imupStory/statistics_03.do
+  [UNIT_MISMATCH] field=overviewProspect.main "임산물교역시스템은 국가별 목재수입통계를 매주 일요일 오전 7시에 갱신해 제공하며, 2016년부터 2026년까지의 수입신고 자료를 조회할 수 있다" claim="2016년" source=https://trade.forest.go.kr/sttst/tmbr/nation?nowMenu=M000000013
+  [UNIT_MISMATCH] field=overviewProspect.main "임산물교역시스템은 국가별 목재수입통계를 매주 일요일 오전 7시에 갱신해 제공하며, 2016년부터 2026년까지의 수입신고 자료를 조회할 수 있다" claim="2026년" source=https://trade.forest.go.kr/sttst/tmbr/nation?nowMenu=M000000013
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "원목인양기조종원은 크레인 제작기준·안전기준및검사기준(옛 노동부고시 제57호, 2002년 1월 1일 시행)에 따른 기계 구조와 안전장치에 대한 지" claim="2002년" source=https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2366
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "원목인양기조종원은 크레인 제작기준·안전기준및검사기준(옛 노동부고시 제57호, 2002년 1월 1일 시행)에 따른 기계 구조와 안전장치에 대한 지" claim="1일" source=https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2366
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "노동부고시로 제정된 크레인작업표준안전작업지침(2002년 1월 1일 시행)도 현장 안전수칙의 근거가 된다[3]." claim="2002년" source=https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2353
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "노동부고시로 제정된 크레인작업표준안전작업지침(2002년 1월 1일 시행)도 현장 안전수칙의 근거가 된다[3]." claim="1일" source=https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2353
+원목인양반장 | 수치 17건 | FOUND 15 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "부산항만공사는 2026년 위험성평가 사전교육을 기존 2회에서 4회로 늘리고 협력업체 종사자를 포함해 약 1,200명 규모의 유해·위험요인 발굴 " claim="2026년" source=https://www.imaeil.com/page/view/2026050717303537811
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "2톤 이상 크레인은 최초 설치 후 3년 이내 안전검사를 받고 이후 2년마다 재검사를 받아야 하는데, 반장은 이런 장비를 다루는 작업원들의 안전수" claim="2톤" source=https://miis.kosha.or.kr/minwon/info/viewIsSiCycle.do
+원목인양원 | 수치 6건 | FOUND 5 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 1
+원목절단원 | 수치 23건 | FOUND 13 | UNIT_MISMATCH 4 | NOT_FOUND 6 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "절단된 목재가 소비자에게 닿는 산림조합 임산물직매장이 전국 43곳에 이를 만큼 유통망도 갖춰져 있다[4]." claim="43곳" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001063&mn=AR01_05_01_05
+  [NOT_FOUND] field=trivia "2025년 기준 산림기사 자격 취득자는 2만5,884명, 산림산업기사는 7,926명으로 집계된다[1]." claim="2만" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?mn=AR01_07_03&cmsId=FC_003634
+  [NOT_FOUND] field=trivia "2025년 기준 산림기사 자격 취득자는 2만5,884명, 산림산업기사는 7,926명으로 집계된다[1]." claim="5,884명" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?mn=AR01_07_03&cmsId=FC_003634
+  [NOT_FOUND] field=trivia "원목을 절단·가공한 제품이 소비자에게 닿는 산림조합 임산물직매장은 전국 43곳으로, 전남(11곳)·전북(7곳)에 특히 몰려 있다[3]." claim="43곳" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001063&mn=AR01_05_01_05
+  [UNIT_MISMATCH] field=trivia "원목을 절단·가공한 제품이 소비자에게 닿는 산림조합 임산물직매장은 전국 43곳으로, 전남(11곳)·전북(7곳)에 특히 몰려 있다[3]." claim="11곳" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001063&mn=AR01_05_01_05
+  [UNIT_MISMATCH] field=trivia "원목을 절단·가공한 제품이 소비자에게 닿는 산림조합 임산물직매장은 전국 43곳으로, 전남(11곳)·전북(7곳)에 특히 몰려 있다[3]." claim="7곳" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?cmsId=FC_001063&mn=AR01_05_01_05
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "2001년부터 시행된 벌목작업표준안전작업지침은 체인톱을 다루는 절단 작업의 기본 안전수칙을 담고 있다[3]." claim="2001년" source=https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2343
+  [NOT_FOUND] field=detailWlb.socialDetail "산림기사·산림산업기사 자격 취득자가 각각 2만5,884명, 7,926명에 이를 만큼[1] 임업·목재 분야 전문 인력 풀은 꾸준히 쌓이고 있다." claim="2만" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?mn=AR01_07_03&cmsId=FC_003634
+  [NOT_FOUND] field=detailWlb.socialDetail "산림기사·산림산업기사 자격 취득자가 각각 2만5,884명, 7,926명에 이를 만큼[1] 임업·목재 분야 전문 인력 풀은 꾸준히 쌓이고 있다." claim="5,884명" source=https://www.forest.go.kr/kfsweb/kfi/kfs/cms/cmsView.do?mn=AR01_07_03&cmsId=FC_003634
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "2001년부터 시행된 벌목작업표준안전작업지침처럼, 체인톱을 다루는 작업의 안전 인식도 오랜 기간 축적돼 왔다[3]." claim="2001년" source=https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2343
+원목절삭기조작원 | 수치 8건 | FOUND 4 | UNIT_MISMATCH 3 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "목재가공용 둥근톱기계는 노동부고시 제27호(2001년 5월 16일 전부개정) 「목재가공용둥근톱기계의 안전기준에 관한 기술상의 지침」에 따른 안전" claim="2001년" source=https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2360
+  [UNIT_MISMATCH] field=way "목재가공용 둥근톱기계는 노동부고시 제27호(2001년 5월 16일 전부개정) 「목재가공용둥근톱기계의 안전기준에 관한 기술상의 지침」에 따른 안전" claim="16일" source=https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=2360
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "원목절삭기 같은 고정형 목재가공기계(둥근톱·대패 등)는 2013년 3월 1일부터 안전인증 대상 산업기계 14종에 포함돼, 인증을 거치지 않고 사" claim="2013년" source=http://www.snmnews.com/news/articleView.html?idxno=304264
+  [NOT_FOUND] field=detailWlb.socialDetail "성창기업처럼 100년 넘게 목재산업을 이어온 국내 기업들은 합판사업·보드사업 등을 지주회사 체제로 운영하며 원목을 규격에 맞게 절삭하는 공정을 " claim="100년" source=https://www.sce.kr/company.php
+원사투입원 | 수치 18건 | FOUND 15 | UNIT_MISMATCH 3 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "코리아텍스타일 디렉토리에는 휴비스·일신방직·전방 등 방적사 제조기업 58개사가 등재돼 있어, 원사투입원이 다루는 원사 유형과 공급업체를 확인할 " claim="58개사" source=https://www.koreatextile.org/hki/hki3010V.do?checkboxCode=12&kindRemark=%EC%9B%90%EC%82%AC&searchCndSubCode=1210000002
+  [UNIT_MISMATCH] field=way "섬유시험기관인 FITI시험연구원은 1965년 직물시험검사소로 출발해 1969년 독립 법인화됐다[3]." claim="1969년" source=https://www.fiti.re.kr/web/contents/FT0504000000.do
+  [UNIT_MISMATCH] field=trivia "2025년 8월 'Preview in Seoul' 전시회에서는 세창상사(트리코트·벨벳 원단), 태진실업(기능성 환편니트) 등 6개 기업이 국산섬" claim="2025년" source=https://www.ktnews.com/news/articleView.html?idxno=140588
+원산지관리사 | 수치 2건 | FOUND 2 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+원색분해기조작원 | 수치 13건 | FOUND 11 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 1
+  [NOT_FOUND] field=way "1999년부터 국내에 CTP(Computer to Plate) 장비가 도입되면서 필름으로 색을 분해해 제판하던 공정이 컴퓨터에서 곧바로 인쇄판을" claim="1999년" source=https://www.koreadaily.com/2004/10/13/society/generalsociety/316035.html
+원석할석원 | 수치 6건 | FOUND 4 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "원석할석원 같은 절단·가공 작업은 2026년 3월 기준으로 시행 중인 산업안전보건기준에 관한 규칙의 적용을 받아 안전기준이 계속 갱신되는 산업이" claim="2026년" source=https://www.law.go.kr/LSW//lsInfoP.do?lsId=007363&ancYnChk=0
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "2026년 3월 기준 시행 중인 산업안전보건기준에 관한 규칙도 할석기 같은 절단 설비의 방호조치를 규율한다[3]." claim="2026년" source=https://www.law.go.kr/LSW//lsInfoP.do?lsId=007363&ancYnChk=0
+원심분리기조작원 | 수치 3건 | FOUND 2 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "식용유지류를 제조·가공하려면 식품위생법에 따라 관할 보건소에 식품영업등록을 해야 하며 처리기간은 약 3개월이 소요된다.[3]" claim="3개월" source=https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A09006&CappBizCD=13520000026
+원액현장감독자 | 수치 12건 | FOUND 10 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=overviewProspect.main "코오롱인더스트리는 파라아라미드 분야에서 세계 3위, 국내 1위를 차지하며 2024년 증설(Double Up)을 추진하고 있다[3]." claim="2024년" source=https://www.kolonindustries.com/kr/product/ARAMID
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "한국화학섬유협회는 매년 '화섬편람'을 발간해 업계 동향·시장정보·화섬수급·무역동향을 정리하는데, 2024년판은 247쪽 분량으로 국립중앙도서관에" claim="2024년" source=https://dl.nanet.go.kr/detail/MONO12024000027524
+원염용해조조작원 | 수치 0건 | FOUND 0 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+원예작물환경연구원 | 수치 29건 | FOUND 20 | UNIT_MISMATCH 8 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=overviewProspect.main "농림축산식품부에 따르면 2023년 말 기준 전체 시설원예 농가면적 약 5만5000ha 중 스마트온실 도입 면적은 7,716ha로 보급률이 약 1" claim="5만" source=https://www.mafra.go.kr/bbs/home/793/572350/artclView.do
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "공공데이터포털의 시설채소 온실현황 통계는 26행 규모의 국가승인통계로 관리되며 누적 3,399회 내려받아졌다[3]." claim="3,399회" source=https://www.data.go.kr/data/15052489/fileData.do
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "비료관리법은 1983년 3월 1일 법률 제3598호로 시행된 이래 비료 품질을 관리해 왔다[1]." claim="1983년" source=https://law.go.kr/lsInfoP.do?lsiSeq=1882
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "비료관리법은 1983년 3월 1일 법률 제3598호로 시행된 이래 비료 품질을 관리해 왔다[1]." claim="1일" source=https://law.go.kr/lsInfoP.do?lsiSeq=1882
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "농약관리법은 2025년 8월 7일 시행판을 기준으로 병해충 방제에 쓰이는 농약의 관리 체계를 정한다[2]." claim="2025년" source=https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=259911
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "농약관리법은 2025년 8월 7일 시행판을 기준으로 병해충 방제에 쓰이는 농약의 관리 체계를 정한다[2]." claim="7일" source=https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=259911
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "스마트팜 작기별 생산환경 데이터는 2023년 8월 등록돼 2025년 기준 402건의 활용신청을 받았다[4]." claim="2023년" source=https://www.data.go.kr/data/15121324/openapi.do
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "스마트팜 작기별 생산환경 데이터는 2023년 8월 등록돼 2025년 기준 402건의 활용신청을 받았다[4]." claim="2025년" source=https://www.data.go.kr/data/15121324/openapi.do
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "스마트팜 작기별 생산환경 데이터는 2023년 8월 등록돼 2025년 기준 402건의 활용신청을 받았다[4]." claim="402건" source=https://www.data.go.kr/data/15121324/openapi.do
+원예종묘시험원 | 수치 2건 | FOUND 1 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "농촌진흥청은 식량작물·채소·과수·화훼·특용작물 등에서 개발한 우수 품종의 육성년도·용도·재배 유의사항을 정리해 공개하는데, 이런 품종 정보 활용" claim="1,700건" source=https://www.data.go.kr/data/3060745/openapi.do
+원예치료사 | 수치 6건 | FOUND 2 | UNIT_MISMATCH 2 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "원예치료와 유사한 재활전문직인 작업치료사의 경우 국가시험을 거쳐 면허를 받으며, 2025년 기준 누적 면허등록자는 2만 9,072명에 이른다.[" claim="2만" source=https://www.kaot.org/pds/current.jsp
+  [NOT_FOUND] field=way "원예치료와 유사한 재활전문직인 작업치료사의 경우 국가시험을 거쳐 면허를 받으며, 2025년 기준 누적 면허등록자는 2만 9,072명에 이른다.[" claim="9,072명" source=https://www.kaot.org/pds/current.jsp
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "인접 재활전문직인 작업치료사는 2025년 기준 누적 2만 9,072명이 면허 등록돼 있어 재활 서비스 인력 기반이 꾸준히 넓어지고 있다.[3]" claim="2만" source=https://www.kaot.org/pds/current.jsp
+  [NOT_FOUND] field=detailWlb.socialDetail "인접 재활전문직인 작업치료사는 2025년 기준 누적 2만 9,072명이 면허 등록돼 있어 재활 서비스 인력 기반이 꾸준히 넓어지고 있다.[3]" claim="9,072명" source=https://www.kaot.org/pds/current.jsp
+원유품질검사원 | 수치 6건 | FOUND 6 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+원자력계측제어정비원 | 수치 16건 | FOUND 7 | UNIT_MISMATCH 6 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 1
+  [UNIT_MISMATCH] field=trivia "2026년 7월 기준 전국 공급능력은 10만9,635MW, 공급예비율은 40.91%로 집계된다[1]." claim="10만" source=https://new.kpx.or.kr/powerinfoSubmain.es?mid=a10606030000
+  [NOT_FOUND] field=trivia "2026년 7월 기준 전국 공급능력은 10만9,635MW, 공급예비율은 40.91%로 집계된다[1]." claim="40.91%" source=https://new.kpx.or.kr/powerinfoSubmain.es?mid=a10606030000
+  [UNIT_MISMATCH] field=trivia "원전 기자재를 만드는 두산에너빌리티는 2025년 12월 미국 엑스에너지와 SMR 핵심소재 16대 예약계약을 맺기도 했다[2]." claim="2025년" source=https://www.doosanenerbility.com/kr
+  [UNIT_MISMATCH] field=trivia "고리2호기는 원자로냉각재 온도 305℃, 압력 154bar 등 실시간 계측값을 공개하며 정상범위 안에서 운전 중임을 보여준다[3]." claim="305℃" source=https://npp.khnp.co.kr/ON004004002002001
+  [NOT_FOUND] field=overviewProspect.main "원자력안전기술원은 법령·기술기준·안전연구·국제협력·전문인력양성을 4대 핵심 체계로 삼아 계측제어를 포함한 원전 안전 규제 인프라를 강화하고 있다" claim="4대" source=https://www.kins.re.kr/safety
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "원전은 정기적으로 계획예방정비에 들어가는데, 한울1호기는 약 59.9일에 걸친 27차 예방정비에서 원자로용기 내부 육안검사와 저압터빈·발전기 분" claim="59.9일" source=https://npp.khnp.co.kr/ON004004002002004
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "월성2호기도 2025년 9월부터 2026년 11월까지 제23차 계획예방정비를 이어가고 있어, 정비 주기가 원전마다 다르게 관리됨을 보여준다[3]" claim="2025년" source=https://npp.khnp.co.kr/ON004004002002003
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "월성2호기도 2025년 9월부터 2026년 11월까지 제23차 계획예방정비를 이어가고 있어, 정비 주기가 원전마다 다르게 관리됨을 보여준다[3]" claim="2026년" source=https://npp.khnp.co.kr/ON004004002002003
+원자력기술자 | 수치 7건 | FOUND 5 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "한국원자력학회는 1969년 창간한 학술지 NET(원자력공학과 기술, p-ISSN 1738-5733)를 2026년 Volume 58까지 발행해 왔" claim="1969년" source=https://www.kns.org/pages/publishing/net
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "한국원자력학회는 1969년 창간한 학술지 NET(원자력공학과 기술, p-ISSN 1738-5733)를 2026년 Volume 58까지 발행해 왔" claim="2026년" source=https://www.kns.org/pages/publishing/net
+---
+Summary | 직업 25건(에러 0) | 수치 346건 | FOUND 236 | UNIT_MISMATCH 56 | NOT_FOUND 39 | UNFETCHABLE 10 | NO_FOOTNOTE 5

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r62-b2",
+      "group_key": "cycle-R62-2026-06-22",
+      "agent_slug": "hangyeol",
+      "label": "R62 B2: 반도체소자품질공정기술자~반도체식각장비공정연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

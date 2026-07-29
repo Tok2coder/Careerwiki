@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r67-b2",
+      "group_key": "cycle-R67-2026-07-01",
+      "agent_slug": "hangyeol",
+      "label": "R67 B2: 발효유배양액균질원~방모반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

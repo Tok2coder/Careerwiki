@@ -1,0 +1,13 @@
+{
+  "ts": "2026-05-24T12:52:09.100Z",
+  "total_active": null,
+  "master_applied": "510",
+  "master_not_applied": "6,429",
+  "master_rate_pct": null,
+  "alert_wayIsArray": null,
+  "alert_imageUrlBad": null,
+  "alert_wayTrunc": null,
+  "alert_srcOrderBad": null,
+  "alert_ytLow": null,
+  "userVerified": null
+}

@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r61-b2",
+      "group_key": "cycle-R61-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R61 B2: 반도체금속막증착장비부분품연구원~반도체레이아웃설계기술자",
+      "model": "sonnet",
+      "status": "done",
+      "detail": "5/5 PASS: 반도체금속막증착장비부분품연구원·반도체금속재료개발연구원·반도체금속재료공정연구원·반도체디지털회로설계연구원·반도체레이아웃설계기술자 — 전건 audit CLEAN, 전건 [job-data-master] 마커 OK"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r105-b3",
+      "group_key": "cycle-R105-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R105 B3: 시멘트품질시험원~시사다큐프로그램프로듀서",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

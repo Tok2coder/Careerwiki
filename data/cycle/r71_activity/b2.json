@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r71-b2",
+      "group_key": "cycle-R71-2026-07-09",
+      "agent_slug": "hangyeol",
+      "label": "R71 B2: 밴드기계조작원~밸브연삭원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

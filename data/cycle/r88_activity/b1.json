@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r88-b1",
+      "group_key": "cycle-R88-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R88 B1: 생태계복원관리연구원~생활체육연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

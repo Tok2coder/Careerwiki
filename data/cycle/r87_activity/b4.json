@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r87-b4",
+      "group_key": "cycle-R87-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R87 B4: 생선절단원~생육정형원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

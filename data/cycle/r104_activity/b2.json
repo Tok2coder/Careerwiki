@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r104-b2",
+      "group_key": "cycle-R104-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R104 B2: 슬라이드제작원~슬리터조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

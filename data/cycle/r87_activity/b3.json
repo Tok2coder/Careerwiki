@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r87-b3",
+      "group_key": "cycle-R87-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R87 B3: 생산관리기술자~생석회세정탈수원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

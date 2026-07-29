@@ -1,0 +1,176 @@
+
+ ⛅️ wrangler 4.57.0 (update available 4.94.0)
+─────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database careerwiki-kr (1dbc57d6-0ce3-4a7e-8d2e-3159b0df1315):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+🚣 Executed 1 command in 123.90ms
+[
+  {
+    "results": [
+      {
+        "slug": "감시용카메라조립원",
+        "latest_rev": 15644,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance: summary·way·trivi"
+      },
+      {
+        "slug": "갑피재단사",
+        "latest_rev": 15646,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — way·trivia·overviewProspect.main"
+      },
+      {
+        "slug": "감시용카메라조정원",
+        "latest_rev": 15648,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance: summary·way·trivi"
+      },
+      {
+        "slug": "갑피재봉사",
+        "latest_rev": 15650,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — way·trivia·overviewProspect.main"
+      },
+      {
+        "slug": "간편결제사업기획운영자",
+        "latest_rev": 15652,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance: summary·way·overv"
+      },
+      {
+        "slug": "각초조화원",
+        "latest_rev": 15654,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — 각초조화원 풀 사이클: way·prospect·abilit"
+      },
+      {
+        "slug": "감염관리전문간호사",
+        "latest_rev": 15656,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance: summary·way·trivi"
+      },
+      {
+        "slug": "강관교정원",
+        "latest_rev": 15660,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — way·trivia·overviewProspect.main"
+      },
+      {
+        "slug": "강관면취기조작원",
+        "latest_rev": 15662,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — way·trivia·overviewProspect.main"
+      },
+      {
+        "slug": "각초팽화기조작원",
+        "latest_rev": 15664,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — 각초팽화기조작원 풀 사이클: way·prospect·abi"
+      },
+      {
+        "slug": "강관압출기조작원",
+        "latest_rev": 15668,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — way·trivia·overviewProspect.main"
+      },
+      {
+        "slug": "간호보조기술학원강사",
+        "latest_rev": 15669,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance topup: trivia +2 d"
+      },
+      {
+        "slug": "갑문조정판조작원",
+        "latest_rev": 15672,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance: summary·way·trivi"
+      },
+      {
+        "slug": "가향기조작원",
+        "latest_rev": 15674,
+        "change_type": "edit",
+        "sum": "[job-data-master] mode=force-enhance pool-limited (Rule 17 변"
+      },
+      {
+        "slug": "갑판원",
+        "latest_rev": 15678,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance: summary·way·trivi"
+      },
+      {
+        "slug": "감사관리자",
+        "latest_rev": 15685,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance topup: trivia +2 d"
+      },
+      {
+        "slug": "가호반장",
+        "latest_rev": 15687,
+        "change_type": "edit",
+        "sum": "[job-data-master] mode=force-enhance pool-limited (Rule 17 변"
+      },
+      {
+        "slug": "간접광고마케터",
+        "latest_rev": 15691,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — 간접광고마케터 풀 사이클: way·prospect·abil"
+      },
+      {
+        "slug": "가호원",
+        "latest_rev": 15693,
+        "change_type": "edit",
+        "sum": "[job-data-master] mode=force-enhance pool-limited (Rule 17 변"
+      },
+      {
+        "slug": "감시용카메라수리원",
+        "latest_rev": 15699,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance: summary·way·overv"
+      },
+      {
+        "slug": "각끌기조작원",
+        "latest_rev": 15701,
+        "change_type": "edit",
+        "sum": "[job-data-master] mode=force-enhance pool-limited (Rule 17 변"
+      },
+      {
+        "slug": "각초냉각기조작원",
+        "latest_rev": 15703,
+        "change_type": "edit",
+        "sum": "[job-data-master] mode=force-enhance pool-limited (Rule 17 변"
+      },
+      {
+        "slug": "감시용카메라제조현장감독자",
+        "latest_rev": 15709,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — force-enhance topup: trivia +2 d"
+      },
+      {
+        "slug": "간판-디자이너",
+        "latest_rev": 15723,
+        "change_type": "edit",
+        "sum": "[job-data-master] enhance — 간판 디자이너 풀 사이클: way·prospect·abil"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 123.903
+      },
+      "duration": 123.903,
+      "changes": 0,
+      "last_row_id": 15737,
+      "changed_db": false,
+      "size_after": 972861440,
+      "rows_read": 18595,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

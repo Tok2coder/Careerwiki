@@ -1,0 +1,5 @@
+HAS technKnow field: true
+HAS technKnow source: true
+source keys: way | trivia | overviewProspect.main | overviewAbilities.technKnow | detailWlb.wlbDetail | detailWlb.socialDetail | detailReady.curriculum | detailReady.recruit | detailReady.training
+technKnow body: 관리사무소장은 공동주택의 운영·유지·보수·교체 업무와 함께 관리비·장기수
+technKnow srcs len: 3

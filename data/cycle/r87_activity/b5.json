@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r87-b5",
+      "group_key": "cycle-R87-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R87 B5: 생지가열로조작원~생체역학연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

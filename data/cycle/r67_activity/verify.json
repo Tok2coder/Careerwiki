@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r67-verify",
+      "group_key": "cycle-R67-2026-07-01",
+      "agent_slug": "hangyeol",
+      "label": "R67 검증: 25직업 전수 실측",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

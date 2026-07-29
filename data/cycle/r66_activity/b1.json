@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r66-b1",
+      "group_key": "cycle-R66-2026-06-30",
+      "agent_slug": "hangyeol",
+      "label": "R66 B1: 발전기계공무기술원~발전설비기계정비원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

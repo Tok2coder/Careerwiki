@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r88-b4",
+      "group_key": "cycle-R88-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R88 B4: 석유화학공정관리자~석유화학물류지원기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

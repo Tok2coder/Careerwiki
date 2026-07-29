@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r110-b4",
+      "group_key": "cycle-R110-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R110 B4: 실크리어러수리원~아로마제품판매원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

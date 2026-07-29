@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r106-b2",
+      "group_key": "cycle-R106-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R106 B2: 시추보조원~시티비전유지보수원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

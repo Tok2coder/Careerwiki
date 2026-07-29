@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r86-b5",
+      "group_key": "cycle-R86-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R86 B5: 색상개발원~샌드밀연화원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

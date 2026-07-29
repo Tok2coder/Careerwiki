@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r60-b3",
+      "group_key": "cycle-R60-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R60 B3: 박막트랜지스터액정주입원~박물관교육사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

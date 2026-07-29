@@ -1,0 +1,40 @@
+SUMMARY WRITTEN rows=2
+
+### 감정평가사  id=1765283280870166  active=1
+top-keys: name, heroCategory, heroTitle, heroIntro, heroTags, overviewWork, overviewProspect, overviewAbilities, overviewAptitude, overviewSalary, detailEducation, detailReady, detailClassification, detailWlb, detailIndicators, charKnowledge, charStatus, charEnvironment, charPerformance, charInterest, charValues, summary, duties, way, salary, satisfaction, prospect, abilities, knowledge, environment, personality, interests, workList, performList, eduLevel, skillYear, relatedJobs, relatedMajors, relatedCertificates, relatedOrganizations, sidebarJobs, sidebarMajors, sidebarOrgs, sidebarCerts, classifications, kecoCodes, educationDistribution, majorDistribution, abilityList, aptitudeList, interestList, jobReadyList, forecastList, indicatorChart, relVideoList, relJinsolList, researchList, doWork, workStrong, workPlace, dJobICdNm, similarNm, certLic, wlb, social, tagList, eduChart, majorChart, jobSumProspect, ablKnwEnv, chrIntrVals, actv, work, abilitiesDetail, knowledgeDetail, educationDetail, majorDetail, careernetOnly, goyong24Only, sources, sourceIds, id, trivia, youtubeLinks, image_url, image_generation_meta, _careerTreeNote, _sources
+  summary: len=442 :: 감정평가사는 문화재 감정, 부동산 감정 등의 지식을 바탕으로 공장, 자동차, 항공기 등과 같은 동산과 토지, 건물, 아파트, 임야와 같은 부동산, 무형 자산 등의 경제적 가치를 평가하는 일을 한다.
+
+토지 관련 세금
+  way: len=194 :: 감정평가사가 되려면 국토교통부 주관·한국산업인력공단 시행의 감정평가사시험(제1차·제2차)에 합격해야 하며, 학력·경력 제한은 없다.[1] 자격 취득 후 1년 이상의 실무수습(1차 면제자는 4주)을 마치고 국토교통부에
+  trivia: len=149 :: 감정평가사 1차 시험 지원자는 2023년 6484명으로 관련 시험 도입 이후 역대 최대를 기록했다.[1] 한국감정평가사협회는 1989년 설립된 이후 부동산·광업·산림·기계기구·무형자산 등 다양한 자산에 대한 감정평가
+  overviewWork: { main=len447, workStrong=len6, workPlace=len4, physicalAct=object, workEnv=object }
+  overviewProspect: { main=len219, forecastList=[arr1], jobProspect=len522, jobSumProspect=[arr5] }
+  overviewAbilities: { abilityList=[arr1], technKnow=len623, eduLevel=len22, skillYear=len13 }
+  overviewSalary: { sal=len46, source=len10 }
+  detailWlb: { wlb=len5, social=len4, wlbDetail=len122, socialDetail=len98 }
+  detailReady: { recruit=[arr3], certificate=[arr1], training=[arr3], curriculum=[arr3], researchList=[arr2] }
+  _sources: overviewWork.main(3), overviewProspect.main(2), detailWlb.wlbDetail(1), detailWlb.socialDetail(1), trivia(2), overviewAbilities.technKnow(4), way(3), detailReady.curriculum(3), detailReady.recruit(3), detailReady.training(3)
+  youtubeLinks: [arr2]
+  heroTags: [arr5]
+  sidebarCerts: [arr2]
+  sidebarOrgs: [arr4]
+  sidebarMajors: [arr5]
+  sidebarJobs: [arr7]
+
+### 주택관리사  id=1765283375948488  active=1
+top-keys: name, heroCategory, heroTitle, heroIntro, heroTags, overviewWork, overviewProspect, overviewAbilities, overviewAptitude, overviewSalary, detailEducation, detailReady, detailClassification, detailWlb, detailIndicators, charKnowledge, charPerformance, summary, duties, salary, satisfaction, prospect, abilities, personality, interests, workList, performList, relatedJobs, relatedCertificates, relatedOrganizations, sidebarJobs, sidebarOrgs, sidebarCerts, classifications, abilityList, aptitudeList, interestList, jobReadyList, forecastList, indicatorChart, wlb, social, tagList, eduChart, majorChart, work, abilitiesDetail, knowledgeDetail, educationDetail, majorDetail, careernetOnly, goyong24Only, sources, sourceIds, id, image_url, image_generation_meta
+  summary: len=269 :: 주택관리사는 아파트와 같은 대규모 공동주택의 각종 시설 및 환경을 유지 관리하며, 공동시설의 유지 및 보수와 관련된 각종 회계 업무를 담당한다.\n\n공동주택의 공동시설인 노인정, 놀이터, 주차장 등을 관리하고 유지
+  way: len=0 :: 
+  trivia: len=0 :: 
+  overviewWork: { main=len269, workStrong=object, workPlace=object, physicalAct=object, workEnv=object }
+  overviewProspect: { main=[arr1], forecastList=[arr1], jobProspect=object, jobSumProspect=object }
+  overviewAbilities: { abilityList=[arr1], technKnow=object, eduLevel=object, skillYear=object }
+  overviewSalary: { wage=len5, wageSource=len119, source=len9 }
+  detailWlb: { wlb=len2, social=len2 }
+  detailReady: { recruit=[arr1], certificate=[arr1], training=[arr1], curriculum=[arr1], researchList=[arr0] }
+  _sources: ABSENT
+  heroTags: [arr4]
+  sidebarCerts: [arr1]
+  sidebarOrgs: [arr1]
+  sidebarJobs: [arr4]
+DONE rc=0 summarySize=4807

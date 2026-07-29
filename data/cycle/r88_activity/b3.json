@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r88-b3",
+      "group_key": "cycle-R88-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R88 B3: 석부원~석유화학고객지원기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

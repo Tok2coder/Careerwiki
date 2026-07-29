@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r61-b1",
+      "group_key": "cycle-R61-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R61 B1: 반도체광학재료공정연구원~반도체금속막증착장비기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r62-b4",
+      "group_key": "cycle-R62-2026-06-22",
+      "agent_slug": "hangyeol",
+      "label": "R62 B4: 반도체연삭공정연구원~반도체웨이퍼재료개발연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

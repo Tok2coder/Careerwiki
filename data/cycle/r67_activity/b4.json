@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r67-b4",
+      "group_key": "cycle-R67-2026-07-01",
+      "agent_slug": "hangyeol",
+      "label": "R67 B4: 방사방적관리자~방사선안전관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r109-b1",
+      "group_key": "cycle-R109-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R109 B1: 신발패턴사~신탁자산관리운용원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

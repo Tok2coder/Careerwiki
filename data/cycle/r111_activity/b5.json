@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r111-b5",
+      "group_key": "cycle-R111-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R111 B5: 아세틸렌가스제조원~아이스크림제조반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

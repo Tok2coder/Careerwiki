@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r59-b1",
+      "group_key": "cycle-R59-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R59 B1: 바이오의약품완충액제조원~바이오의약품품질보증기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

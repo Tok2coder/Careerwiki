@@ -1,0 +1,5 @@
+음향감독 | id=1765284150366967 | totalE=16 | distinct=16
+인공지능서비스기획자 | id=1765284098678334 | totalE=17 | distinct=17
+일반공무원 | id=1765283358210803 | totalE=16 | distinct=10
+임상-데이터-매니저 | id=1765283725150877 | totalE=18 | distinct=12
+임상시험코디네이터 | id=1765283658228622 | totalE=16 | distinct=8

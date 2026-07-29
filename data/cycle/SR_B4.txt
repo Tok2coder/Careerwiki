@@ -1,0 +1,5 @@
+금융상품개발자 | id=1765283426646339 | totalE=18 | distinct=12
+기상연구원 | id=1765283293608896 | totalE=17 | distinct=17
+기상캐스터 | id=1765284155848546 | totalE=15 | distinct=14
+나무의사 | id=1765283654596147 | totalE=17 | distinct=10
+내과전문의사 | id=1765283991781488 | totalE=18 | distinct=12

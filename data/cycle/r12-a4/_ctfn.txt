@@ -1,0 +1,15 @@
+analyzeCareerTreeNote source:
+function analyzeCareerTreeNote(note) {
+  if (!note || typeof note !== 'string') {
+    return { pass: false, candidateCount: 0, categoryCount: 0 };
+  }
+  const candidates = note.match(CANDIDATE_PAT) || [];
+  const candidateCount = candidates.length;
+
+  const covered = CAREER_TREE_SEARCH_CATEGORIES.filter(c => c.pattern.test(note));
+  const categoryCount = covered.length;
+  const missingCategories = CAREER_TREE_SEARCH_CATEGORIES.filter(c => !c.pattern.test(note)).map(c => c.name);
+
+  const pass = candidateCount >= 5 || categoryCount >= 3;
+  return { pass, candidateCount, categoryCount, missingCategories };
+}

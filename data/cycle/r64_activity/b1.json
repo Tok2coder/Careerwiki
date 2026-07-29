@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r64-b1",
+      "group_key": "cycle-R64-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R64 B1: 반도체칩본딩장비공정연구원~반도체칩절단공정연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

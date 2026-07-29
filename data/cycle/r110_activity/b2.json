@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r110-b2",
+      "group_key": "cycle-R110-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R110 B2: 실린더주조원~아동복지지도원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

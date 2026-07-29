@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r87-b2",
+      "group_key": "cycle-R87-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R87 B2: 생물화학공정연구원~생산관리-컨설턴트",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

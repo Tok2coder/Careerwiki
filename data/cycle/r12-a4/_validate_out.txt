@@ -1,0 +1,12 @@
+
+=== 검증 결과: 주택관리사 ===
+
+❌ ERRORS (1개 — API 호출 차단):
+  [careerTree-증거없음] careerTree를 null로 제출할 때는 _careerTreeNote 필드 필수. 형식: "직업명 관련 한국인 공인 탐색: 인물A(이유), 인물B(이유). 적합 인물 없음." 탐색 없이 null 저장 금지.
+
+⚠️ WARNINGS (1개 — 수동 확인 필요):
+  [필드] detailReady가 없음
+
+❌ FAIL — 에러 수정 후 재검증 필요
+
+exit=1

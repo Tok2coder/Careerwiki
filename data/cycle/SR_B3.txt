@@ -1,0 +1,5 @@
+관세사 | id=1765283287536467 | totalE=16 | distinct=12
+광고모델 | id=1765284152811209 | totalE=15 | distinct=8
+교육학연구원 | id=1765283289215513 | totalE=18 | distinct=6
+국가산업보안전문가 | id=1765284441906309 | totalE=18 | distinct=10
+금융관리자 | id=1765283407952843 | totalE=16 | distinct=9

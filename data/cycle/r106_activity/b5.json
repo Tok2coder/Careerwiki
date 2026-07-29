@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r106-b5",
+      "group_key": "cycle-R106-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R106 B5: 식생활지도사~식용유추출반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

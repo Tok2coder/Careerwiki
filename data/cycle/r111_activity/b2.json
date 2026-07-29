@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r111-b2",
+      "group_key": "cycle-R111-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R111 B2: 아스팔트살포기조종원~아이스크림충전원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r58-b2",
+      "group_key": "cycle-R58-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R58 B2: 바이오물류운영원~바이오세라믹재료시험원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

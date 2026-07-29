@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r66-b5",
+      "group_key": "cycle-R66-2026-06-30",
+      "agent_slug": "hangyeol",
+      "label": "R66 B5: 발전제어공무기술원~발전효율관리원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

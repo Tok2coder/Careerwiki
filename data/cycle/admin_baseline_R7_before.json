@@ -1,0 +1,14 @@
+{
+  "ts": "2026-05-24T12:52:54.052Z",
+  "master_applied": "510",
+  "total_active": "6,939",
+  "master_rate_pct": "7.3",
+  "master_not_applied": "6429",
+  "alert": {
+    "wayIsArray": "0",
+    "imageUrlBad": "0",
+    "wayTrunc": "0",
+    "srcOrderBad": "0",
+    "ytLow": "6,373"
+  }
+}

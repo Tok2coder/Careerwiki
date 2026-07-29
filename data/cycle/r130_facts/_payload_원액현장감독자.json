@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "way": "원액현장감독자는 화학섬유 공장에서 원액(방사원액) 제조 작업원으로 실무 경력을 쌓은 뒤 승진하거나, 화학·섬유공학 관련 학과 졸업 후 현장에 배치돼 감독자로 채용되는 경로가 일반적이다. 원액을 다루는 만큼 화공기사(고용노동부 소관, 한국산업인력공단 시행) 자격을 취득하면 채용과 승진에 유리하다[1]. 위험물산업기사(소방청 소관)도 관련 자격으로 꼽힌다[2]. 관리자급으로 올라서면 위험물기능장 자격을 갖추기도 한다[3]. 화학물질관리법에 따라 유해화학물질 취급시설은 설치·정기·수시검사와 안전진단을 받아야 하므로, 현장감독자는 이런 검사·진단 절차도 숙지해야 한다[4].",
+    "trivia": "화학섬유는 석유·석탄·천연가스 등을 화학적으로 합성해 만든 고분자를 방사구를 통해 실 형태로 뽑아내는 방사(紡絲) 공정을 거쳐 만들어지며, 이때 분자 배열이 섬유의 결정성과 강도를 좌우한다[1]. 효성티앤씨는 기존 중합물의 용매 65%·고형분 35% 구성비를 조정해 고형분 함량을 높이고 용매량을 줄인 신규 중합물을 약 1년 6개월 만에 개발해, 물성은 유지하면서 방사 속도를 높이는 데 성공했다[2]. 전북대 습식공정연구실은 용융방사로 만들 수 없는 고성능 소재를 위해 폴리아크릴로니트릴(PAN) 중합물을 용액방사해 탄소섬유용 프리커서 섬유를 만드는 기술을 연구한다[3].",
+    "overviewProspect": {
+      "main": "효성티앤씨의 스판덱스 브랜드 '크레오라'는 10년 연속 세계시장 점유율 1위를 지키고 있으며, 2026년까지 점유율 34% 달성을 목표로 내걸었다[1]. 이 회사는 옥수수 유래 원료로 만든 '크레오라 바이오베이스드' 스판덱스를 세계 최초로 상용화해 스위스 SGS의 에코 프로덕트 마크를 획득했고, 기존 제품 대비 물 사용량 39%·이산화탄소 배출량 23%를 줄일 수 있다고 밝혔다[2]. 코오롱인더스트리는 파라아라미드 분야에서 세계 3위, 국내 1위를 차지하며 2024년 증설(Double Up)을 추진하고 있다[3]. 이 회사의 타이어코드 사업은 미쉐린·브리지스톤·굿이어 등 세계 상위 20개 타이어 업체에 공급하는 글로벌 2위 제조사 지위를 갖고 있다[4]."
+    },
+    "overviewAbilities": {
+      "technKnow": "원액현장감독자는 화학물질관리법 체계에 따라 유해화학물질 취급시설의 검사·안전진단 절차를 이해해야 한다[1]. 화학물질관리법 시행령은 이 법의 세부 시행 사항을 정하고 있다[2]. 방사 공정은 원액과 응고 과정에 따라 습식방사·건식방사·용융방사·건습식방사로 나뉘므로, 원액현장감독자는 자사 공정이 어느 방식에 해당하는지, 그에 따라 원액 농도 관리가 어떻게 달라지는지 알아야 한다[3]."
+    },
+    "detailWlb": {
+      "wlbDetail": "원액현장감독자는 실내에서 작업원의 안전교육을 실시하고 원액의 규정 농도를 점검하는 등 화학물질을 다루는 현장을 관리한다. 물질안전보건자료시스템(KMS)은 20,568종의 화학물질에 대한 물질안전보건자료(MSDS)를 제공하며, 산업안전보건법 제110·111조에 근거해 유통 화학물질의 MSDS 정보를 관리한다[1]. 유해화학물질 취급시설은 환경부고시에 따라 설치 후 정기·수시검사와 안전진단을 받아야 한다[2].",
+      "socialDetail": "원액현장감독자가 다루는 화학섬유 산업은 국내 섬유원료·섬유사 수출입 통계에서 별도 품목군(MTI 41 섬유원료)으로 집계되는 산업통상자원부 관리 대상이다[1]. 한국화학섬유협회는 매년 '화섬편람'을 발간해 업계 동향·시장정보·화섬수급·무역동향을 정리하는데, 2024년판은 247쪽 분량으로 국립중앙도서관에도 소장돼 있다[2]. 경북대 섬유시스템공학과는 섬유고분자부터 화학조제 기술, 소재 디자인까지 아우르는 학과로, 이 산업은 학계와도 연결돼 있다[3]. 섬유공업은 노동집약적이며 에너지 다소비형 산업으로 분류되는데, 화학섬유 원액 제조 공정 역시 이런 산업 특성의 연장선에 있다[4]."
+    },
+    "youtubeLinks": [],
+    "_youtubeSearchNote": "KEIS '원액현장감독자' 0개, '방사원액 화학섬유 공정' 0개, '화학섬유 공장 현직자' 0개, '스판덱스 방사 공정' 0개, '화공기사 현장 관리자' 0개, '화학섬유 원액 감독' 0개 (2026-07-29 확인, 한국어 영상 부재)"
+  },
+  "sources": {
+    "way": [
+      {"id": 1, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=1110", "text": "Q-net — 화공기사 국가자격 종목별 상세정보"},
+      {"id": 2, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=2121", "text": "Q-net — 위험물산업기사 국가자격 종목별 상세정보"},
+      {"id": 3, "url": "https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=3360", "text": "Q-net — 위험물기능장 국가자격 종목별 상세정보"},
+      {"id": 4, "url": "https://law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000247630&chrClsCd=010202&urlMode=admRulLsInfoP", "text": "국가법령정보센터 — 유해화학물질 취급시설 검사 및 안전진단 규정"}
+    ],
+    "trivia": [
+      {"id": 5, "url": "https://ko.wikipedia.org/wiki/%ED%99%94%ED%95%99%EC%84%AC%EC%9C%A0", "text": "위키백과 — 화학섬유(합성섬유)"},
+      {"id": 6, "url": "https://blog.hyosung.com/5126", "text": "효성 블로그 — 스판덱스 방사 중합물 개발"},
+      {"id": 7, "url": "https://org.jbnu.ac.kr/org/7104/subview.do", "text": "전북대학교 — 유기소재섬유공학과 습식공정연구실"}
+    ],
+    "overviewProspect.main": [
+      {"id": 8, "url": "https://www.hyosung.com/kr/newsroom/view/15369", "text": "효성 뉴스룸 — 크레오라 스판덱스 세계 1위"},
+      {"id": 9, "url": "https://www.hyosung.com/kr/newsroom/view/11861", "text": "효성 뉴스룸 — 크레오라 바이오베이스드 스판덱스"},
+      {"id": 10, "url": "https://www.kolonindustries.com/kr/product/ARAMID", "text": "코오롱인더스트리 — 파라아라미드 제품"},
+      {"id": 11, "url": "https://www.kolonindustries.com/kr/product/TIRECORD", "text": "코오롱인더스트리 — 타이어코드 제품"}
+    ],
+    "detailWlb.wlbDetail": [
+      {"id": 12, "url": "https://msds.kosha.or.kr/MSDSInfo/kcic/msdssearchMsds.do", "text": "안전보건공단 — 물질안전보건자료(MSDS) 검색시스템"},
+      {"id": 13, "url": "https://law.go.kr/LSW/admRulInfoP.do?admRulSeq=2100000247630&chrClsCd=010202&urlMode=admRulLsInfoP", "text": "국가법령정보센터 — 유해화학물질 취급시설 검사 및 안전진단 규정"}
+    ],
+    "detailWlb.socialDetail": [
+      {"id": 14, "url": "https://www.data.go.kr/data/15051124/fileData.do", "text": "공공데이터포털 — 섬유산업 수출입 현황"},
+      {"id": 15, "url": "https://dl.nanet.go.kr/detail/MONO12024000027524", "text": "국립중앙도서관 — 화섬편람 2024"},
+      {"id": 16, "url": "https://home.knu.ac.kr/HOME/textileng/index.htm", "text": "경북대학교 — 섬유시스템공학과 홈페이지"},
+      {"id": 17, "url": "https://encykorea.aks.ac.kr/Article/E0029136", "text": "한국민족문화대백과사전 — 섬유공업"}
+    ],
+    "overviewAbilities.technKnow": [
+      {"id": 18, "url": "https://www.law.go.kr/lsInfoP.do?lsiSeq=276815", "text": "국가법령정보센터 — 화학물질관리법"},
+      {"id": 19, "url": "https://law.go.kr/%EB%B2%95%EB%A0%B9/%ED%99%94%ED%95%99%EB%AC%BC%EC%A7%88%EA%B4%80%EB%A6%AC%EB%B2%95%EC%8B%9C%ED%96%89%EB%A0%B9", "text": "국가법령정보센터 — 화학물질관리법 시행령"},
+      {"id": 20, "url": "https://ko.wikipedia.org/wiki/%ED%99%94%ED%95%99%EC%84%AC%EC%9C%A0", "text": "위키백과 — 화학섬유(합성섬유)"}
+    ]
+  },
+  "changeSummary": "[job-data-master] enhance — way·trivia·overviewProspect.main·overviewAbilities.technKnow·detailWlb.wlbDetail·detailWlb.socialDetail·youtubeLinks (신규 19 distinct URL, 명칭 중의성 정정: 음료 원액 아닌 화학섬유 방사원액). summary/overviewWork.main/abilityList는 CareerNet 원본 보존, sidebarCerts/detailReady/sidebarOrgs/sidebarMajors/careerTree는 범위 밖 후속 사이클",
+  "_jobSlug": "원액현장감독자"
+}

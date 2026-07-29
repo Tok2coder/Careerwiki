@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r110-b3",
+      "group_key": "cycle-R110-2026-07-20",
+      "agent_slug": "hangyeol",
+      "label": "R110 B3: 실린더충전원~아동전문간호사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r64-b5",
+      "group_key": "cycle-R64-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R64 B5: 반도체화학약품재료공정연구원~반도체화학적기계적연마장비기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

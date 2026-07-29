@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r67-b3",
+      "group_key": "cycle-R67-2026-07-01",
+      "agent_slug": "hangyeol",
+      "label": "R67 B3: 방문안내원~방사반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

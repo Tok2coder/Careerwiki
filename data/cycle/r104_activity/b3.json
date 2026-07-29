@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r104-b3",
+      "group_key": "cycle-R104-2026-07-18",
+      "agent_slug": "hangyeol",
+      "label": "R104 B3: 승강기검사원~승용완구조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

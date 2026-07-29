@@ -1,0 +1,5 @@
+창업기획자 | id=1765284072600313 | totalE=18 | distinct=10
+철도여행상품개발원 | id=1765284103328910 | totalE=17 | distinct=6
+총무사무원 | id=1765283418119932 | totalE=18 | distinct=15
+총무인사관리자 | id=1765283545838587 | totalE=17 | distinct=10
+촬영감독 | id=1765284151748873 | totalE=16 | distinct=10

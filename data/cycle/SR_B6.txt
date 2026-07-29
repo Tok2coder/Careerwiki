@@ -1,0 +1,5 @@
+방사선사 | id=1765283311344239 | totalE=18 | distinct=11
+방송기자 | id=1765283468460636 | totalE=16 | distinct=10
+방송아나운서 | id=1765284156601966 | totalE=17 | distinct=10
+배우 | id=1765284153577673 | totalE=16 | distinct=7
+법무사-및-집행관 | id=1765283459587278 | totalE=16 | distinct=10

@@ -1,0 +1,9 @@
+
+=== 검증 결과: 주택관리사 ===
+
+⚠️ WARNINGS (1개 — 수동 확인 필요):
+  [필드] detailReady가 없음
+
+⚠️ PASS WITH WARNINGS — API 호출 가능하지만 경고 확인 권장
+
+rc=0

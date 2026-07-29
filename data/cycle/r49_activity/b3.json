@@ -1,0 +1,67 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r49-b3",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R49 B3: 매니플레이트운전원~매립가스포집분석원",
+      "model": "sonnet",
+      "status": "running"
+    },
+    {
+      "source": "job",
+      "external_id": "r49-b3-job1",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "매니플레이트운전원 enhance DONE rev=19075",
+      "model": "sonnet",
+      "status": "done"
+    },
+    {
+      "source": "job",
+      "external_id": "r49-b3-job2",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "매듭기수리원 enhance DONE rev=19095",
+      "model": "sonnet",
+      "status": "done"
+    },
+    {
+      "source": "job",
+      "external_id": "r49-b3-job3",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "매립가스발전장치조작원 enhance DONE rev=19101",
+      "model": "sonnet",
+      "status": "done"
+    },
+    {
+      "source": "job",
+      "external_id": "r49-b3-job4",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "매립가스정제원 enhance DONE rev=19106",
+      "model": "sonnet",
+      "status": "done"
+    },
+    {
+      "source": "job",
+      "external_id": "r49-b3-job5",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "매립가스포집분석원 enhance DONE rev=19109",
+      "model": "sonnet",
+      "status": "done"
+    },
+    {
+      "source": "batch",
+      "external_id": "r49-b3-done",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R49 B3 배치 완료: 5/5직업 enhance DONE",
+      "model": "sonnet",
+      "status": "done"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r49-b1",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R49 B1: 만화영화연출가~말관리사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

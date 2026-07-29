@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r58-b4",
+      "group_key": "cycle-R58-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R58 B4: 바이오에너지연구원~바이오의약품분리정제원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

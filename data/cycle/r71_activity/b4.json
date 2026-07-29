@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r71-b4",
+      "group_key": "cycle-R71-2026-07-09",
+      "agent_slug": "hangyeol",
+      "label": "R71 B4: 버섯유통원~버스배차원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

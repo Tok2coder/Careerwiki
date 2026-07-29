@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r107-b3",
+      "group_key": "cycle-R107-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R107 B3: 식품미생물응용연구원~식품영양연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

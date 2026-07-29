@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r69-b1",
+      "group_key": "cycle-R69-2026-07-04",
+      "agent_slug": "hangyeol",
+      "label": "R69 B1: 방송영상감독~방송주조감독",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

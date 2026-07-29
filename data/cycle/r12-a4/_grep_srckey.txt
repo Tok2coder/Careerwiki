@@ -1,0 +1,31 @@
+260:    const sourceKeys = Object.keys(sources).filter(k => sources[k] && (Array.isArray(sources[k]) ? sources[k].length > 0 : true));
+528:  for (const fieldPath of SHORT_LABEL_FIELDS) {
+529:    const val = getNestedField(fields, fieldPath);
+531:      errors.push(`[라벨] ${fieldPath}가 "${val.substring(0, 30)}..." — 짧은 라벨이어야 함 (20자 이하)`);
+537:  for (const fieldPath of STATS_ONLY_FIELDS) {
+538:    const val = getNestedField(fields, fieldPath);
+541:      const sourceKey = fieldPath.includes('.') ? fieldPath : fieldPath;
+542:      if (!sources[sourceKey] && !sources[fieldPath]) {
+543:        errors.push(`[통계전용] ${fieldPath}에 값이 있지만 출처가 없음 — 공식 통계만 허용`);
+553:  for (const fieldPath of textFields) {
+554:    const text = getNestedField(fields, fieldPath);
+568:      errors.push(`[markerCluster] ${fieldPath}: sentence-level cluster ${sentenceClusters.length}개 (예: "${c.markers}" in "${c.sentence.slice(0, 100)}${c.sentence.length > 100 ? '...' : ''}"). 한 sentence 안에 마커 ${c.count}개 — 본문을 의미 단위로 분리 + 각 sentence에 마커 1개 매핑 필요.`);
+576:      errors.push(`[각주] ${fieldPath}: 중복 발견! ${dupes.map(([n, c]) => `${n}이 ${c}회`).join(', ')}`);
+580:    const sourceKey = getSourceKey(fieldPath);
+582:      errors.push(`[출처] ${fieldPath}에 [N] 각주가 있지만 sources["${sourceKey}"]가 없음`);
+617:      errors.push(`[footnote-split] ${fieldPath}: multiple footnotes are stacked only at the paragraph end. Split them by sentence, e.g. sentence A.[1] sentence B.[2]`);
+767:  for (const fieldPath of sentenceFields) {
+768:    const text = getNestedField(fields, fieldPath);
+777:        errors.push(`[잘린문장] ${fieldPath}: 미완성 문장 — "...${cleanEnd.slice(-25)}"`);
+786:        warnings.push(`[잘린문장] ${fieldPath}: 완성형 어미 미확인 — "...${trimmed.slice(-30)}"`);
+1513:  function checkTrailingSentence(text, fieldPath) {
+1522:        warnings.push(`[무출처] ${fieldPath}: 마지막 ${lastMarker[0]} 이후 미출처 문장 (${afterLast.length}자) — "${afterLast.substring(0, 60)}"`);
+1527:  for (const fieldPath of FULL_CHECK_FIELDS) {
+1528:    const text = getNestedField(fields, fieldPath);
+1538:        warnings.push(`[무출처] ${fieldPath}: [N] 각주 마커 없음 (${trimmed.length}자) — 모든 서술에 출처 표기 필수`);
+1541:      checkTrailingSentence(trimmed, fieldPath);
+1545:  for (const fieldPath of TRAILING_CHECK_FIELDS) {
+1546:    const text = getNestedField(fields, fieldPath);
+1550:    checkTrailingSentence(trimmed, fieldPath);
+1629:function getSourceKey(fieldPath) {
+done 30

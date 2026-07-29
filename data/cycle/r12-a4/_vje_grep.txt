@@ -1,0 +1,169 @@
+15: *   "sources": { ... },
+17: *   "changeSummary": "..."
+21:const fs = require('fs');
+22:const path = require('path');
+44:  // 2026-05-06 후속 — sidebar 영역 _sources orphan 차단
+51:  PROSE_BODY_FIELDS,
+58:} = require(path.join(__dirname, '_shared', 'detect-patterns.cjs'));
+61:// _sources에 등록 가능한 fieldKey 화이트리스트. 미포함 키 발견 시 FAIL.
+65://  1) PROSE_BODY_FIELDS (산문 9)는 detect-patterns.cjs에서 관리
+68:// 2026-05-22 PR #43: careernet canonical 영역 (사용자 편집 불가) sources 등록 금지.
+70:// 사용자 sources 등록 시 매핑 부정확 ("직업 설명 출처가 사이드바엔 보이는데 본문 안 보임" 사고).
+73:  ...PROSE_BODY_FIELDS.filter(f => !CAREERNET_CANONICAL_FIELDS.has(f)),
+164:// validate() async 호출 시 _sources URL 전수 HEAD fetch → 4xx/5xx/timeout이면 [urlBroken] FAIL
+168:async function checkUrlsLive(sources, sampleRate = 100) {
+170:  for (const [field, arr] of Object.entries(sources || {})) {
+232:async function validateAsync(data) {
+237:    const broken = await checkUrlsLive(data.sources || {}, sampleRate);
+239:      result.errors.push(`[urlBroken] _sources.${b.field}[${b.idx}] HTTP ${b.status} — ${b.url}`);
+242:      result.errors.push(`[urlBrokenSummary] ${broken.length}개 URL 검증 실패 (총 ${Object.values(data.sources || {}).reduce((s, a) => s + (Array.isArray(a) ? a.length : 0), 0)}개 중) — hallucinated URL 의심`);
+248:function validate(data) {
+252:  const { fields = {}, sources = {}, careerTree, changeSummary } = data;
+255:  // changeSummary에 [job-data-enhance] 마커만 있고 fields가 비어 있거나
+257:  const isEnhanceMarker = typeof changeSummary === 'string' && /\[(job|major)-data-enhance\]/.test(changeSummary);
+260:    const sourceKeys = Object.keys(sources).filter(k => sources[k] && (Array.isArray(sources[k]) ? sources[k].length > 0 : true));
+262:      errors.push(`[minimalPOST] changeSummary에 [job-data-enhance] 마커만 있고 fields/sources 모두 비어있음 — minimal POST는 단축 처리로 간주, 풀 사이클 Phase 0~5 강제`);
+264:      warnings.push(`[minimalPOST?] fields ${fieldKeys.length}개 + sources 0개 — trivial 변경 의심. enhance가 풀 사이클이면 17필드 보강이 정상`);
+270:  // fields 내 모든 문자열 필드 + sources 내 text 값을 검사한다.
+291:  // sources 내 text 값 검사
+292:  for (const [srcKey, srcArr] of Object.entries(sources)) {
+296:          errors.push(`[Mojibake] sources["${srcKey}"][${i}].text — 각주 텍스트가 깨진 문자로 저장됨`);
+321:      if (dr[sub] && dr[sub].length > 0 && !sources[`detailReady.${sub}`]) {
+322:        errors.push(`[curriculum-출처누락] detailReady.${sub}에 내용이 있지만 sources["detailReady.${sub}"]가 없음 — 반드시 출처 등록 필요`);
+326:    // OS(Orphan Source) 탐지: sources["detailReady.X"]가 있는데 해당 배열의 어느 항목에도 [N] 마커가 없으면 WARN
+330:      if (sources[srcKey] && sources[srcKey].length > 0 && dr[sub] && dr[sub].length > 0) {
+337:          errors.push(`[OS-Orphan] detailReady.${sub}: sources["${srcKey}"]가 등록되어 있지만 배열 항목에 [N] 마커가 없음 — 마지막 항목 끝에 [1] 추가 필요`);
+374:        errors.push(`[recruit-객체] detailReady.recruit에 {text, url} 객체 항목 ${objItems.length}개 — 반드시 plain string으로 변환. URL은 _sources["detailReady.recruit"]에만 등록`);
+379:    // 출처 정보는 각주 [N] + _sources로만 표기해야 함
+386:          errors.push(`[인라인도메인] detailReady.${sub}[${idx}]에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${text.substring(0, 60)}..."`);
+415:    // Cleanup-only emptying is allowed, but sending sources with it is blocked.
+420:      } else if (sources['detailReady.certificate'] && sources['detailReady.certificate'].length > 0) {
+421:        errors.push(`[detailReady.certificate] certificate was emptied but sources["detailReady.certificate"] was still sent. Remove those sources for cleanup-only drafts.`);
+423:    } else if (sources['detailReady.certificate'] && sources['detailReady.certificate'].length > 0) {
+424:      errors.push(`[detailReady.certificate] Body certificate sources are not allowed. Use sidebarCerts sources only.`);
+480:        warnings.push(`[sidebarCerts] "${name}" — sidebarCerts 항목 텍스트에 [N] 마커가 포함되어 있습니다. sidebarCerts는 자격증명만 저장하세요. 출처는 sources["sidebarCerts"]에만 등록.`);
+540:      // sources에 해당 필드의 출처가 있는지 확인
+542:      if (!sources[sourceKey] && !sources[fieldPath]) {
+579:    // sources 대응 확인
+581:    if (!sources[sourceKey]) {
+582:      errors.push(`[출처] ${fieldPath}에 [N] 각주가 있지만 sources["${sourceKey}"]가 없음`);
+584:      const srcArr = sources[sourceKey];
+590:            errors.push(`[출처blob] sources["${sourceKey}"]에 blob 발견: "${srcText.substring(0, 60)}..." — 개별 항목으로 분리 필요`);
+596:            errors.push(`[출처형식] sources["${sourceKey}"]의 text에 URL이 포함됨 — text와 url을 분리해야 함`);
+600:            errors.push(`[출처형식] sources["${sourceKey}"]의 text가 URL로 시작 — "[N] 기관명" 형식 사용 필요`);
+602:          // text가 [N] 마커로 시작하면 FAIL (마커는 본문에만 — sources.text는 기관명만)
+605:            errors.push(`[출처마커prefix] sources["${sourceKey}"]의 text가 [N] 마커로 시작 — text에는 기관명만, [N] 마커는 본문에만 사용: "${src.text.substring(0, 80)}..."`);
+685:      const { execSync } = require('child_process');
+688:        { encoding: 'utf8', cwd: require('path').join(__dirname, '..'), stdio: ['pipe', 'pipe', 'pipe'], timeout: 15000 }
+700:  // ── 6. changeSummary 존재 ──
+701:  if (!changeSummary || changeSummary.length < 10) {
+702:    warnings.push(`[기타] changeSummary가 없거나 너무 짧음`);
+798:  if (sources['overviewSalary.sal']) {
+799:    errors.push('[sal-readonly] sources["overviewSalary.sal"] must not be sent by job-data-enhance. Salary annotations and salary sources are read-only here.');
+802:  // ── 9b-OMIT. master enhance patch는 youtubeLinks 영역 omit 금지 (2026-05-26 신규) ──
+803:  // 5/23~26 dispatch 171건 사고 root cause: master 적용 patch가 youtubeLinks 영역 자체를
+806:  const isMasterMarker = typeof changeSummary === 'string' && /\[(job|major)-data-master\]/.test(changeSummary);
+807:  const isPartialMode = typeof changeSummary === 'string' && /(yt-fill|cleanup|--field-only=)/i.test(changeSummary);
+808:  if (isMasterMarker && !isPartialMode && !('youtubeLinks' in fields)) {
+809:    errors.push('[YouTube-영역누락] master enhance patch는 youtubeLinks 영역 필수. 한국어 영상 있으면 [{url,title}], 없으면 []+_youtubeSearchNote. 영역 omit 금지 (2026-05-26 신규, 171건 사고 후속).');
+812:  // ── 9b. youtubeLinks 개수 검증 + 무언 스킵 금지 (2026-04-15 강화) ──
+814:  // youtubeLinks가 draft에 포함된 경우에만 검사 (미포함 시 이번 저장에서 변경 없음 → 검사 생략)
+815:  if ('youtubeLinks' in fields) {
+816:    const ytLinks = Array.isArray(fields.youtubeLinks)
+817:      ? fields.youtubeLinks
+818:      : (fields.youtubeLinks === null || fields.youtubeLinks === undefined ? [] :
+819:         (typeof fields.youtubeLinks === 'string' ? JSON.parse(fields.youtubeLinks) : []));
+824:        errors.push('[YouTube-증거없음] youtubeLinks를 빈 배열로 제출할 때는 _youtubeSearchNote 필드 필수. 형식: "KEIS \'직업명\' 0개, \'직업명 현직자인터뷰\' 0개 (날짜)". 검색 없이 빈 배열 저장 금지.');
+860:  if (fields.youtubeLinks) {
+861:    const ytLinks = Array.isArray(fields.youtubeLinks)
+862:      ? fields.youtubeLinks
+863:      : (typeof fields.youtubeLinks === 'string' ? JSON.parse(fields.youtubeLinks) : []);
+865:      errors.push(`[YouTube] youtubeLinks 최대 3개 초과 (현재 ${ytLinks.length}개) — 3개 이하로 줄일 것`);
+871:  if (fields.youtubeLinks) {
+872:    const links = Array.isArray(fields.youtubeLinks)
+873:      ? fields.youtubeLinks
+874:      : (typeof fields.youtubeLinks === 'string' ? JSON.parse(fields.youtubeLinks) : []);
+910:  // ── 10. _sources 포맷 검사 ──
+913:  for (const [sourceKey, srcVal] of Object.entries(sources)) {
+923:      errors.push(`[출처중복] sources["${sourceKey}"]에 동일 URL이 ${count}번 등록: "${url}" — 같은 필드에 같은 URL 중복 금지`);
+932:        errors.push(`[출처URL복수] sources["${sourceKey}"][${i}]: source text에 URL이 2개 이상 포함됨 — text/url 분리 원칙 위반. URL은 url 필드에만 1개, text는 기관명만 기재하세요`);
+936:        warnings.push(`[출처라벨병합] sources["${sourceKey}"][${i}]: ${orgHint} — URL이 언급된 모든 기관을 실제로 커버하는지 확인. 한 기관이 빠진 경우 별도 source 항목으로 분리하세요 (한 source = 한 기관 = 한 URL 원칙)`);
+954:            errors.push(`[검색결과URL] sources["${sourceKey}"]에 동적 검색결과 페이지 URL: "${src.url}" — 기관 메인 또는 구체적 직업 상세 페이지로 교체 필요`);
+962:  for (const [sourceKey, srcVal] of Object.entries(sources)) {
+963:    // delete merge 패턴 — server (job-editor.ts:544) 가 `delete updatedUserData._sources[key]` 처리.
+969:      errors.push(`[출처포맷] sources["${sourceKey}"]가 배열이 아님 — Array여야 함`);
+977:        warnings.push(`[출처포맷] sources["${sourceKey}"][${i}]: string 형식 — {text, url} 객체로 변환 필요`);
+981:        errors.push(`[출처포맷] sources["${sourceKey}"][${i}]: null 또는 비객체`);
+994:          errors.push(`[출처포맷] sources["${sourceKey}"][${i}].url 유효하지 않은 URL: "${src.url}"`);
+998:          errors.push(`[출처포맷] sources["${sourceKey}"][${i}].text에 URL 포함 — text와 url 필드를 분리해야 함`);
+1001:        warnings.push(`[출처포맷] sources["${sourceKey}"][${i}]: text와 url 모두 없음`);
+1008:  // sources.cjs의 4 패턴(rawURL/bracketPrefix/mojibake/sourcesNULL) 위에 추가:
+1013:  //   H) orphanSrc — 산문 필드 _sources 등록 idx N이 본문에 [N] 미사용 (WARN)
+1014:  //   I) brokenRef — 산문 필드 본문 [N]이 _sources[fieldKey] 길이 초과 (FAIL)
+1019:  // ⚠️ origin 검사 컨텍스트: _sources 안에서만. sidebarCerts/sidebarOrgs 같은
+1021:  // _sources가 아니므로 이 룰의 영향 없음.
+1025:    for (const [, srcArr] of Object.entries(sources)) {
+1033:      errors.push(`[selfDomain] _sources에 careerwiki.org/.kr URL 포함 — 자기 사이트 인용은 절대 금지. 외부 출처로 교체 필요`);
+1038:    // 1건이라도 _sources에 있으면 즉시 FAIL. 외부 보충 여부 무관.
+1044:        `[originDomain] _sources에 정부 산하 직업정보 origin 도메인 ${hostInfo.originHostCount}건 발견 (${originSet.join(', ')}) — ` +
+1052:    // PROSE_BODY_FIELDS는 detect-patterns.cjs export — audit-via-api.cjs / detect-patterns 모두 동일 list 공유.
+1053:    // (BODY_FIELDS_FOR_FOOTNOTE 별칭은 backward compat 유지)
+1054:    const BODY_FIELDS_FOR_FOOTNOTE = PROSE_BODY_FIELDS;
+1056:    for (const [fieldKey, srcArr] of Object.entries(sources)) {
+1064:            `[listPageURL] sources["${fieldKey}"][${i}].url 이 인덱스/카테고리 페이지: "${src.url}" — ` +
+1071:      // _sources에 등록 가능한 fieldKey가 ALLOWED set 미포함 → FAIL.
+1081:          `[orphanSources] sources["${fieldKey}"]는 알려진 필드가 아님 — _sources fieldKey는 산문 9 영역 ` +
+1082:          `(${PROSE_BODY_FIELDS.join('/')}) 또는 detailReady.{curriculum,recruit,training,researchList,certificate} 중 하나여야 함. ` +
+1084:          `fieldKey 교정 또는 _sources에서 제거 필요`
+1089:      if (BODY_FIELDS_FOR_FOOTNOTE.includes(fieldKey)) {
+1095:              `[orphanSrc] sources["${fieldKey}"]에 ${srcArr.length}개 등록됐는데 본문에서 ` +
+1097:              `본문에 해당 출처를 인용하거나 _sources에서 제거 필요. ` +
+1098:              `(field-local 번호 기준: 본문 [N] ↔ _sources["${fieldKey}"][N-1])`
+1105:              `_sources["${fieldKey}"] 길이 ${srcArr.length}개로 부족 — 본문 마커는 field-local 1..N 연속이어야 함. ` +
+1106:              `_sources에 누락 항목 추가하거나 본문 마커 정리 필요`
+1110:          // 룰 ZZZ — sourcesWithoutMarkers (2026-05-11 신규, FAIL)
+1111:          // body 100자+ AND _sources url>=1 AND body 안 [N] 0개 → FAIL.
+1118:              `[sourcesWithoutMarkers] ${fieldKey} 본문 ${body.length}자에 _sources ${urlCount}건 등록됐는데 본문에 [N] 마커 0개 — ` +
+1120:              `(a) fact가 본문에 등장하면 해당 위치에 [N] 추가 (b) 출처가 본문 fact를 cover 못 하면 _sources에서 제거`
+1131:  // 배열 항목 안에 글로벌 idx [N]을 박았으나 _sources["detailReady.X"]는 field-local
+1141:        const srcArr = sources[fieldKey];
+1147:            `_sources["${fieldKey}"] 길이 ${srcArr.length}개로 부족 — ` +
+1149:            `(글로벌 idx 박지 마). _sources에 누락 항목 추가하거나 본문 마커 재번호 필요`
+1156:  // ── 10-F. _sources 글로벌 idxGap 검사 (2026-05-06 사고 차단) ────────────────
+1158:  // 사고 사례: 국무총리 _sources에 id=5 누락 (1,2,3,4,6,7,...). audit-deep는
+1161:    const gap = detectSourceIdxGap(sources);
+1165:        `[idxGap] _sources 글로벌 id가 1부터 연속이 아님 — ` +
+1168:        `_sources 등록 순서 + id 번호를 페이지 표시 순서대로 1,2,3,... 재정렬 필요`
+1173:  // ── 10-G2. _sources[].text URL 자기복제 (2026-05-22 룰 26) ──────────────────
+1179:    for (const [fieldKey, srcArr] of Object.entries(sources)) {
+1186:            `[sourceTextIsUrl] sources["${fieldKey}"][${i}].text가 URL — "${txt}". ` +
+1211:  // ── 10-H. sidebar 영역 _sources 등록 금지 (2026-05-06 후속 사고 차단) ────────
+1213:  // 사고 사례: 게임-기획자 _sources.sidebarCerts[0] (id=15) — SKILL 정책상 sidebar
+1214:  // 본문에 [N] 마커 금지. 그래서 _sources.sidebarCerts에 등록해도 본문 sup이
+1217:  // 배열로 표시되므로 _sources 별도 등록 불필요.
+1219:    const sidebarHits = detectSidebarSources(sources);
+1223:        `[sidebarSources] _sources에 sidebar 영역(${SIDEBAR_FIELDS_FORBIDDEN_TXT}) 등록됨: ${desc} — ` +
+1225:        `_sources에 등록하면 orphan 발생. 해당 항목들을 _sources에서 제거 필요`
+1238:    for (const [fieldKey, srcArr] of Object.entries(sources)) {
+1251:        `[rootURL] _sources에 root URL ${rootHits.length}건 발견 (${desc}${rootHits.length > 5 ? ' ...' : ''}) — ` +
+1264:    const q = calcWikiQuota(sources);
+1267:        `[wikiQuota] _sources의 위키 점유율 ${(q.ratio * 100).toFixed(1)}% (${q.count}/${q.total}) > 30% 초과 — ` +
+1277:  // 검사. 글로벌 idx 시스템에서 첫 등장 순서가 _sources 등록 순서와 일치해야
+1282:    const BODY_FIELDS_FOR_ORDER = [
+1294:    for (const f of BODY_FIELDS_FOR_ORDER) {
+1324:        `본문 마커 + _sources 등록 순서를 페이지 표시 순서대로 1부터 재번호 필요`
+1330:  // 텍스트 본문에 (도메인) 패턴 금지 — 출처는 [N]+_sources로만 표기
+1338:        errors.push(`[인라인도메인] ${fp}에 괄호 안 도메인 표기 — 텍스트에서 제거 필요. 출처는 [N]+_sources로만: "${val.substring(0, 60)}..."`);
+1345:  // 본문에 구체 회사명/기관명을 적시할 경우, 매핑되는 [N] _sources의 host에
+1350:  //   _sources["way"][11].url = https://www.ksla.or.kr  (한국조경협회 메인)
+1356:    const BODY_FIELDS_FACT_CHECK = [
+1381:    for (const fp of BODY_FIELDS_FACT_CHECK) {
+1384:      const srcArr = sources[fp];
+1424:              `_sources["${fp}"][${N-1}].url host(${host})에 매칭 안 됨 — ` +
+1471:                `_sources["${fp}"][${N-1}].url이 ${isRootUrl ? 'root URL' : '장식적 출처(직업백과/자소서/블로그)'} (${src.url}) — ` +
+1494:  //   3. 새 출처 확인되면 → [N+1] 추가 후 _sources 등록
+1649:  if (process.argv[2]) {
+1650:    input = fs.readFileSync(process.argv[2], 'utf8');
+1656:    console.error('Env: VALIDATE_CHECK_URLS=1 — _sources URL HEAD fetch 검증 (4xx/5xx/timeout = [urlBroken] FAIL)');
+1700:module.exports = { validate, validateAsync, checkUrlsLive };
+1702:if (require.main === module) {

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r109-b2",
+      "group_key": "cycle-R109-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R109 B2: 신발품질관리원~신재생하이브리드시스템개발자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

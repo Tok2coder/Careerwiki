@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r58-b1",
+      "group_key": "cycle-R58-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R58 B1: 바렐기조작원~바이오농약제조원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r58-b3",
+      "group_key": "cycle-R58-2026-06-20",
+      "agent_slug": "hangyeol",
+      "label": "R58 B3: 바이오세라믹재료탈지원~바이오소재인증연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

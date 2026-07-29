@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r49-b2",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R49 B2: 맛소금제조원~매너강사",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

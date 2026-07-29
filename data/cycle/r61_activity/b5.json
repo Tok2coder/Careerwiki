@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r61-b5",
+      "group_key": "cycle-R61-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R61 B5: 반도체소자웨이퍼검사공정기술자~반도체소자웨이퍼검사장비부분품연구원",
+      "model": "sonnet",
+      "status": "done"
+    }
+  ]
+}

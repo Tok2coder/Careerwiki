@@ -1,0 +1,5 @@
+전기가스수도관리자 | id=1765283412976396 | totalE=18 | distinct=10
+전기공학기술자 | id=1765283365417879 | totalE=18 | distinct=9
+조명기사 | id=1765283373650318 | totalE=16 | distinct=6
+중고등학교교사 | id=176528345711765 | totalE=18 | distinct=18
+직업운동선수 | id=1765283474642714 | totalE=17 | distinct=12

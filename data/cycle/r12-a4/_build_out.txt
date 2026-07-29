@@ -1,0 +1,2 @@
+PAYLOAD WRITTEN. source entries=23 distinct URLs=17
+fields=way, trivia, overviewProspect.main, overviewAbilities.technKnow, detailWlb.wlbDetail, detailWlb.socialDetail, detailReady.curriculum, detailReady.recruit, detailReady.training, youtubeLinks

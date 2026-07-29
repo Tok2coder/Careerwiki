@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r69-b4",
+      "group_key": "cycle-R69-2026-07-04",
+      "agent_slug": "hangyeol",
+      "label": "R69 B4: 방적사시험원~배관설치원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

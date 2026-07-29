@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r71-b3",
+      "group_key": "cycle-R71-2026-07-09",
+      "agent_slug": "hangyeol",
+      "label": "R71 B3: 밸브조립원~버섯연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

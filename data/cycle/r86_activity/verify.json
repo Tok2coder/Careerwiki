@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r86-verify",
+      "group_key": "cycle-R86-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R86 검증: 25직업 전수 실측",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

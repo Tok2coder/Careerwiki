@@ -1,0 +1,104 @@
+
+ ⛅️ wrangler 4.57.0 (update available 4.94.0)
+─────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database careerwiki-kr (1dbc57d6-0ce3-4a7e-8d2e-3159b0df1315):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+🚣 Executed 1 command in 0.95ms
+[
+  {
+    "results": [
+      {
+        "id": "1765285144796915",
+        "slug": "셀레늄가스처리원"
+      },
+      {
+        "id": "1765285145183425",
+        "slug": "셀레늄반장"
+      },
+      {
+        "id": "1765283679500725",
+        "slug": "셋톱박스개발자"
+      },
+      {
+        "id": "1765284988108575",
+        "slug": "셔츠홀딩기조작원"
+      },
+      {
+        "id": "1765284737256653",
+        "slug": "셔터설치반장"
+      },
+      {
+        "id": "1765284737508156",
+        "slug": "셔터설치원"
+      },
+      {
+        "id": "1765284212688890",
+        "slug": "셰이더"
+      },
+      {
+        "id": "1765285044525608",
+        "slug": "소결체제조원"
+      },
+      {
+        "id": "17652834880882",
+        "slug": "소규모판매점장"
+      },
+      {
+        "id": "1765284888276864",
+        "slug": "소금용액제조원"
+      },
+      {
+        "id": "1765284780334153",
+        "slug": "소금채취원"
+      },
+      {
+        "id": "1765284447156721",
+        "slug": "소년원교사"
+      },
+      {
+        "id": "1765284018175578",
+        "slug": "소독관리자"
+      },
+      {
+        "id": "1765284679626591",
+        "slug": "소면기마침원"
+      },
+      {
+        "id": "1765284680096882",
+        "slug": "소면기보전원"
+      },
+      {
+        "id": "1765284910461584",
+        "slug": "소면기소제원"
+      },
+      {
+        "id": "1765284910751361",
+        "slug": "소면반장"
+      },
+      {
+        "id": "1765284911021624",
+        "slug": "소면틀보기원"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "KIX",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.9535
+      },
+      "duration": 0.9535,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 972169216,
+      "rows_read": 36,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

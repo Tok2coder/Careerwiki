@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r88-b5",
+      "group_key": "cycle-R88-2026-07-15",
+      "agent_slug": "hangyeol",
+      "label": "R88 B5: 석유화학물질분석원~석유화학설비유지보수원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

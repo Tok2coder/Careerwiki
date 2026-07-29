@@ -1,0 +1,5 @@
+수상운송사무원 | id=176528342030072 | totalE=18 | distinct=12
+스포츠트레이너 | id=1765283333034320 | totalE=18 | distinct=18
+실버로봇서비스기획자 | id=1765284097469833 | totalE=18 | distinct=14
+심리상담전문가 | id=1765283459870115 | totalE=17 | distinct=10
+심판 | id=1765284220959816 | totalE=17 | distinct=10

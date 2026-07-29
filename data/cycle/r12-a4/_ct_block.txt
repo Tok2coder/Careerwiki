@@ -1,0 +1,48 @@
+        }
+
+        // 전직 스테이지 체크 (마지막 스테이지가 다른 직업이면 의심)
+        if (sorted.length > 0) {
+          const lastStage = sorted[sorted.length - 1];
+          const suspiciousRoles = ['국회의원', '장관', '대통령', '감독', 'CEO', '회장', '사장', '교수'];
+          for (const role of suspiciousRoles) {
+            if (lastStage.title && lastStage.title.includes(role)) {
+              warnings.push(`[커리어트리] 마지막 스테이지 "${lastStage.title}" — 전직 스테이지 의심. 해당 직업 이후 전직은 제외`);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ── 5-B. 커리어트리 DB 중복 링크 검사 (slug 있을 때 선택 실행) ──
+  // career_tree_job_links에서 같은 직업에 대한 중복 링크 감지
+  if (data.slug) {
+    try {
+      const { execSync } = require('child_process');
+      const result = execSync(
+        `npx wrangler d1 execute careerwiki-kr --remote --json --command "SELECT career_tree_id, COUNT(*) as cnt FROM career_tree_job_links WHERE job_slug='${data.slug.replace(/'/g, "''")}' GROUP BY career_tree_id HAVING cnt > 1"`,
+        { encoding: 'utf8', cwd: require('path').join(__dirname, '..'), stdio: ['pipe', 'pipe', 'pipe'], timeout: 15000 }
+      );
+      const parsed = JSON.parse(result);
+      const dupes = parsed?.[0]?.results || [];
+      for (const dup of dupes) {
+        errors.push(`[careerTree-자기강조] career_tree_id=${dup.career_tree_id}에 job_slug="${data.slug}" 중복 링크 ${dup.cnt}개 — career_tree_job_links 중복 제거 필요`);
+      }
+    } catch {
+      // wrangler 미연결 또는 오류 시 조용히 스킵
+    }
+  }
+
+  // ── 6. changeSummary 존재 ──
+  if (!changeSummary || changeSummary.length < 10) {
+    warnings.push(`[기타] changeSummary가 없거나 너무 짧음`);
+  }
+
+  // ── 7. detailWlb 등급 띄어쓰기 검사 ──
+  if (fields.detailWlb) {
+    const wlbGrade = fields.detailWlb?.wlb;
+    const socialGrade = fields.detailWlb?.social;
+    const stuckForms = ['보통이상', '보통이하', '다소높음', '다소낮음'];
+    if (wlbGrade && stuckForms.includes(wlbGrade)) {
+      errors.push(`[detailWlb.wlb] 붙여쓰기 금지: "${wlbGrade}" → "보통 이상" 또는 "보통 이하" 형식 사용`);
+    }

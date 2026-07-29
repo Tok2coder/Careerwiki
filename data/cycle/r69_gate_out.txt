@@ -1,0 +1,42 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 방송영상감독                   | totalE=33 | distinct=18 | marker=OK | clean
+PASS 방송운행프로듀서                 | totalE=32 | distinct=18 | marker=OK | clean
+PASS 방송인제스트원                  | totalE=31 | distinct=18 | marker=OK | clean
+PASS 방송제작비관리원                 | totalE=33 | distinct=18 | marker=OK | clean
+PASS 방송주조감독                   | totalE=33 | distinct=18 | marker=OK | clean
+PASS 방송중계회선기사                 | totalE=34 | distinct=18 | marker=OK | clean
+PASS 방송책임프로듀서                 | totalE=33 | distinct=18 | marker=OK | clean
+PASS 방송카메라강사                  | totalE=32 | distinct=11 | marker=OK | clean
+PASS 방송콘텐츠기획판매자               | totalE=29 | distinct=10 | marker=OK | clean
+PASS 방송통신기기제작원                | totalE=27 | distinct=10 | marker=OK | clean
+PASS 방송편집기사                   | totalE=39 | distinct=18 | marker=OK | clean
+PASS 방수공                      | totalE=30 | distinct=12 | marker=OK | clean
+PASS 방수반장                     | totalE=30 | distinct=12 | marker=OK | clean
+PASS 방수보조원                    | totalE=27 | distinct=11 | marker=OK | clean
+PASS 방재전문가                    | totalE=36 | distinct=18 | marker=OK | clean
+PASS 방적사시험원                   | totalE=39 | distinct=18 | marker=OK | clean
+FAIL 방전가공기조작원                 | totalE=35 | distinct=12 | marker=OK | urlDead(1), WARN:urlUnverified(1)
+        [urlDead] http-404: https://www.koami.or.kr/business/viewMHrdc.do
+        [urlUnverified] tls: https://partner.kitech.re.kr/techCounselForm.do
+PASS 방향제품제조원                  | totalE=35 | distinct=10 | marker=OK | clean
+PASS 배경화가                     | totalE=29 | distinct=10 | marker=OK | clean
+PASS 배관설치원                    | totalE=29 | distinct=10 | marker=OK | clean
+PASS 배소기조작원                   | totalE=26 | distinct=12 | marker=OK | clean
+PASS 배소로조작원                   | totalE=27 | distinct=15 | marker=OK | clean
+PASS 배소반장                     | totalE=27 | distinct=15 | marker=OK | clean
+FAIL 배송센터관리자                  | totalE=27 | distinct=21 | marker=OK | urlDead(3), WARN:urlUnverified(2)
+        [urlDead] http-404: https://www.mk.co.kr/news/business/10988000
+        [urlDead] http-404: https://www.cjlogistics.com/ko/service/platform/domestic-delivery
+        [urlDead] http-404: https://www.saramin.co.kr/zf_user/company-info/view?csn=1348726241
+        [urlUnverified] http-403(anti-bot 가능): https://www.hankyung.com/economy/article/2023071821991
+        [urlUnverified] http-500: https://www.cjlogistics.com/ko/network/tracking
+FAIL 배수장관리원                   | totalE=27 | distinct=16 | marker=OK | urlDead(1)
+        [urlDead] http-404: https://www.me.go.kr/home/web/index.do?menuId=10280
+
+=== Summary: PASS 22/25, FAIL 3 ===
+FAIL: 방전가공기조작원(urlDead(1)), 배송센터관리자(urlDead(3)), 배수장관리원(urlDead(1))
+verify-cycle exit: 1

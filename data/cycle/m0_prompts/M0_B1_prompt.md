@@ -54,6 +54,7 @@
 
 12. **🚨 산문 3필드 신규 작성 의무 (output-only patch X)**:
     - `whatStudy`(배우는 내용) / `howPrepare`(준비 방법) / `jobProspect`(진로 전망) — **각 300자 이상 문단 수준 산문 + 본문 [N] 각주 필수** (607 전공 전원 현재 공백 — 사실상 전부 신규 작성).
+    - 🔴 **각주 [N]은 필드-로컬** — 각 필드에서 [1]부터 (그 필드의 N번째 출처). 서버 _sources 전역 id를 본문에 절대 쓰지 마라 — 템플릿이 필드-로컬→전역 표시번호로 매핑하며, 전역 번호 사용 시 raw `[N]` 텍스트 노출 (M0 렌더 사고 컨벤션 확정).
     - `summary`는 **보강만** (careernet API 원문 존중, 전면 재작성 X) + **`_sources["summary"]` 출처 등록 절대 금지** (careernet canonical — job 룰 25 승계).
     - `mainSubjects` / `enterField` / `licenses`는 기존 API 값 있으면 보강 (기존 항목 삭제 X, 타입 유지 — array는 array로).
     - **출처만 추가하고 본문 안 채우는 minimal patch 절대 금지.**
@@ -71,9 +72,9 @@
       b. 한국어 영상 부재 → `youtubeLinks: []` + `_youtubeSearchNote` (탐색어 ≥6개 OR 카테고리 ≥3개 / 학과소개·전공소개·커리큘럼·진로·브이로그·인터뷰)
     - validate `[YouTube-영역누락]` FAIL — omit 시 차단됨.
 
-15. **🚨 totalEntries ≥ 12 강제**:
-    - `_sources` 총 entry 수 (모든 fieldKey의 entry 합산) **≥ 12** 필수 (M0 파일럿 후 수치 확정 — 확정 전 12 기준).
-    - distinct URL ≥ 8과 별개로, 본문 [N] 인용 위치 수 자체를 늘리거나 새 출처 항목 추가로 ≥12 달성.
+15. **🚨 totalEntries ≥ 14 강제** (M0 확정 + trivia 편입 상향, 2026-07-02):
+    - `_sources` 총 entry 수 (모든 fieldKey의 entry 합산) **≥ 14** 필수.
+    - distinct URL ≥ 8과 별개로, 본문 [N] 인용 위치 수 자체를 늘리거나 새 출처 항목 추가로 ≥14 달성.
     - minimal patch (totalEntries 변동 없음) 금지.
     - 보강 패턴: (a) distinct URL 추가 (1차) (b) 본문 [N] 마커 추가 인용 (1 URL → 2-3 위치 분산) (c) 산문 3필드 본문 expand + [N] 추가.
 
@@ -101,7 +102,7 @@
 
 19. **🔴 룰 C — POST 전공당 1회 원칙 + POST 전 셀프 게이트**:
     - **POST 전 distinct·totalE·산문 3필드 300자 셀프 카운트 의무 — 기준 미달 상태로 POST 절대 금지** (보강 완료 후 1회 POST). "일단 POST 하고 패치"는 잉여 rev + 재작업 낭비.
-    - **결정적 강제**: validate 호출은 반드시 `node scripts/validate-major-edit.cjs payload.json` — totalE(<12) / 산문 3필드(<300자) / distinct(<8) / 보호영역 접촉 게이트가 FAIL로 차단. 작업자 모델의 자가 카운트 보고와 무관하게 스크립트가 판정.
+    - **결정적 강제**: validate 호출은 반드시 `node scripts/validate-major-edit.cjs payload.json` — totalE(<14) / 산문 3필드(<300자) / distinct(<8) / 보호영역 접촉 게이트가 FAIL로 차단. 작업자 모델의 자가 카운트 보고와 무관하게 스크립트가 판정.
     - **동일 payload(동일 changeSummary) 반복 POST 금지.** POST 성공(revisionId 반환) 후 같은 전공 재POST는 audit FAIL 수정 시에만, **최대 2회**. 재POST 전 latest rev 확인(이미 반영됐으면 skip).
     - changeSummary는 **top-level** (fields 안에 중첩 금지 — R39 교훈, 중첩 시 마커 미생성 → KPI 탈락).
 
@@ -112,10 +113,11 @@
     - **배치 5전공 누적 tool-call 관리**: 전공당 ~40 tool-call 목표(5전공 ≈ 200 이내). 과검증이 세션 사망 주원인 — 전공당 검증 1라운드 엄수.
     - 한 전공 막히면(10 site 시도 후) 텍스트로 사유 보고 + 그 전공 skip하고 **다음 전공 계속** (세션 전체 abort 금지). 검증세션이 skip분 식별 → 재spawn.
 
-21. **🔴 룰 E (전공 신설) — `trivia` 필드 절대 전송 금지**:
-    - major-editor 서버에 레거시 로직 존재: **patch fields에 `trivia` 키가 있으면 서버가 `jobProspect`를 UCJ·merged에서 삭제** (`src/routes/major-editor.ts` deepMerge 후 trivia→jobProspect delete).
-    - 전공 enhance는 `jobProspect`가 핵심 필드 — trivia 전송 = jobProspect 파괴 사고.
-    - `fields.trivia` / `sources["trivia"]` 어떤 형태로도 전송 금지.
+21. **🔴 룰 E (개정 2026-07-02 — Jason 승인) — `trivia`(여담) 작성 의무**:
+    - (구 버전의 "전송 금지"는 폐지 — 서버 레거시(trivia 키 → jobProspect 삭제)가 **제거 배포됨**. 이제 전송 안전.)
+    - **여담 3~5개 bullet 작성** (직업 페이지 여담과 동일 스타일): 흥미로운 사실·통계·인식 교정 등, 항목별 완결 문장. 개요 탭 마지막 "여담" 섹션에 렌더.
+    - 각 항목에 [N] 각주(필드-로컬) + `sources["trivia"]` 등록 — 신규 출처 2~3건, WebFetch 검증 의무 동일.
+    - 🔴 **POST 후 readback에서 `jobProspect` 잔존 확인 의무** (레거시 회귀 감지) — 사라졌으면 즉시 abort + 보고.
 
 22. **🔴 룰 F (전공 신설) — `_sources[].text` 한글 제목 필수 (서버 silent fallback 주의)**:
     - major-editor 서버는 `text: text || url` silent fallback — text 누락 시 raw URL이 그대로 사이드바 노출 (job R1 109건 사고 패턴 동일).
@@ -153,11 +155,11 @@
 
 | # | name | id | slug | URL pool hint |
 |---|---|---|---|---|
-| 1 | 컴퓨터공학과 | major:컴퓨터공학과 | 컴퓨터공학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥12 필수(미달 검증 FAIL)** |
-| 2 | 기계공학과 | major:기계공학과 | 기계공학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥12 필수(미달 검증 FAIL)** |
-| 3 | 사회복지학과 | major:사회복지학과 | 사회복지학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥12 필수(미달 검증 FAIL)** |
-| 4 | 유아교육학과 | major:유아교육학과 | 유아교육학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥12 필수(미달 검증 FAIL)** |
-| 5 | 식품영양학과 | major:식품영양학과 | 식품영양학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥12 필수(미달 검증 FAIL)** |
+| 1 | 컴퓨터공학과 | major:컴퓨터공학과 | 컴퓨터공학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥14 필수(미달 검증 FAIL)** |
+| 2 | 기계공학과 | major:기계공학과 | 기계공학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥14 필수(미달 검증 FAIL)** |
+| 3 | 사회복지학과 | major:사회복지학과 | 사회복지학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥14 필수(미달 검증 FAIL)** |
+| 4 | 유아교육학과 | major:유아교육학과 | 유아교육학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥14 필수(미달 검증 FAIL)** |
+| 5 | 식품영양학과 | major:식품영양학과 | 식품영양학과 | 대학 학과 페이지(.ac.kr 소개·커리큘럼 deep) + 소관 부처(.go.kr)·학회/협회(.or.kr) deep + 언론 deep article 우선. root/검색 URL 금지. **distinct≥8 + totalE≥14 필수(미달 검증 FAIL)** |
 
 # 처리 절차
 
@@ -167,7 +169,7 @@
 - POST 전 `node scripts/validate-major-edit.cjs payload.json` ALL PASS 의무 (결정적 게이트)
 - POST 후 `node scripts/skill-cache/audit-major-via-api.cjs <slug>` CLEAN + 마커 확인 — **전공당 1라운드** (과검증 금지, 세션 생존)
 - change_summary: `[major-data-master] enhance — whatStudy·howPrepare·jobProspect·summary·youtubeLinks·...` (top-level — fields 중첩 금지)
-- distinct URL ≥ 8 + totalEntries ≥ 12 강제 + 산문 3필드(whatStudy/howPrepare/jobProspect) 각 300자+각주. 한 전공 막히면 사유 보고 + skip하고 다음 전공 계속(세션 전체 abort X).
+- distinct URL ≥ 8 + totalEntries ≥ 14 강제 + 산문 3필드(whatStudy/howPrepare/jobProspect) 각 300자+각주. 한 전공 막히면 사유 보고 + skip하고 다음 전공 계속(세션 전체 abort X).
 - 🔴 보호영역 절대 미접촉: chartData/employmentRate/salaryAfterGraduation/universities/recruitmentStatus/relatedJobs/relatedMajors/sourceIds/sources(origin)/aptitude/property/careerAct/relateSubject/mainSubject(단수형)
 
 표의 전공 전부 끝나면 즉시 종료. 자동 다음 cycle 진입 X.

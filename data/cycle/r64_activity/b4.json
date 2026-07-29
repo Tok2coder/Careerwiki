@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r64-b4",
+      "group_key": "cycle-R64-2026-06-23",
+      "agent_slug": "hangyeol",
+      "label": "R64 B4: 반도체화학기상증착공정연구원~반도체화학약품재료개발연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

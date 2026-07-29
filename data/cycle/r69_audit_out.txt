@@ -1,0 +1,100 @@
+=== 방송영상감독 ===
+OK   방송영상감독                         clean
+
+=== Summary: 0/1 FAIL ===
+=== 방송운행프로듀서 ===
+OK   방송운행프로듀서                       clean
+
+=== Summary: 0/1 FAIL ===
+=== 방송인제스트원 ===
+OK   방송인제스트원                        clean
+
+=== Summary: 0/1 FAIL ===
+=== 방송제작비관리원 ===
+OK   방송제작비관리원                       clean
+
+=== Summary: 0/1 FAIL ===
+=== 방송주조감독 ===
+OK   방송주조감독                         clean
+
+=== Summary: 0/1 FAIL ===
+=== 방송중계회선기사 ===
+OK   방송중계회선기사                       clean
+
+=== Summary: 0/1 FAIL ===
+=== 방송책임프로듀서 ===
+OK   방송책임프로듀서                       clean
+
+=== Summary: 0/1 FAIL ===
+=== 방송카메라강사 ===
+OK   방송카메라강사                        wikiQuotaWARN(28%), urlCountInsufficient(11<18)
+
+=== Summary: 0/1 FAIL ===
+=== 방송콘텐츠기획판매자 ===
+OK   방송콘텐츠기획판매자                     wikiQuotaWARN(28%), urlCountInsufficient(10<18)
+
+=== Summary: 0/1 FAIL ===
+=== 방송통신기기제작원 ===
+OK   방송통신기기제작원                      wikiQuotaWARN(26%), urlCountInsufficient(10<18)
+
+=== Summary: 0/1 FAIL ===
+=== 방송편집기사 ===
+OK   방송편집기사                         clean
+
+=== Summary: 0/1 FAIL ===
+=== 방수공 ===
+OK   방수공                            urlCountInsufficient(12<18)
+
+=== Summary: 0/1 FAIL ===
+=== 방수반장 ===
+OK   방수반장                           urlCountInsufficient(12<18)
+
+=== Summary: 0/1 FAIL ===
+=== 방수보조원 ===
+OK   방수보조원                          urlCountInsufficient(11<18)
+
+=== Summary: 0/1 FAIL ===
+=== 방재전문가 ===
+OK   방재전문가                          clean
+
+=== Summary: 0/1 FAIL ===
+=== 방적사시험원 ===
+OK   방적사시험원                         clean
+
+=== Summary: 0/1 FAIL ===
+=== 방전가공기조작원 ===
+         [urlUnverified] tls: https://partner.kitech.re.kr/techCounselForm.do
+
+=== Summary: 1/1 FAIL ===
+=== 방향제품제조원 ===
+OK   방향제품제조원                        wikiQuotaWARN(26%), urlCountInsufficient(10<18)
+
+=== Summary: 0/1 FAIL ===
+=== 배경화가 ===
+OK   배경화가                           wikiQuotaWARN(24%), urlCountInsufficient(10<18)
+
+=== Summary: 0/1 FAIL ===
+=== 배관설치원 ===
+OK   배관설치원                          wikiQuotaWARN(28%), urlCountInsufficient(10<18)
+
+=== Summary: 0/1 FAIL ===
+=== 배소기조작원 ===
+OK   배소기조작원                         urlCountInsufficient(12<18)
+
+=== Summary: 0/1 FAIL ===
+=== 배소로조작원 ===
+OK   배소로조작원                         urlCountInsufficient(15<18)
+
+=== Summary: 0/1 FAIL ===
+=== 배소반장 ===
+OK   배소반장                           urlCountInsufficient(15<18)
+
+=== Summary: 0/1 FAIL ===
+=== 배송센터관리자 ===
+         [urlUnverified] http-500: https://www.cjlogistics.com/ko/network/tracking
+
+=== Summary: 1/1 FAIL ===
+=== 배수장관리원 ===
+         [urlDead] http-404: https://www.me.go.kr/home/web/index.do?menuId=10280
+
+=== Summary: 1/1 FAIL ===

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r130-b3",
+      "group_key": "cycle-R130-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R130 B3: 원목등급원~원예작물환경연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

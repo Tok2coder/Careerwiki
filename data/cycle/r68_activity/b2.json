@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r68-b2",
+      "group_key": "cycle-R68-2026-07-03",
+      "agent_slug": "hangyeol",
+      "label": "R68 B2: 방사성폐기물처분시설운영원~방송-가상스튜디오-엔지니어",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

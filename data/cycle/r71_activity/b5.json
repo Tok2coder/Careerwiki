@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r71-b5",
+      "group_key": "cycle-R71-2026-07-09",
+      "agent_slug": "hangyeol",
+      "label": "R71 B5: 버스터미널배차원~버스표매표사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

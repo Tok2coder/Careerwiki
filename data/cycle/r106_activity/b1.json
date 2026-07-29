@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r106-b1",
+      "group_key": "cycle-R106-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R106 B1: 시장위험관리사무원~시추기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

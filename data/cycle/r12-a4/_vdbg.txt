@@ -1,0 +1,42 @@
+=== 495-532 ===
+
+  // sidebarOrgs — [N] 마커 금지
+  if (fields.sidebarOrgs) {
+    const orgs = Array.isArray(fields.sidebarOrgs) ? fields.sidebarOrgs : JSON.parse(fields.sidebarOrgs);
+    for (const org of orgs) {
+      const name = typeof org === 'string' ? org : org.name;
+      if (name && /\[\d+\]/.test(name)) {
+        warnings.push(`[sidebarOrgs] "${name}" — sidebarOrgs 항목 텍스트에 [N] 마커가 포함되어 있습니다. 기관명만 저장하세요.`);
+      }
+    }
+  }
+
+  // heroTags 점검
+  const NOUN_EXCEPTIONS = ['강의', '설비', '기여', '처리', '관리', '설계', '분석', '개발', '운의', '합의', '회의', '정의', '위의', '아나운서', '캐스터', '리포터', '호스트'];
+
+  if (fields.heroTags) {
+    const tags = Array.isArray(fields.heroTags) ? fields.heroTags : JSON.parse(fields.heroTags);
+    if (tags.length < 3) warnings.push(`[태그] heroTags가 ${tags.length}개 (최소 3개)`);
+    if (tags.length > 10) warnings.push(`[태그] heroTags가 ${tags.length}개 (최대 10개)`);
+    for (const tag of tags) {
+      if (tag.length > 15) warnings.push(`[태그] "${tag}" — 15자 초과`);
+      if (tag.length < 2) warnings.push(`[태그] "${tag}" — 2자 미만`);
+      if (/[을를이은는에서도의]$/.test(tag)) {
+        const isNounException = NOUN_EXCEPTIONS.some(noun => tag.endsWith(noun));
+        if (!isNounException) {
+          errors.push(`[태그] "${tag}" — 조사로 끝남, 명사구여야 함`);
+        }
+      }
+    }
+  }
+
+  // ── 2. 짧은 라벨 필드 ──
+
+  for (const fieldPath of SHORT_LABEL_FIELDS) {
+    const val = getNestedField(fields, fieldPath);
+    if (val && typeof val === 'string' && val.length > 20) {
+      errors.push(`[라벨] ${fieldPath}가 "${val.substring(0, 30)}..." — 짧은 라벨이어야 함 (20자 이하)`);
+    }
+=== SOURCE_FIELD_MAP def ===
+=== PROSE_BODY_FIELDS def ===
+664:const PROSE_BODY_FIELDS = [

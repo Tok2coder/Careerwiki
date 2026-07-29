@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r109-b5",
+      "group_key": "cycle-R109-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R109 B5: 신발판매원~신호수",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

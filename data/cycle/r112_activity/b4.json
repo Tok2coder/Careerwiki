@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r112-b4",
+      "group_key": "cycle-R112-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R112 B4: 아일릿원~안전위생관리기술자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

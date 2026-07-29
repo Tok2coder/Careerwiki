@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r68-b1",
+      "group_key": "cycle-R68-2026-07-03",
+      "agent_slug": "hangyeol",
+      "label": "R68 B1: 방사성폐기물처리시설안전관리원~방사성폐기물처분시설안전성평가원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

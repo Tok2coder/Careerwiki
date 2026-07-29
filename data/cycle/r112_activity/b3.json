@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r112-b3",
+      "group_key": "cycle-R112-2026-07-21",
+      "agent_slug": "hangyeol",
+      "label": "R112 B3: 악기운반원~안테나조립원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

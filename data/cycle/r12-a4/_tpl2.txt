@@ -1,0 +1,7 @@
+YT=[{"url":"https://www.youtube.com/watch?v=JU83uKeq9V0","title":"억대 연봉 직업 감정평가사 — 실무자 인터뷰"},{"url":"https://www.youtube.com/watch?v=9T5IbLGIGRM","title":"[비상교육] 직업정보_감정 평가사"}]
+
+CT="탐색 카테고리 ≥3개: 학계·연구(서울대·고려대 부동산학·감정평가학 교수진) / 한국감정평가사협회 KAPAA 임원 / 감정평가법인 대표(한국·태평양·하나감정평가법인 등) — 한국인 공인 인물 후보 풀, 다음 사이클 위키 cross-check 후 careerTree DB 등록 예정."
+
+WAYSRC=[{"id":14,"text":"Q-Net — 감정평가사 자격 안내(jmCd=9745)","url":"https://www.q-net.or.kr/crf005.do?id=crf00503&jmCd=9745"},{"id":15,"text":"법제처 국가법령정보 — 감정평가법(실무수습·국토부 등록)","url":"https://www.law.go.kr/법령/감정평가및감정평가사에관한법률"},{"id":16,"text":"한국감정평가사협회 — 협회·법인·사무소 진로 안내","url":"https://www.kapanet.or.kr/about/business_introduction.asp"}]
+
+KEYS=overviewWork.main,overviewProspect.main,detailWlb.wlbDetail,detailWlb.socialDetail,trivia,overviewAbilities.technKnow,way,detailReady.curriculum,detailReady.recruit,detailReady.training

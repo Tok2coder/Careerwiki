@@ -1,0 +1,3 @@
+PROSE_BODY_FIELDS=["way","summary","trivia","overviewWork.main","overviewProspect.main","overviewAbilities.technKnow","overviewSalary.sal","detailWlb.wlbDetail","detailWlb.socialDetail"]
+SOURCE_FIELD_MAP keys="UNDEFINED"
+technKnow in PROSE_BODY_FIELDS=true

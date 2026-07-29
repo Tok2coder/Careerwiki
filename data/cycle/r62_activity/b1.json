@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r62-b1",
+      "group_key": "cycle-R62-2026-06-22",
+      "agent_slug": "hangyeol",
+      "label": "R62 B1: 반도체소자패키지검사공정기술자~반도체소자패키지검사장비부분품연구원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r49-b5",
+      "group_key": "cycle-R49-2026-06-15",
+      "agent_slug": "hangyeol",
+      "label": "R49 B5: 매트리스제조반장~매트리스포장원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

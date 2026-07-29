@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r59-b4",
+      "group_key": "cycle-R59-2026-06-21",
+      "agent_slug": "hangyeol",
+      "label": "R59 B4: 바이오화학제품배양원~바이오화학제품중합공정관리자",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+사회학연구원 | id=1765283321689634 | totalE=17 | distinct=14
+선물큐레이터 | id=1765284790444847 | totalE=16 | distinct=10
+세라믹소재연구원 | id=1765283824185438 | totalE=17 | distinct=17
+소모반장 | id=176528491203449 | totalE=16 | distinct=8
+쇼핑호스트 | id=1765283331082680 | totalE=16 | distinct=10

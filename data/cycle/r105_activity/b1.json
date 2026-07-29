@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r105-b1",
+      "group_key": "cycle-R105-2026-07-19",
+      "agent_slug": "hangyeol",
+      "label": "R105 B1: 시계품질검사원~시럽제조원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
