@@ -77,6 +77,21 @@
 | 출처 우선순위 | .go.kr/.or.kr/.co.kr deep | **.ac.kr 학과 페이지 deep 최우선** → .go.kr deep(origin 금지: career/work/work24/wagework/job.go.kr + CAREERNET/WORK24 자기인용) → 학회 .or.kr → 한국 미디어 deep |
 | M0 파일럿 | — | 정식 cycle 전 필수: API first-blood(실사용 0)·merge 반영·각주 실렌더·KPI +5 일치·보호영역 diff 0·게이트 수치 확정 (설계서 §7) |
 
+## 4.5 효율화 v7 (Jason 지시 2026-07-30 — R130·R131 효율 회귀 4h20m/3.7M 수습. **품질 게이트 수치 기준 불변, 실행 경로만 최적화**)
+
+근거 실측: R131 벽시계 4h20m(배치 최장 152분·tool_uses 276~348/세션), 토큰 3.7M(v5 안정기 709K의 5배). 원인 3종 — ①WebSearch 200회 소진이 5/5 세션 재현(소진 후 우회는 검색당 tool_use 3~5배) ②직업당 게이트 부담 누적(URL 개별 fetch·수치 465건 전건 기록) ③재보강 상시화로 7→12세션.
+
+1. **준비 세션 = seed pool 발굴 겸임(P2)**: 준비 세션이 명단 산출에 더해 **직업당 검증된 seed URL 6~8건**(deep, 축 지정)을 발굴해 배치 프롬프트에 주입한다. 준비 세션의 WebSearch 예산은 통째로 남아 있다 — 검색 부담을 예산이 살아있는 세션으로 앞당기는 것. **형제 클러스터는 준비 세션이 URL을 배치별로 배타 분할**해 URL-set 재사용을 사전 차단한다(R130 Jaccard 1.00·R131 4쌍 FAIL — "축 분리하라" 지시문만으로는 워커가 공용 풀을 복제함이 2 cycle 실증. 사후 게이트→사전 배분 전환).
+2. **배치 검색 상한**: 직업당 WebSearch ≤25회. seed+직접 URL 추정+WebFetch 우선, 소진 임박 시 DuckDuckGo HTML·Jina로 조기 전환(소진 후 전환 금지 — 그때는 이미 예산이 없다).
+3. **facts.md 위험수치 한정**: 기록 의무 = 금액·통계량·정원·연도·규격수치(원문 인용 필수). **면제 = 법령 시행일 표기·산술 파생값·연도 축약 표기**(numprov v2 정규화가 커버 — R131 UNIT_MISMATCH 82건 전건 거짓양성 실측). 기록량 ~40% 절감.
+4. **URL 생존검증 일괄화**: 개별 fetch 금지. 세션당 1~2회 node 일괄 스크립트(Chrome UA·리다이렉트·TLS 완화 포함)로 전 URL 검증.
+5. **배치 내 self-gate**: POST 전 distinct·도메인 비중 자가 집계, 미달이면 **그 자리에서** 보강 후 POST(재보강 세션 스폰 오버헤드 제거). 최종 표에 distinct 실측 필수. 재보강 세션은 게이트 실측 후 잔여 결함에만 최소 스폰.
+6. **검증 1세션 + 경량 제약**: numprov v2(거짓양성 자동 필터·UNFETCHABLE 분리) 출력의 잔여 항목만 triage. **"게이트 전수 재실행 금지, 수정 직업만 재게이트" 제약 필수** — R130 78분→R131 29분 실증. 검증은 판별·수정만, 측정은 dispatcher 몫.
+7. **scratch 격리**: 워커 임시 산출물(원본 JSON·payload·페이지 덤프)은 `data/cycle/_scratch/`(gitignored)에만. 커밋 대상은 facts.md·보고서·게이트 출력만. (R131에서 워커 raw dump가 pre-commit check-secrets에 Cloudflare 토큰 오탐→커밋 차단 사고)
+8. **도구 게이트 v2 유지보수**: url-liveness 재시도 사다리(310d4fb)·numprov v2가 오탐을 스크립트 계층에서 흡수한다 — 검증 세션에 오탐 재판별을 시키지 마라.
+
+목표 예산: 벽시계 ~2h(배치 60~75분·재보강 0~1세션·검증 30~40분), 토큰 ~1.5M. 게이트(마커·distinct≥18·도메인≥6·비중≤30%·수치 literal·Jaccard<0.30·KPI 정확 일치)는 전부 불변.
+
 ## 5. 자동연속 운영 (Jason 명시 승인 시만 — R59~R61 적립)
 
 각 cycle 완료 통지 시 한 턴에: ①독립 KPI 재실측 + 집합검증 + prod 표본 ②§4 보고 ③종료 갱신 2곳 ④즉시 다음 preflight+명단+spawn 연쇄. 승인 범위 마지막 cycle 후 go-gate 복원. 리밋 재발 시 DB landing→`--resume`.

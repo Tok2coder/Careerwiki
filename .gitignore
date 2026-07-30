@@ -145,3 +145,6 @@ data/audit-sources-deep.json
 
 # Local skill cache (drafts, audit snapshots, pilot prompts — not for git)
 .skill-cache/
+
+# Cycle worker scratch (raw dumps, payloads, page snapshots — check-secrets 오탐 방지, v7 §4.5-7)
+data/cycle/_scratch/
