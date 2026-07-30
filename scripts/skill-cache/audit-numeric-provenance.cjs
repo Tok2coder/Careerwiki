@@ -110,6 +110,14 @@ function extractFootnotes(sentenceText) {
 // 주의: 같은 단위가 반복되는 경우(예: "10조→19조")는 대상이 아니다 — 그건
 // 실제 사고(제지 생산액 10조→19조 날조)를 그대로 잡아야 하므로 제외해야 한다.
 const MAGNITUDE_ORDER = ['조', '억', '만', '천'];
+const MAGNITUDE_MULT = { 천: 1e3, 만: 1e4, 억: 1e8, 조: 1e12 };
+
+// R131 실측 사고(복합수 분해 ①/④): "2만 9,072명" → "2만"(만)/"9,072명"(명) 두 claim으로
+// 쪼개지는데, 기존 로직은 두 번째 claim의 unit이 조/억/만/천(MAGNITUDE_ORDER)이 아니면
+// (예: "명") 아예 복합군으로 묶지 않아 개별 대조로 새 버려 UNIT_MISMATCH/NOT_FOUND 오탐을
+// 냈다("7만3260" ↔ "7만"+"3260원" 같은 무공백 인접 케이스도 동일). c1이 순수 대수 단위
+// (조/억/만/천)이기만 하면, c2는 더 큰/같은 대수 단위만 아니면(=반복 케이스 제외) 어떤
+// 단위든(대수 단위 포함 더 작은 단위, 또는 개체 단위) 묶어 결합값을 계산한다.
 function findCompoundGroups(claims, sentenceText) {
   const groups = [];
   const used = new Set();
@@ -118,12 +126,13 @@ function findCompoundGroups(claims, sentenceText) {
     const c1 = claims[i];
     const c2 = claims[i + 1];
     const r1 = MAGNITUDE_ORDER.indexOf(c1.unit);
+    if (r1 === -1) continue; // c1은 반드시 순수 대수 단위(조/억/만/천)여야 함
     const r2 = MAGNITUDE_ORDER.indexOf(c2.unit);
-    if (r1 === -1 || r2 === -1) continue;
-    if (r2 <= r1) continue; // 반드시 조>억>만>천 순으로 감소해야 복합 표현
+    // 같은/더 큰 대수 단위 반복(예: 제지 생산액 "10조→19조" 사고)은 실제 별개 수치이므로 제외.
+    if (r2 !== -1 && r2 <= r1) continue;
     if (c1.isRange || c2.isRange) continue;
     const between = sentenceText.slice(c1.end, c2.start);
-    if (!/^\s*$/.test(between)) continue; // 공백만 있어야 인접으로 간주
+    if (!/^\s*$/.test(between)) continue; // 공백(또는 무공백) 인접만 복합 표현으로 간주
     groups.push([i, i + 1]);
     used.add(i);
     used.add(i + 1);
@@ -131,10 +140,34 @@ function findCompoundGroups(claims, sentenceText) {
   return groups;
 }
 
+// 복합 표현의 결합 수치값 계산 — c2가 대수 단위면 두 배수를 더하고(예: "6억"+"9,158만"),
+// c2가 개체 단위(명/원 등)면 c1의 배수값에 c2의 원 숫자를 그대로 더한다(예: "2만"+"9,072명"→29072).
+function combineMagnitudeValue(c1, c2) {
+  const r1 = MAGNITUDE_ORDER.indexOf(c1.unit);
+  if (r1 === -1 || c1.isRange || c2.isRange) return null;
+  const base1 = Number(digitsOnly(c1.numbers[0])) * MAGNITUDE_MULT[c1.unit];
+  const r2 = MAGNITUDE_ORDER.indexOf(c2.unit);
+  const base2 = r2 !== -1
+    ? Number(digitsOnly(c2.numbers[0])) * MAGNITUDE_MULT[c2.unit]
+    : Number(digitsOnly(c2.numbers[0]));
+  const total = base1 + base2;
+  return isFinite(total) ? Math.round(total) : null;
+}
+
 // ── 2. 숫자 매칭 ─────────────────────────────────────────────────────────────
 
 function digitsOnly(s) {
-  return String(s).replace(/,/g, '');
+  return String(s).replace(/[,\s]/g, '');
+}
+
+// 전각(全角) 숫자·콤마·마침표 → 반각 변환 — 원문(원자재 판매 사이트 등)이 전각으로 표기하는
+// 경우 본문(반각)과 표기만 다를 뿐 동일 수치인데 NOT_FOUND로 오판되는 사고 방지(요구사항 ④).
+function toHalfWidthDigitsAndComma(s) {
+  if (!s) return s;
+  return s
+    .replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xff10 + 0x30))
+    .replace(/，/g, ',')
+    .replace(/．/g, '.');
 }
 
 // 숫자 문자열(콤마 유무 양쪽 시도)이 text 안에 등장하는 모든 위치의 ±25자 윈도우를 반환.
@@ -183,7 +216,7 @@ function unitVariants(unit) {
 
 // 한글 대수 단위는 원문이 전개형으로 쓰는 경우가 많다("5만 톤" ↔ "50,000톤", "6,500톤" ↔ "6500").
 // 본문 표기만으로 NOT_FOUND를 내면 오탐이 되므로 전개형도 함께 조회한다. (R126 전수 실측으로 추가)
-const MAGNITUDE_MULT = { 천: 1e3, 만: 1e4, 억: 1e8, 조: 1e12 };
+// MAGNITUDE_MULT는 findCompoundGroups 근처(위)에서 이미 선언됨 — 재사용.
 function expandedForms(numStr, unit) {
   const mult = MAGNITUDE_MULT[unit];
   if (!mult) return [];
@@ -227,6 +260,61 @@ function isYearException(claim, sourceMeta) {
   if (!/^(19|20)\d{2}$/.test(n)) return false;
   const hay = `${(sourceMeta && sourceMeta.url) || ''} ${(sourceMeta && sourceMeta.text) || ''}`;
   return hay.includes(n);
+}
+
+// ── 연도 축약 표기 대조 (요구사항 ②) ────────────────────────────────────────
+// 원문이 보도자료 관행상 "'26년"/"’26.6.1." 처럼 두 자리로 축약해 쓰는 경우가 많다.
+// 본문은 "2026년"으로 완전 표기하므로 그대로 대조하면 NOT_FOUND/UNIT_MISMATCH로 오판된다.
+function yearAbbrevMatch(numStr, sourceText) {
+  const n = digitsOnly(numStr);
+  if (!/^(19|20)\d{2}$/.test(n)) return false;
+  const last2 = n.slice(2);
+  const re = new RegExp(`[’'‘’\`]\\s*${last2}(?!\\d)`);
+  return re.test(sourceText);
+}
+
+// ── 법령·공시 날짜 표기차 대조 (요구사항 ③) ─────────────────────────────────
+// 본문 "2018년 10월 8일" ↔ 원문(법제처 등) "[시행 2018. 10. 8.]" — 같은 날짜를
+// 문장 부호만 다르게 쓴다. 문장에서 "YYYY년 M월 D일" 패턴을 통째로 찾아 그 범위
+// 안에 있는 claim(년/일 단위)에 한해 점(.)/하이픈(-) 변형으로도 원문을 대조한다.
+const DATE_CONTEXT_RE = /(\d{4})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일/g;
+function extractDateContexts(sentenceText) {
+  const contexts = [];
+  let m;
+  DATE_CONTEXT_RE.lastIndex = 0;
+  while ((m = DATE_CONTEXT_RE.exec(sentenceText))) {
+    contexts.push({
+      start: m.index,
+      end: m.index + m[0].length,
+      year: Number(m[1]),
+      month: Number(m[2]),
+      day: Number(m[3]),
+    });
+  }
+  return contexts;
+}
+function dateVariants(y, m, d) {
+  const mm = String(m).padStart(2, '0');
+  const dd = String(d).padStart(2, '0');
+  const out = new Set();
+  for (const mv of new Set([String(m), mm])) {
+    for (const dv of new Set([String(d), dd])) {
+      out.add(`${y}. ${mv}. ${dv}`);
+      out.add(`${y}. ${mv}. ${dv}.`);
+      out.add(`${y}.${mv}.${dv}`);
+      out.add(`${y}.${mv}.${dv}.`);
+      out.add(`${y}-${mv}-${dv}`);
+    }
+  }
+  return [...out];
+}
+function dateContextMatch(claim, sentenceText, sourceText) {
+  if (claim.unit !== '년' && claim.unit !== '일') return false;
+  const contexts = extractDateContexts(sentenceText);
+  const ctx = contexts.find((c) => claim.start >= c.start && claim.end <= c.end);
+  if (!ctx) return false;
+  const normalizedSource = sourceText.replace(/\s+/g, ' ');
+  return dateVariants(ctx.year, ctx.month, ctx.day).some((v) => normalizedSource.includes(v));
 }
 
 // ── 3. HTML → plain text ────────────────────────────────────────────────────
@@ -345,7 +433,14 @@ function httpGet(urlStr, { minimalHeaders = false, redirectsLeft = 5 } = {}) {
 // 실제 조문은 클라이언트 JS가 그려서 원시 HTML엔 17~21자 shell만 있음. 이걸 "원문"으로 보고
 // 숫자 매칭을 시도하면 항상 NOT_FOUND(날조 오판)가 나온다. 추출 텍스트가 임계치 미만이면
 // 판정 불가(UNFETCHABLE)로 처리 — fetch 자체는 성공했어도 본문 추출 실패와 동일 취급.
-const MIN_USABLE_TEXT_LEN = 200;
+// v2: 200→500 상향(가시 텍스트 500자 미만 = JS 셸 의심, 요구사항 1).
+const MIN_USABLE_TEXT_LEN = 500;
+
+function isPdfResponse(contentTypeHeader, urlStr) {
+  if (contentTypeHeader && /application\/pdf/i.test(contentTypeHeader)) return true;
+  if (/\.pdf(?:[?#]|$)/i.test(urlStr)) return true;
+  return false;
+}
 
 // EUC-KR 인코딩 사이트 mojibake 오탐 억제 — 실사고(와이어커팅기조작원 spmedm.cafe24.com):
 // 본문에 "33년 동안 ..."이 실제로 있는데도 EUC-KR 바이트를 UTF-8로 오디코딩하면 한글이
@@ -365,27 +460,63 @@ function normalizeCharset(cs) {
   if (/utf-?8/.test(c)) return 'utf-8';
   return c;
 }
+// U+FFFD(치환문자) 개수/비율 — charset 선언이 없거나 틀렸는데도 EUC-KR 바이트를 UTF-8로
+// 디코딩한 경우를 잡아낸다(요구사항 2). 선언 기반 감지로 못 잡는 케이스의 보강 폴백.
+function replacementStats(s) {
+  if (!s) return { count: 0, ratio: 0 };
+  const count = (s.match(/�/g) || []).length;
+  return { count, ratio: count / Math.max(1, s.length) };
+}
 function decodeBody(buffer, contentTypeHeader) {
   const charset = detectCharset(buffer, contentTypeHeader);
+  let text;
   try {
-    return new TextDecoder(charset, { fatal: false }).decode(buffer);
+    text = new TextDecoder(charset, { fatal: false }).decode(buffer);
   } catch (e) {
-    return buffer.toString('utf8'); // 미지원 인코딩 — utf8 fallback
+    text = buffer.toString('utf8'); // 미지원 인코딩 — utf8 fallback
   }
+  if (charset !== 'euc-kr') {
+    const stats = replacementStats(text);
+    if (stats.count >= 3 && stats.ratio > 0.01) {
+      try {
+        const retryText = new TextDecoder('euc-kr', { fatal: false }).decode(buffer);
+        if (replacementStats(retryText).ratio < stats.ratio) return retryText;
+      } catch (e) { /* euc-kr 미지원 환경 — 원래 text 유지 */ }
+    }
+  }
+  return text;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// ── 재시도 사다리 (요구사항 4) ───────────────────────────────────────────────
+// 1차 fetch가 403/503이면 (Chrome UA+Accept-Language ko / 리다이렉트 추적 5회 /
+// rejectUnauthorized:false — 이 세 설정은 httpGet 기본값에 이미 포함) 짧은 대기 후
+// 1회만 재시도한다(일시적 차단·부하 완화 목적). 그 외 실패(404 등)는 기존 R124
+// 최소-헤더 재시도 패턴을 그대로 유지한다. 도메인당/URL당 재시도는 항상 최대 1회.
 // R124 실사고(staffingbridge.co.kr): 풀 헤더 GET은 404, 최소 헤더 GET은 200.
 async function fetchAndExtractText(urlStr) {
   let r = await httpGet(urlStr);
   if (!r.ok) {
-    const m = await httpGet(urlStr, { minimalHeaders: true });
-    if (m.ok) r = m;
+    if (r.reason === 'http-403' || r.reason === 'http-503') {
+      await sleep(500);
+      const retry = await httpGet(urlStr, { minimalHeaders: false, redirectsLeft: 5 });
+      if (retry.ok) r = retry;
+      else return { ok: false, reason: retry.reason || r.reason || 'unknown' };
+    } else {
+      const m = await httpGet(urlStr, { minimalHeaders: true });
+      if (m.ok) r = m;
+      else return { ok: false, reason: r.reason || 'unknown' };
+    }
   }
-  if (!r.ok) return null;
+  if (isPdfResponse(r.contentType, urlStr)) return { ok: false, reason: 'pdf' };
   const decoded = decodeBody(r.bodyBuffer, r.contentType);
-  const text = htmlToText(decoded);
-  if (text.length < MIN_USABLE_TEXT_LEN) return null; // JS shell/PDF 등 — 판정 보류
-  return text;
+  let text = htmlToText(decoded);
+  text = toHalfWidthDigitsAndComma(text);
+  if (text.length < MIN_USABLE_TEXT_LEN) return { ok: false, reason: 'js-shell' }; // 판정 보류
+  return { ok: true, text };
 }
 
 // ── 동시성 제한 실행 (≤5) ────────────────────────────────────────────────────
@@ -454,12 +585,14 @@ async function analyzeProseData(data, fetchTextFn) {
     }
   }
 
+  // fetchTextFn은 { ok, text, reason } 형태를 반환한다(v2 — UNFETCHABLE 사유 코드 전파).
   const cache = new Map();
   await runPool([...neededUrls], 5, async (u) => {
     cache.set(u, await fetchTextFn(u));
   });
 
   const counts = { claims: 0, FOUND: 0, UNIT_MISMATCH: 0, NOT_FOUND: 0, UNFETCHABLE: 0, NO_FOOTNOTE: 0 };
+  const unfetchableReasons = {};
   const details = [];
 
   for (const rec of records) {
@@ -471,15 +604,24 @@ async function analyzeProseData(data, fetchTextFn) {
 
     if (rec.isCompound) {
       counts.claims += 2;
-      const fetched = rec.sources.map((s) => ({ url: s.url, text: cache.get(s.url) })).filter((t) => t.text != null);
+      const fetchedAll = rec.sources.map((s) => ({ url: s.url, r: cache.get(s.url) }));
+      const okFetched = fetchedAll.filter((f) => f.r && f.r.ok);
       let verdict = 'UNFETCHABLE';
-      let note = fetched.length === 0 ? 'fetchFailed' : 'compoundAmbiguous';
+      let note = okFetched.length === 0 ? 'fetchFailed' : 'compoundAmbiguous';
       let usedUrl = rec.sources[0].url;
+      const combined = combineMagnitudeValue(rec.claims[0], rec.claims[1]);
+      const combinedVariants = combined != null
+        ? [String(combined), String(combined).replace(/\B(?=(\d{3})+(?!\d))/g, ',')]
+        : [];
       const n1 = digitsOnly(rec.claims[0].numbers[0]);
       const n2 = digitsOnly(rec.claims[1].numbers[0]);
-      for (const t of fetched) {
-        if (findNumberWindows(n1, t.text).length > 0 && findNumberWindows(n2, t.text).length > 0) {
-          verdict = 'FOUND'; note = 'compound-lenient'; usedUrl = t.url;
+      for (const f of okFetched) {
+        if (combinedVariants.some((v) => findNumberWindows(v, f.r.text).length > 0)) {
+          verdict = 'FOUND'; note = 'compound-combined'; usedUrl = f.url;
+          break;
+        }
+        if (findNumberWindows(n1, f.r.text).length > 0 && findNumberWindows(n2, f.r.text).length > 0) {
+          verdict = 'FOUND'; note = 'compound-lenient'; usedUrl = f.url;
           break;
         }
       }
@@ -497,24 +639,34 @@ async function analyzeProseData(data, fetchTextFn) {
     counts.claims += 1;
     const localVerdicts = [];
     for (const src of rec.sources) {
-      const text = cache.get(src.url);
-      if (text == null) { localVerdicts.push({ v: 'UNFETCHABLE', url: src.url }); continue; }
+      const fetched = cache.get(src.url);
+      if (!fetched || !fetched.ok) {
+        localVerdicts.push({ v: 'UNFETCHABLE', url: src.url, reason: (fetched && fetched.reason) || 'unknown' });
+        continue;
+      }
+      const text = fetched.text;
       let v = matchClaim(claim, text);
-      if (v === 'NOT_FOUND' && isYearException(claim, src)) v = 'FOUND';
+      if (v !== 'FOUND' && isYearException(claim, src)) v = 'FOUND';
+      // 연도 축약('26 등)·법령 날짜 표기차 정규화 — 범위(claim.isRange) 주장은 대상 제외.
+      if (v !== 'FOUND' && !claim.isRange && claim.unit === '년' && yearAbbrevMatch(claim.numbers[0], text)) v = 'FOUND';
+      if (v !== 'FOUND' && !claim.isRange && dateContextMatch(claim, rec.sentence, text)) v = 'FOUND';
       localVerdicts.push({ v, url: src.url });
     }
     localVerdicts.sort((a, b) => VERDICT_RANK[a.v] - VERDICT_RANK[b.v]);
     const best = localVerdicts[0];
     counts[best.v] += 1;
-    if (best.v === 'NOT_FOUND' || best.v === 'UNIT_MISMATCH') {
+    if (best.v === 'UNFETCHABLE') {
+      unfetchableReasons[best.reason] = (unfetchableReasons[best.reason] || 0) + 1;
+    }
+    if (best.v === 'NOT_FOUND' || best.v === 'UNIT_MISMATCH' || best.v === 'UNFETCHABLE') {
       details.push({
         level: best.v, field: rec.field, sentence: rec.sentence.slice(0, 80),
-        claim: claim.raw, url: best.url,
+        claim: claim.raw, url: best.url, reason: best.reason,
       });
     }
   }
 
-  return { counts, details };
+  return { counts, details, unfetchableReasons };
 }
 
 // ── 6. CLI ───────────────────────────────────────────────────────────────────
@@ -554,8 +706,14 @@ async function fetchJobData(slug) {
 async function processJob(slug) {
   const { data, error } = await fetchJobData(slug);
   if (error) return { slug, error };
-  const { counts, details } = await analyzeProseData(data, fetchAndExtractText);
-  return { slug, counts, details };
+  const { counts, details, unfetchableReasons } = await analyzeProseData(data, fetchAndExtractText);
+  return { slug, counts, details, unfetchableReasons };
+}
+
+function formatReasons(reasons) {
+  const keys = Object.keys(reasons || {});
+  if (keys.length === 0) return '';
+  return ` (${keys.map((k) => `${k}:${reasons[k]}`).join(', ')})`;
 }
 
 function printJobResult(r) {
@@ -566,11 +724,13 @@ function printJobResult(r) {
   const c = r.counts;
   console.log(
     `${r.slug} | 수치 ${c.claims}건 | FOUND ${c.FOUND} | UNIT_MISMATCH ${c.UNIT_MISMATCH} | ` +
-    `NOT_FOUND ${c.NOT_FOUND} | UNFETCHABLE ${c.UNFETCHABLE} | NO_FOOTNOTE ${c.NO_FOOTNOTE}`
+    `NOT_FOUND ${c.NOT_FOUND} | UNFETCHABLE ${c.UNFETCHABLE}${formatReasons(r.unfetchableReasons)} | NO_FOOTNOTE ${c.NO_FOOTNOTE}`
   );
   for (const d of r.details) {
     if (d.level === 'INFO') {
       console.log(`  [INFO][${d.note}] field=${d.field} "${d.sentence}" claim="${d.claim}" source=${d.url || '-'}`);
+    } else if (d.level === 'UNFETCHABLE') {
+      console.log(`  [UNFETCHABLE][${d.reason}] field=${d.field} "${d.sentence}" claim="${d.claim}" source=${d.url || '-'}`);
     } else {
       console.log(`  [${d.level}] field=${d.field} "${d.sentence}" claim="${d.claim}" source=${d.url || '-'}`);
     }
@@ -598,6 +758,7 @@ async function main() {
   }
 
   const totals = { claims: 0, FOUND: 0, UNIT_MISMATCH: 0, NOT_FOUND: 0, UNFETCHABLE: 0, NO_FOOTNOTE: 0 };
+  const totalReasons = {};
   const results = [];
 
   for (const slug of slugs) {
@@ -606,6 +767,9 @@ async function main() {
     results.push(r);
     if (!r.error) {
       for (const k of Object.keys(totals)) totals[k] += r.counts[k];
+      for (const [reason, n] of Object.entries(r.unfetchableReasons || {})) {
+        totalReasons[reason] = (totalReasons[reason] || 0) + n;
+      }
     }
   }
 
@@ -613,7 +777,7 @@ async function main() {
   console.log('---');
   console.log(
     `Summary | 직업 ${results.length}건(에러 ${errored}) | 수치 ${totals.claims}건 | FOUND ${totals.FOUND} | ` +
-    `UNIT_MISMATCH ${totals.UNIT_MISMATCH} | NOT_FOUND ${totals.NOT_FOUND} | UNFETCHABLE ${totals.UNFETCHABLE} | ` +
+    `UNIT_MISMATCH ${totals.UNIT_MISMATCH} | NOT_FOUND ${totals.NOT_FOUND} | UNFETCHABLE ${totals.UNFETCHABLE}${formatReasons(totalReasons)} | ` +
     `NO_FOOTNOTE ${totals.NO_FOOTNOTE}`
   );
 
@@ -626,11 +790,17 @@ module.exports = {
   extractClaims,
   extractFootnotes,
   findCompoundGroups,
+  combineMagnitudeValue,
   matchClaim,
   matchSingleNumber,
   findNumberWindows,
   digitsOnly,
   isYearException,
+  yearAbbrevMatch,
+  extractDateContexts,
+  dateContextMatch,
+  toHalfWidthDigitsAndComma,
+  isPdfResponse,
   htmlToText,
   analyzeProseData,
   VERDICT_RANK,
