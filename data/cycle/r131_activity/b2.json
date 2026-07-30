@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r131-b2",
+      "group_key": "cycle-R131-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R131 B2: 원자력안전관리원~원형톱할석원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+원자력설비설계원 | 수치 22건 | FOUND 21 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "2025년 한수원은 체코 두코바니 5·6호기에 1000MW급 APR1000 2기를 공급하는 계약을 체결했고 한전기술이 설계를 맡았다.[3]" claim="2025년" source=https://www.khan.co.kr/article/202506050921001
+원자력안전관리원 | 수치 11건 | FOUND 9 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "원자력·에너지 분야 전문인력 양성을 위해 2012년 KEPCO 5개 그룹사가 출연해 설립한 국제원자력대학원대학교(KINGS)의 원자력산업학과·에" claim="2012년" source=https://www.kings.ac.kr/home.do?lang=ko
+  [UNIT_MISMATCH] field=way "한국원자력안전기술원(KINS)은 2008년 국제원자력안전학교를 개교해 안전규제 실무 교육을 제공해 왔다[3]." claim="2008년" source=https://www.kins.re.kr/history2
+원자력연료제조원 | 수치 32건 | FOUND 27 | UNIT_MISMATCH 3 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "채용 공고의 생산기술직 기계 분야(가 38명·나 1명)는 교대근무를 전제로 대전 또는 논산 사업장 근무가 가능해야 지원할 수 있다는 조건을 명시" claim="38명" source=https://linkareer.com/activity/260684
+  [NOT_FOUND] field=way "채용 공고의 생산기술직 기계 분야(가 38명·나 1명)는 교대근무를 전제로 대전 또는 논산 사업장 근무가 가능해야 지원할 수 있다는 조건을 명시" claim="1명" source=https://linkareer.com/activity/260684
+  [UNIT_MISMATCH] field=way "이 회사는 1982년 11월 5일 설립된 공공기관으로 2025년 기준 직원 1,174명, 자본금 931억 5천만원 규모를 갖추고 있어 채용 규모" claim="5일" source=https://www.jobkorea.co.kr/company/1463982
+  [UNIT_MISMATCH] field=trivia "한국원자력연구원이 1997년 연구에 착수해 약 15년의 개발 끝에 2012년 12월 4일 한전원자력연료에 이전한 고성능 HANA 피복관·대결정립" claim="15년" source=https://kaeri.re.kr/arti/board/view?pageNum=57&rowCnt=10&menuId=MENU00326&schType=0&schYear=&schText=&categoryId=&continent=&country=&boardStyle=Text&linkId=5841
+  [UNIT_MISMATCH] field=trivia "한국원자력연구원이 1997년 연구에 착수해 약 15년의 개발 끝에 2012년 12월 4일 한전원자력연료에 이전한 고성능 HANA 피복관·대결정립" claim="2012년" source=https://kaeri.re.kr/arti/board/view?pageNum=57&rowCnt=10&menuId=MENU00326&schType=0&schYear=&schText=&categoryId=&continent=&country=&boardStyle=Text&linkId=5841
+원자력품질관리원 | 수치 20건 | FOUND 11 | UNIT_MISMATCH 9 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "이미 산업에 종사 중인 실무자는 KAIF가 정원 50명 규모로 유료(50만원) 운영하는 12시간짜리 '원자력 품질보증 교육'을 통해 품질보증 정" claim="50만" source=https://edu.kaif.or.kr/course/course_view.jsp?cid=&id=176344
+  [UNIT_MISMATCH] field=trivia "원자력안전위원회는 2026년 7월 24일 원자로시설의 안전등급 규정과 가동중검사 규정, 품질보증 세부요건 기준을 KEPIC·ASME 코드 최신판" claim="2026년" source=https://www.energydaily.co.kr/news/articleView.html?idxno=201736
+  [UNIT_MISMATCH] field=trivia "원자력안전위원회는 2026년 7월 24일 원자로시설의 안전등급 규정과 가동중검사 규정, 품질보증 세부요건 기준을 KEPIC·ASME 코드 최신판" claim="2026년" source=https://www.energydaily.co.kr/news/articleView.html?idxno=201736
+  [UNIT_MISMATCH] field=trivia "대한전기협회는 2025년 6월 26일 서울 송파구 본사에서 새로 도입한 '원자력 품질보증계획 인증제도'(QAP)의 첫 인증서 수여식을 열었고, " claim="2025년" source=https://www.thefairnews.co.kr/news/articleView.html?idxno=50372
+  [UNIT_MISMATCH] field=trivia "DL이앤씨는 원자력 기계(MN)·전기(EN)·구조(SN)·공조기기(MH) 4개 분야에서 각각 별도의 KEPIC 인증번호를 보유하고 있으며 유효기" claim="2026년" source=https://www.dlenc.co.kr/sustainability/quality/CertificateNuclear.do
+  [UNIT_MISMATCH] field=trivia "DL이앤씨는 원자력 기계(MN)·전기(EN)·구조(SN)·공조기기(MH) 4개 분야에서 각각 별도의 KEPIC 인증번호를 보유하고 있으며 유효기" claim="2029년" source=https://www.dlenc.co.kr/sustainability/quality/CertificateNuclear.do
+  [UNIT_MISMATCH] field=trivia "DL이앤씨는 원자력 기계(MN)·전기(EN)·구조(SN)·공조기기(MH) 4개 분야에서 각각 별도의 KEPIC 인증번호를 보유하고 있으며 유효기" claim="3년" source=https://www.dlenc.co.kr/sustainability/quality/CertificateNuclear.do
+  [UNIT_MISMATCH] field=trivia "한국전력기술은 1999년 KEPIC 인증을 처음 취득한 이래 원자력 기계·구조 분야 인증과 함께 1984년부터 유지해 온 미국기계학회(ASME)" claim="1984년" source=https://www.kepco-enc.com/menu.es?mid=a10403010300
+  [UNIT_MISMATCH] field=overviewProspect.main "대한전기협회는 소형모듈원자로(SMR) 상용화에 대비해 법정단체로 출범한 이후 처음 여는 2026년 8월 KEPIC-Week 행사에서 제작·인허가" claim="2026년" source=https://www.energydaily.co.kr/news/articleView.html?idxno=201801
+원자로공학연구원 | 수치 10건 | FOUND 8 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "한국원자력연구원은 1959년 2월 설립돼 국가과학기술연구회 산하에서 원자로·핵연료주기와 원자력설비 안전성 연구를 수행해 온 출연연구기관이다[1]" claim="1959년" source=https://www.nst.re.kr/www/sub.do?key=217
+  [UNIT_MISMATCH] field=trivia "이 연구원은 2013년 10월 국제원자력교육훈련센터에서 '확률론적 안전성 평가(PSA) 심포지엄'을 열어 한국수력원자력·한국원자력안전기술원·한국" claim="2013년" source=https://www.kaeri.re.kr/artie/board/view?pageNum=114&rowCnt=10&no1=371&linkId=5910&menuId=MENU00326
+원자로운전원 | 수치 28건 | FOUND 25 | UNIT_MISMATCH 3 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "2024년 8월 23일에는 대전 한수원 중앙연구원에 한국형 소형모듈원자로 시뮬레이터센터가 준공돼, 운전 적합성 검증과 운전원 교육을 함께 수행하" claim="2024년" source=https://www.industrynews.co.kr/news/articleView.html?idxno=54916
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "고리 2호기는 2023년 4월 정지된 뒤 정기검사 102개 항목 중 임계 전 필요한 94개 항목을 마치고 10건의 안전조치를 이행해 2026년 " claim="2026년" source=https://biz.heraldcorp.com/article/10706795
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "2026년 6월에는 현장 경력이 풍부한 베테랑 직원들이 위험요인을 미리 찾아 후배에게 전수하는 '안전이음단'이 출범해, 예방 중심의 안전문화를 " claim="2026년" source=https://www.energydaily.co.kr/news/articleView.html?idxno=200892
+원자로현장운전원 | 수치 18건 | FOUND 14 | UNIT_MISMATCH 3 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "면허 취득 후에도 3년마다 5일 이상 보수교육을 받아야 하며, 교육시간의 30%는 정상·비정상·비상운전 모의제어반 실습으로 채워진다[2]." claim="30%" source=https://www.kins.re.kr/requalification/defaultAction?act=ROEN029R
+  [UNIT_MISMATCH] field=way "한국원자력연구원 원자력교육센터는 연구용 원자로조종사 교육을 5일 과정·회당 20명 규모로 운영하는 등 실습 중심 교육을 제공한다[3]." claim="20명" source=https://www.kaeri.re.kr/board?menuId=MENU00565
+  [UNIT_MISMATCH] field=way "한국원자력안전기술원은 원자력안전법 시행령 제122조에 따라 매년 원자력관계면허시험 시행계획을 공고하는데, 2026년에는 발전용 원자로조종사·조종" claim="1회" source=https://license.kins.re.kr/lice/LiceAction?act=KLIAC110R
+  [UNIT_MISMATCH] field=trivia "한수원은 2024년 8월 대전 유성구 중앙연구원에 i-SMR 시뮬레이션 센터를 열어, 실제와 같이 구성한 주제어실에서 비상상황 대응훈련을 할 수" claim="2024년" source=https://v.daum.net/v/ZvB87CCnpD
+원자재품질분석원 | 수치 17건 | FOUND 17 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+원전계전기술연구원 | 수치 21건 | FOUND 17 | UNIT_MISMATCH 3 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "한수원 중앙연구원은 1983년 한국전력공사 기술연구본부 원자력연구실에서 출발해 2011년 8월 지금의 조직으로 통합 개원했고, 현재 계전연구소를" claim="1983년" source=https://www.khnp.co.kr/central/contents.do?key=1926
+  [UNIT_MISMATCH] field=way "한수원 중앙연구원은 1983년 한국전력공사 기술연구본부 원자력연구실에서 출발해 2011년 8월 지금의 조직으로 통합 개원했고, 현재 계전연구소를" claim="2011년" source=https://www.khnp.co.kr/central/contents.do?key=1926
+  [NOT_FOUND] field=trivia "이 연구는 한수원 중앙연구원을 중심으로 두산에너빌리티 등 10개 기업이 참여해 2022년 말 핵심요소기술 개발을 마치고 3차례의 프로토타입을 시" claim="2022년" source=https://www.knpnews.com/news/articleView.html?idxno=31480
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "한수원 중앙연구원은 2026년 발명의 날(제61회) 기념식에서 연구개발 초기 단계부터 특허 전략을 세워 핵심 기술을 자산화한 공로로 국무총리 표" claim="2026년" source=https://www.energydaily.co.kr/news/articleView.html?idxno=167450
+원전설비연구원 | 수치 6건 | FOUND 3 | UNIT_MISMATCH 2 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "한국원자력안전기술원은 2015년 원전 시뮬레이터를 준공해 설비 이상 상황을 재현·검증하는 연구 인프라를 갖췄다[1]." claim="2015년" source=https://www.kins.re.kr/history2
+  [UNIT_MISMATCH] field=overviewProspect.main "한수원은 2024년 8월 i-SMR 시뮬레이션 센터를 열어 소형모듈원전의 최적 설계와 운전 적합성을 미리 검증할 수 있게 했는데, 이 데이터는 " claim="2024년" source=https://v.daum.net/v/ZvB87CCnpD
+  [NOT_FOUND] field=overviewAbilities.technKnow "산업통상자원부가 2050 중장기 원전산업 로드맵에서 원전 운영 고도화와 함께 연구개발(R&D)·인력 기반 강화를 5대 전략 중 하나로 제시한 것" claim="5대" source=https://www.motie.go.kr/kor/article/ATCL3f49a5a8c/169828/view
+원전안전분석기술연구원 | 수치 21건 | FOUND 15 | UNIT_MISMATCH 5 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "원전안전분석기술연구원이 다루는 중대사고 종합해석코드 CINEMA는 국내 전문가들이 10여 년간 독자 개발해 2022년 11월 국내 최초로 소프트" claim="2022년" source=https://www.khnp.co.kr/main/selectBbsNttView.do;WCN_EXHP=5rH8Mm5MWcrVrO4H_VWCq-97KQM1LKqkrELCj3Mv8G8yqoEtbGBw!-570597537?key=2289&bbsNo=71&nttNo=46400&searchCtgry=&searchCnd=all&searchKrwd=&integrDeptCode=&pageIndex=72
+  [UNIT_MISMATCH] field=trivia "한국원자력안전기술원은 1990년 설립 이후 2015년 원전 시뮬레이터를 준공하는 등 안전해석 인프라를 꾸준히 확충해 왔다.[5]" claim="1990년" source=https://www.kins.re.kr/history2
+  [UNIT_MISMATCH] field=trivia "한국원자력안전기술원은 1990년 설립 이후 2015년 원전 시뮬레이터를 준공하는 등 안전해석 인프라를 꾸준히 확충해 왔다.[5]" claim="2015년" source=https://www.kins.re.kr/history2
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "이 기관은 1989년 12월 30일 시행된 한국원자력안전기술원법(법률 제4195호)을 설립 근거로 삼고 있어, 소속 연구원은 이 법이 정한 안전" claim="1989년" source=https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=4062
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "이 기관은 1989년 12월 30일 시행된 한국원자력안전기술원법(법률 제4195호)을 설립 근거로 삼고 있어, 소속 연구원은 이 법이 정한 안전" claim="30일" source=https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=4062
+  [NOT_FOUND] field=detailWlb.wlbDetail "이 기관은 2025년 기준 매출액 1,531억원 규모로 운영되는 국내 공공기관·공기업으로 분류돼 정년과 복지 제도가 비교적 잘 갖춰져 있다.[2" claim="2025년" source=https://www.saramin.co.kr/zf_user/company-info/view/csn/QTdZSzZZNE10dGVPTUxCVFBmWWJjQT09/company_nm/%ED%95%9C%EA%B5%AD%EC%9B%90%EC%9E%90%EB%A0%A5%EC%95%88%EC%A0%84%EA%B8%B0%EC%88%A0%EC%9B%90
+원전연료장전원 | 수치 31건 | FOUND 22 | UNIT_MISMATCH 8 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "한국원자력연구원 원자력교육센터가 운영하는 '핵연료물질취급자 단기과정'(RM면허 준비과정)은 2주·정원 30명으로 진행되지만 이 과정 자체가 실무" claim="30명" source=https://www.kaeri.re.kr/kntc/board/view?pageNum=4&rowCnt=10&menuId=MENU00669&schType=0&linkId=12099
+  [UNIT_MISMATCH] field=trivia "한울2호기는 2026년 5월 20일 오전 10시 발전을 멈추고 26차 계획예방정비에 들어갔는데, 3주기 연속 무고장 운전 기록을 세운 뒤 약 3" claim="2026년" source=https://www.getnews.co.kr/news/articleView.html?idxno=870565
+  [UNIT_MISMATCH] field=trivia "한울4호기도 5월 18일부터 약 2개월간 정비하며 연료를 교체한 뒤 7월 18일 발전을 재개해 7월 20일 오후 5시 38분 100% 출력에 도" claim="2개월" source=https://www.newspim.com/news/view/20260720001059
+  [UNIT_MISMATCH] field=trivia "반면 가압중수로(PHWR)형인 월성1호기는 1983년 4월 22일 상업운전을 시작한 뒤 2019년 12월 24일 영구정지됐다.[5]" claim="1983년" source=https://nsic.nssc.go.kr/nuclear/operatingNppWolsungUnit.do?nppKey=CMN024010401
+  [UNIT_MISMATCH] field=trivia "반면 가압중수로(PHWR)형인 월성1호기는 1983년 4월 22일 상업운전을 시작한 뒤 2019년 12월 24일 영구정지됐다.[5]" claim="22일" source=https://nsic.nssc.go.kr/nuclear/operatingNppWolsungUnit.do?nppKey=CMN024010401
+  [UNIT_MISMATCH] field=trivia "반면 가압중수로(PHWR)형인 월성1호기는 1983년 4월 22일 상업운전을 시작한 뒤 2019년 12월 24일 영구정지됐다.[5]" claim="24일" source=https://nsic.nssc.go.kr/nuclear/operatingNppWolsungUnit.do?nppKey=CMN024010401
+  [UNIT_MISMATCH] field=overviewProspect.main "공공데이터포털에 공개된 원전 호기별 계획예방정비 현황은 2011년부터 2025년까지 222건이 누적돼 있을 만큼, 원전이 가동되는 한 정기적인 " claim="222건" source=https://www.data.go.kr/data/15114951/fileData.do
+  [UNIT_MISMATCH] field=overviewProspect.main "2026년에도 가동원전 호기별로 19건의 계획예방정비가 예정돼 있어, 연료장전 업무는 매년 되풀이되는 정기 일정으로 자리잡고 있다.[2]" claim="19건" source=https://www.data.go.kr/data/15060801/fileData.do
+  [UNIT_MISMATCH] field=overviewProspect.main "2014년 이후 호기별 발전량·이용률 통계가 268건 축적돼 있는 것처럼 원전은 장기간 안정적으로 가동되는 설비여서, 정비 주기에 맞춰 반복되는" claim="268건" source=https://www.data.go.kr/data/15002302/fileData.do
+원전토건기술연구원 | 수치 18건 | FOUND 14 | UNIT_MISMATCH 1 | NOT_FOUND 3 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "한국전력기술이 설계한 새울 3,4호기는 SSE 0.3g의 강화된 내진설계와 항공기 충돌 방호설계를 적용했고, 신한울 1,2호기는 2022년 준공" claim="2022년" source=https://www.kepco-enc.com/menu.es?mid=a10302020100
+  [UNIT_MISMATCH] field=trivia "원전 지진 리스크 저감을 위한 내진 성능 최적화 연구는 한국원자력연구원 구조·지진안전연구부가 수행해 2024년 한국지진공학회논문집 28권 6호에" claim="2024년" source=https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003133739
+  [NOT_FOUND] field=trivia "원전 격납건물 돔의 비축대칭 텐던 배치를 다루는 축대칭 모델링 기법 논문은 2005년 콘크리트학회 논문집 17권 4호에 실렸다[6]." claim="2005년" source=https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE02290357
+  [NOT_FOUND] field=trivia "원자로건물 규모는 노형별로 상이해 한국전력기술이 설계한 APR1400은 OPR1000 대비 전기출력이 1.4배(1,400MW급) 커 원자로건물과" claim="1.4배" source=https://www.kepco-enc.com/menu.es?mid=a10302030100
+원통도금원 | 수치 25건 | FOUND 23 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "자동차 wheel nut 하지도금 연구에서는 시안화구리 도금의 최적 조건을 배럴 개공율 22.5%, 회전속도 2.5rpm, 도금온도 323K(약" claim="50℃" source=https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=DIKO0012499023
+  [NOT_FOUND] field=trivia "2023년 인천 남동산단 특별점검에서는 113개소 중 31개 도금·금속표면처리업체가 배출허용기준을 초과한 특정수질유해물질을 배출해 적발됐고, 기" claim="2023년" source=http://www.namdongnews.co.kr/news/articleView.html?idxno=80618
+원판절단기조작원 | 수치 19건 | FOUND 11 | UNIT_MISMATCH 4 | NOT_FOUND 2 | UNFETCHABLE 2 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "2024년 국내 철강 생산량은 6,650만톤으로 전년보다 4.9% 줄었지만 수출은 2,840만톤으로 3.7% 늘어 내수 부진을 수출이 메웠다.[" claim="2024년" source=https://www.index.go.kr/unity/potal/main/EachDtlPageDetail.do?idx_cd=1152
+  [NOT_FOUND] field=trivia "2024년 국내 철강 생산량은 6,650만톤으로 전년보다 4.9% 줄었지만 수출은 2,840만톤으로 3.7% 늘어 내수 부진을 수출이 메웠다.[" claim="6,650만" source=https://www.index.go.kr/unity/potal/main/EachDtlPageDetail.do?idx_cd=1152
+  [NOT_FOUND] field=trivia "2024년 국내 철강 생산량은 6,650만톤으로 전년보다 4.9% 줄었지만 수출은 2,840만톤으로 3.7% 늘어 내수 부진을 수출이 메웠다.[" claim="2,840만" source=https://www.index.go.kr/unity/potal/main/EachDtlPageDetail.do?idx_cd=1152
+  [INFO][compoundAmbiguous] field=trivia "포스코 포항제철소 후판공장은 압연설비 전반을 아우르는 4단계 지능형 감시체계를 도입해 잠재적 설비장애 25건을 사전에 차단하고 가동정지 위기 2" claim="65억 + 4000만" source=https://newsroom.posco.com/kr/%ED%8F%AC%ED%95%AD%EC%A0%9C%EC%B2%A0%EC%86%8C-%ED%9B%84%ED%8C%90%EA%B3%B5%EC%9E%A5-%EC%A7%80%EB%8A%A5%ED%98%95-%EC%84%A4%EB%B9%84%EC%9E%A5%EC%95%A0-%EA%B0%90%EC%8B%9C%EC%B2%B4%EA%B3%84-%EB%8F%84/
+  [UNIT_MISMATCH] field=trivia "1955년 설립된 세아베스틸은 국내 자동차용 특수강의 20% 이상을 공급하며 2021년에는 국내 기업 최초로 사용후핵연료 운반저장용기를 미국 시" claim="1955년" source=https://ko.wikipedia.org/wiki/%EC%84%B8%EC%95%84%EB%B2%A0%EC%8A%A4%ED%8B%B8
+  [UNIT_MISMATCH] field=trivia "2026년 7월에는 일주일 새 현대중공업 울산조선소·HL만도 평택공장·현대중공업 군산조선소에서 각각 끼임 사고로 노동자가 숨졌는데 세 사건 모두" claim="2026년" source=https://www.khan.co.kr/article/202607281605001/
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "2026년 7월 조선업 등 제조현장에서 잇따른 끼임 사망사고는 안전장치 미작동과 하청 노동자에게 위험 업무를 맡기는 구조가 원인으로 지목되면서," claim="2026년" source=https://www.khan.co.kr/article/202607281605001/
+원피건조원 | 수치 25건 | FOUND 17 | UNIT_MISMATCH 8 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "원피건조원이 되려면 특별한 학력 제한 없이 보통 고졸 정도의 학력에 3~6개월의 짧은 현장 숙련 기간을 거쳐 투입되며, 건조 전 단계인 원피 재" claim="3~6개월" source=https://www.kssn.net/search/stddetail.do?itemNo=K001010155130
+  [UNIT_MISMATCH] field=trivia "2023년 국제모피연맹(IFF) 주최로 열린 서울국제모피가죽박람회에는 35개 기업이 참가했는데, 세계 모피 교역 규모는 약 180억 달러에 달하" claim="2023년" source=https://www.itnk.co.kr/news/articleView.html?idxno=71258
+  [UNIT_MISMATCH] field=trivia "한국모피협회가 2014년 처음 마련한 K-Fur 디자인 콘테스트는 2018년 제5회째에 약 200개 작품이 응모해 8개 작품이 예선을 통과했다." claim="2018년" source=https://www.itnk.co.kr/news/articleView.html?idxno=58717
+  [UNIT_MISMATCH] field=trivia "2016년 제3회 대회 당시 김혁주 한국모피협회 이사장은 신진 디자이너를 적극 지원하겠다고 밝혔다.[4]" claim="2016년" source=https://www.gukjenews.com/news/articleView.html?idxno=602174
+  [UNIT_MISMATCH] field=trivia "한국과학기술연구원(KIST)은 2018년 10월 폴리피롤 흡착재로 도금·염색·피혁공장 폐수 속 1급 발암물질인 6가크롬을 99% 이상 제거하는 " claim="2018년" source=https://www.sedaily.com/article/12080104
+  [UNIT_MISMATCH] field=trivia "2024년 2월에는 35개국 50여 개 동물단체로 구성된 모피반대연합(Fur Free Alliance)이 이탈리아 명품 브랜드 막스마라를 겨냥해" claim="2024년" source=https://www.hankookilbo.com/news/article/A2024021916250003691
+  [UNIT_MISMATCH] field=overviewProspect.main "2022년 기준 국내 제조업 사업체수는 7만3260개로 전년보다 750개 늘어난 것처럼, 원피 가공을 포함한 제조업 생태계는 완만하게 확장되는 " claim="2022년" source=https://kosis.kr/visual/nsportalStats/detailContents.do?statJipyoId=3649&listId=B&vStatJipyoId=4974
+  [UNIT_MISMATCH] field=overviewProspect.main "2022년 기준 국내 제조업 사업체수는 7만3260개로 전년보다 750개 늘어난 것처럼, 원피 가공을 포함한 제조업 생태계는 완만하게 확장되는 " claim="7만" source=https://kosis.kr/visual/nsportalStats/detailContents.do?statJipyoId=3649&listId=B&vStatJipyoId=4974
+원피깎기원 | 수치 16건 | FOUND 9 | UNIT_MISMATCH 6 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 1
+  [UNIT_MISMATCH] field=way "한국소재융합연구원(KIMCO)은 1987년 재단법인 한국신발연구소로 설립돼 1996년 한국신발피혁연구소, 2013년 한국신발피혁연구원을 거쳐 2" claim="1987년" source=https://kimco.i-cloud.kr/page/introduce/history
+  [UNIT_MISMATCH] field=way "한국소재융합연구원(KIMCO)은 1987년 재단법인 한국신발연구소로 설립돼 1996년 한국신발피혁연구소, 2013년 한국신발피혁연구원을 거쳐 2" claim="1996년" source=https://kimco.i-cloud.kr/page/introduce/history
+  [UNIT_MISMATCH] field=way "한국소재융합연구원(KIMCO)은 1987년 재단법인 한국신발연구소로 설립돼 1996년 한국신발피혁연구소, 2013년 한국신발피혁연구원을 거쳐 2" claim="2013년" source=https://kimco.i-cloud.kr/page/introduce/history
+  [UNIT_MISMATCH] field=way "한국소재융합연구원(KIMCO)은 1987년 재단법인 한국신발연구소로 설립돼 1996년 한국신발피혁연구소, 2013년 한국신발피혁연구원을 거쳐 2" claim="2023년" source=https://kimco.i-cloud.kr/page/introduce/history
+  [UNIT_MISMATCH] field=trivia "한국소재융합연구원은 2003년 피혁연구센터와 창업보육센터를 개소했고 2010년 국제공인시험기관인증(KOLAS)을 획득했다[1]." claim="2003년" source=https://kimco.i-cloud.kr/page/introduce/history
+  [UNIT_MISMATCH] field=trivia "한국소재융합연구원은 2003년 피혁연구센터와 창업보육센터를 개소했고 2010년 국제공인시험기관인증(KOLAS)을 획득했다[1]." claim="2010년" source=https://kimco.i-cloud.kr/page/introduce/history
+원피분할원 | 수치 23건 | FOUND 22 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "가죽을 두께 방향으로 나눠 은면가죽과 분할가죽을 만드는 방법은 이미 1977년 출원된 국내 특허에 '크롬을 함유하지 않는 무두질제로 예비무두질한" claim="1977년" source=https://patents.google.com/patent/KR810001057B1/ko
+원피선별원 | 수치 22건 | FOUND 21 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "2025년 3월 사가(Saga) 옥션에서 원피 낙찰가가 기존보다 2~3배 가파르게 치솟아, 올겨울 모피 제품 소비자가격도 50% 이상 오를 것으" claim="2025년" source=https://www.apparelnews.co.kr/news/news_view/?idx=225040&cat=CAT100
+원피제육제모원 | 수치 16건 | FOUND 15 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "한국신발피혁연구원은 1987년 재단법인 한국신발연구소로 출발해 신발·피혁 생산기술을 연구·보급해오다 2023년 11월 한국소재융합연구원으로 개칭" claim="2023년" source=https://busan.grandculture.net/Contents/Contents?dataType=01&contents_id=GC04210705
+원피톱밥태고조작원 | 수치 18건 | FOUND 8 | UNIT_MISMATCH 6 | NOT_FOUND 3 | UNFETCHABLE 0 | NO_FOOTNOTE 1
+  [UNIT_MISMATCH] field=way "1985년 공개된 국내 특허 '피혁제품 연화장치'가 밀폐식 용기와 압축공기 분무 수단으로 가죽을 습윤·연화시키는 방식을 소개한 것처럼, 원피를 " claim="1985년" source=https://patents.google.com/patent/KR850007462A/ko
+  [UNIT_MISMATCH] field=trivia "부산의 조일산업은 버섯 균사체를 이용한 대체가죽 기술을 개발해 2025년 8월 기준 국내외 230개 제품을 개발 중이며, 연간 700톤 생산을 " claim="2025년" source=https://www.kookje.co.kr/news2011/asp/newsbody.asp?key=20250805.22010000800
+  [UNIT_MISMATCH] field=trivia "부산의 조일산업은 버섯 균사체를 이용한 대체가죽 기술을 개발해 2025년 8월 기준 국내외 230개 제품을 개발 중이며, 연간 700톤 생산을 " claim="700톤" source=https://www.kookje.co.kr/news2011/asp/newsbody.asp?key=20250805.22010000800
+  [UNIT_MISMATCH] field=trivia "부산의 조일산업은 버섯 균사체를 이용한 대체가죽 기술을 개발해 2025년 8월 기준 국내외 230개 제품을 개발 중이며, 연간 700톤 생산을 " claim="1,000톤" source=https://www.kookje.co.kr/news2011/asp/newsbody.asp?key=20250805.22010000800
+  [NOT_FOUND] field=trivia "부산의 조일산업은 버섯 균사체를 이용한 대체가죽 기술을 개발해 2025년 8월 기준 국내외 230개 제품을 개발 중이며, 연간 700톤 생산을 " claim="1,600만" source=https://www.kookje.co.kr/news2011/asp/newsbody.asp?key=20250805.22010000800
+  [UNIT_MISMATCH] field=trivia "2023년 서울에서 열린 국제모피가죽박람회에서는 환경친화적 생산·동물복지 기준을 제3자가 인증하는 Furmark® 인증을 받은 제품이 주목받았고" claim="2023년" source=https://www.itnk.co.kr/news/articleView.html?idxno=71258
+  [UNIT_MISMATCH] field=trivia "고용노동부는 2026년 6월 1일부터 신규 중대재해 조사보고서를 공개하기 시작했고, 2024년 발생해 판결이 확정된 사건 51건을 먼저 공개해 " claim="2026년" source=https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=19436
+  [NOT_FOUND] field=trivia "고용노동부는 2026년 6월 1일부터 신규 중대재해 조사보고서를 공개하기 시작했고, 2024년 발생해 판결이 확정된 사건 51건을 먼저 공개해 " claim="2024년" source=https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=19436
+  [NOT_FOUND] field=overviewAbilities.technKnow "한국산업안전보건공단의 'KOSHA Guide D-12-2012(분진폭발방지에 관한 기술지침)'는 톱밥 같은 가연성 고체 분진이 일정 농도 이상 " claim="240조" source=https://oshri.kosha.or.kr/extappKosha/kosha/guidance/fileDownload.do?sfhlhTchnlgyManualNo=D-12-2012&fileOrdrNo=3
+원피화학처리원 | 수치 7건 | FOUND 7 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+원형제작원 | 수치 18건 | FOUND 13 | UNIT_MISMATCH 5 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "도자기를 빚는 전통 기능은 국가무형유산으로도 보호되는데, '사기장(沙器匠)'은 1996년 7월 1일 국가무형유산으로 지정됐다.[1]" claim="1996년" source=https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1273701050000
+  [UNIT_MISMATCH] field=trivia "한국세라믹학회가 발간하는 학회지(Journal of the Korean Ceramic Society)는 2023년 저널인용보고서(JCR) Q1에" claim="2023년" source=https://kcers.or.kr/intro/sub_intro02.asp
+  [UNIT_MISMATCH] field=overviewProspect.main "1912년 중앙시험소 요업부에서 출발해 2009년 독립기관으로 출범한 한국세라믹기술원처럼, 세라믹 R&D 축적이 이어지고 있어 원형 제작 공정에" claim="1912년" source=http://kicet.re.kr/00015/00026/00028.web
+  [UNIT_MISMATCH] field=overviewProspect.main "1912년 중앙시험소 요업부에서 출발해 2009년 독립기관으로 출범한 한국세라믹기술원처럼, 세라믹 R&D 축적이 이어지고 있어 원형 제작 공정에" claim="2009년" source=http://kicet.re.kr/00015/00026/00028.web
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "1912년 중앙시험소 요업부로 출발해 세라믹 R&D를 이어온 한국세라믹기술원의 축적된 기술 자료도 원형 제작 품질을 높이는 데 참고가 된다.[3" claim="1912년" source=http://kicet.re.kr/00015/00026/00028.web
+원형톱할석원 | 수치 14건 | FOUND 8 | UNIT_MISMATCH 5 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "전국 160여 개 중소기업체가 조합원으로 가입한 한국석재협동조합(옛 한국석제품공업협동조합)이 1979년 9월 설립된 뒤 석재 가공업체의 단체표준" claim="1979년" source=http://www.kostone.or.kr/company/company01.php
+  [UNIT_MISMATCH] field=trivia "한국석재협동조합은 1979년 9월 20일 산림청장 인가로 한국석제품공업협동조합이라는 이름으로 설립됐고, 1983년 3월에는 석건재가 중소기업 고" claim="1979년" source=http://www.kostone.or.kr/company/company02.php
+  [UNIT_MISMATCH] field=trivia "한국석재협동조합은 1979년 9월 20일 산림청장 인가로 한국석제품공업협동조합이라는 이름으로 설립됐고, 1983년 3월에는 석건재가 중소기업 고" claim="20일" source=http://www.kostone.or.kr/company/company02.php
+  [UNIT_MISMATCH] field=trivia "한국석재협동조합은 1979년 9월 20일 산림청장 인가로 한국석제품공업협동조합이라는 이름으로 설립됐고, 1983년 3월에는 석건재가 중소기업 고" claim="1983년" source=http://www.kostone.or.kr/company/company02.php
+  [UNIT_MISMATCH] field=overviewProspect.main "국토교통부는 골재채취법에 따라 2007년부터 전국 모든 시·군과 서·남해 3,100개 광구(약 8,370㎢)를 대상으로 골재자원조사를 계속하고 " claim="2024년" source=https://www.agris.go.kr/main/info/plan01.do
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "한국석재협동조합이 1979년부터 단체표준 인증 업무를 이어온 것처럼, 절단 규격도 표준화된 기준을 따르는 경우가 많다[3]." claim="1979년" source=http://www.kostone.or.kr/company/company02.php
+원화원 | 수치 7건 | FOUND 2 | UNIT_MISMATCH 5 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "문화체육관광부는 2025년 4월 24일 '애니메이션 산업 진흥 기본계획(2025~2030)'을 발표하며 전 세대가 즐기고 세계에서 통하는 산업으" claim="24일" source=https://korea.kr/briefing/pressReleaseView.do?newsId=156685967
+  [UNIT_MISMATCH] field=trivia "코스닥 상장 애니메이션 제작사 스튜디오미르는 2025년 3월 사업보고서를 공시했다[4]." claim="2025년" source=https://kind.krx.co.kr/common/disclsviewer.do?method=search&acptno=20250313002289
+  [UNIT_MISMATCH] field=trivia "2025 애니메이션산업백서는 한국콘텐츠진흥원이 2025년 나주에서 발행한 413쪽 분량 자료로 콘텐츠도서관에 소장돼 있다[6]." claim="2025년" source=https://library.kocca.kr/detailview.do?action=detailView&searchSubId=0&pageIndex=1&menuPath=recommendSearch&MASTER_ID=7635320
+  [UNIT_MISMATCH] field=trivia "스튜디오미르는 2026년 3월 30일에도 전자공시시스템에 사업보고서를 공시했다[7]." claim="2026년" source=https://opendart.fss.or.kr/xbrl/viewer/main.do?rcpNo=20260330001828
+  [UNIT_MISMATCH] field=trivia "스튜디오미르는 2026년 3월 30일에도 전자공시시스템에 사업보고서를 공시했다[7]." claim="30일" source=https://opendart.fss.or.kr/xbrl/viewer/main.do?rcpNo=20260330001828
+---
+Summary | 직업 25건(에러 0) | 수치 465건 | FOUND 359 | UNIT_MISMATCH 82 | NOT_FOUND 20 | UNFETCHABLE 2 | NO_FOOTNOTE 2

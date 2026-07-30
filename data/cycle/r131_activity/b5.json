@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r131-b5",
+      "group_key": "cycle-R131-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R131 B5: 원자로공학연구원~원화원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r131-b4",
+      "group_key": "cycle-R131-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R131 B4: 원자력품질관리원~원피톱밥태고조작원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

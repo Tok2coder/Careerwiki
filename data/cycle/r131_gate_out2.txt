@@ -1,0 +1,38 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 원자력설비설계원                 | totalE=20 | distinct=19 | marker=OK | clean
+PASS 원자로운전원                   | totalE=19 | distinct=18 | marker=OK | clean
+PASS 원전계전기술연구원                | totalE=19 | distinct=18 | marker=OK | clean
+WARN 원피분할원                    | totalE=26 | distinct=16 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.shoenet.org/main/14?action=view&no=42711&bbsId=109
+        [urlUnverified] tls: https://www.shoenet.org/main/14?action=view&no=41177&bbsId=109
+PASS 원형제작원                    | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원자력안전관리원                 | totalE=23 | distinct=18 | marker=OK | clean
+PASS 원자로현장운전원                 | totalE=20 | distinct=18 | marker=OK | clean
+WARN 원전설비연구원                  | totalE=19 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] tls: https://www.knfc.co.kr/menu?menuId=MENU00342
+PASS 원피선별원                    | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원형톱할석원                   | totalE=27 | distinct=18 | marker=OK | clean
+WARN 원자력연료제조원                 | totalE=25 | distinct=18 | marker=OK | WARN:urlUnverified(2)
+        [urlUnverified] tls: https://www.knfc.co.kr/board?menuId=MENU00533&siteId=null
+        [urlUnverified] tls: https://www.knfc.co.kr/board?menuId=MENU00611&siteId=null
+PASS 원자재품질분석원                 | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원전안전분석기술연구원              | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원통도금원                    | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원피제육제모원                  | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원자력품질관리원                 | totalE=31 | distinct=20 | marker=OK | clean
+PASS 원전연료장전원                  | totalE=31 | distinct=19 | marker=OK | clean
+PASS 원판절단기조작원                 | totalE=29 | distinct=19 | marker=OK | clean
+PASS 원피건조원                    | totalE=30 | distinct=18 | marker=OK | clean
+PASS 원피톱밥태고조작원                | totalE=31 | distinct=18 | marker=OK | clean
+PASS 원자로공학연구원                 | totalE=22 | distinct=20 | marker=OK | clean
+PASS 원전토건기술연구원                | totalE=26 | distinct=19 | marker=OK | clean
+PASS 원피깎기원                    | totalE=22 | distinct=18 | marker=OK | clean
+PASS 원피화학처리원                  | totalE=26 | distinct=18 | marker=OK | clean
+PASS 원화원                      | totalE=27 | distinct=18 | marker=OK | clean
+
+=== Summary: PASS 22/25, WARN 3 ===
+WARN: 원피분할원(urlUnverified(2)), 원전설비연구원(urlUnverified(1)), 원자력연료제조원(urlUnverified(2))

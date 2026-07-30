@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r131-b3",
+      "group_key": "cycle-R131-2026-07-29",
+      "agent_slug": "hangyeol",
+      "label": "R131 B3: 원자력연료제조원~원피제육제모원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
