@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r132-b4",
+      "group_key": "cycle-R132-2026-07-30",
+      "agent_slug": "hangyeol",
+      "label": "R132 B4: 웨딩드레스제조원~위관운반원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

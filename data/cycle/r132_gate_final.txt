@@ -1,0 +1,41 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 웨이퍼디퓨전장비조작원              | totalE=19 | distinct=18 | marker=OK | clean
+        [retry-ok] retry-ok(tls-relaxed): https://www.ksia.or.kr/bbs/board.php?bo_table=notice&wr_id=727
+PASS 웨이퍼텍스처링장비조작원             | totalE=27 | distinct=18 | marker=OK | clean
+PASS 웹머천다이저                   | totalE=28 | distinct=22 | marker=OK | clean
+PASS 웹서비스기획원                  | totalE=28 | distinct=19 | marker=OK | clean
+PASS 위권반장                     | totalE=27 | distinct=18 | marker=OK | clean
+PASS 웨이퍼반사방지코팅장비조작원           | totalE=19 | distinct=19 | marker=OK | clean
+PASS 웨이퍼피에스지제거장비조작원           | totalE=19 | distinct=19 | marker=OK | clean
+        [retry-ok] retry-ok(tls-relaxed): https://www.semes.com/ko/media/newsroom/detail/142
+PASS 웹소설기획자                   | totalE=27 | distinct=18 | marker=OK | clean
+        [retry-ok] retry-ok(tls-relaxed): https://adr.copyright.or.kr/web/main/mainPage.do
+PASS 웹툰아트디렉터                  | totalE=27 | distinct=18 | marker=OK | clean
+        [retry-ok] retry-ok(tls-relaxed): https://adr.copyright.or.kr/web/main/mainPage.do
+PASS 위권틀보기원                   | totalE=27 | distinct=18 | marker=OK | clean
+PASS 원화작화감독                   | totalE=30 | distinct=18 | marker=OK | clean
+PASS 웨딩도우미                    | totalE=30 | distinct=18 | marker=OK | clean
+        [retry-ok] retry-ok(tls-relaxed): https://www.kca.go.kr/home/sub.do?menukey=4002&mode=view&no=1002984986
+        [retry-ok] retry-ok(tls-relaxed): https://www.kca.go.kr/smartconsumer/sub.do?menukey=7301&mode=view&no=1002920045
+PASS 웨이퍼수입검사원                 | totalE=27 | distinct=20 | marker=OK | clean
+PASS 웹툰후보정작가                  | totalE=31 | distinct=18 | marker=OK | clean
+WARN 웹퍼블리셔                    | totalE=28 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] http-403(anti-bot 가능): https://www.w3.org/html/ig/ko/Overview.ko.html
+PASS 웨딩드레스제조원                 | totalE=27 | distinct=18 | marker=OK | clean
+PASS 웨이퍼전극측정원                 | totalE=29 | distinct=18 | marker=OK | clean
+PASS 웹-방송-엔지니어                | totalE=27 | distinct=18 | marker=OK | clean
+PASS 웹호스팅기획자                  | totalE=23 | distinct=19 | marker=OK | clean
+PASS 위관운반원                    | totalE=28 | distinct=18 | marker=OK | clean
+PASS 웨이퍼전극형성장비조작원             | totalE=25 | distinct=18 | marker=OK | clean
+PASS 웹마케터                     | totalE=20 | distinct=18 | marker=OK | clean
+PASS 웹서버관리원                   | totalE=19 | distinct=18 | marker=OK | clean
+PASS 위관잔사처리원                  | totalE=29 | distinct=18 | marker=OK | clean
+PASS 위락놀이시설-디자이너              | totalE=28 | distinct=18 | marker=OK | clean
+        [retry-ok] retry-ok(tls-relaxed): https://www.codil.or.kr/viewConStd.do
+
+=== Summary: PASS 24/25, WARN 1 ===
+WARN: 웹퍼블리셔(urlUnverified(1))

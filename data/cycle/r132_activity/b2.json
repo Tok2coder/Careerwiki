@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r132-b2",
+      "group_key": "cycle-R132-2026-07-30",
+      "agent_slug": "hangyeol",
+      "label": "R132 B2: 웨이퍼반사방지코팅장비조작원~위권틀보기원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

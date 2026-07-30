@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r132-b3",
+      "group_key": "cycle-R132-2026-07-30",
+      "agent_slug": "hangyeol",
+      "label": "R132 B3: 원화작화감독~웹퍼블리셔",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

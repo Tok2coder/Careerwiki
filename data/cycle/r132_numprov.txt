@@ -1,0 +1,133 @@
+원화작화감독 | 수치 24건 | FOUND 20 | UNIT_MISMATCH 3 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "문화체육관광부는 이보다 앞서 2021년 6월 '애니메이션산업 진흥 기본계획(2021~2025)'을 발표한 바 있어, 2025~2030년 계획은 " claim="2025~2030년" source=https://mcst.go.kr/kor/s_notice/press/pressView.jsp?pSeq=18923
+  [UNIT_MISMATCH] field=overviewProspect.main "문화체육관광부는 2025~2030년 애니메이션 산업 진흥 기본계획을 통해 투자 확대, IP 가치 극대화, 신기술 활용, 전문인력 양성을 6대 중" claim="2025~2030년" source=https://nsp.nanet.go.kr/plan/subject/detail.do?nationalPlanControlNo=PLAN0000054842
+  [UNIT_MISMATCH] field=overviewProspect.main "콘진원은 2026년 7월 '2026 라이선싱 엑스포 차이나'에 국내 애니메이션 기업 15개사와 함께 참가해 총 281건의 비즈니스 상담과 2,5" claim="15개사" source=https://kocca.kr/kocca/koccanews/reportview.do?nttNo=1176&menuNo=2047673
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "문화체육관광부는 창작자의 권익 보호와 공정한 거래질서 확립을 위해 2019년 애니메이션 분야 표준계약서를 고시해 제작 현장의 계약 관행 개선을 " claim="2019년" source=https://www.mcst.go.kr/site/s_notice/press/pressView.jsp?pSeq=17388
+웨딩도우미 | 수치 22건 | FOUND 19 | UNIT_MISMATCH 1 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "공정거래위원회는 2020년 예식업 분야 소비자분쟁해결기준과 표준약관을 개정해 계약 관행을 개선했다.[2]" claim="2020년" source=https://korea.kr/briefing/pressReleaseView.do?newsId=156413641
+  [NOT_FOUND] field=trivia "2025년 결혼 성수기(4~5월) 소비자 분쟁 신청은 전년 동기 대비 56% 늘었고, 분쟁의 88.1%가 계약 해지·위약금·청약 철회와 관련됐다" claim="2025년" source=https://www.ngonews.kr/news/articleView.html?idxno=228808
+  [NOT_FOUND] field=detailWlb.wlbDetail "웨딩도우미는 결혼 성수기인 봄(4~5월)과 가을 주말에 업무가 집중되는 편으로, 2025년에도 4~5월 예식 관련 소비자 분쟁 신청이 전년 동기" claim="2025년" source=https://www.ngonews.kr/news/articleView.html?idxno=228808
+웨딩드레스제조원 | 수치 31건 | FOUND 26 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 4 | NO_FOOTNOTE 0
+  [INFO][compoundAmbiguous] field=overviewProspect.main "서울 지역 봉제업체는 2021년 기준 1만 8,364개사, 종사자는 7만 7,615명으로 집계됐으나 외주화와 경기 침체로 감소 추세다 [2]." claim="1만 + 8,364개사" source=https://chunchu.yonsei.ac.kr/news/articleView.html?idxno=31120
+  [INFO][compoundAmbiguous] field=overviewProspect.main "서울 지역 봉제업체는 2021년 기준 1만 8,364개사, 종사자는 7만 7,615명으로 집계됐으나 외주화와 경기 침체로 감소 추세다 [2]." claim="7만 + 7,615명" source=https://chunchu.yonsei.ac.kr/news/articleView.html?idxno=31120
+  [NOT_FOUND] field=overviewProspect.main "정부 지원 규모도 2024년 207억원으로 전년 대비 18.9% 확대됐다.[5]" claim="18.9%" source=https://korea.kr/briefing/pressReleaseView.do?newsId=156616562
+웨이퍼디퓨전장비조작원 | 수치 28건 | FOUND 26 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 2 (pdf:2) | NO_FOOTNOTE 0
+  [UNFETCHABLE][pdf] field=trivia "확산 공정에 쓰이는 전자급 실리콘(EGS)은 순도 약 98%의 실리콘을 추가로 정제해 만들며, n형 반도체에는 인·비소를, p형 반도체에는 붕소" claim="98%" source=https://oshri.kosha.or.kr/kosha/business/HealthAndSafetyModel.do?mode=download&articleNo=419198&attachNo=236336
+  [UNFETCHABLE][pdf] field=trivia "확산 공정에 쓰이는 전자급 실리콘(EGS)은 순도 약 98%의 실리콘을 추가로 정제해 만들며, n형 반도체에는 인·비소를, p형 반도체에는 붕소" claim="10억" source=https://oshri.kosha.or.kr/kosha/business/HealthAndSafetyModel.do?mode=download&articleNo=419198&attachNo=236336
+웨이퍼반사방지코팅장비조작원 | 수치 14건 | FOUND 10 | UNIT_MISMATCH 4 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "한국기술교육대학교 반도체장비기술교육센터(SETEC)는 반도체장비 교육과정(35시간, 5회차)과 장비유지보수 과정(26시간, 4회차) 등을 운영해" claim="35시간" source=https://setec.koreatech.ac.kr/sub2-4.php
+  [UNIT_MISMATCH] field=way "한국기술교육대학교 반도체장비기술교육센터(SETEC)는 반도체장비 교육과정(35시간, 5회차)과 장비유지보수 과정(26시간, 4회차) 등을 운영해" claim="5회" source=https://setec.koreatech.ac.kr/sub2-4.php
+  [UNIT_MISMATCH] field=way "한국기술교육대학교 반도체장비기술교육센터(SETEC)는 반도체장비 교육과정(35시간, 5회차)과 장비유지보수 과정(26시간, 4회차) 등을 운영해" claim="26시간" source=https://setec.koreatech.ac.kr/sub2-4.php
+  [UNIT_MISMATCH] field=way "한국기술교육대학교 반도체장비기술교육센터(SETEC)는 반도체장비 교육과정(35시간, 5회차)과 장비유지보수 과정(26시간, 4회차) 등을 운영해" claim="4회" source=https://setec.koreatech.ac.kr/sub2-4.php
+웨이퍼수입검사원 | 수치 19건 | FOUND 18 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=detailWlb.socialDetail "2022년 기준 전북 지역의 태양광 발전량은 553만여 MWh에 달할 만큼 신재생에너지 비중이 커지고 있다.[1]" claim="553만" source=https://www.knrec.or.kr/biz/statistics/supply/supply02_02_list.do
+웨이퍼전극측정원 | 수치 5건 | FOUND 3 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "한국에너지기술연구원은 2022년 8월 기준 태양전지 모듈·소재·소자 등 21개 시험규격을 국제공인기관으로 인정받아 [3], 국내 태양전지 측정 " claim="2022년" source=https://www.kier.re.kr/otest/evaluation/testEvalIntro.do
+  [NOT_FOUND] field=overviewProspect.main "한국에너지기술연구원은 2020년 태양전지 소자의 전류-전압 특성곡선 측정 표준과 스펙트럼 응답도 측정 표준에 대해 국내 유일의 KOLAS 공인시" claim="2020년" source=https://energium.kier.re.kr/sub040101/articles/view/tableid/news/id/4340
+웨이퍼전극형성장비조작원 | 수치 14건 | FOUND 13 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "국내에는 이러한 KS인증을 받은 신재생에너지 설비 모델 정보가 7,482건 데이터베이스로 공개돼 있다[4]." claim="7,482건" source=https://www.data.go.kr/data/15083029/fileData.do
+웨이퍼텍스처링장비조작원 | 수치 25건 | FOUND 18 | UNIT_MISMATCH 3 | NOT_FOUND 0 | UNFETCHABLE 4 (stream-error:1, pdf:3) | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "한국반도체산업협회는 반도체인프라활용 현장인력양성 사업을 통해 고려대·연세대·포항공대 등 13개 대학·기관에서 정원 20~80명 규모의 예비취업자" claim="20~80명" source=https://infra.ksia.or.kr/user/Wo/WoUser0101.do?SCH_PRM_GB=002&CURRENT_MENU_CODE=MENU0046&TOP_MENU_CODE=MENU0040
+  [UNFETCHABLE][stream-error] field=way "산업통상자원부와 한국전기산업연구원은 2023년 태양광발전설비 표준시방서(건물설치형 판넬지붕형)를 제정해 설비 시공·품질 기준을 구체화했다[4]." claim="2023년" source=https://www.erik.re.kr/data/board/sub3_3/xcK-57Gkud_A_LyzuvEgx6XB2L3Duea8rSCwx7mwvLPEocf8KMbHs9rB9rrYx_wp.pdf
+  [UNIT_MISMATCH] field=trivia "계면활성제를 첨가한 알칼리 용액으로 90℃에서 35분간 식각하면 반사도가 23%에서 11.4%로 낮아지고 광전변환효율도 16.38%에서 16.8" claim="90℃" source=https://patents.google.com/patent/KR101168589B1/ko
+  [UNIT_MISMATCH] field=trivia "계면활성제를 첨가한 알칼리 용액으로 90℃에서 35분간 식각하면 반사도가 23%에서 11.4%로 낮아지고 광전변환효율도 16.38%에서 16.8" claim="16.38%" source=https://patents.google.com/patent/KR101168589B1/ko
+  [UNFETCHABLE][pdf] field=overviewAbilities.technKnow "텍스처링 장비조작원은 KOH·IPA·DI워터를 혼합한 습식 에칭용액으로 80℃에서 1~40분간 처리해 실리콘 웨이퍼 표면에 피라미드 구조를 형성" claim="80℃" source=https://www.kais99.org/jkais/journal/v12n6/38/42ci/42ci.pdf
+  [UNFETCHABLE][pdf] field=overviewAbilities.technKnow "텍스처링 장비조작원은 KOH·IPA·DI워터를 혼합한 습식 에칭용액으로 80℃에서 1~40분간 처리해 실리콘 웨이퍼 표면에 피라미드 구조를 형성" claim="1~40분" source=https://www.kais99.org/jkais/journal/v12n6/38/42ci/42ci.pdf
+  [UNFETCHABLE][pdf] field=overviewAbilities.technKnow "텍스처링 장비조작원은 KOH·IPA·DI워터를 혼합한 습식 에칭용액으로 80℃에서 1~40분간 처리해 실리콘 웨이퍼 표면에 피라미드 구조를 형성" claim="20분" source=https://www.kais99.org/jkais/journal/v12n6/38/42ci/42ci.pdf
+웨이퍼피에스지제거장비조작원 | 수치 16건 | FOUND 15 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "2021년 1월 경기 파주의 한 사업장에서는 배관에 남아 있던 TMAH(수산화테트라메틸암모늄) 용액이 압력으로 분출돼 2명이 숨지고 4명이 다치" claim="2021년" source=https://www.gasnews.com/news/articleView.html?idxno=102823
+웹-방송-엔지니어 | 수치 24건 | FOUND 10 | UNIT_MISMATCH 0 | NOT_FOUND 2 | UNFETCHABLE 12 (timeout:2) | NO_FOOTNOTE 0
+  [INFO][compoundAmbiguous] field=way "국내 웹 전문가(웹개발·웹/앱 UI·UX 디자인) 인력은 2020년 2만7,600명에서 2024년 4만3,200명으로 4년간 약 56% 늘었다 " claim="2만 + 7,600명" source=https://spri.kr/post/22277
+  [INFO][compoundAmbiguous] field=way "국내 웹 전문가(웹개발·웹/앱 UI·UX 디자인) 인력은 2020년 2만7,600명에서 2024년 4만3,200명으로 4년간 약 56% 늘었다 " claim="4만 + 3,200명" source=https://spri.kr/post/22277
+  [NOT_FOUND] field=way "국내 웹 전문가(웹개발·웹/앱 UI·UX 디자인) 인력은 2020년 2만7,600명에서 2024년 4만3,200명으로 4년간 약 56% 늘었다 " claim="56%" source=https://spri.kr/post/22277
+  [INFO][fetchFailed] field=trivia "2024년 기준 디지털크리에이터미디어산업은 사업체 1만1,123개, 매출 4조1,254억원, 종사자 3만5,375명 규모로 국가승인통계가 처음 " claim="4조 + 1,254억" source=https://eiec.kdi.re.kr/policy/materialView.do?num=246937
+  [INFO][fetchFailed] field=trivia "2024년 기준 디지털크리에이터미디어산업은 사업체 1만1,123개, 매출 4조1,254억원, 종사자 3만5,375명 규모로 국가승인통계가 처음 " claim="3만 + 5,375명" source=https://eiec.kdi.re.kr/policy/materialView.do?num=246937
+  [UNFETCHABLE][timeout] field=trivia "2024년 기준 디지털크리에이터미디어산업은 사업체 1만1,123개, 매출 4조1,254억원, 종사자 3만5,375명 규모로 국가승인통계가 처음 " claim="2024년" source=https://eiec.kdi.re.kr/policy/materialView.do?num=246937
+  [UNFETCHABLE][timeout] field=trivia "2024년 기준 디지털크리에이터미디어산업은 사업체 1만1,123개, 매출 4조1,254억원, 종사자 3만5,375명 규모로 국가승인통계가 처음 " claim="1만" source=https://eiec.kdi.re.kr/policy/materialView.do?num=246937
+  [INFO][compoundAmbiguous] field=overviewProspect.main "국내 웹 전문가 인력은 2024년 4만3,200명으로 4년 새 56% 증가했다 [2]." claim="4만 + 3,200명" source=https://spri.kr/post/22277
+  [NOT_FOUND] field=overviewProspect.main "국내 웹 전문가 인력은 2024년 4만3,200명으로 4년 새 56% 증가했다 [2]." claim="56%" source=https://spri.kr/post/22277
+웹마케터 | 수치 51건 | FOUND 43 | UNIT_MISMATCH 3 | NOT_FOUND 0 | UNFETCHABLE 5 (js-shell:3) | NO_FOOTNOTE 0
+  [INFO][fetchFailed] field=trivia "2024년 온라인광고 취급액은 10조 1,011억원으로 국내 광고시장의 59%를 차지한 반면 방송광고는 18.8%로 축소됐다[2]." claim="10조 + 1,011억" source=https://m.journalist.or.kr/m/m_article.html?no=60072
+  [UNFETCHABLE][js-shell] field=trivia "2024년 온라인광고 취급액은 10조 1,011억원으로 국내 광고시장의 59%를 차지한 반면 방송광고는 18.8%로 축소됐다[2]." claim="2024년" source=https://m.journalist.or.kr/m/m_article.html?no=60072
+  [UNFETCHABLE][js-shell] field=trivia "2024년 온라인광고 취급액은 10조 1,011억원으로 국내 광고시장의 59%를 차지한 반면 방송광고는 18.8%로 축소됐다[2]." claim="59%" source=https://m.journalist.or.kr/m/m_article.html?no=60072
+  [UNFETCHABLE][js-shell] field=trivia "2024년 온라인광고 취급액은 10조 1,011억원으로 국내 광고시장의 59%를 차지한 반면 방송광고는 18.8%로 축소됐다[2]." claim="18.8%" source=https://m.journalist.or.kr/m/m_article.html?no=60072
+  [UNIT_MISMATCH] field=overviewProspect.main "정부는 K-브랜드 플랫폼에 최대 2억원, 기업당 최대 1000만원의 온라인 수출 바우처를 지원하는 등 온라인 마케팅·광고 지원을 확대하고 있으며" claim="2025년" source=https://www.korea.kr/news/policyNewsView.do?newsId=148959501
+  [UNIT_MISMATCH] field=detailWlb.wlbDetail "인플루언서 협찬 콘텐츠의 경제적 이해관계를 명확히 표시하지 않으면 관련 매출액의 2% 이내 또는 최대 5억원의 과징금이 부과될 수 있어, 캠페인" claim="2%" source=https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1575&ccfNo=2&cciNo=3&cnpClsNo=1
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "웹마케터가 다루는 온라인 맞춤형 광고는 2017년 제정돼 2020년 개인정보보호위원회로 이관된 가이드라인에 따라 이용자 동의 없는 행태정보 처리" claim="2017년" source=https://www.kmcc.go.kr/user.do?mode=view&page=A02030700&boardId=1099&cp=1&boardSeq=44473
+웹머천다이저 | 수치 33건 | FOUND 23 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 8 (js-shell:2) | NO_FOOTNOTE 0
+  [INFO][compoundAmbiguous] field=trivia "2024년 기준 해외직구 금액은 39억 1,700만 달러로 전년보다 17.2% 늘어난 반면 역직구는 17억 6,700만 달러에 그쳐 직구가 역직" claim="39억 + 1,700만" source=https://www.kita.net/board/totalTradeNews/totalTradeNewsDetail.do?no=86697&siteId=1
+  [INFO][compoundAmbiguous] field=trivia "2024년 기준 해외직구 금액은 39억 1,700만 달러로 전년보다 17.2% 늘어난 반면 역직구는 17억 6,700만 달러에 그쳐 직구가 역직" claim="17억 + 6,700만" source=https://www.kita.net/board/totalTradeNews/totalTradeNewsDetail.do?no=86697&siteId=1
+  [NOT_FOUND] field=overviewProspect.main "한국온라인쇼핑협회는 2025년 온라인쇼핑 시장 규모를 275조원으로 추산했으며 이 중 모바일쇼핑이 213조원으로 77%를 차지한다고 밝혔다[2]" claim="77%" source=https://kolsa.or.kr/%ED%98%91%ED%9A%8C-%EC%86%8C%EC%8B%9D/?mod=document&uid=87586
+  [INFO][fetchFailed] field=overviewProspect.main "2024년 상반기 온라인쇼핑 거래액도 120조 4천억원으로 전년 동기 대비 9.7% 성장하는 등 시장이 꾸준히 커지고 있다[3]." claim="120조 + 4천" source=https://eiec.kdi.re.kr/policy/domesticView.do?ac=0000188338
+  [UNFETCHABLE][js-shell] field=overviewProspect.main "2024년 상반기 온라인쇼핑 거래액도 120조 4천억원으로 전년 동기 대비 9.7% 성장하는 등 시장이 꾸준히 커지고 있다[3]." claim="2024년" source=https://eiec.kdi.re.kr/policy/domesticView.do?ac=0000188338
+  [UNFETCHABLE][js-shell] field=overviewProspect.main "2024년 상반기 온라인쇼핑 거래액도 120조 4천억원으로 전년 동기 대비 9.7% 성장하는 등 시장이 꾸준히 커지고 있다[3]." claim="9.7%" source=https://eiec.kdi.re.kr/policy/domesticView.do?ac=0000188338
+  [UNIT_MISMATCH] field=overviewAbilities.technKnow "이러한 규제 지식과 함께 국가데이터처가 매월 발표하는 온라인쇼핑몰 거래액(2026년 5월 기준 25조원 이상) 등 통계를 분석해 상품군별 수요 " claim="2026년" source=https://kosis.kr/visual/nsportalStats/detailContents.do?listId=N&statJipyoId=3732&vStatJipyoId=4863
+웹서버관리원 | 수치 41건 | FOUND 35 | UNIT_MISMATCH 6 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "주요정보통신기반시설 운영기관은 기술적 취약점을 정기적으로 분석·평가해야 하며, 이는 2021년 제정된 상세가이드에 따라 수행된다[1]." claim="2021년" source=https://www.kisa.or.kr/2060204/form?postSeq=12&lang_type=KO&page=1
+  [UNIT_MISMATCH] field=way "리눅스마스터 자격은 1급(리눅스 기반 서비스 시스템 구축·운영, 네트워크·보안 관리 총괄)과 2급(리눅스 시스템 설치·운영, 네트워크·보안 서비" claim="2024년" source=https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=433
+  [UNIT_MISMATCH] field=way "리눅스마스터 자격은 1급(리눅스 기반 서비스 시스템 구축·운영, 네트워크·보안 관리 총괄)과 2급(리눅스 시스템 설치·운영, 네트워크·보안 서비" claim="8.97%" source=https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=433
+  [UNIT_MISMATCH] field=way "리눅스마스터 자격은 1급(리눅스 기반 서비스 시스템 구축·운영, 네트워크·보안 관리 총괄)과 2급(리눅스 시스템 설치·운영, 네트워크·보안 서비" claim="24.58%" source=https://www.pqi.or.kr/inf/qul/infQulBasDetail.do?qulId=433
+  [UNIT_MISMATCH] field=trivia "2022년 10월 SK C&C 판교 데이터센터 화재로 카카오는 10만 5,116건, 유료 서비스는 1만 4,918건의 피해 접수를 받았다[4]." claim="2022년" source=https://www.korea.kr/news/policyNewsView.do?newsId=156540855
+  [UNIT_MISMATCH] field=overviewProspect.main "국제에너지기구(IEA) 분석에 따르면 데이터센터 전력 수요는 2030년까지 현재의 2배 이상, AI 데이터센터는 4배 이상 늘어날 전망이며, 한" claim="2배" source=https://www.electimes.com/news/articleView.html?idxno=363963
+웹서비스기획원 | 수치 16건 | FOUND 13 | UNIT_MISMATCH 1 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "공공 소프트웨어(SW) 시장 규모는 2014년 3조 8천억원에서 2015년 4조원으로 늘었으나 신규사업 비중은 2013년 64%에서 2016년 " claim="2014년" source=https://www.comworld.co.kr/news/articleView.html?idxno=49078
+  [NOT_FOUND] field=trivia "공공 소프트웨어(SW) 시장 규모는 2014년 3조 8천억원에서 2015년 4조원으로 늘었으나 신규사업 비중은 2013년 64%에서 2016년 " claim="2015년" source=https://www.comworld.co.kr/news/articleView.html?idxno=49078
+  [UNIT_MISMATCH] field=trivia "공공 소프트웨어(SW) 시장 규모는 2014년 3조 8천억원에서 2015년 4조원으로 늘었으나 신규사업 비중은 2013년 64%에서 2016년 " claim="2016년" source=https://www.comworld.co.kr/news/articleView.html?idxno=49078
+웹소설기획자 | 수치 35건 | FOUND 27 | UNIT_MISMATCH 3 | NOT_FOUND 5 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=trivia "웹소설 분야 표준계약서는 2023년 9월 출범한 '웹소설 상생협의체'가 8회 회의와 12차례 논의를 거쳐 2024년 4월 상생협약을 체결한 뒤," claim="8회" source=https://www.ftc.go.kr/www/selectBbsNttView.do?pageUnit=10&pageIndex=1&searchCnd=all&key=12&bordCd=3&searchCtgry=01,02&searchViolt=100&nttSn=45925&rltnNttSn=42648
+  [NOT_FOUND] field=trivia "한국저작권보호원은 2026년 2월에도 저작권 보호 연차보고서 통계편(조회수 2,240회)을 발간하는 등 콘텐츠 분야별 불법복제물 이용 실태를 매" claim="2,240회" source=https://www.kcopa.or.kr/lay1/bbs/S1T283C290/F/25/view.do?article_seq=7314&cpage=1&rows=9&condition=&keyword=
+  [UNIT_MISMATCH] field=trivia "이 조사는 한국출판문화산업진흥원이 웹소설 공급사(CP사) 152곳, 플랫폼 10곳, 창작자 800명, 이용자 811명을 대상으로 실시한 '202" claim="152곳" source=https://www.kpipa.or.kr/p/download/g1_5/943/2/
+  [UNIT_MISMATCH] field=trivia "이 조사는 한국출판문화산업진흥원이 웹소설 공급사(CP사) 152곳, 플랫폼 10곳, 창작자 800명, 이용자 811명을 대상으로 실시한 '202" claim="10곳" source=https://www.kpipa.or.kr/p/download/g1_5/943/2/
+  [NOT_FOUND] field=trivia "이 조사는 한국출판문화산업진흥원이 웹소설 공급사(CP사) 152곳, 플랫폼 10곳, 창작자 800명, 이용자 811명을 대상으로 실시한 '202" claim="800명" source=https://www.kpipa.or.kr/p/download/g1_5/943/2/
+  [NOT_FOUND] field=trivia "이 조사는 한국출판문화산업진흥원이 웹소설 공급사(CP사) 152곳, 플랫폼 10곳, 창작자 800명, 이용자 811명을 대상으로 실시한 '202" claim="811명" source=https://www.kpipa.or.kr/p/download/g1_5/943/2/
+  [UNIT_MISMATCH] field=overviewProspect.main "한국저작권보호원·한국콘텐츠진흥원·한국만화가협회가 함께 진행한 '릴레이 한컷웹툰' 캠페인은 2024년 1월 61화로 완결됐고 조회수 3,447회를" claim="2024년" source=https://www.kcopa.or.kr/lay1/bbs/S1T11C461/B/76/view.do?article_seq=5187&cpage=1&rows=10&condition=&keyword=
+  [NOT_FOUND] field=overviewProspect.main "한국저작권보호원·한국콘텐츠진흥원·한국만화가협회가 함께 진행한 '릴레이 한컷웹툰' 캠페인은 2024년 1월 61화로 완결됐고 조회수 3,447회를" claim="3,447회" source=https://www.kcopa.or.kr/lay1/bbs/S1T11C461/B/76/view.do?article_seq=5187&cpage=1&rows=10&condition=&keyword=
+웹툰아트디렉터 | 수치 38건 | FOUND 36 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "이 통계는 국가데이터처가 2025년 10월 23일 승인번호 제467002호로 승인한 '웹툰산업실태조사'에 따른 것으로, 실적이 있는 종사자 1인" claim="1회" source=https://mods.go.kr/board.es?mid=a10403040000&act=view&bid=107&list_no=438943
+  [NOT_FOUND] field=detailWlb.socialDetail "2024년 개정 표준계약서가 점자파일 다운로드까지 지원하도록 마련된 점은, 웹툰 산업의 계약 정보 접근성을 넓히려는 사회적 노력을 보여준다 [3" claim="2024년" source=https://www.mcst.go.kr/site/s_open/generalData/dataView.jsp?pMenuCD=0405050000&pSeq=48
+웹툰후보정작가 | 수치 36건 | FOUND 16 | UNIT_MISMATCH 2 | NOT_FOUND 3 | UNFETCHABLE 12 (stream-error:11, js-shell:1) | NO_FOOTNOTE 3
+  [NOT_FOUND] field=way "한국콘텐츠진흥원은 만 19세 이상 예비 창작자를 대상으로 창작초기단계 만화웹툰 콘텐츠 공모를 통해 과제당 600만원을 지원한다.[3]" claim="600만" source=https://kocca.kr/kocca/pims/view.do?intcNo=325D00092001&menuNo=204104&category=3
+  [NOT_FOUND] field=way "웹툰 보조작가도 예술활동증명을 완료하면 한국예술인복지재단의 생활안정자금(의료비·결혼자금 등 최고 700만원, 금리 2.5%, 3년 상환)을 신청" claim="700만" source=https://www.artloan.kr/notice/lifeFund.do
+  [UNIT_MISMATCH] field=trivia "2023년 한국노동안전보건연구소 조사에서 현직 웹툰작가의 28.7%가 우울증 기준을 초과해 한국인 평생 유병률(7.7%)의 3배를 넘었고, 자살" claim="3배" source=https://www.karnews.or.kr/news/articleView.html?idxno=10562
+  [UNFETCHABLE][stream-error] field=trivia "2019년 콘진원 조사(응답자 309명)에서는 어시스턴트의 주 수행 역할이 '채색(밑색)' 79.0%로 가장 높았고, 회당 평균 비용은 21.1" claim="2019년" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_dc27006c-2ad0-4580-b315-41d9a1d737ef&fileSn=1
+  [UNFETCHABLE][stream-error] field=trivia "2019년 콘진원 조사(응답자 309명)에서는 어시스턴트의 주 수행 역할이 '채색(밑색)' 79.0%로 가장 높았고, 회당 평균 비용은 21.1" claim="309명" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_dc27006c-2ad0-4580-b315-41d9a1d737ef&fileSn=1
+  [UNFETCHABLE][stream-error] field=trivia "2019년 콘진원 조사(응답자 309명)에서는 어시스턴트의 주 수행 역할이 '채색(밑색)' 79.0%로 가장 높았고, 회당 평균 비용은 21.1" claim="79.0%" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_dc27006c-2ad0-4580-b315-41d9a1d737ef&fileSn=1
+  [UNFETCHABLE][stream-error] field=trivia "2019년 콘진원 조사(응답자 309명)에서는 어시스턴트의 주 수행 역할이 '채색(밑색)' 79.0%로 가장 높았고, 회당 평균 비용은 21.1" claim="21.1만" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_dc27006c-2ad0-4580-b315-41d9a1d737ef&fileSn=1
+  [UNFETCHABLE][stream-error] field=trivia "2019년 콘진원 조사(응답자 309명)에서는 어시스턴트의 주 수행 역할이 '채색(밑색)' 79.0%로 가장 높았고, 회당 평균 비용은 21.1" claim="1년" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_dc27006c-2ad0-4580-b315-41d9a1d737ef&fileSn=1
+  [UNFETCHABLE][stream-error] field=trivia "2019년 콘진원 조사(응답자 309명)에서는 어시스턴트의 주 수행 역할이 '채색(밑색)' 79.0%로 가장 높았고, 회당 평균 비용은 21.1" claim="658.6만" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_dc27006c-2ad0-4580-b315-41d9a1d737ef&fileSn=1
+  [NOT_FOUND] field=overviewProspect.main "한국콘텐츠진흥원은 2025년 창작초기단계 만화웹툰 콘텐츠 공모로 110개 내외 과제에 과제당 600만원을 지원했다.[1]" claim="600만" source=https://kocca.kr/kocca/pims/view.do?intcNo=325D00092001&menuNo=204104&category=3
+  [UNIT_MISMATCH] field=overviewProspect.main "문화체육관광부와 공정거래위원회는 2022년 창작자·제작사·플랫폼이 모두 합의한 첫 상생협약을 체결해 매출정보 공개, 표준식별체계 도입, 표준계약" claim="2022년" source=https://www.korea.kr/news/policyNewsView.do?newsId=148909518
+  [UNFETCHABLE][js-shell] field=overviewProspect.main "한국만화웹툰평론가협회도 2025년 웹툰산업 실태조사 보고서를 통해 창작 생태계 현황을 점검했다.[3]" claim="2025년" source=https://kaomwc.org/boards/127/view
+  [UNFETCHABLE][stream-error] field=overviewAbilities.technKnow "2022년 웹툰 작가 조사에서는 혼자 작업하지 않는 작가 중 '1명의 보조작가와 작업'하는 비율이 29.3%로 가장 높았고, 보조작가와 계약서를" claim="2022년" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_2c79510b-9092-46c1-96fb-9c652e4c9015&fileSn=1
+  [UNFETCHABLE][stream-error] field=overviewAbilities.technKnow "2022년 웹툰 작가 조사에서는 혼자 작업하지 않는 작가 중 '1명의 보조작가와 작업'하는 비율이 29.3%로 가장 높았고, 보조작가와 계약서를" claim="1명" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_2c79510b-9092-46c1-96fb-9c652e4c9015&fileSn=1
+  [UNFETCHABLE][stream-error] field=overviewAbilities.technKnow "2022년 웹툰 작가 조사에서는 혼자 작업하지 않는 작가 중 '1명의 보조작가와 작업'하는 비율이 29.3%로 가장 높았고, 보조작가와 계약서를" claim="29.3%" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_2c79510b-9092-46c1-96fb-9c652e4c9015&fileSn=1
+  [UNFETCHABLE][stream-error] field=overviewAbilities.technKnow "2022년 웹툰 작가 조사에서는 혼자 작업하지 않는 작가 중 '1명의 보조작가와 작업'하는 비율이 29.3%로 가장 높았고, 보조작가와 계약서를" claim="50.2%" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_2c79510b-9092-46c1-96fb-9c652e4c9015&fileSn=1
+  [UNFETCHABLE][stream-error] field=overviewAbilities.technKnow "2022년 웹툰 작가 조사에서는 혼자 작업하지 않는 작가 중 '1명의 보조작가와 작업'하는 비율이 29.3%로 가장 높았고, 보조작가와 계약서를" claim="37.9만" source=https://welcon.kocca.kr/cmm/fms/CrawlingFileDown.do?atchFileId=FILE_2c79510b-9092-46c1-96fb-9c652e4c9015&fileSn=1
+웹퍼블리셔 | 수치 24건 | FOUND 16 | UNIT_MISMATCH 1 | NOT_FOUND 5 | UNFETCHABLE 2 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "향후 10년간 국내 웹개발자 수는 2021년 약 41,000명에서 2031년 약 51,000명으로 연평균 2.2%씩 늘어날 것으로 전망된다.[1" claim="41,000명" source=https://www.edujin.co.kr/news/articleView.html?idxno=44423
+  [NOT_FOUND] field=way "향후 10년간 국내 웹개발자 수는 2021년 약 41,000명에서 2031년 약 51,000명으로 연평균 2.2%씩 늘어날 것으로 전망된다.[1" claim="51,000명" source=https://www.edujin.co.kr/news/articleView.html?idxno=44423
+  [NOT_FOUND] field=overviewProspect.main "향후 10년간 국내 웹개발자 수는 2021년 약 41,000명에서 2031년 약 51,000명으로 연평균 2.2%씩 증가할 것으로 전망된다.[1" claim="41,000명" source=https://www.edujin.co.kr/news/articleView.html?idxno=44423
+  [NOT_FOUND] field=overviewProspect.main "향후 10년간 국내 웹개발자 수는 2021년 약 41,000명에서 2031년 약 51,000명으로 연평균 2.2%씩 증가할 것으로 전망된다.[1" claim="51,000명" source=https://www.edujin.co.kr/news/articleView.html?idxno=44423
+  [INFO][compoundAmbiguous] field=overviewProspect.main "2025년 기준 국내 ICT산업 인력은 약 216만명(잠정)이며, ICT 생산액은 2023년 기준 약 564조 6,000억원에 달한다.[2]" claim="564조 + 6,000억" source=https://www.itstat.go.kr/itstat/main.html
+  [NOT_FOUND] field=overviewProspect.main "2025년 기준 국내 ICT산업 인력은 약 216만명(잠정)이며, ICT 생산액은 2023년 기준 약 564조 6,000억원에 달한다.[2]" claim="216만" source=https://www.itstat.go.kr/itstat/main.html
+  [UNIT_MISMATCH] field=overviewProspect.main "2025년 기준 국내 ICT산업 인력은 약 216만명(잠정)이며, ICT 생산액은 2023년 기준 약 564조 6,000억원에 달한다.[2]" claim="2023년" source=https://www.itstat.go.kr/itstat/main.html
+웹호스팅기획자 | 수치 14건 | FOUND 12 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "국내 .kr 도메인은 2026년 6월 기준 108만9,144개로 집계된다 [3]." claim="2026년" source=https://krnic.kisa.or.kr/jsp/statboard/domain/reg/currentNation.jsp
+  [NOT_FOUND] field=trivia "국내 .kr 도메인은 2026년 6월 기준 108만9,144개로 집계된다 [3]." claim="108만" source=https://krnic.kisa.or.kr/jsp/statboard/domain/reg/currentNation.jsp
+위관운반원 | 수치 22건 | FOUND 20 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "위사를 감아올린 정방관사에서 실 끝(구사)을 자동으로 찾아 절단하는 장치가 1992년 특허로 개발돼 수작업 의존도를 낮췄다 [2]." claim="1992년" source=https://patents.google.com/patent/KR920001806B1/ko
+  [NOT_FOUND] field=overviewProspect.main "실제로 한국섬유산업연합회는 2020년부터 3년간 43개 섬유기업에 58억원을 지원해 스마트공장을 구축했으며, 그 결과 생산성이 2~25% 늘고 " claim="2020년" source=https://www.kdfnews.com/news/articleView.html?idxno=127146
+위관잔사처리원 | 수치 4건 | FOUND 2 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "한국폐기물협회 집계로는 2024년 재활용업체가 6,659개소(전년비 2.7%↓)이며, 재활용 폐기물량 8,050만톤·재활용제품 판매액 18.8조" claim="8,050만" source=https://kwaste.or.kr/data/01_4.php
+  [UNIT_MISMATCH] field=overviewProspect.main "한국폐기물협회 집계로는 2024년 재활용업체가 6,659개소(전년비 2.7%↓)이며, 재활용 폐기물량 8,050만톤·재활용제품 판매액 18.8조" claim="18.8조" source=https://kwaste.or.kr/data/01_4.php
+위권반장 | 수치 22건 | FOUND 20 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "위사(씨실)를 목관이나 보빈에 감는 위권 공정은 에어제트룸이 분당 1,700회, 워터제트룸이 분당 2,000회로 위사를 삽입할 만큼 빠른 속도로" claim="1,700회" source=https://www.textopia.or.kr/contents/site/selectPageIntroView.do?menuId=278
+  [UNIT_MISMATCH] field=trivia "위사(씨실)를 목관이나 보빈에 감는 위권 공정은 에어제트룸이 분당 1,700회, 워터제트룸이 분당 2,000회로 위사를 삽입할 만큼 빠른 속도로" claim="2,000회" source=https://www.textopia.or.kr/contents/site/selectPageIntroView.do?menuId=278
+위권틀보기원 | 수치 11건 | FOUND 9 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "재단법인 한국섬유기계융합연구원이 개발한 스프레드 토우 위사 공급장치 특허는 2041년까지 유효한 상태로 등록돼 있어, 위사 공급·권취 관련 국내" claim="2041년" source=https://patents.google.com/patent/KR102453130B1/ko
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "직물·편성물 시험방법(KS K 0642)이 2013년 제정 이후 2022년까지 개정을 거듭해 온 것은 국내 섬유 제품의 품질 신뢰성을 유지하려는" claim="2013년" source=https://www.standard.go.kr/KSCI/standardIntro/getStandardSearchView.do?menuId=503&ksNo=KSK0642&tmprKsNo=KSK0642
+위락놀이시설-디자이너 | 수치 18건 | FOUND 15 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 1
+  [UNIT_MISMATCH] field=way "2012년 시행된 어린이놀이시설 안전관리법은 놀이시설의 설치·검사·유지관리 전반을 규율한다[1]." claim="2012년" source=https://www.law.go.kr/LSW/lsInfoP.do?chrClsCd=010202&lsiSeq=115697
+  [UNIT_MISMATCH] field=trivia "2026년 4월 13일 행정안전부로부터 어린이놀이시설 설치검사·정기시설검사 기관으로 지정된 한국건설산업품질연구원은 정기시설검사를 최소 2년마다 " claim="2026년" source=https://www.dailian.co.kr/news/view/1634971/
+---
+Summary | 직업 25건(에러 0) | 수치 587건 | FOUND 465 | UNIT_MISMATCH 42 | NOT_FOUND 27 | UNFETCHABLE 49 (pdf:5, stream-error:12, timeout:2, js-shell:6) | NO_FOOTNOTE 4
