@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r132-b1",
+      "group_key": "cycle-R132-2026-07-30",
+      "agent_slug": "hangyeol",
+      "label": "R132 B1: 웨이퍼디퓨전장비조작원~위권반장",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}
