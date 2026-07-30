@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r133-b2",
+      "group_key": "cycle-R133-2026-07-30",
+      "agent_slug": "hangyeol",
+      "label": "R133 B2: 위변조방지기술개발원~유가증권매매제도기획원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r133-b3",
+      "group_key": "cycle-R133-2026-07-30",
+      "agent_slug": "hangyeol",
+      "label": "R133 B3: 위생용품가공설비조작원~유가증권발행사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

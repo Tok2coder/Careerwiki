@@ -1,0 +1,56 @@
+위변조방지기술개발원 | 수치 2건 | FOUND 1 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "문화체육관광부는 2022~2026년 인쇄문화산업 진흥계획을 통해 디지털 전환기 인쇄산업의 경쟁력 강화를 정책 과제로 제시하고 있다 [1]." claim="2022~2026년" source=https://www.mcst.go.kr/kor/s_policy/dept/deptView.jsp?pSeq=1729&pDataCD=0417000000&pType=04
+위생도기이형제처리원 | 수치 7건 | FOUND 7 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+위생도기조립원 | 수치 3건 | FOUND 1 | UNIT_MISMATCH 0 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=overviewProspect.main "정부는 2030년까지 1,000억원을 투입하는 세라믹 R&D 로드맵을 수립해 세라믹 산업의 공급망 안정화를 추진하고 있다 [2]." claim="2030년" source=https://www.motie.go.kr/kor/article/ATCL3f49a5a8c/171290/view
+  [NOT_FOUND] field=overviewProspect.main "정부는 2030년까지 1,000억원을 투입하는 세라믹 R&D 로드맵을 수립해 세라믹 산업의 공급망 안정화를 추진하고 있다 [2]." claim="1,000억" source=https://www.motie.go.kr/kor/article/ATCL3f49a5a8c/171290/view
+위생용품가공설비조작원 | 수치 5건 | FOUND 4 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "2025년 식약처 고시 개정으로 위생용품 기준 및 규격에 새 시험법이 추가된 것은 소비자가 안심하고 제품을 쓸 수 있도록 품질 신뢰를 높이려는 " claim="2025년" source=https://www.mfds.go.kr/brd/m_211/view.do?seq=14902
+위생용품검사원 | 수치 0건 | FOUND 0 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+위생용품성형설비조작원 | 수치 1건 | FOUND 0 | UNIT_MISMATCH 0 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "2019년 「위생용품 관리법」이 본격 시행되면서 위생용품 제조업체는 별도 법령의 관리 대상이 되었다[2]." claim="2019년" source=https://www.mfds.go.kr/brd/m_99/view.do?seq=41518
+위생용품제조반장 | 수치 8건 | FOUND 5 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 3
+위생청소원 | 수치 1건 | FOUND 1 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+위성방송상품개발원 | 수치 20건 | FOUND 18 | UNIT_MISMATCH 0 | NOT_FOUND 2 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=way "KT스카이라이프 같은 위성방송사업자는 방송미디어통신위원회의 위성방송 재허가 심사를 통과해야 유효기간 7년의 사업권을 이어갈 수 있어, 상품개발 " claim="7년" source=https://www.kmcc.go.kr/user.do?boardId=1112&page=A05020000&dc=K00000200&boardSeq=68863&mode=view
+  [NOT_FOUND] field=overviewProspect.main "과학기술정보통신부와 산업계는 6세대 이동통신 국제표준을 기반으로 한 저궤도 위성통신 핵심기술 확보사업에 나서, 총사업비 약 3,200억 원을 투" claim="3,200억" source=https://eiec.kdi.re.kr/policy/materialView.do?num=251779
+위성통신망감리원 | 수치 1건 | FOUND 0 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "2026년 들어 학위·경력만으로도 특급 정보통신기술자로 인정받는 기준이 완화되면서 진입 경로가 한층 넓어졌다[4]." claim="2026년" source=https://www.koit.co.kr/news/articleView.html?idxno=125989
+위성통신망설계기술자 | 수치 2건 | FOUND 2 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+위성통신망시공기술자 | 수치 16건 | FOUND 14 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "신규 등급 신청 수수료는 10만원, 등급변경은 1만원 수준이며 기술자격증·경력확인서·공적증빙서류 등을 제출해야 한다[3]." claim="10만" source=https://career.kica.or.kr/intro/tech/
+  [UNIT_MISMATCH] field=way "신규 등급 신청 수수료는 10만원, 등급변경은 1만원 수준이며 기술자격증·경력확인서·공적증빙서류 등을 제출해야 한다[3]." claim="1만" source=https://career.kica.or.kr/intro/tech/
+위성통신망운용원 | 수치 2건 | FOUND 2 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+위성통신설비관리원 | 수치 13건 | FOUND 11 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "우주항공청은 한국형 위성항법시스템(KPS) 안테나국 착공식을 2025년 7월 금산 KT SAT 위성센터에서 열고 항법위성 1호기 관제를 위한 안" claim="2025년" source=https://www.businesspost.co.kr/BP?command=article_view&num=404624
+  [UNIT_MISMATCH] field=detailWlb.socialDetail "간이무선국·우주국·지구국의 무선설비 기술기준을 정한 행정규칙은 2026년 7월에도 개정을 거치는 등 계속 갱신되며, 지구국 설비가 최신 기술기준" claim="2026년" source=https://www.law.go.kr/admRulLsInfoP.do?admRulId=2055206&efYd=0
+위성통신설비연구원 | 수치 0건 | FOUND 0 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+위조주화감정연구원 | 수치 10건 | FOUND 8 | UNIT_MISMATCH 2 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=way "경찰청과 국립과학수사연구원은 2018년 위조화폐 원격감정·수사정보시스템을 시범운영에서 정식운영으로 전환해, 현장에서 촬영한 위조화폐 정보를 곧바" claim="2018년" source=https://korea.kr/briefing/pressReleaseView.do?newsId=156301523
+  [UNIT_MISMATCH] field=trivia "1999년 인천에서는 금고 정리 중 발견된 500원짜리 위조주화가 육안으로는 진짜와 구분하기 어려웠지만, 바닥에 떨어뜨렸을 때 나는 둔탁한 소리" claim="1999년" source=https://www.incheonilbo.com/news/articleView.html?idxno=21600
+위폐감정사 | 수치 5건 | FOUND 4 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 1 (js-shell:1) | NO_FOOTNOTE 0
+  [UNFETCHABLE][js-shell] field=trivia "형법 제207조는 행사할 목적으로 통용하는 대한민국의 화폐·지폐·은행권을 위조 또는 변조한 자를 무기 또는 2년 이상의 징역에 처하도록 정하고 " claim="2년" source=https://law.go.kr/lsLawLinkInfo.do?lsJoLnkSeq=900775720&chrClsCd=010202
+위험물취급원 | 수치 6건 | FOUND 4 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "2025년 8월 인천신항 한진컨테이너터미널에서는 신고서류에 중고차 25,000kg만 기재된 컨테이너에서 LP가스통과 부탄가스캔이 무단으로 실려 " claim="2025년" source=https://www.ebn.co.kr/news/articleView.html?idxno=1685515
+  [NOT_FOUND] field=trivia "2025년 8월 인천신항 한진컨테이너터미널에서는 신고서류에 중고차 25,000kg만 기재된 컨테이너에서 LP가스통과 부탄가스캔이 무단으로 실려 " claim="25,000kg" source=https://www.ebn.co.kr/news/articleView.html?idxno=1685515
+위험평가사정원 | 수치 8건 | FOUND 6 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "2025년 11월부터 금융위원회가 생명보험 사고원인 통계, 암 발생 데이터 등 생·손보 핵심 공공데이터 162종을 개방해 위험률 산출이 한층 정" claim="2025년" source=https://www.insjournal.co.kr/news/articleView.html?idxno=29089
+  [NOT_FOUND] field=trivia "언더라이터는 계약자에게 회사의 계약인수과정을 정확히 설명하고 직무상 취득한 개인정보를 목적 외로 활용하지 않는 등 5대 업무수칙을 지켜야 한다[" claim="5대" source=https://exam.insure.or.kr/under/intro/rule
+윈치염색원 | 수치 20건 | FOUND 18 | UNIT_MISMATCH 1 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "환경 당국은 대구염색산업단지 입주업체 107곳을 대상으로 전수조사를 실시해 폐수 처리 실태를 점검한 적이 있다[3]." claim="107곳" source=https://www.kyongbuk.co.kr/news/articleView.html?idxno=4033904
+  [NOT_FOUND] field=overviewProspect.main "서대구 지역에서는 노후 하수처리장 4곳을 한 곳으로 모아 지하화하는 사업이 추진되고 있으며, 지상 부지는 공원 등으로 조성될 예정이다[3]." claim="4곳" source=https://www.daegu.go.kr/seodaegu/water.php
+유가증권-디자이너 | 수치 5건 | FOUND 3 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 1 (pdf:1) | NO_FOOTNOTE 0
+  [UNFETCHABLE][pdf] field=way "정부는 제5차 인쇄문화산업 진흥계획(2022~2026년)을 수립해 인쇄산업 인프라 강화, 전문인력 양성 등 과제를 담았다[3]." claim="2022~2026년" source=https://www.mcst.go.kr/servlets/eduport/front/upload/UplDownloadFile?pFileName=%EC%A0%9C5%EC%B0%A8_%EC%9D%B8%EC%87%84%EB%AC%B8%ED%99%94%EC%82%B0%EC%97%85_%EC%A7%84%ED%9D%A5_%EA%B3%84%ED%9A%8D(2022-2026).pdf
+  [UNIT_MISMATCH] field=way "계획 발표 당시 정부는 4대 전략과 14개 실행과제로 인쇄산업 경쟁력을 강화하겠다고 밝혔다[4]." claim="4대" source=https://www.korea.kr/briefing/pressReleaseView.do?newsId=156519108
+유가증권대차거래중개인 | 수치 12건 | FOUND 11 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=overviewProspect.main "2025년 3월 말 전 종목 공매도가 재개되면서 증권대차거래 수요도 함께 늘었는데, 전문가들은 재개 후 한 달가량 변동성이 확대된 뒤 안정을 찾" claim="2025년" source=https://www.etoday.co.kr/news/view/2449326
+유가증권매매제도기획원 | 수치 7건 | FOUND 5 | UNIT_MISMATCH 1 | NOT_FOUND 0 | UNFETCHABLE 1 (js-shell:1) | NO_FOOTNOTE 0
+  [UNIT_MISMATCH] field=trivia "2026년 3월에는 대체거래소 넥스트레이드가 출범해 하루 12시간, 최대 800개 종목의 거래를 지원하게 됐다 [2]." claim="2026년" source=https://www.hani.co.kr/arti/economy/finance/1181611.html
+  [UNFETCHABLE][js-shell] field=overviewProspect.main "한국거래소는 오전 7시부터 주식거래를 시작하는 등 거래시간을 12시간까지 늘리는 방안을 추진하고 있다 [2]." claim="12시간" source=https://www.chosun.com/economy/stock-finance/2026/01/13/2DJHLPT3CBAQVKZR557B7XVNJU/
+유가증권발행사무원 | 수치 14건 | FOUND 11 | UNIT_MISMATCH 2 | NOT_FOUND 1 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+  [NOT_FOUND] field=overviewProspect.main "예탁결제원과 한국거래소는 2024년 12월 증권 발행·유통정보 공유시스템 1단계를 가동해, 그동안 기관별로 따로 입력하던 증권 발행·상장 정보를" claim="2024년" source=https://www.etoday.co.kr/news/view/2540351
+  [UNIT_MISMATCH] field=overviewProspect.main "금융위원회는 2026년 7월 자본시장법 시행령을 개정해 음악저작권·부동산 등을 기초자산으로 묶는 조각투자 수익증권도 모집금액과 무관하게 증권신고" claim="2026년" source=https://www.kbanker.co.kr/news/articleView.html?idxno=225493
+  [UNIT_MISMATCH] field=overviewProspect.main "신규 상장기업과 사모 전환사채 발행기업에 대한 공시 의무도 2025년 7월 강화돼, 상장 직전 분기·반기 실적 공시 기한이 새로 생기고 사모 전" claim="2025년" source=https://www.fsc.go.kr/no010101/84627
+유가증권보관사무원 | 수치 6건 | FOUND 6 | UNIT_MISMATCH 0 | NOT_FOUND 0 | UNFETCHABLE 0 | NO_FOOTNOTE 0
+---
+Summary | 직업 25건(에러 0) | 수치 174건 | FOUND 142 | UNIT_MISMATCH 17 | NOT_FOUND 9 | UNFETCHABLE 3 (js-shell:2, pdf:1) | NO_FOOTNOTE 3

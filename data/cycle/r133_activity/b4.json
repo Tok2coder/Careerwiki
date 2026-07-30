@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "source": "batch",
+      "external_id": "r133-b4",
+      "group_key": "cycle-R133-2026-07-30",
+      "agent_slug": "hangyeol",
+      "label": "R133 B4: 위생용품검사원~유가증권보관사무원",
+      "model": "sonnet",
+      "status": "running"
+    }
+  ]
+}

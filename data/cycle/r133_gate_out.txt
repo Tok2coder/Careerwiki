@@ -1,0 +1,37 @@
+[master-verify-cycle] 대상 25 직업
+
+[db] 일괄 조회 중 (25 id, wrangler 2회 — 약 1분)...
+[db] 완료 — rev 25건 / job 25건 매칭. 직업별 검사 시작 (1건당 20~40초)
+
+PASS 위생도기이형제처리원               | totalE=24 | distinct=18 | marker=OK | clean
+PASS 위생용품제조반장                 | totalE=21 | distinct=11 | marker=OK | clean
+PASS 위성통신망시공기술자               | totalE=23 | distinct=18 | marker=OK | clean
+PASS 위험평가사정원                  | totalE=22 | distinct=18 | marker=OK | clean
+PASS 유가증권대차거래중개인              | totalE=22 | distinct=18 | marker=OK | clean
+PASS 위변조방지기술개발원               | totalE=27 | distinct=20 | marker=OK | clean
+PASS 위생도기조립원                  | totalE=27 | distinct=19 | marker=OK | clean
+PASS 위생청소원                    | totalE=28 | distinct=19 | marker=OK | clean
+PASS 위성통신망운용원                 | totalE=29 | distinct=19 | marker=OK | clean
+PASS 유가증권매매제도기획원              | totalE=26 | distinct=19 | marker=OK | clean
+PASS 위생용품가공설비조작원              | totalE=19 | distinct=11 | marker=OK | clean
+PASS 위성방송상품개발원                | totalE=19 | distinct=19 | marker=OK | clean
+PASS 위성통신설비관리원                | totalE=19 | distinct=18 | marker=OK | clean
+PASS 위조주화감정연구원                | totalE=19 | distinct=18 | marker=OK | clean
+PASS 유가증권발행사무원                | totalE=19 | distinct=18 | marker=OK | clean
+PASS 위생용품검사원                  | totalE=19 | distinct=10 | marker=OK | clean
+PASS 위성통신망감리원                 | totalE=20 | distinct=18 | marker=OK | clean
+PASS 위성통신설비연구원                | totalE=19 | distinct=18 | marker=OK | clean
+PASS 위폐감정사                    | totalE=19 | distinct=18 | marker=OK | clean
+PASS 유가증권보관사무원                | totalE=19 | distinct=18 | marker=OK | clean
+PASS 위생용품성형설비조작원              | totalE=20 | distinct=10 | marker=OK | clean
+PASS 위성통신망설계기술자               | totalE=20 | distinct=18 | marker=OK | clean
+WARN 위험물취급원                   | totalE=21 | distinct=18 | marker=OK | WARN:urlUnverified(1)
+        [urlUnverified] timeout: https://www.customs.go.kr/kcs/cm/cntnts/cntntsView.do?mi=2819&cntntsId=817
+        [retry-ok] retry-ok(tls-relaxed): https://www.komdi.or.kr/ukiwi/biz/dngr/guide/ukiwiBizDngrGuide.do
+        [retry-ok] retry-ok(tls-relaxed): https://www.komdi.or.kr/ukiwi/biz/edu/guide/ukiwiBizEduGuideProfessional.do
+        [retry-ok] retry-ok(tls-relaxed): https://www.komdi.or.kr/ukiwi/biz/edu/guide/ukiwiBizEduGuideManagerTraining.do
+PASS 윈치염색원                    | totalE=21 | distinct=18 | marker=OK | clean
+PASS 유가증권-디자이너                | totalE=25 | distinct=18 | marker=OK | clean
+
+=== Summary: PASS 24/25, WARN 1 ===
+WARN: 위험물취급원(urlUnverified(1))
