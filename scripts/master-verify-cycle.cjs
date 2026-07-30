@@ -236,6 +236,10 @@ function parseJaccardPairs() {
 
   const dbInfo = fetchDbInfo(jobs.map((j) => j.id));
 
+  // cycle 전체에서 도메인별 503 누적을 공유 — 직업당 checkUrls를 매번 새로 리셋하면
+  // patents.google.com처럼 여러 직업에 흩어진 동일 도메인 레이트리밋을 못 묶어 매번 헛재시도한다.
+  const urlDomainState = new Map();
+
   const rows = [];
   for (const job of jobs) {
     const reasons = [];
@@ -265,12 +269,14 @@ function parseJaccardPairs() {
       // distinct 보편 하한(niche=10) — queue에 class 정보 부재로 10 미만만 FAIL.
       // (R45 레크리에이션지도자 d9가 "minor 절충"으로 통과한 soft-miss 후 추가 — niche<10 룰 강제)
       if (distinct < 10) reasons.push(`distinct=${distinct}<10`);
-      // d) URL 생존
-      const live = await checkUrls(stats.urls);
+      // d) URL 생존 (재시도 사다리 통과분은 url-liveness.cjs가 verdict:'OK'로 승격 —
+      //    reason에 retry-ok(사유) 표기만 남겨 어떤 사다리로 살았는지 로그로 추적)
+      const live = await checkUrls(stats.urls, urlDomainState);
       if (live.dead.length) reasons.push(`urlDead(${live.dead.length})`);
       if (live.unverified.length) warns.push(`urlUnverified(${live.unverified.length})`);
       job._urlDead = live.dead;
       job._urlUnverified = live.unverified;
+      job._urlRetryOk = live.ok.filter((u) => u.reason && u.reason.startsWith('retry-ok'));
       job._urlSet = [...new Set(stats.urls)];
       // R122 게이트 보강 ①: domain-diversity — distinct≥18(major급)인데 도메인 ≤3이면
       // 사이트 페이지 walking으로 바를 채운 padding 의심 (염료개발기술자 dyetec 12 + kofoti 6 = 18)
@@ -311,6 +317,7 @@ function parseJaccardPairs() {
     );
     (job._urlDead || []).forEach((u) => console.log(`        [urlDead] ${u.reason}: ${u.url}`));
     (job._urlUnverified || []).forEach((u) => console.log(`        [urlUnverified] ${u.reason}: ${u.url}`));
+    (job._urlRetryOk || []).forEach((u) => console.log(`        [retry-ok] ${u.reason}: ${u.url}`));
   }
 
   // ─── R122 게이트 보강 ②: cross-job URL-set 동일성 (R123 재calibration) ───
